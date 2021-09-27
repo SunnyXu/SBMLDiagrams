@@ -39,7 +39,7 @@ filename = 'test_center.xml'
 reactionLineType = 'bezier' #'linear' or 'bezier'
 showBezierHandles = True #True: show the Bezier handles, False: do not show
 fileFormat = 'PNG' #'PNG' or 'JPEG'
-fileName = '' #filename or '' 
+fileName = 'output' #filename or '' 
 complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
 
 f = open(os.path.join(dirname, filename), 'r')

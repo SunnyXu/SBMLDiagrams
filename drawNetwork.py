@@ -602,6 +602,7 @@ def draw(surface, scalingFactor=1, fileName = '', file_format = 'PNG'):
         #self.surface.write_to_png(tmpfileName)
         pil_im = Image.open(tmpfileName)
         display(pil_im)
+        pil_im.show()
 
 
 
@@ -618,6 +619,6 @@ def draw(surface, scalingFactor=1, fileName = '', file_format = 'PNG'):
             
         pil_im = Image.open(fileName)
         display(pil_im)
-            
+        pil_im.show()            
     
 
