@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # This script was initiated by Herbert Sauro, written by Jin Xu and available on Github
-# https://github.com/SunnyXu
+# https://github.com/SunnyXu/SBMLDiagrams
 # This file includes all the functions to visualize the SBML file.
 """
 Created on Fri Jul 16 09:57:30 2021
