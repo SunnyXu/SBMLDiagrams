@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # This script was written by Jin Xu and available on Github
-# https://github.com/SunnyXu
+# https://github.com/SunnyXu/SBMLDiagrams
 # Input is an SBML file, and output will be a diagram as a visualization for the SBML file.
 """
 Created on Mon Aug 23 13:25:34 2021
