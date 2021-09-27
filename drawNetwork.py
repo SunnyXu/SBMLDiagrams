@@ -8,13 +8,12 @@ Created on Fri Jul 16 09:57:30 2021
 @author: hsauro
 """
 
-from PIL import ImageColor
 import math
 import random, tempfile, string, os
 from PIL import Image               # to load images
 from IPython.display import display # to display images
 import skia
-import ctypes as ct
+
 
 
 def drawRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = False):
@@ -594,19 +593,31 @@ def draw(surface, scalingFactor=1, fileName = '', file_format = 'PNG'):
 
         image = surface.makeImageSnapshot()
         if file_format == 'PNG':
-            image.save(tmpfileName + '.png', skia.kPNG)
+            tmpfileName = tmpfileName + '.png'
+            image.save(tmpfileName, skia.kPNG)
         elif file_format == 'JPEG':
-            image.save(tmpfileName + '.jpg', skia.kJPEG)
-
+            tmpfileName = tmpfileName + '.jpg'
+            image.save(tmpfileName, skia.kJPEG)
+            
+        #self.surface.write_to_png(tmpfileName)
         pil_im = Image.open(tmpfileName)
         display(pil_im)
 
+
+
     else:
+
+        tmpfileName = os.path.join(os.getcwd())
         image = surface.makeImageSnapshot()
         if file_format == 'PNG':
-            image.save(fileName + '.png', skia.kPNG)
+            fileName = fileName + '.png'
+            image.save(fileName, skia.kPNG)
         elif file_format == 'JPEG':
-            image.save(fileName + '.jpg', skia.kJPEG)
+            fileName = fileName + '.jpg'
+            image.save(fileName, skia.kJPEG)
+            
+        pil_im = Image.open(fileName)
+        display(pil_im)
             
     
 
