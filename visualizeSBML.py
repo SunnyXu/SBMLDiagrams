@@ -28,12 +28,15 @@ dirname = "" #same folder as the main.py
 #part layout
 #filename = "LinearChain.xml"
 #filename = "Feedback-Sauro.xml"
+filename = "Jana_WolfGlycolysis.xml"
 #whole layout
-filename = 'test_center.xml' 
+#filename = 'test_center.xml' 
 #filename = 'test_handles.xml'
 #filename = 'test_arrows.xml'
 #filename = 'test_no_comp.xml'
 #filename = 'test_comp.xml'
+#invalid sbml
+#filename = 'testbigmodel.xml'
 
 
 reactionLineType = 'bezier' #'linear' or 'bezier'
@@ -289,129 +292,295 @@ if len(sbmlStr) != 0:
                         text_font_size = group.getFontSize()
                         text_render.append([idList,text_line_color,text_line_width])
 
-    model = simplesbml.loadSBMLStr(sbmlStr)
-    numFloatingNodes  = model.getNumFloatingSpecies()
-    FloatingNodes_ids = model.getListOfFloatingSpecies()
-    numBoundaryNodes  = model.getNumBoundarySpecies()
-    BoundaryNodes_ids = model.getListOfBoundarySpecies()
-    numRxns   = model.getNumReactions()
-    Rxns_ids  = model.getListOfReactionIds()
-    numComps  = model.getNumCompartments()
-    Comps_ids = model.getListOfCompartmentIds()
-    numNodes = numFloatingNodes + numBoundaryNodes
-    comp_node_list = [0]*numComps #Note: numComps is different from numCompGlyphs
-    for i in range(numComps):
-        comp_node_list[i] = []
-
-    #if there is layout info:
-    if len(spec_id_list) != 0:
+    try: 
+        model = simplesbml.loadSBMLStr(sbmlStr)
+        numFloatingNodes  = model.getNumFloatingSpecies()
+        FloatingNodes_ids = model.getListOfFloatingSpecies()
+        numBoundaryNodes  = model.getNumBoundarySpecies()
+        BoundaryNodes_ids = model.getListOfBoundarySpecies()
+        numRxns   = model.getNumReactions()
+        Rxns_ids  = model.getListOfReactionIds()
+        numComps  = model.getNumCompartments()
+        Comps_ids = model.getListOfCompartmentIds()
+        numNodes = numFloatingNodes + numBoundaryNodes
+        comp_node_list = [0]*numComps #Note: numComps is different from numCompGlyphs
         for i in range(numComps):
-            temp_id = Comps_ids[i]
-            vol= model.getCompartmentVolume(i)
-            if temp_id == "_compartment_default_":
-                dimension = [3900, 2400]
-                position = [10, 10]
-                comp_border_color = (255, 255, 255, 0) #the last digit for transparent
-                comp_fill_color = (255, 255, 255, 0)
+            comp_node_list[i] = []
 
-                drawNetwork.addCompartment(canvas, position, dimension,
-                                           comp_border_color, comp_fill_color, comp_border_width)
-    
-            else:
-                if len(comp_id_list) != 0:
-                #if mplugin is not None:                    
-                    for j in range(numCompGlyphs):
-                        if comp_id_list[j] == temp_id:
-                            dimension = comp_dimension_list[j]
-                            position = comp_position_list[j]
-                    for j in range(len(comp_render)):
-                        if temp_id == comp_render[j][0]:
-                            comp_fill_color = comp_render[j][1]
-                            comp_border_color = comp_render[j][2]
-                            comp_border_width = comp_render[j][3]
-
-                else:# no layout info about compartment,
-                    # then the whole size of the canvas is the compartment size
-                    # modify the compartment size using the max_rec function above
-                    # random assigned network:
-                    # dimension = [800,800]
-                    # position = [40,40]
-                    # the whole size of the compartment: 4000*2500
-                    dimension = [3900,2400]
-                    position = [10,10]
+        #if there is layout info:
+        if len(spec_id_list) != 0:
+            for i in range(numComps):
+                temp_id = Comps_ids[i]
+                vol= model.getCompartmentVolume(i)
+                if temp_id == "_compartment_default_":
+                    dimension = [3900, 2400]
+                    position = [10, 10]
+                    comp_border_color = (255, 255, 255, 0) #the last digit for transparent
                     comp_fill_color = (255, 255, 255, 0)
-                    comp_border_color = (255, 255, 255, 0)
-                                     
-                drawNetwork.addCompartment(canvas, position, dimension,
-                                           comp_border_color, comp_fill_color, comp_border_width)
+
+                    drawNetwork.addCompartment(canvas, position, dimension,
+                                            comp_border_color, comp_fill_color, comp_border_width)
+        
+                else:
+                    if len(comp_id_list) != 0:
+                    #if mplugin is not None:                    
+                        for j in range(numCompGlyphs):
+                            if comp_id_list[j] == temp_id:
+                                dimension = comp_dimension_list[j]
+                                position = comp_position_list[j]
+                        for j in range(len(comp_render)):
+                            if temp_id == comp_render[j][0]:
+                                comp_fill_color = comp_render[j][1]
+                                comp_border_color = comp_render[j][2]
+                                comp_border_width = comp_render[j][3]
+
+                    else:# no layout info about compartment,
+                        # then the whole size of the canvas is the compartment size
+                        # modify the compartment size using the max_rec function above
+                        # random assigned network:
+                        # dimension = [800,800]
+                        # position = [40,40]
+                        # the whole size of the compartment: 4000*2500
+                        dimension = [3900,2400]
+                        position = [10,10]
+                        comp_fill_color = (255, 255, 255, 0)
+                        comp_border_color = (255, 255, 255, 0)
+                                        
+                    drawNetwork.addCompartment(canvas, position, dimension,
+                                            comp_border_color, comp_fill_color, comp_border_width)
 
 
-        #add reactions before adding nodes to help with the line positions
-        numSpec_in_reaction = len(spec_specGlyph_id_list)
-        for i in range (numReactionGlyphs):
-            src = []
-            dst = []
-            src_position = []
-            src_dimension = [] 
-            dst_position = []
-            dst_dimension = []
-            src_handle = []
-            dst_handle = []
-            temp_id = reaction_id_list[i]
-            kinetics = kinetics_list[i]
-            #rct_num = len(rct_specGlyph_list[i])
-            #prd_num = len(prd_specGlyph_list[i])
-            rct_num = len(rct_specGlyph_handle_list[i])
-            prd_num = len(prd_specGlyph_handle_list[i])
+            #add reactions before adding nodes to help with the line positions
+            numSpec_in_reaction = len(spec_specGlyph_id_list)
+            for i in range (numReactionGlyphs):
+                src = []
+                dst = []
+                src_position = []
+                src_dimension = [] 
+                dst_position = []
+                dst_dimension = []
+                src_handle = []
+                dst_handle = []
+                temp_id = reaction_id_list[i]
+                kinetics = kinetics_list[i]
+                #rct_num = len(rct_specGlyph_list[i])
+                #prd_num = len(prd_specGlyph_list[i])
+                rct_num = len(rct_specGlyph_handle_list[i])
+                prd_num = len(prd_specGlyph_handle_list[i])
 
 
-            # for j in range(rct_num):
-            #     temp_specGlyph_id = rct_specGlyph_list[i][j]
-            #     for k in range(numSpec_in_reaction):
-            #         if temp_specGlyph_id == specGlyph_id_list[k]:
-            #             src_position.append(spec_position_list[k])
-            #             src_dimension.append(spec_dimension_list[k])
+                # for j in range(rct_num):
+                #     temp_specGlyph_id = rct_specGlyph_list[i][j]
+                #     for k in range(numSpec_in_reaction):
+                #         if temp_specGlyph_id == specGlyph_id_list[k]:
+                #             src_position.append(spec_position_list[k])
+                #             src_dimension.append(spec_dimension_list[k])
 
-            # for j in range(prd_num):
-            #     temp_specGlyph_id = prd_specGlyph_list[i][j]
-            #     for k in range(numSpec_in_reaction):
-            #         if temp_specGlyph_id == specGlyph_id_list[k]:
-            #             dst_position.append(spec_position_list[k])
-            #             dst_dimension.append(spec_dimension_list[k])
+                # for j in range(prd_num):
+                #     temp_specGlyph_id = prd_specGlyph_list[i][j]
+                #     for k in range(numSpec_in_reaction):
+                #         if temp_specGlyph_id == specGlyph_id_list[k]:
+                #             dst_position.append(spec_position_list[k])
+                #             dst_dimension.append(spec_dimension_list[k])
 
 
-            for j in range(rct_num):
-                temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
-                for k in range(numSpec_in_reaction):
-                    if temp_specGlyph_id == specGlyph_id_list[k]:
-                        src_position.append(spec_position_list[k])
-                        src_dimension.append(spec_dimension_list[k])
-                src_handle.append(rct_specGlyph_handle_list[i][j][1])
+                for j in range(rct_num):
+                    temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
+                    for k in range(numSpec_in_reaction):
+                        if temp_specGlyph_id == specGlyph_id_list[k]:
+                            src_position.append(spec_position_list[k])
+                            src_dimension.append(spec_dimension_list[k])
+                    src_handle.append(rct_specGlyph_handle_list[i][j][1])
 
-            for j in range(prd_num):
-                temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
-                for k in range(numSpec_in_reaction):
-                    if temp_specGlyph_id == specGlyph_id_list[k]:
-                        dst_position.append(spec_position_list[k])
-                        dst_dimension.append(spec_dimension_list[k])
-                dst_handle.append(prd_specGlyph_handle_list[i][j][1])
+                for j in range(prd_num):
+                    temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
+                    for k in range(numSpec_in_reaction):
+                        if temp_specGlyph_id == specGlyph_id_list[k]:
+                            dst_position.append(spec_position_list[k])
+                            dst_dimension.append(spec_dimension_list[k])
+                    dst_handle.append(prd_specGlyph_handle_list[i][j][1])
 
-            for j in range(len(rxn_render)):
-                if temp_id == rxn_render[j][0]:
-                    reaction_line_color = rxn_render[j][1]
-                    reaction_line_width = rxn_render[j][2]
+                for j in range(len(rxn_render)):
+                    if temp_id == rxn_render[j][0]:
+                        reaction_line_color = rxn_render[j][1]
+                        reaction_line_width = rxn_render[j][2]
 
-            try: 
-                center_position = reaction_center_list[i]
-                center_handle = reaction_center_handle_list[i]
-                handles = [center_handle]
-                handles.extend(src_handle)
-                handles.extend(dst_handle)   
-                drawNetwork.addReaction(canvas, src_position, dst_position, center_position, handles, 
-                src_dimension, dst_dimension, reaction_line_color, reaction_line_width,
-                reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
+                try: 
+                    center_position = reaction_center_list[i]
+                    center_handle = reaction_center_handle_list[i]
+                    handles = [center_handle]
+                    handles.extend(src_handle)
+                    handles.extend(dst_handle)   
+                    drawNetwork.addReaction(canvas, src_position, dst_position, center_position, handles, 
+                    src_dimension, dst_dimension, reaction_line_color, reaction_line_width,
+                    reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
+                
+                except:
+                    center_x = 0.
+                    center_y = 0.
+                    for j in range(rct_num):
+                        center_x += src_position[j][0]+.5*src_dimension[j][0]
+                        center_y += src_position[j][1]+.5*src_dimension[j][1]
+                    for j in range(prd_num):
+                        center_x += dst_position[j][0]+.5*dst_dimension[j][0]
+                        center_y += dst_position[j][1]+.5*dst_dimension[j][1]
+                    center_x = center_x/(rct_num + prd_num) 
+                    center_y = center_y/(rct_num + prd_num)
+                    center_position = [center_x, center_y]
+                    handles = [center_position]
+                    for j in range(rct_num):
+                        src_handle_x = .5*(center_position[0] + src_position[j][0] + .5*src_dimension[j][0])
+                        src_handle_y = .5*(center_position[1] + src_position[j][1] + .5*src_dimension[j][1])
+                        handles.append([src_handle_x,src_handle_y])
+                    for j in range(prd_num):
+                        dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
+                        dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
+                        handles.append([dst_handle_x,dst_handle_y])
+                    drawNetwork.addReaction(canvas, src_position, dst_position, center_position, handles,
+                    src_dimension, dst_dimension, reaction_line_color, reaction_line_width,
+                    reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
+                        
+            id_list = []
+            #numSpecGlyphs is larger than numSpec_in_reaction if there orphan nodes
+            if numSpecGlyphs > numSpec_in_reaction:
+                print("Orphan nodes are removed.")
+            for i in range (numSpec_in_reaction):
+                temp_id = spec_specGlyph_id_list[i][0]
+                tempGlyph_id = spec_specGlyph_id_list[i][1]
+                dimension = spec_dimension_list[i]
+                position = spec_position_list[i]
+                text_position = spec_text_position_list[i]
+                text_dimension = spec_text_dimension_list[i]
+                for j in range(numFloatingNodes):
+                    if temp_id == FloatingNodes_ids[j]:
+                        if temp_id not in id_list:
+                            for k in range(len(spec_render)):
+                                if temp_id == spec_render[k][0]:
+                                    spec_fill_color = spec_render[k][1]
+                                    spec_border_color = spec_render[k][2]
+                                    spec_border_width = spec_render[k][3]
+                                    shapeIdx = spec_render[k][4]
+                            for k in range(len(text_render)):
+                                if temp_id == text_render[k][0]:
+                                    text_line_color = text_render[k][1]
+                                    text_line_width = text_render[k][2]
+                            drawNetwork.addNode(canvas, 'floating', '', position, dimension,
+                                                spec_border_color, spec_fill_color, spec_border_width,
+                                                shapeIdx, complex_shape = complexShape)
+                            drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)
+                            id_list.append(temp_id)                    
+                        else:
+                            for k in range(len(spec_render)):
+                                if temp_id == spec_render[k][0]:
+                                    spec_fill_color = spec_render[k][1]
+                                    spec_border_color = spec_render[k][2]
+                                    spec_border_width = spec_render[k][3]
+                                    shapeIdx = spec_render[k][4]
+                            for k in range(len(text_render)):
+                                if temp_id == text_render[k][0]:
+                                    text_line_color = text_render[k][1]
+                                    text_line_width = text_render[k][2]
+                            drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
+                                                spec_border_color, spec_fill_color, spec_border_width,
+                                                shapeIdx, complex_shape=complexShape)
+                            drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)
+                            id_list.append(temp_id)
+                for j in range(numBoundaryNodes):
+                    if temp_id == BoundaryNodes_ids[j]:
+                        if temp_id not in id_list:
+                            for k in range(len(spec_render)):
+                                if temp_id == spec_render[k][0]:
+                                    spec_fill_color = spec_render[k][1]
+                                    spec_border_color = spec_render[k][2]
+                                    spec_border_width = spec_render[k][3]
+                                    shapeIdx = spec_render[k][4]
+                            for k in range(len(text_render)):
+                                if temp_id == text_render[k][0]:
+                                    text_line_color = text_render[k][1]
+                                    text_line_width = text_render[k][2]        
+                            drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
+                                                spec_border_color, spec_fill_color, spec_border_width,
+                                                shapeIdx, complex_shape=complexShape)
+                            drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)
+                            id_list.append(temp_id)
+                        else:
+                            for k in range(len(spec_render)):
+                                if temp_id == spec_render[k][0]:
+                                    spec_fill_color = spec_render[k][1]
+                                    spec_border_color = spec_render[k][2]
+                                    spec_border_width = spec_render[k][3]
+                                    shapeIdx = spec_render[k][4]
+                            for k in range(len(text_render)):
+                                if temp_id == text_render[k][0]:
+                                    text_line_color = text_render[k][1]
+                                    text_line_width = text_render[k][2] 
+                            drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
+                                                spec_border_color, spec_fill_color, spec_border_width,
+                                                shapeIdx, complex_shape=complexShape)
+                            drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)                
+                            id_list.append(temp_id)
+    
+                
+        else: # there is no layout information, assign position randomly and size as default
+            comp_id_list = Comps_ids
+            nodeIdx_temp = 0 #to track the node index
+        
+            for i in range(numComps):
+                temp_id = Comps_ids[i]
+                vol= model.getCompartmentVolume(i)
+                dimension = [3900,2400]
+                position = [10,10]
             
-            except:
+                drawNetwork.addCompartment(canvas, position, dimension,
+                                            comp_border_color, comp_fill_color, comp_border_width)
+            spec_id_list = [] 
+            spec_dimension_list = []
+            spec_position_list = []
+            for i in range (numFloatingNodes):
+                temp_id = FloatingNodes_ids[i]
+                dimension = [60,40]
+                position = [40 + math.trunc (_random.random()*800), 40 + math.trunc (_random.random()*800)]
+
+                spec_id_list.append(temp_id)
+                spec_dimension_list.append(dimension)
+                spec_position_list.append(position)
+
+            for i in range (numBoundaryNodes):
+                temp_id = BoundaryNodes_ids[i]
+                dimension = [60,40]
+                position = [40 + math.trunc (_random.random()*800), 40 + math.trunc (_random.random()*800)]
+
+                spec_id_list.append(temp_id)
+                spec_dimension_list.append(dimension)
+                spec_position_list.append(position)
+        
+        
+            for i in range (numRxns):
+                src_position = []
+                dst_position = []
+                src_dimension = []
+                dst_dimension = []
+                temp_id = Rxns_ids[i]
+                kinetics = model.getRateLaw(i)
+                rct_num = model.getNumReactants(i)
+                prd_num = model.getNumProducts(i)
+        
+        
+                for j in range(rct_num):
+                    rct_id = model.getReactant(temp_id,j)
+                    for k in range(numNodes):
+                        if spec_id_list[k] == rct_id:
+                            src_position.append(spec_position_list[k])
+                            src_dimension.append(spec_dimension_list[k])
+        
+        
+                for j in range(prd_num):
+                    prd_id = model.getProduct(temp_id,j)
+                    for k in range(numNodes):
+                        if spec_id_list[k] == prd_id:
+                            dst_position.append(spec_position_list[k])
+                            dst_dimension.append(spec_dimension_list[k])  
+
                 center_x = 0.
                 center_y = 0.
                 for j in range(rct_num):
@@ -423,6 +592,7 @@ if len(sbmlStr) != 0:
                 center_x = center_x/(rct_num + prd_num) 
                 center_y = center_y/(rct_num + prd_num)
                 center_position = [center_x, center_y]
+
                 handles = [center_position]
                 for j in range(rct_num):
                     src_handle_x = .5*(center_position[0] + src_position[j][0] + .5*src_dimension[j][0])
@@ -432,199 +602,34 @@ if len(sbmlStr) != 0:
                     dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
                     dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                     handles.append([dst_handle_x,dst_handle_y])
+        
                 drawNetwork.addReaction(canvas, src_position, dst_position, center_position, handles,
                 src_dimension, dst_dimension, reaction_line_color, reaction_line_width,
                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
-                    
-        id_list = []
-        #numSpecGlyphs is larger than numSpec_in_reaction if there orphan nodes
-        if numSpecGlyphs > numSpec_in_reaction:
-            print("Orphan nodes are removed.")
-        for i in range (numSpec_in_reaction):
-            temp_id = spec_specGlyph_id_list[i][0]
-            tempGlyph_id = spec_specGlyph_id_list[i][1]
-            dimension = spec_dimension_list[i]
-            position = spec_position_list[i]
-            text_position = spec_text_position_list[i]
-            text_dimension = spec_text_dimension_list[i]
-            for j in range(numFloatingNodes):
-                if temp_id == FloatingNodes_ids[j]:
-                    if temp_id not in id_list:
-                        for k in range(len(spec_render)):
-                            if temp_id == spec_render[k][0]:
-                                spec_fill_color = spec_render[k][1]
-                                spec_border_color = spec_render[k][2]
-                                spec_border_width = spec_render[k][3]
-                                shapeIdx = spec_render[k][4]
-                        for k in range(len(text_render)):
-                            if temp_id == text_render[k][0]:
-                                text_line_color = text_render[k][1]
-                                text_line_width = text_render[k][2]
-                        drawNetwork.addNode(canvas, 'floating', '', position, dimension,
-                                            spec_border_color, spec_fill_color, spec_border_width,
-                                            shapeIdx, complex_shape = complexShape)
-                        drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)
-                        id_list.append(temp_id)                    
-                    else:
-                        for k in range(len(spec_render)):
-                            if temp_id == spec_render[k][0]:
-                                spec_fill_color = spec_render[k][1]
-                                spec_border_color = spec_render[k][2]
-                                spec_border_width = spec_render[k][3]
-                                shapeIdx = spec_render[k][4]
-                        for k in range(len(text_render)):
-                            if temp_id == text_render[k][0]:
-                                text_line_color = text_render[k][1]
-                                text_line_width = text_render[k][2]
-                        drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
-                                            spec_border_color, spec_fill_color, spec_border_width,
-                                            shapeIdx, complex_shape=complexShape)
-                        drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)
-                        id_list.append(temp_id)
-            for j in range(numBoundaryNodes):
-                if temp_id == BoundaryNodes_ids[j]:
-                    if temp_id not in id_list:
-                        for k in range(len(spec_render)):
-                            if temp_id == spec_render[k][0]:
-                                spec_fill_color = spec_render[k][1]
-                                spec_border_color = spec_render[k][2]
-                                spec_border_width = spec_render[k][3]
-                                shapeIdx = spec_render[k][4]
-                        for k in range(len(text_render)):
-                            if temp_id == text_render[k][0]:
-                                text_line_color = text_render[k][1]
-                                text_line_width = text_render[k][2]        
-                        drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
-                                            spec_border_color, spec_fill_color, spec_border_width,
-                                            shapeIdx, complex_shape=complexShape)
-                        drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)
-                        id_list.append(temp_id)
-                    else:
-                        for k in range(len(spec_render)):
-                            if temp_id == spec_render[k][0]:
-                                spec_fill_color = spec_render[k][1]
-                                spec_border_color = spec_render[k][2]
-                                spec_border_width = spec_render[k][3]
-                                shapeIdx = spec_render[k][4]
-                        for k in range(len(text_render)):
-                            if temp_id == text_render[k][0]:
-                                text_line_color = text_render[k][1]
-                                text_line_width = text_render[k][2] 
-                        drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
-                                            spec_border_color, spec_fill_color, spec_border_width,
-                                            shapeIdx, complex_shape=complexShape)
-                        drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)                
-                        id_list.append(temp_id)
- 
-            
-    else: # there is no layout information, assign position randomly and size as default
-        comp_id_list = Comps_ids
-        nodeIdx_temp = 0 #to track the node index
-    
-        for i in range(numComps):
-            temp_id = Comps_ids[i]
-            vol= model.getCompartmentVolume(i)
-            dimension = [3900,2400]
-            position = [10,10]
-          
-            drawNetwork.addCompartment(canvas, position, dimension,
-                                           comp_border_color, comp_fill_color, comp_border_width)
-        spec_id_list = [] 
-        spec_dimension_list = []
-        spec_position_list = []
-        for i in range (numFloatingNodes):
-            temp_id = FloatingNodes_ids[i]
-            dimension = [60,40]
-            position = [40 + math.trunc (_random.random()*800), 40 + math.trunc (_random.random()*800)]
-
-            spec_id_list.append(temp_id)
-            spec_dimension_list.append(dimension)
-            spec_position_list.append(position)
-
-        for i in range (numBoundaryNodes):
-            temp_id = BoundaryNodes_ids[i]
-            dimension = [60,40]
-            position = [40 + math.trunc (_random.random()*800), 40 + math.trunc (_random.random()*800)]
-
-            spec_id_list.append(temp_id)
-            spec_dimension_list.append(dimension)
-            spec_position_list.append(position)
-    
-    
-        for i in range (numRxns):
-            src_position = []
-            dst_position = []
-            src_dimension = []
-            dst_dimension = []
-            temp_id = Rxns_ids[i]
-            kinetics = model.getRateLaw(i)
-            rct_num = model.getNumReactants(i)
-            prd_num = model.getNumProducts(i)
-    
-    
-            for j in range(rct_num):
-                rct_id = model.getReactant(temp_id,j)
+        
+            for i in range (numFloatingNodes):
+                temp_id = FloatingNodes_ids[i]
                 for k in range(numNodes):
-                    if spec_id_list[k] == rct_id:
-                        src_position.append(spec_position_list[k])
-                        src_dimension.append(spec_dimension_list[k])
-    
-    
-            for j in range(prd_num):
-                prd_id = model.getProduct(temp_id,j)
+                    if spec_id_list[k] == temp_id:
+                        position = spec_position_list[k]
+                        dimension = spec_dimension_list[k]
+                drawNetwork.addNode(canvas, 'floating', '', position, dimension,
+                                    spec_border_color, spec_fill_color, spec_border_width,
+                                    shapeIdx, complex_shape=complexShape)
+                drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)   
+            for i in range (numBoundaryNodes):
+                temp_id = BoundaryNodes_ids[i]
                 for k in range(numNodes):
-                    if spec_id_list[k] == prd_id:
-                        dst_position.append(spec_position_list[k])
-                        dst_dimension.append(spec_dimension_list[k])  
-
-            center_x = 0.
-            center_y = 0.
-            for j in range(rct_num):
-                center_x += src_position[j][0]+.5*src_dimension[j][0]
-                center_y += src_position[j][1]+.5*src_dimension[j][1]
-            for j in range(prd_num):
-                center_x += dst_position[j][0]+.5*dst_dimension[j][0]
-                center_y += dst_position[j][1]+.5*dst_dimension[j][1]
-            center_x = center_x/(rct_num + prd_num) 
-            center_y = center_y/(rct_num + prd_num)
-            center_position = [center_x, center_y]
-
-            handles = [center_position]
-            for j in range(rct_num):
-                src_handle_x = .5*(center_position[0] + src_position[j][0] + .5*src_dimension[j][0])
-                src_handle_y = .5*(center_position[1] + src_position[j][1] + .5*src_dimension[j][1])
-                handles.append([src_handle_x,src_handle_y])
-            for j in range(prd_num):
-                dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
-                dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
-                handles.append([dst_handle_x,dst_handle_y])
-    
-            drawNetwork.addReaction(canvas, src_position, dst_position, center_position, handles,
-            src_dimension, dst_dimension, reaction_line_color, reaction_line_width,
-            reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
-    
-        for i in range (numFloatingNodes):
-            temp_id = FloatingNodes_ids[i]
-            for k in range(numNodes):
-                if spec_id_list[k] == temp_id:
-                    position = spec_position_list[k]
-                    dimension = spec_dimension_list[k]
-            drawNetwork.addNode(canvas, 'floating', '', position, dimension,
-                                spec_border_color, spec_fill_color, spec_border_width,
-                                shapeIdx, complex_shape=complexShape)
-            drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)   
-        for i in range (numBoundaryNodes):
-            temp_id = BoundaryNodes_ids[i]
-            for k in range(numNodes):
-                if spec_id_list[k] == temp_id:
-                    position = spec_position_list[k]
-                    dimension = spec_dimension_list[k]
-            drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
-                                spec_border_color, spec_fill_color, spec_border_width,
-                                shapeIdx, complex_shape=complexShape)
-            drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)
-    drawNetwork.draw(surface, fileName = fileName, file_format = fileFormat ) 
-
+                    if spec_id_list[k] == temp_id:
+                        position = spec_position_list[k]
+                        dimension = spec_dimension_list[k]
+                drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
+                                    spec_border_color, spec_fill_color, spec_border_width,
+                                    shapeIdx, complex_shape=complexShape)
+                drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)
+        drawNetwork.draw(surface, fileName = fileName, file_format = fileFormat ) 
+    except:
+        print("invalid SBML file")
 else:
     print("empty sbml")
 
