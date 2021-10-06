@@ -357,8 +357,8 @@ spec_border_color, spec_fill_color, spec_border_width, shapeIdx, complex_shape =
             drawTetramer (canvas, x, y, width, height, 
                         outline, fill, linewidth)
   
-def addReaction(canvas, rct_position, prd_position, center_position, handles,
-                rct_dimension, prd_dimension,reaction_line_color, reaction_line_width, 
+def addReaction(canvas, rct_position, prd_position, mod_position, center_position, handles,
+                rct_dimension, prd_dimension, mod_dimension, reaction_line_color, reaction_line_width, 
                 reaction_line_type = 'bezier', show_bezier_handles = True):
     
     def cross_point(arcCenter, c2, s2):
@@ -562,7 +562,20 @@ def addReaction(canvas, rct_position, prd_position, center_position, handles,
             #prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
             #drawLine(canvas, arcCenter[0], arcCenter[1], prd_center_position[0], prd_center_position[1], lineColor, linewidth)
             drawLine(canvas, arcCenter[0], arcCenter[1], arrow_head_pt[0], arrow_head_pt[1], lineColor, linewidth)
-           
+
+    #draw modifiers:
+    modifier_lineColor = skia.Color(128, 0, 128)
+    modifier_linewidth = 2.
+
+    mod_num = len(mod_position)
+    for i in range(mod_num): 
+        mod_end_x = .5*mod_dimension[i][0] + mod_position[i][0]
+        mod_end_y = .5*mod_dimension[i][1] + mod_position[i][1] 
+        drawLine(canvas, arcCenter[0], arcCenter[1], mod_end_x, mod_end_y,
+         modifier_lineColor, modifier_linewidth)  
+        drawCircle(canvas, arcCenter[0]-modifier_linewidth, arcCenter[1]-modifier_linewidth, 
+        2*modifier_linewidth, 2*modifier_linewidth,
+                        modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)     
 
 
 def addText(canvas, node_id, position, dimension, text_line_color, text_line_width):
