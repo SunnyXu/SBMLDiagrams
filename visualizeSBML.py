@@ -28,7 +28,7 @@ dirname = "" #same folder as the main.py
 #part layout
 #filename = "LinearChain.xml"
 #filename = "Feedback-Sauro.xml"
-filename = "Jana_WolfGlycolysis.xml"
+#filename = "Jana_WolfGlycolysis.xml"
 #whole layout
 #filename = 'test_center.xml' 
 #filename = 'test_handles.xml'
@@ -37,8 +37,14 @@ filename = "Jana_WolfGlycolysis.xml"
 #filename = 'test_comp.xml'
 #invalid sbml
 #filename = 'testbigmodel.xml'
+#modifiers
+#filename = 'test_modifier.xml'
+#filename = "BorisEJB.xml"
 
+#test output from editSBML.py
+filename = 'output.xml'
 
+#check
 reactionLineType = 'bezier' #'linear' or 'bezier'
 showBezierHandles = True #True: show the Bezier handles, False: do not show
 fileFormat = 'PNG' #'PNG' or 'JPEG'
@@ -126,6 +132,8 @@ if len(sbmlStr) != 0:
             reaction_center_handle_list = []
             rct_specGlyph_handle_list = []
             prd_specGlyph_handle_list = []
+            reaction_mod_list = []
+            mod_specGlyph_list = []
             
             for i in range(numReactionGlyphs):
                 reactionGlyph = layout.getReactionGlyph(i)
@@ -145,13 +153,21 @@ if len(sbmlStr) != 0:
                 reaction = model_layout.getReaction(reaction_id)
                 kinetics = reaction.getKineticLaw().getFormula()
                 kinetics_list.append(kinetics)
+                
+                temp_mod_list = []
+                for j in range(len(reaction.getListOfModifiers())):
+                    modSpecRef = reaction.getModifier(j)
+                    temp_mod_list.append(modSpecRef.getSpecies())
+                reaction_mod_list.append(temp_mod_list)       
+                
                 numSpecRefGlyphs = reactionGlyph.getNumSpeciesReferenceGlyphs()
 
                 #rct_specGlyph_temp_list = []
                 #prd_specGlyph_temp_list = []
                 rct_specGlyph_handles_temp_list = []
                 prd_specGlyph_handles_temp_list = [] 
-                
+                mod_specGlyph_temp_list = []
+
                 for j in range(numSpecRefGlyphs):
                     specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
                     #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
@@ -215,12 +231,18 @@ if len(sbmlStr) != 0:
                     elif role == "product": #it is a prd
                         #prd_specGlyph_temp_list.append(specGlyph_id)
                         prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
-
+                    elif role == "modifier": #it is a modifier
+                        mod_specGlyph_temp_list.append(specGlyph_id)
+                       
                 #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                 #prd_specGlyph_list.append(prd_specGlyph_temp_list)
                 reaction_center_handle_list.append(center_handle)
                 rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
                 prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
+                mod_specGlyph_list.append(mod_specGlyph_temp_list)
+
+            #print(reaction_mod_list)
+            #print(mod_specGlyph_list)
 
             rPlugin = layout.getPlugin("render")
             if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
@@ -292,7 +314,7 @@ if len(sbmlStr) != 0:
                         text_font_size = group.getFontSize()
                         text_render.append([idList,text_line_color,text_line_width])
 
-    try: 
+    #try: 
         model = simplesbml.loadSBMLStr(sbmlStr)
         numFloatingNodes  = model.getNumFloatingSpecies()
         FloatingNodes_ids = model.getListOfFloatingSpecies()
@@ -315,8 +337,10 @@ if len(sbmlStr) != 0:
                 if temp_id == "_compartment_default_":
                     dimension = [3900, 2400]
                     position = [10, 10]
-                    comp_border_color = (255, 255, 255, 0) #the last digit for transparent
-                    comp_fill_color = (255, 255, 255, 0)
+                    #comp_border_color = (255, 255, 255, 0) #the last digit for transparent
+                    #comp_fill_color = (255, 255, 255, 0)
+                    comp_border_color = (255, 255, 255)
+                    comp_fill_color = (255, 255, 255)
 
                     drawNetwork.addCompartment(canvas, position, dimension,
                                             comp_border_color, comp_fill_color, comp_border_width)
@@ -343,8 +367,10 @@ if len(sbmlStr) != 0:
                         # the whole size of the compartment: 4000*2500
                         dimension = [3900,2400]
                         position = [10,10]
-                        comp_fill_color = (255, 255, 255, 0)
-                        comp_border_color = (255, 255, 255, 0)
+                        #comp_fill_color = (255, 255, 255, 0)
+                        #comp_border_color = (255, 255, 255, 0)
+                        comp_fill_color = (255, 255, 255)
+                        comp_border_color = (255, 255, 255)
                                         
                     drawNetwork.addCompartment(canvas, position, dimension,
                                             comp_border_color, comp_fill_color, comp_border_width)
@@ -353,12 +379,14 @@ if len(sbmlStr) != 0:
             #add reactions before adding nodes to help with the line positions
             numSpec_in_reaction = len(spec_specGlyph_id_list)
             for i in range (numReactionGlyphs):
-                src = []
-                dst = []
+                #src = []
+                #dst = []
                 src_position = []
                 src_dimension = [] 
                 dst_position = []
                 dst_dimension = []
+                mod_position = []
+                mod_dimension = []
                 src_handle = []
                 dst_handle = []
                 temp_id = reaction_id_list[i]
@@ -367,7 +395,7 @@ if len(sbmlStr) != 0:
                 #prd_num = len(prd_specGlyph_list[i])
                 rct_num = len(rct_specGlyph_handle_list[i])
                 prd_num = len(prd_specGlyph_handle_list[i])
-
+                mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
 
                 # for j in range(rct_num):
                 #     temp_specGlyph_id = rct_specGlyph_list[i][j]
@@ -400,6 +428,24 @@ if len(sbmlStr) != 0:
                             dst_dimension.append(spec_dimension_list[k])
                     dst_handle.append(prd_specGlyph_handle_list[i][j][1])
 
+
+                for j in range(mod_num):
+                    if len(mod_specGlyph_list[i]) != 0:
+                        temp_specGlyph_id = mod_specGlyph_list[i][j]
+                        for k in range(numSpec_in_reaction):
+                            if temp_specGlyph_id == specGlyph_id_list[k]:
+                                mod_position.append(spec_position_list[k])
+                                mod_dimension.append(spec_dimension_list[k])
+                    else:
+                        for k in range(len(spec_specGlyph_id_list)):
+                            if reaction_mod_list[i][j] == spec_specGlyph_id_list[k][0]:
+                                temp_specGlyph_id = spec_specGlyph_id_list[k][1]
+                        for k in range(numSpec_in_reaction):
+                            if temp_specGlyph_id == specGlyph_id_list[k]:
+                                mod_position.append(spec_position_list[k])
+                                mod_dimension.append(spec_dimension_list[k])
+
+
                 for j in range(len(rxn_render)):
                     if temp_id == rxn_render[j][0]:
                         reaction_line_color = rxn_render[j][1]
@@ -411,8 +457,9 @@ if len(sbmlStr) != 0:
                     handles = [center_handle]
                     handles.extend(src_handle)
                     handles.extend(dst_handle)   
-                    drawNetwork.addReaction(canvas, src_position, dst_position, center_position, handles, 
-                    src_dimension, dst_dimension, reaction_line_color, reaction_line_width,
+                    drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
+                    center_position, handles, src_dimension, dst_dimension, mod_dimension,
+                    reaction_line_color, reaction_line_width,
                     reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
                 
                 except:
@@ -436,8 +483,9 @@ if len(sbmlStr) != 0:
                         dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
                         dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                         handles.append([dst_handle_x,dst_handle_y])
-                    drawNetwork.addReaction(canvas, src_position, dst_position, center_position, handles,
-                    src_dimension, dst_dimension, reaction_line_color, reaction_line_width,
+                    drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
+                    center_position, handles, src_dimension, dst_dimension, mod_dimension,
+                    reaction_line_color, reaction_line_width,
                     reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
                         
             id_list = []
@@ -558,14 +606,16 @@ if len(sbmlStr) != 0:
             for i in range (numRxns):
                 src_position = []
                 dst_position = []
+                mod_position = []
                 src_dimension = []
                 dst_dimension = []
+                mod_dimension = []
                 temp_id = Rxns_ids[i]
                 kinetics = model.getRateLaw(i)
                 rct_num = model.getNumReactants(i)
                 prd_num = model.getNumProducts(i)
-        
-        
+                mod_num = model.getNumModifiers(temp_id)
+                
                 for j in range(rct_num):
                     rct_id = model.getReactant(temp_id,j)
                     for k in range(numNodes):
@@ -581,6 +631,15 @@ if len(sbmlStr) != 0:
                             dst_position.append(spec_position_list[k])
                             dst_dimension.append(spec_dimension_list[k])  
 
+                modifiers = model.getListOfModifiers(temp_id)
+                for j in range(mod_num):
+                    mod_id = modifiers[j]
+                    for k in range(numNodes):
+                        if spec_id_list[k] == mod_id:
+                            mod_position.append(spec_position_list[k])
+                            mod_dimension.append(spec_dimension_list[k])
+                
+                
                 center_x = 0.
                 center_y = 0.
                 for j in range(rct_num):
@@ -603,8 +662,9 @@ if len(sbmlStr) != 0:
                     dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                     handles.append([dst_handle_x,dst_handle_y])
         
-                drawNetwork.addReaction(canvas, src_position, dst_position, center_position, handles,
-                src_dimension, dst_dimension, reaction_line_color, reaction_line_width,
+                drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
+                center_position, handles, src_dimension, dst_dimension, mod_dimension,
+                reaction_line_color, reaction_line_width,
                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
         
             for i in range (numFloatingNodes):
@@ -628,8 +688,8 @@ if len(sbmlStr) != 0:
                                     shapeIdx, complex_shape=complexShape)
                 drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)
         drawNetwork.draw(surface, fileName = fileName, file_format = fileFormat ) 
-    except:
-        print("invalid SBML file")
+    # except:
+    #     print("invalid SBML file")
 else:
     print("empty sbml")
 
