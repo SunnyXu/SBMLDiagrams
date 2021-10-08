@@ -356,7 +356,6 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
         pt_up_right   = [c2[0]+s2[0], c2[1]]
         pt_down_left  = [c2[0], c2[1]+s2[1]]
         pt_down_right = [c2[0]+s2[0], c2[1]+s2[1]]
-
         def line_intersection(line1, line2):
             xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
             ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
@@ -540,11 +539,16 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
     for i in range(mod_num):
         mod_start_virtual_x = .5*mod_dimension[i][0] + mod_position[i][0]
         mod_start_virtual_y = .5*mod_dimension[i][1] + mod_position[i][1]
-        [mod_start_x, mod_start_y] = cross_point(arcCenter, 
-        [mod_position[i][0]-.25*mod_dimension[i][0], mod_position[i][1]-.25*mod_dimension[i][1]],
-        [mod_dimension[i][0]*1.5, mod_dimension[i][1]*1.5]) 
-        [mod_end_x, mod_end_y] = cross_point([mod_start_virtual_x, mod_start_virtual_y],
-         [arcCenter[0]-.5*mod_dimension[i][0],arcCenter[1]-.5*mod_dimension[i][1]], mod_dimension[i])
+        try: 
+            [mod_start_x, mod_start_y] = cross_point(arcCenter, 
+            [mod_position[i][0]-.25*mod_dimension[i][0], mod_position[i][1]-.25*mod_dimension[i][1]],
+            [mod_dimension[i][0]*1.5, mod_dimension[i][1]*1.5]) 
+            [mod_end_x, mod_end_y] = cross_point([mod_start_virtual_x, mod_start_virtual_y],
+            [arcCenter[0]-.5*mod_dimension[i][0],arcCenter[1]-.5*mod_dimension[i][1]], mod_dimension[i])
+        except: 
+            mod_start_x = .5*mod_dimension[i][0] + mod_position[i][0]
+            mod_start_y = .5*mod_dimension[i][1] + mod_position[i][1]
+            [mod_end_x, mod_end_y] = arcCenter[0], arcCenter[1] 
         drawLine(canvas, mod_start_x, mod_start_y, mod_end_x, mod_end_y,
          modifier_lineColor, modifier_linewidth)  
         drawCircle(canvas, mod_end_x-modifier_linewidth, mod_end_y-modifier_linewidth, 

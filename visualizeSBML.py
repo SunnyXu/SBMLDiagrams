@@ -21,14 +21,14 @@ dirname = "" #same folder as the main.py
 #filename = "test.xml"
 #filename = 'test_line.xml'
 #no layout
-#filename = "E_coli_Millard2016.xml"
+#filename = "E_coli_Millard2016.xml" 
 #filename = 'feedback-self.xml'
 #part layout
 #filename = "LinearChain.xml"
 #filename = "Feedback-Sauro.xml"
 #filename = "Jana_WolfGlycolysis.xml"
 #whole layout
-#filename = 'test_center.xml' 
+filename = 'test_center.xml' 
 #filename = 'test_handles.xml'
 #filename = 'test_arrows.xml'
 #filename = 'test_no_comp.xml'
@@ -37,7 +37,7 @@ dirname = "" #same folder as the main.py
 #filename = 'testbigmodel.xml'
 #modifiers
 #filename = 'test_modifier.xml'
-filename = "BorisEJB.xml"
+#filename = "BorisEJB.xml"
 
 #test output from editSBML.py
 #filename = 'output.xml'
@@ -657,7 +657,7 @@ if len(sbmlStr) != 0:
                 drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)
         drawNetwork.draw(surface, fileName = fileName, file_format = fileFormat ) 
     except:
-        print("invalid SBML file")
+       print("invalid SBML file")
 else:
     print("empty sbml")
 
