@@ -22,13 +22,13 @@ dirname = "" #same folder as the main.py
 #filename = 'test_line.xml'
 #no layout
 #filename = "E_coli_Millard2016.xml" 
-#filename = 'feedback-self.xml'
+#filename = 'feedback-self.xml' 
 #part layout
 #filename = "LinearChain.xml"
 #filename = "Feedback-Sauro.xml"
 #filename = "Jana_WolfGlycolysis.xml"
 #whole layout
-filename = 'test_center.xml' 
+#filename = 'test_center.xml' 
 #filename = 'test_handles.xml'
 #filename = 'test_arrows.xml'
 #filename = 'test_no_comp.xml'
@@ -37,10 +37,10 @@ filename = 'test_center.xml'
 #filename = 'testbigmodel.xml'
 #modifiers
 #filename = 'test_modifier.xml'
+#filename = 'test_modifier_comp.xml'
 #filename = "BorisEJB.xml"
 
-#test output from editSBML.py
-#filename = 'output.xml'
+filename = "output.xml"
 
 #check
 reactionLineType = 'bezier' #'linear' or 'bezier'
@@ -307,10 +307,10 @@ if len(sbmlStr) != 0:
                             if color_list[k][0] == group.getStroke():
                                 text_line_color = hex_to_rgb(color_list[k][1])
                         text_line_width = group.getStrokeWidth()
-                        text_font_size = group.getFontSize()
+                        #text_font_size = group.getFontSize()
                         text_render.append([idList,text_line_color,text_line_width])
 
-    try: 
+    #try: 
         model = simplesbml.loadSBMLStr(sbmlStr)
         numFloatingNodes  = model.getNumFloatingSpecies()
         FloatingNodes_ids = model.getListOfFloatingSpecies()
@@ -439,9 +439,10 @@ if len(sbmlStr) != 0:
                 try: 
                     center_position = reaction_center_list[i]
                     center_handle = reaction_center_handle_list[i]
-                    handles = [center_handle]
+                    handles = [center_position]
                     handles.extend(src_handle)
                     handles.extend(dst_handle)   
+                    #print(handles)
                     drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                     center_position, handles, src_dimension, dst_dimension, mod_dimension,
                     reaction_line_color, reaction_line_width,
@@ -467,6 +468,7 @@ if len(sbmlStr) != 0:
                         dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
                         dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                         handles.append([dst_handle_x,dst_handle_y])
+                    #print(handles)
                     drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                     center_position, handles, src_dimension, dst_dimension, mod_dimension,
                     reaction_line_color, reaction_line_width,
@@ -656,8 +658,8 @@ if len(sbmlStr) != 0:
                                     shapeIdx, complex_shape=complexShape)
                 drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)
         drawNetwork.draw(surface, fileName = fileName, file_format = fileFormat ) 
-    except:
-       print("invalid SBML file")
+    #except:
+    #   print("invalid SBML file")
 else:
     print("empty sbml")
 
