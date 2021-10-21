@@ -16,9 +16,9 @@ from libsbml import *
 import math
 import random as _random
 
-dirname = "" #same folder as the main.py
+dirname = "test_sbml_files"
 #simple files
-#filename = "test.xml"
+filename = "test.xml"
 #filename = 'test_line.xml'
 #no layout
 #filename = "E_coli_Millard2016.xml" 
@@ -40,13 +40,13 @@ dirname = "" #same folder as the main.py
 #filename = 'test_modifier_comp.xml'
 #filename = "BorisEJB.xml"
 
-filename = "output.xml"
+#filename = "output.xml"
 
 #check
 reactionLineType = 'bezier' #'linear' or 'bezier'
 showBezierHandles = True #True: show the Bezier handles, False: do not show
 fileFormat = 'PNG' #'PNG' or 'JPEG'
-fileName = 'output' #filename or '' 
+output_fileName = 'output' #filename or '' 
 complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
 
 f = open(os.path.join(dirname, filename), 'r')
@@ -657,7 +657,7 @@ if len(sbmlStr) != 0:
                                     spec_border_color, spec_fill_color, spec_border_width,
                                     shapeIdx, complex_shape=complexShape)
                 drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)
-        drawNetwork.draw(surface, fileName = fileName, file_format = fileFormat ) 
+        drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat ) 
     #except:
     #   print("invalid SBML file")
 else:
