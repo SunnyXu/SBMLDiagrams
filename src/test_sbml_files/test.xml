@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1" xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1" level="3" version="1" layout:required="false" render:required="false">
+  <model id="Model_layout">
+    <listOfCompartments>
+      <compartment id="_compartment_default_" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="x_0" compartment="_compartment_default_" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="x_1" compartment="_compartment_default_" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="E0" value="0.1" constant="true"/>
+      <parameter id="k0" value="0.1" constant="true"/>
+      <parameter id="k0r" value="0.1" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="r_0" reversible="true" fast="false">
+        <listOfReactants>
+          <speciesReference id="SpecRef_r_0_rct0" species="x_1" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference id="SpecRef_r_0_prd0" species="x_0" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E0 </ci>
+              <apply>
+                <minus/>
+                <apply>
+                  <times/>
+                  <ci> k0 </ci>
+                  <ci> x_1 </ci>
+                </apply>
+                <apply>
+                  <times/>
+                  <ci> k0r </ci>
+                  <ci> x_0 </ci>
+                </apply>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+    <layout:listOfLayouts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1">
+      <layout:layout layout:id="Layout_1">
+        <layout:dimensions layout:width="800" layout:height="800"/>
+        <layout:listOfCompartmentGlyphs>
+          <layout:compartmentGlyph layout:id="CompG__compartment_default_" layout:compartment="_compartment_default_">
+            <layout:boundingBox layout:id="bb__compartment_default_">
+              <layout:position layout:x="10" layout:y="10"/>
+              <layout:dimensions layout:width="3900" layout:height="2400"/>
+            </layout:boundingBox>
+          </layout:compartmentGlyph>
+        </layout:listOfCompartmentGlyphs>
+        <layout:listOfSpeciesGlyphs>
+          <layout:speciesGlyph layout:id="SpecG_x_0_idx_0" layout:species="x_0">
+            <layout:boundingBox layout:id="bb_x_0_idx_0">
+              <layout:position layout:x="205" layout:y="216"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_x_1_idx_1" layout:species="x_1">
+            <layout:boundingBox layout:id="bb_x_1_idx_1">
+              <layout:position layout:x="413" layout:y="216"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+        </layout:listOfSpeciesGlyphs>
+        <layout:listOfReactionGlyphs>
+          <layout:reactionGlyph layout:id="RectionG_r_0" layout:reaction="r_0">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="334" layout:y="231"/>
+                  <layout:end layout:x="334" layout:y="231"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_r_0_rct0" layout:speciesReference="SpecRef_r_0_rct0" layout:speciesGlyph="SpecG_x_1_idx_1" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="334" layout:y="231"/>
+                      <layout:end layout:x="438" layout:y="201"/>
+                      <layout:basePoint1 layout:x="386" layout:y="231"/>
+                      <layout:basePoint2 layout:x="386" layout:y="231"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_r_0_prd0" layout:speciesReference="SpecRef_r_0_prd0" layout:speciesGlyph="SpecG_x_0_idx_0" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="334" layout:y="231"/>
+                      <layout:end layout:x="230" layout:y="201"/>
+                      <layout:basePoint1 layout:x="386" layout:y="231"/>
+                      <layout:basePoint2 layout:x="386" layout:y="231"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+        </layout:listOfReactionGlyphs>
+        <layout:listOfTextGlyphs>
+          <layout:textGlyph layout:id="TextG_x_0_idx_0" layout:originOfText="SpecG_x_0_idx_0" layout:graphicalObject="SpecG_x_0_idx_0">
+            <layout:boundingBox layout:id="bb_spec_text_x_0_idx_0">
+              <layout:position layout:x="205" layout:y="216"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_x_1_idx_1" layout:originOfText="SpecG_x_1_idx_1" layout:graphicalObject="SpecG_x_1_idx_1">
+            <layout:boundingBox layout:id="bb_spec_text_x_1_idx_1">
+              <layout:position layout:x="413" layout:y="216"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+        </layout:listOfTextGlyphs>
+        <render:listOfRenderInformation xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1">
+          <render:renderInformation render:id="info" render:name="Render Information" render:programName="RenderInformation" render:programVersion="1.0">
+            <render:listOfColorDefinitions>
+              <render:colorDefinition render:id="comp_fill_color" render:value="#00ffff"/>
+              <render:colorDefinition render:id="comp_border_color" render:value="#00ffff"/>
+              <render:colorDefinition render:id="spec_fill_color_x_0" render:value="#ffcc99"/>
+              <render:colorDefinition render:id="spec_border_color_x_0" render:value="#ff6c09"/>
+              <render:colorDefinition render:id="text_line_color_x_0" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_x_1" render:value="#ffcc99"/>
+              <render:colorDefinition render:id="spec_border_color_x_1" render:value="#ff6c09"/>
+              <render:colorDefinition render:id="text_line_color_x_1" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_r_0" render:value="#5bb0fd"/>
+            </render:listOfColorDefinitions>
+            <render:listOfStyles>
+              <render:style render:id="compStyle" render:typeList="COMPARTMENTGLYPH" render:idList="_compartment_default_">
+                <render:g render:stroke="comp_border_color" render:stroke-width="2" render:fill="comp_fill_color">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specStyle_x_0" render:typeList="SPECIESGLYPH" render:idList="x_0">
+                <render:g render:stroke="spec_border_color_x_0" render:stroke-width="2" render:fill="spec_fill_color_x_0">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_0">
+                <render:g render:stroke="text_line_color_x_0" render:stroke-width="1" render:font-size="11"/>
+              </render:style>
+              <render:style render:id="specStyle_x_1" render:typeList="SPECIESGLYPH" render:idList="x_1">
+                <render:g render:stroke="spec_border_color_x_1" render:stroke-width="2" render:fill="spec_fill_color_x_1">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_1">
+                <render:g render:stroke="text_line_color_x_1" render:stroke-width="1" render:font-size="11"/>
+              </render:style>
+              <render:style render:id="reactionStyle_r_0" render:typeList="REACTIONGLYPH SPECIESREFERENCEGLYPH" render:idList="r_0">
+                <render:g render:stroke="reaction_fill_color_r_0" render:stroke-width="3"/>
+              </render:style>
+            </render:listOfStyles>
+          </render:renderInformation>
+        </render:listOfRenderInformation>
+      </layout:layout>
+    </layout:listOfLayouts>
+  </model>
+</sbml>
