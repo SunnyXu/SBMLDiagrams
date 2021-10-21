@@ -16,52 +16,14 @@ from libsbml import *
 import math
 import random as _random
 
-dirname = "test_sbml_files"
-#simple files
-filename = "test.xml"
-#filename = 'test_line.xml'
-#no layout
-#filename = "E_coli_Millard2016.xml" 
-#filename = 'feedback-self.xml' 
-#part layout
-#filename = "LinearChain.xml"
-#filename = "Feedback-Sauro.xml"
-#filename = "Jana_WolfGlycolysis.xml"
-#whole layout
-#filename = 'test_center.xml' 
-#filename = 'test_handles.xml'
-#filename = 'test_arrows.xml'
-#filename = 'test_no_comp.xml'
-#filename = 'test_comp.xml'
-#invalid sbml
-#filename = 'testbigmodel.xml'
-#modifiers
-#filename = 'test_modifier.xml'
-#filename = 'test_modifier_comp.xml'
-#filename = "BorisEJB.xml"
 
-#filename = "output.xml"
+def main(sbmlStr, canvas):
+    
+    def hex_to_rgb(value):
+        value = value.lstrip('#')
+        return tuple(int(value[i:i+2], 16) for i in (0, 2, 4))
 
-#check
-reactionLineType = 'bezier' #'linear' or 'bezier'
-showBezierHandles = True #True: show the Bezier handles, False: do not show
-fileFormat = 'PNG' #'PNG' or 'JPEG'
-output_fileName = 'output' #filename or '' 
-complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
 
-f = open(os.path.join(dirname, filename), 'r')
-sbmlStr = f.read()
-f.close()
-
-size = (3940,2430)
-surface = skia.Surface(3940, 2430)
-canvas = surface.getCanvas()
-
-def hex_to_rgb(value):
-    value = value.lstrip('#')
-    return tuple(int(value[i:i+2], 16) for i in (0, 2, 4))
-
-if len(sbmlStr) != 0:
     comp_id_list = []
     comp_dimension_list = []
     comp_position_list = []
@@ -660,12 +622,56 @@ if len(sbmlStr) != 0:
         drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat ) 
     #except:
     #   print("invalid SBML file")
-else:
-    print("empty sbml")
 
 
 
 
+if __name__ == '__main__':
+    dirname = "test_sbml_files"
+    #simple files
+    filename = "test.xml"
+    #filename = 'test_line.xml'
+    #no layout
+    #filename = "E_coli_Millard2016.xml" 
+    #filename = 'feedback-self.xml' 
+    #part layout
+    #filename = "LinearChain.xml"
+    #filename = "Feedback-Sauro.xml"
+    #filename = "Jana_WolfGlycolysis.xml"
+    #whole layout
+    #filename = 'test_center.xml' 
+    #filename = 'test_handles.xml'
+    #filename = 'test_arrows.xml'
+    #filename = 'test_no_comp.xml'
+    #filename = 'test_comp.xml'
+    #invalid sbml
+    #filename = 'testbigmodel.xml'
+    #modifiers
+    #filename = 'test_modifier.xml'
+    #filename = 'test_modifier_comp.xml'
+    #filename = "BorisEJB.xml"
+
+    #filename = "output.xml"
+
+    #check
+    reactionLineType = 'bezier' #'linear' or 'bezier'
+    showBezierHandles = True #True: show the Bezier handles, False: do not show
+    fileFormat = 'PNG' #'PNG' or 'JPEG'
+    output_fileName = 'output' #filename or '' 
+    complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
+
+    f = open(os.path.join(dirname, filename), 'r')
+    sbmlStr = f.read()
+    f.close()
+
+    size = (3940,2430)
+    surface = skia.Surface(3940, 2430)
+    canvas = surface.getCanvas()
+
+    if len(sbmlStr) == 0:
+        print("empty sbml")
+    else:
+        main(sbmlStr, canvas)
 
 
 
