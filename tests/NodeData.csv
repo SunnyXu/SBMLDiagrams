@@ -1,0 +1,3 @@
+net_idx,comp_idx,idx,original_idx,id,floating_node,concentration,position,size,shape_idx,txt_position,txt_size,fill_color,border_color,border_width,txt_font_color,txt_line_width
+0,0,0,-1,x_1,TRUE,0.0,"[413.0, 216.0]","[50.0, 30.0]",1,"[413.0, 216.0]","[50.0, 30.0]","[255, 204, 153]","[255, 108, 9]",2.0,"[0, 0, 0]",1.0
+0,0,1,-1,x_0,TRUE,0.0,"[205.0, 216.0]","[50.0, 30.0]",1,"[205.0, 216.0]","[50.0, 30.0]","[255, 204, 153]","[255, 108, 9]",2.0,"[0, 0, 0]",1.0
