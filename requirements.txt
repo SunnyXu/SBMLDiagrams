@@ -1,0 +1,8 @@
+coverage
+numpy
+pandas
+python-libsbml
+pip>20
+simplesbml
+tellurium
+skia-python
