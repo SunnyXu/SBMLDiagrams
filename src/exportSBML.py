@@ -17,15 +17,13 @@ def main(df_CompartmentData, df_NodeData, df_ReactionData):
 
     input
     -------
-    SBMLStr: str-the string of the input sbml file 
-    reactionLineType: str-type of the reaction line: 'linear' or 'bezier'
-    complexShape: str-type of complex shapes: '' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'  
-
-    Returns
-    -------
     df_CompartmentData: DataFrame-Compartment information
     df_NodeData: DataFrame-Node information
     df_ReactionData: DataFrame-Reaction information
+    
+    Returns
+    -------
+    SBMLStr_layout_render: str-the string of the output sbml file 
 
     """
 
