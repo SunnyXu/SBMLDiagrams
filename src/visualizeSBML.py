@@ -17,7 +17,10 @@ import math
 import random as _random
 
 
-def main(sbmlStr, canvas):
+def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileName, complexShape):
+
+    surface = skia.Surface(3940, 2430)
+    canvas = surface.getCanvas()
     
     def hex_to_rgb(value):
         value = value.lstrip('#')
@@ -664,14 +667,12 @@ if __name__ == '__main__':
     sbmlStr = f.read()
     f.close()
 
-    size = (3940,2430)
-    surface = skia.Surface(3940, 2430)
-    canvas = surface.getCanvas()
+
 
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        main(sbmlStr, canvas)
+        main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileName, complexShape)
 
 
 
