@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # This script was written by Jin Xu and available on Github
 # https://github.com/SunnyXu/SBMLDiagrams
-# Input is an SBML file, and output will be a dataframe/excel files.
+
 """
 Created on Mon Aug 23 13:25:34 2021
 
@@ -57,22 +57,20 @@ COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIF
 
 
 
-def main(sbmlStr, reactionLineType, complexShape): 
+def main(sbmlStr, reactionLineType): 
+
     """
-    Process the classification of kinetics for BioModel dataset
+    Save the information of an SBML file to a set of dataframe.
 
-    input
-    -------
-    SBMLStr: str-the string of the input sbml file 
-    reactionLineType: str-type of the reaction line: 'linear' or 'bezier'
-    complexShape: str-type of complex shapes: '' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'  
+    Args:  
+        sbmlStr: str-the string of the input sbml file 
+        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'
 
-    Returns
-    -------
-    df_CompartmentData: DataFrame-Compartment information
-    df_NodeData: DataFrame-Node information
-    df_ReactionData: DataFrame-Reaction information
-
+    Returns:
+        df_CompartmentData: DataFrame-Compartment information
+        df_NodeData: DataFrame-Node information
+        df_ReactionData: DataFrame-Reaction information
+    
     """
 
     def hex_to_rgb(value):
@@ -1041,8 +1039,6 @@ if __name__ == '__main__':
 
     #check
     reactionLineType = 'bezier' #'linear' or 'bezier'
-    complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
-
 
     f = open(os.path.join(dirname, filename), 'r')
     sbmlStr = f.read()
@@ -1051,7 +1047,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        (df_CompartmentData, df_NodeData, df_ReactionData) = main(sbmlStr, reactionLineType, complexShape)
+        (df_CompartmentData, df_NodeData, df_ReactionData) = main(sbmlStr, reactionLineType)
         df_CompartmentData.to_csv("CompartmentData.csv", index=False)
         df_NodeData.to_csv("NodeData.csv", index=False)
         df_ReactionData.to_csv("ReactionData.csv", index=False)

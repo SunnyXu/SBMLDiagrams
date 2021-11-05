@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # This script was written by Jin Xu and available on Github
 # https://github.com/SunnyXu/SBMLDiagrams
-# Input is an SBML file, and output will be a diagram as a visualization for the SBML file.
+
 """
 Created on Mon Aug 23 13:25:34 2021
 
@@ -18,6 +18,19 @@ import random as _random
 
 
 def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileName, complexShape):
+
+    """
+    Visualization from an sbml string to a PNG/JPG file.
+
+    Args:  
+        sbmlStr: str-the string of the input sbml file 
+        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'
+        showBezierHandles: bool-show the Bezier handles (True) or not (False)
+        fileFormat: str-output file type: 'PNG' or 'JPEG'
+        output_fileName: str-filename: 'output' or '' 
+        complexShape: str-type of complex shapes: '' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'  
+
+    """
 
     surface = skia.Surface(3940, 2430)
     canvas = surface.getCanvas()

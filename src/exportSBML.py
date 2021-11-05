@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 # This script was written by Jin Xu and available on Github
 # https://github.com/SunnyXu/SBMLDiagrams
-# Input is dataframe/excel file, and output will be an SBML file.
+
+"""
+Created on Mon Aug 23 13:25:34 2021
+
+@author: Jin Xu
+"""
 
 from inspect import Parameter
 import os
@@ -12,19 +17,18 @@ import math
 
 
 def main(df_CompartmentData, df_NodeData, df_ReactionData):
+
     """
-    Process the classification of kinetics for BioModel dataset
+    Write the information of a set of dataframe to an SBML string. 
 
-    input
-    -------
-    df_CompartmentData: DataFrame-Compartment information
-    df_NodeData: DataFrame-Node information
-    df_ReactionData: DataFrame-Reaction information
+    Args:  
+        df_CompartmentData: DataFrame-Compartment information
+        df_NodeData: DataFrame-Node information
+        df_ReactionData: DataFrame-Reaction information
+
+    Returns:
+        SBMLStr_layout_render: str-the string of the output sbml file 
     
-    Returns
-    -------
-    SBMLStr_layout_render: str-the string of the output sbml file 
-
     """
 
     def getSymbols(kinetic_law):
