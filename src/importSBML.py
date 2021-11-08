@@ -107,237 +107,238 @@ def main(sbmlStr, reactionLineType):
     text_line_color = [0,0,0]
     text_line_width = 1.
     
-    ### from here for layout ###
-    document = readSBMLFromString(sbmlStr)
-    model_layout = document.getModel()
-    mplugin = model_layout.getPlugin("layout")
-    if mplugin is not None:
-        layout = mplugin.getLayout(0)    
-        if layout is not None:
-            numCompGlyphs = layout.getNumCompartmentGlyphs()
-            numSpecGlyphs = layout.getNumSpeciesGlyphs()
-            numReactionGlyphs = layout.getNumReactionGlyphs() 
-            for i in range(numCompGlyphs):
-                compGlyph = layout.getCompartmentGlyph(i)
-                temp_id = compGlyph.getCompartmentId()
-                comp_id_list.append(temp_id)
-                boundingbox = compGlyph.getBoundingBox()
-                height = boundingbox.getHeight()
-                width = boundingbox.getWidth()
-                pos_x = boundingbox.getX()
-                pos_y = boundingbox.getY()
-                comp_dimension_list.append([width,height])
-                comp_position_list.append([pos_x,pos_y])
-                
-                # for i in range(numSpecGlyphs):
-                #     specGlyph = layout.getSpeciesGlyph(i)
-                #     spec_id = specGlyph.getSpeciesId()
-                #     spec_id_list.append(spec_id)
-                #     boundingbox = specGlyph.getBoundingBox()
-                #     height = boundingbox.getHeight()
-                #     width = boundingbox.getWidth()
-                #     pos_x = boundingbox.getX()
-                #     pos_y = boundingbox.getY()
-                #     spec_dimension_list.append([width,height])
-                #     spec_position_list.append([pos_x,pos_y])
+    try: #invalid sbml
+        ### from here for layout ###
+        document = readSBMLFromString(sbmlStr)
+        model_layout = document.getModel()
+        mplugin = model_layout.getPlugin("layout")
+        if mplugin is not None:
+            layout = mplugin.getLayout(0)    
+            if layout is not None:
+                numCompGlyphs = layout.getNumCompartmentGlyphs()
+                numSpecGlyphs = layout.getNumSpeciesGlyphs()
+                numReactionGlyphs = layout.getNumReactionGlyphs() 
+                for i in range(numCompGlyphs):
+                    compGlyph = layout.getCompartmentGlyph(i)
+                    temp_id = compGlyph.getCompartmentId()
+                    comp_id_list.append(temp_id)
+                    boundingbox = compGlyph.getBoundingBox()
+                    height = boundingbox.getHeight()
+                    width = boundingbox.getWidth()
+                    pos_x = boundingbox.getX()
+                    pos_y = boundingbox.getY()
+                    comp_dimension_list.append([width,height])
+                    comp_position_list.append([pos_x,pos_y])
+                    
+                    # for i in range(numSpecGlyphs):
+                    #     specGlyph = layout.getSpeciesGlyph(i)
+                    #     spec_id = specGlyph.getSpeciesId()
+                    #     spec_id_list.append(spec_id)
+                    #     boundingbox = specGlyph.getBoundingBox()
+                    #     height = boundingbox.getHeight()
+                    #     width = boundingbox.getWidth()
+                    #     pos_x = boundingbox.getX()
+                    #     pos_y = boundingbox.getY()
+                    #     spec_dimension_list.append([width,height])
+                    #     spec_position_list.append([pos_x,pos_y])
 
-            reaction_id_list = []
-            reaction_center_list = []
-            kinetics_list = []
-            #rct_specGlyph_list = []
-            #prd_specGlyph_list = []
-            reaction_center_handle_list = []
-            rct_specGlyph_handle_list = []
-            prd_specGlyph_handle_list = []
-            reaction_mod_list = []
-            mod_specGlyph_list = []
-            
-            for i in range(numReactionGlyphs):
-                reactionGlyph = layout.getReactionGlyph(i)
-                curve = reactionGlyph.getCurve()
-                # listOfCurveSegments = curve.getListOfCurveSegments()
-                # for j in range(len(listOfCurveSegments)):
-                #     #center_x = curve.getCurveSegment(j).getStart().x()
-                #     #center_y = curve.getCurveSegment(j).getStart().y()
-                #     center_x = curve.getCurveSegment(j).getStart().getXOffset()
-                #     center_y = curve.getCurveSegment(j).getStart().getYOffset()
-                for segment in curve.getListOfCurveSegments():
-                    center_x = segment.getStart().getXOffset()
-                    center_y = segment.getStart().getYOffset()
-                    reaction_center_list.append([center_x, center_y])
-                reaction_id = reactionGlyph.getReactionId()
-                reaction_id_list.append(reaction_id)
-                reaction = model_layout.getReaction(reaction_id)
-                kinetics = reaction.getKineticLaw().getFormula()
-                kinetics_list.append(kinetics)
+                reaction_id_list = []
+                reaction_center_list = []
+                kinetics_list = []
+                #rct_specGlyph_list = []
+                #prd_specGlyph_list = []
+                reaction_center_handle_list = []
+                rct_specGlyph_handle_list = []
+                prd_specGlyph_handle_list = []
+                reaction_mod_list = []
+                mod_specGlyph_list = []
                 
-                temp_mod_list = []
-                for j in range(len(reaction.getListOfModifiers())):
-                    modSpecRef = reaction.getModifier(j)
-                    temp_mod_list.append(modSpecRef.getSpecies())
-                reaction_mod_list.append(temp_mod_list)       
-                
-                numSpecRefGlyphs = reactionGlyph.getNumSpeciesReferenceGlyphs()
-
-                #rct_specGlyph_temp_list = []
-                #prd_specGlyph_temp_list = []
-                rct_specGlyph_handles_temp_list = []
-                prd_specGlyph_handles_temp_list = [] 
-                mod_specGlyph_temp_list = []
-
-                for j in range(numSpecRefGlyphs):
-                    specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
-                    #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
-                                        
-                    curve = specRefGlyph.getCurve()                             
+                for i in range(numReactionGlyphs):
+                    reactionGlyph = layout.getReactionGlyph(i)
+                    curve = reactionGlyph.getCurve()
+                    # listOfCurveSegments = curve.getListOfCurveSegments()
+                    # for j in range(len(listOfCurveSegments)):
+                    #     #center_x = curve.getCurveSegment(j).getStart().x()
+                    #     #center_y = curve.getCurveSegment(j).getStart().y()
+                    #     center_x = curve.getCurveSegment(j).getStart().getXOffset()
+                    #     center_y = curve.getCurveSegment(j).getStart().getYOffset()
                     for segment in curve.getListOfCurveSegments():
-                            # print(segment.getStart().getXOffset())
-                            # print(segment.getStart().getYOffset())
-                            # print(segment.getEnd().getXOffset())
-                            # print(segment.getEnd().getYOffset())
-                            try:
-                                center_handle = [segment.getBasePoint1().getXOffset(), 
-                                            segment.getBasePoint1().getYOffset()]                                
-                                spec_handle = [segment.getBasePoint2().getXOffset(),
-                                        segment.getBasePoint2().getYOffset()]
-                            except:
-                                center_handle = []
-                                spec_handle = []
-
-                    role = specRefGlyph.getRoleString()
-                    specGlyph_id = specRefGlyph.getSpeciesGlyphId()
-                    specGlyph = layout.getSpeciesGlyph(specGlyph_id)
+                        center_x = segment.getStart().getXOffset()
+                        center_y = segment.getStart().getYOffset()
+                        reaction_center_list.append([center_x, center_y])
+                    reaction_id = reactionGlyph.getReactionId()
+                    reaction_id_list.append(reaction_id)
+                    reaction = model_layout.getReaction(reaction_id)
+                    kinetics = reaction.getKineticLaw().getFormula()
+                    kinetics_list.append(kinetics)
                     
-                    for k in range(numSpecGlyphs):
-                        textGlyph_temp = layout.getTextGlyph(k)
-                        temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
-                        if temp_specGlyph_id == specGlyph_id:
-                            textGlyph = textGlyph_temp
-
-                    spec_id = specGlyph.getSpeciesId()
-                    spec = model_layout.getSpecies(spec_id)
-                    try:
-                        concentration = spec.getInitialConcentration()
-                    except:
-                        concentration = 1.
-                    spec_boundingbox = specGlyph.getBoundingBox()
-                    width = spec_boundingbox.getWidth()
-                    height = spec_boundingbox.getHeight()
-                    pos_x = spec_boundingbox.getX()
-                    pos_y = spec_boundingbox.getY()
+                    temp_mod_list = []
+                    for j in range(len(reaction.getListOfModifiers())):
+                        modSpecRef = reaction.getModifier(j)
+                        temp_mod_list.append(modSpecRef.getSpecies())
+                    reaction_mod_list.append(temp_mod_list)       
                     
-                    try:
-                        text_boundingbox = textGlyph.getBoundingBox()
-                        text_pos_x = text_boundingbox.getX()
-                        text_pos_y = text_boundingbox.getY()   
-                        text_dim_w = text_boundingbox.getWidth()
-                        text_dim_h = text_boundingbox.getHeight()
-                    except:
-                        text_pos_x = pos_x
-                        text_pos_y = pos_y   
-                        text_dim_w = width
-                        text_dim_h = height
+                    numSpecRefGlyphs = reactionGlyph.getNumSpeciesReferenceGlyphs()
 
-                    if specGlyph_id not in specGlyph_id_list:
-                        spec_id_list.append(spec_id)
-                        specGlyph_id_list.append(specGlyph_id)
-                        spec_specGlyph_id_list.append([spec_id,specGlyph_id])
-                        spec_dimension_list.append([width,height])
-                        spec_position_list.append([pos_x,pos_y])
-                        spec_text_position_list.append([text_pos_x, text_pos_y])
-                        spec_text_dimension_list.append([text_dim_w, text_dim_h])
-                        spec_concentration_list.append(concentration)
+                    #rct_specGlyph_temp_list = []
+                    #prd_specGlyph_temp_list = []
+                    rct_specGlyph_handles_temp_list = []
+                    prd_specGlyph_handles_temp_list = [] 
+                    mod_specGlyph_temp_list = []
 
-                    if role == "substrate": #it is a rct
-                        #rct_specGlyph_temp_list.append(specGlyph_id)
-                        rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
-                    elif role == "product": #it is a prd
-                        #prd_specGlyph_temp_list.append(specGlyph_id)
-                        prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
-                    elif role == "modifier": #it is a modifier
-                        mod_specGlyph_temp_list.append(specGlyph_id)
-                       
-                #rct_specGlyph_list.append(rct_specGlyph_temp_list)
-                #prd_specGlyph_list.append(prd_specGlyph_temp_list)
-                reaction_center_handle_list.append(center_handle)
-                rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
-                prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
-                mod_specGlyph_list.append(mod_specGlyph_temp_list)
+                    for j in range(numSpecRefGlyphs):
+                        specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
+                        #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
+                                            
+                        curve = specRefGlyph.getCurve()                             
+                        for segment in curve.getListOfCurveSegments():
+                                # print(segment.getStart().getXOffset())
+                                # print(segment.getStart().getYOffset())
+                                # print(segment.getEnd().getXOffset())
+                                # print(segment.getEnd().getYOffset())
+                                try:
+                                    center_handle = [segment.getBasePoint1().getXOffset(), 
+                                                segment.getBasePoint1().getYOffset()]                                
+                                    spec_handle = [segment.getBasePoint2().getXOffset(),
+                                            segment.getBasePoint2().getYOffset()]
+                                except:
+                                    center_handle = []
+                                    spec_handle = []
 
-            #print(reaction_mod_list)
-            #print(mod_specGlyph_list)
+                        role = specRefGlyph.getRoleString()
+                        specGlyph_id = specRefGlyph.getSpeciesGlyphId()
+                        specGlyph = layout.getSpeciesGlyph(specGlyph_id)
+                        
+                        for k in range(numSpecGlyphs):
+                            textGlyph_temp = layout.getTextGlyph(k)
+                            temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            if temp_specGlyph_id == specGlyph_id:
+                                textGlyph = textGlyph_temp
 
-            rPlugin = layout.getPlugin("render")
-            if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
-                info = rPlugin.getRenderInformation(0)
-                color_list = []
-                comp_render = []
-                spec_render = []
-                rxn_render = []
-                text_render = []
-                for  j in range ( 0, info.getNumColorDefinitions()):
-                    color = info.getColorDefinition(j)
-                    color_list.append([color.getId(),color.createValueString()])
+                        spec_id = specGlyph.getSpeciesId()
+                        spec = model_layout.getSpecies(spec_id)
+                        try:
+                            concentration = spec.getInitialConcentration()
+                        except:
+                            concentration = 1.
+                        spec_boundingbox = specGlyph.getBoundingBox()
+                        width = spec_boundingbox.getWidth()
+                        height = spec_boundingbox.getHeight()
+                        pos_x = spec_boundingbox.getX()
+                        pos_y = spec_boundingbox.getY()
+                        
+                        try:
+                            text_boundingbox = textGlyph.getBoundingBox()
+                            text_pos_x = text_boundingbox.getX()
+                            text_pos_y = text_boundingbox.getY()   
+                            text_dim_w = text_boundingbox.getWidth()
+                            text_dim_h = text_boundingbox.getHeight()
+                        except:
+                            text_pos_x = pos_x
+                            text_pos_y = pos_y   
+                            text_dim_w = width
+                            text_dim_h = height
 
-                for j in range (0, info.getNumStyles()):
-                    style = info.getStyle(j)
-                    group = style.getGroup()
-                    typeList = style.createTypeString()
-                    idList = style.createIdString()
-                    if 'COMPARTMENTGLYPH' in typeList:
-                        for k in range(len(color_list)):
-                            if color_list[k][0] == group.getFill():
-                                comp_fill_color = hex_to_rgb(color_list[k][1])
-                            if color_list[k][0] == group.getStroke():
-                                comp_border_color = hex_to_rgb(color_list[k][1])
-                        comp_border_width = group.getStrokeWidth()
-                        comp_render.append([idList,comp_fill_color,comp_border_color,comp_border_width])
-                    elif 'SPECIESGLYPH' in typeList:
-                        for k in range(len(color_list)):
-                            if color_list[k][0] == group.getFill():
-                                spec_fill_color = hex_to_rgb(color_list[k][1])
-                            if color_list[k][0] == group.getStroke():
-                                spec_border_color = hex_to_rgb(color_list[k][1])
-                        spec_border_width = group.getStrokeWidth()
-                        name_list = []
-                        for element in group.getListOfElements():
-                            name = element.getElementName()
-                            name_list.append(name)
-                            try:
-                                NumRenderpoints = element.getListOfElements().getNumRenderPoints()
-                            except:
-                                NumRenderpoints = 0
-                        shapeIdx = 0
-                        if name == "rectangle":
-                            shapeIdx = 1
-                        elif name == "ellipse": #circle
-                            shapeIdx = 2
-                        elif name == "polygon" and NumRenderpoints == 6: #hexagon
-                            shapeIdx = 3
-                        elif name == "polygon" and NumRenderpoints == 2: #line
-                            shapeIdx = 4
-                        elif name == "polygon" and NumRenderpoints == 3: #triangle
-                            shapeIdx = 5
-                        else:
+                        if specGlyph_id not in specGlyph_id_list:
+                            spec_id_list.append(spec_id)
+                            specGlyph_id_list.append(specGlyph_id)
+                            spec_specGlyph_id_list.append([spec_id,specGlyph_id])
+                            spec_dimension_list.append([width,height])
+                            spec_position_list.append([pos_x,pos_y])
+                            spec_text_position_list.append([text_pos_x, text_pos_y])
+                            spec_text_dimension_list.append([text_dim_w, text_dim_h])
+                            spec_concentration_list.append(concentration)
+
+                        if role == "substrate": #it is a rct
+                            #rct_specGlyph_temp_list.append(specGlyph_id)
+                            rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
+                        elif role == "product": #it is a prd
+                            #prd_specGlyph_temp_list.append(specGlyph_id)
+                            prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
+                        elif role == "modifier": #it is a modifier
+                            mod_specGlyph_temp_list.append(specGlyph_id)
+                        
+                    #rct_specGlyph_list.append(rct_specGlyph_temp_list)
+                    #prd_specGlyph_list.append(prd_specGlyph_temp_list)
+                    reaction_center_handle_list.append(center_handle)
+                    rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
+                    prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
+                    mod_specGlyph_list.append(mod_specGlyph_temp_list)
+
+                #print(reaction_mod_list)
+                #print(mod_specGlyph_list)
+
+                rPlugin = layout.getPlugin("render")
+                if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
+                    info = rPlugin.getRenderInformation(0)
+                    color_list = []
+                    comp_render = []
+                    spec_render = []
+                    rxn_render = []
+                    text_render = []
+                    for  j in range ( 0, info.getNumColorDefinitions()):
+                        color = info.getColorDefinition(j)
+                        color_list.append([color.getId(),color.createValueString()])
+
+                    for j in range (0, info.getNumStyles()):
+                        style = info.getStyle(j)
+                        group = style.getGroup()
+                        typeList = style.createTypeString()
+                        idList = style.createIdString()
+                        if 'COMPARTMENTGLYPH' in typeList:
+                            for k in range(len(color_list)):
+                                if color_list[k][0] == group.getFill():
+                                    comp_fill_color = hex_to_rgb(color_list[k][1])
+                                if color_list[k][0] == group.getStroke():
+                                    comp_border_color = hex_to_rgb(color_list[k][1])
+                            comp_border_width = group.getStrokeWidth()
+                            comp_render.append([idList,comp_fill_color,comp_border_color,comp_border_width])
+                        elif 'SPECIESGLYPH' in typeList:
+                            for k in range(len(color_list)):
+                                if color_list[k][0] == group.getFill():
+                                    spec_fill_color = hex_to_rgb(color_list[k][1])
+                                if color_list[k][0] == group.getStroke():
+                                    spec_border_color = hex_to_rgb(color_list[k][1])
+                            spec_border_width = group.getStrokeWidth()
+                            name_list = []
+                            for element in group.getListOfElements():
+                                name = element.getElementName()
+                                name_list.append(name)
+                                try:
+                                    NumRenderpoints = element.getListOfElements().getNumRenderPoints()
+                                except:
+                                    NumRenderpoints = 0
                             shapeIdx = 0
+                            if name == "rectangle":
+                                shapeIdx = 1
+                            elif name == "ellipse": #circle
+                                shapeIdx = 2
+                            elif name == "polygon" and NumRenderpoints == 6: #hexagon
+                                shapeIdx = 3
+                            elif name == "polygon" and NumRenderpoints == 2: #line
+                                shapeIdx = 4
+                            elif name == "polygon" and NumRenderpoints == 3: #triangle
+                                shapeIdx = 5
+                            else:
+                                shapeIdx = 0
 
-                        spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,shapeIdx])
+                            spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,shapeIdx])
 
-                    elif 'REACTIONGLYPH' in typeList:
-                        for k in range(len(color_list)):
-                            if color_list[k][0] == group.getStroke():
-                                reaction_line_color = hex_to_rgb(color_list[k][1])
-                        reaction_line_width = group.getStrokeWidth()
-                        rxn_render.append([idList, reaction_line_color,reaction_line_width])
-                    elif 'TEXTGLYPH' in typeList:
-                        for k in range(len(color_list)):
-                            if color_list[k][0] == group.getStroke():
-                                text_line_color = hex_to_rgb(color_list[k][1])
-                        text_line_width = group.getStrokeWidth()
-                        #text_font_size = group.getFontSize() #can not give an int
-                        text_render.append([idList,text_line_color,text_line_width])
+                        elif 'REACTIONGLYPH' in typeList:
+                            for k in range(len(color_list)):
+                                if color_list[k][0] == group.getStroke():
+                                    reaction_line_color = hex_to_rgb(color_list[k][1])
+                            reaction_line_width = group.getStrokeWidth()
+                            rxn_render.append([idList, reaction_line_color,reaction_line_width])
+                        elif 'TEXTGLYPH' in typeList:
+                            for k in range(len(color_list)):
+                                if color_list[k][0] == group.getStroke():
+                                    text_line_color = hex_to_rgb(color_list[k][1])
+                            text_line_width = group.getStrokeWidth()
+                            #text_font_size = group.getFontSize() #can not give an int
+                            text_render.append([idList,text_line_color,text_line_width])
 
-    #try: 
+ 
         model = simplesbml.loadSBMLStr(sbmlStr)
         numFloatingNodes  = model.getNumFloatingSpecies()
         FloatingNodes_ids = model.getListOfFloatingSpecies()
@@ -1006,8 +1007,8 @@ def main(sbmlStr, reactionLineType):
 
         return (df_CompartmentData, df_NodeData, df_ReactionData) 
 
-    # except:
-    #    raise ValueError('Invalid SBML!')
+    except:
+       raise ValueError('Invalid SBML!')
 
 
 if __name__ == '__main__':
