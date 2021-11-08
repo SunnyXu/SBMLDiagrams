@@ -23,12 +23,17 @@ def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileNa
     Visualization from an sbml string to a PNG/JPG file.
 
     Args:  
-        sbmlStr: str-the string of the input sbml file 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'
-        showBezierHandles: bool-show the Bezier handles (True) or not (False)
-        fileFormat: str-output file type: 'PNG' or 'JPEG'
-        output_fileName: str-filename: 'output' or '' 
-        complexShape: str-type of complex shapes: '' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'  
+        sbmlStr: str-the string of the input sbml file.
+
+        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'.
+
+        showBezierHandles: bool-show the Bezier handles (True) or not (False).
+
+        fileFormat: str-output file type: 'PNG' or 'JPEG'.
+
+        output_fileName: str-filename: 'output' or ''.
+        
+        complexShape: str-type of complex shapes: '' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'.  
 
     """
 

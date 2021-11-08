@@ -63,13 +63,16 @@ def main(sbmlStr, reactionLineType):
     Save the information of an SBML file to a set of dataframe.
 
     Args:  
-        sbmlStr: str-the string of the input sbml file 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'
+        sbmlStr: str-the string of the input sbml file.
+
+        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'.
 
     Returns:
-        df_CompartmentData: DataFrame-Compartment information
-        df_NodeData: DataFrame-Node information
-        df_ReactionData: DataFrame-Reaction information
+        df_CompartmentData: DataFrame-Compartment information.
+
+        df_NodeData: DataFrame-Node information.
+
+        df_ReactionData: DataFrame-Reaction information.
     
     """
 
