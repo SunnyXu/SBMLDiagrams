@@ -1,0 +1,11 @@
+site_name: SBMLDiagrams
+site_url: https://github.com/SunnyXu/SBMLDiagrams
+site_description: Description...
+site_author:      Jin Xu
+ 
+docs_dir: '_build'
+
+theme: readthedocs
+
+nav:
+    - Home: html/index.html
