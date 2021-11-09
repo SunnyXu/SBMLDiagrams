@@ -17,7 +17,7 @@ class TestKineticLaw(unittest.TestCase):
     df_NodeData = pd.read_csv('NodeData.csv')
     df_ReactionData = pd.read_csv('ReactionData.csv')
     sbmlStr_layout_render = exportSBML.main(df_CompartmentData, df_NodeData, df_ReactionData)
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.main(sbmlStr_layout_render, reactionLineType, complexShape)
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.main(sbmlStr_layout_render, reactionLineType)
 
   def testCompartment1(self):
     # Test all the column names

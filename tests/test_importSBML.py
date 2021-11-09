@@ -17,7 +17,7 @@ class TestKineticLaw(unittest.TestCase):
     f = open(os.path.join(dirname, filename), 'r')
     sbmlStr = f.read()
     f.close()
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.main(sbmlStr, reactionLineType, complexShape)
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.main(sbmlStr, reactionLineType)
 
   def testCompartment1(self):
     # Test all the column names
