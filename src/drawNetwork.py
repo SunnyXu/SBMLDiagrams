@@ -21,7 +21,7 @@ def _drawRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash 
     Draw a rectangle on canvas.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
+        canvas: skia.Surface().getCanvas().
         x: float-left up corner position_x
         y: float-left up corner position_y
         width: float-width of the rectangle
@@ -381,12 +381,18 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
     Add a compartment.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
-        position: 1*2 matrix-leftup corner of the rectangle [position_x, position_y]
-        dimension: 1*2 matrix-size of the rectangle [width, height]
-        comp_border_color: 1*3 matrix-compartment border color 
-        comp_fill_color: 1*2 matrix-compartment fill color
-        comp_border_width: float-compartment border line width
+        canvas: skia.Surface().getCanvas().
+
+        position: 1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+
+        dimension: 1*2 matrix-size of the rectangle [width, height].
+
+        comp_border_color: 1*3 matrix-compartment border color.
+
+        comp_fill_color: 1*2 matrix-compartment fill color.
+
+        comp_border_width: float-compartment border line width.
+        
     """   
 
     [x, y] = position
@@ -405,16 +411,26 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
     Add a node.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
-        floating_boundary_node: str-floating node ('floating') or not ('boundary')
-        alias_node: str-alias node ('alias') or not ('')
-        position: 1*2 matrix-leftup corner of the rectangle [position_x, position_y]
-        dimension: 1*2 matrix-size of the rectangle [width, height]
-        spec_border_color: 1*3 matrix-species border color 
-        spec_fill_color: 1*3 matrix-species fill color 
-        spec_border_width: float-compartment border line width
-        shapeIdx: int-1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle
-        complex_shape: str-''(default), 'monomer', 'dimer', 'trimer', or 'tetramer'
+        canvas: skia.Surface().getCanvas().
+
+        floating_boundary_node: str-floating node ('floating') or not ('boundary').
+
+        alias_node: str-alias node ('alias') or not ('').
+
+        position: 1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+
+        dimension: 1*2 matrix-size of the rectangle [width, height].
+
+        spec_border_color: 1*3 matrix-species border color.
+
+        spec_fill_color: 1*3 matrix-species fill color.
+
+        spec_border_width: float-compartment border line width.
+
+        shapeIdx: int-1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+
+        complex_shape: str-''(default), 'monomer', 'dimer', 'trimer', or 'tetramer'.
+
     """
 
     [x, y] = position
@@ -498,19 +514,32 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
     Add a reaction.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
-        rct_position: list of 1*2 matrix: positions of each reactant
-        prd_position: list of 1*2 matrix: positions of each product
-        mod_position: list of 1*2 matrix: positions of each modifier
-        center_position: 1*2 matrix: position of the center
-        handles: list of 1*2 matrix: position of the handles: [center handle, reactant handles, product handles]
-        rct_dimension: list of 1*2 matrix: dimension/size of each reactant
-        prd_dimension: list of 1*2 matrix: dimension/size of each product
-        mod_dimension: list of 1*2 matrix: dimension/size of each modifier      
-        reaction_line_color: 1*3 matrix-species fill color 
-        reaction_line_width: float-reaction line width
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'
-        showBezierHandles: bool-show the Bezier handles (True) or not (False)
+        canvas: skia.Surface().getCanvas().
+
+        rct_position: list of 1*2 matrix: positions of each reactant.
+
+        prd_position: list of 1*2 matrix: positions of each product.
+
+        mod_position: list of 1*2 matrix: positions of each modifier.
+
+        center_position: 1*2 matrix: position of the center.
+
+        handles: list of 1*2 matrix: position of the handles: [center handle, reactant handles, product handles].
+
+        rct_dimension: list of 1*2 matrix: dimension/size of each reactant.
+
+        prd_dimension: list of 1*2 matrix: dimension/size of each product.
+
+        mod_dimension: list of 1*2 matrix: dimension/size of each modifier.
+
+        reaction_line_color: 1*3 matrix-species fill color.
+
+        reaction_line_width: float-reaction line width.
+
+        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'.
+
+        showBezierHandles: bool-show the Bezier handles (True) or not (False).
+
     """
     
     def _cross_point(arcCenter, c2, s2):
@@ -764,12 +793,18 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
     Add the text.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
-        node_id: str-the content of the text
-        position: 1*2 matrix-leftup corner of the rectangle [position_x, position_y]
-        dimension: 1*2 matrix-size of the rectangle [width, height] 
-        text_line_color: 1*3 matrix-text line color
-        text_line_width: float-text line width
+        canvas: skia.Surface().getCanvas().
+
+        node_id: str-the content of the text.
+
+        position: 1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+
+        dimension: 1*2 matrix-size of the rectangle [width, height].
+
+        text_line_color: 1*3 matrix-text line color.
+
+        text_line_width: float-text line width.
+
     """ 
     id = node_id
     #fontSize = 11
@@ -793,10 +828,11 @@ def draw(surface, fileName = '', file_format = 'PNG'):
     Display the diagram and save it to the local.
 
     Args:  
-        surface: skia.Surface()
-        fileName: str-the name for the generated file: 
-                either the input filename or a randomly generated filename
-        fileFormat = 'PNG' #'PNG' or 'JPEG'
+        surface: skia.Surface().
+
+        fileName: str-the name for the generated file: either the input filename or a randomly generated filename.
+        
+        fileFormat = 'PNG' #'PNG' or 'JPEG'.
     """ 
     if fileName == '':
         random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))

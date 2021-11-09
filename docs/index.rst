@@ -10,12 +10,7 @@ Welcome to SBMLDiagrams's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   autodoc
+   api
+   functions
 
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

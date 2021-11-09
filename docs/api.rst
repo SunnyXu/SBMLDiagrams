@@ -1,6 +1,6 @@
-.. _autodoc:
+.. _api:
  
-visualizeSBML.py
+api
 =============
  
 .. automodule:: visualizeSBML
@@ -10,6 +10,11 @@ visualizeSBML.py
  
 
 .. automodule:: importSBML
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
+.. automodule:: exportSBML
   :members:
   :undoc-members:
   :show-inheritance:
