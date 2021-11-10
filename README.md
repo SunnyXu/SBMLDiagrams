@@ -1,4 +1,5 @@
-![cod cov](http://$SOME_BACKET.storage.googleapis.com/$PROJECT_NAME/codcov.svg)
+[![codecov.io](https://codecov.io/github/SunnyXu/SBMLDiagrams/coverage.svg?branch=main)]
+(https://codecov.io/github/SunnyXu/SBMLDiagrams?branch=main)
 
 # SBMLDiagrams
 
