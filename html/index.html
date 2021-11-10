@@ -159,6 +159,116 @@
 <li class="toctree-l1"><a class="reference internal" href="functions.html">functions</a></li>
 </ul>
 </div>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>SBMLDiagrams can visualize SBML to PNG/JPG files by visualizeSBML. On one hand,
+users can get all the information about Compartment, Node and Reaction from an
+SBML file to csv files by importSBML. On the other hand, it supports users to
+generate SBML files based on the information of csv files. Users can edit the
+csv files and update the information so that can generate a new SBML file via exportSBML.</p>
+</div>
+<div class="section" id="setup-environment-and-validation">
+<h2>Setup environment and validation<a class="headerlink" href="#setup-environment-and-validation" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Clone the SBMLDiagrams repository.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/SunnyXu/SBMLDiagrams
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Create a virtual environment for the project.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> SBMLDiagrams
+py -m venv kv
+<span class="nb">source</span> kv/Scripts/activate
+py -m pip install -r requirements.txt
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>To verify the setup.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">PYTHONPATH</span><span class="o">=</span><span class="sb">`</span><span class="nb">pwd</span><span class="sb">`</span>
+<span class="nb">cd</span> tests
+py test_importSBML.py. The tests should run without error.
+</pre></div>
+</div>
+</div>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>The package was written initially by python 3.8.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>To install SBMLDiagrams use (comming soon)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">SBMLDiagrams</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>(needs double check after pypi)</p>
+<ol class="arabic simple">
+<li><p>Visualize an SBML file to a PNG.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">visualizeSBML</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;test.xml&quot;</span>
+<span class="n">reactionLineType</span> <span class="o">=</span> <span class="s1">&#39;bezier&#39;</span> <span class="c1">#&#39;linear&#39; or &#39;bezier&#39;</span>
+<span class="n">showBezierHandles</span> <span class="o">=</span> <span class="kc">True</span> <span class="c1">#True: show the Bezier handles, False: do not show</span>
+<span class="n">fileFormat</span> <span class="o">=</span> <span class="s1">&#39;PNG&#39;</span> <span class="c1"># &#39;PNG&#39; or &#39;JPEG&#39;</span>
+<span class="n">ouput_fileNmae</span> <span class="o">=</span> <span class="s1">&#39;ouput&#39;</span> <span class="c1"># a certain filename or &#39;&#39;</span>
+<span class="n">complexShape</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span> <span class="c1">#&#39;&#39; or &#39;monomer&#39; or &#39;dimer&#39; or &#39;trimer&#39; or &#39;tetramer&#39;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">sbmlStr</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empty SBML!&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+   <span class="n">visualizeSBML</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">,</span> <span class="n">reactionLineType</span><span class="p">,</span> <span class="n">showBezierHandles</span><span class="p">,</span> <span class="n">fileFormat</span><span class="p">,</span> <span class="n">output_fileName</span><span class="p">,</span> <span class="n">complexShape</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Import an SBML file to a set of csv files to edit.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">importSBML</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;test.xml&quot;</span>
+<span class="n">reactionLineType</span> <span class="o">=</span> <span class="s1">&#39;bezier&#39;</span> <span class="c1">#&#39;linear&#39; or &#39;bezier&#39;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">sbmlStr</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empty SBML!&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">df_CompartmentData</span><span class="p">,</span> <span class="n">df_NdeData</span><span class="p">,</span> <span class="n">df_reactionData</span> <span class="o">=</span> <span class="n">importSBML</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">,</span> <span class="n">reactionLineType</span><span class="p">)</span>
+      <span class="n">df_CompartmentData</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;CompartmentData.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+      <span class="n">df_NodeData</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;NodeData.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+      <span class="n">df_ReactionData</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;ReactionData.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+   <span class="k">except</span><span class="p">:</span>
+      <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid SBML!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Export an SBML file based on the information from a set of csv files.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">exportSBML</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df_CompartmentData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;path//to//CompartmentData.csv&#39;</span><span class="p">)</span>
+<span class="n">df_NodeData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;path//to//NodeData.csv&#39;</span><span class="p">)</span>
+<span class="n">df_ReactionData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;path//to//ReactionData.csv&#39;</span><span class="p">)</span>
+<span class="n">sbmlStr_layout_render</span> <span class="o">=</span> <span class="n">exportSBML</span><span class="o">.</span><span class="n">main</span><span class="p">(</span><span class="n">df_CompartmentData</span><span class="p">,</span> <span class="n">df_NodeData</span><span class="p">,</span> <span class="n">df_ReactionData</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sbmlStr_layout_render</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
 </div>
 
 
