@@ -649,12 +649,15 @@ def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileNa
 
 if __name__ == '__main__':
     dirname = "test_sbml_files"
+    #dirname = "sample_sbml"
+    #dirname = ''
     #simple files
     filename = "test.xml"
     #filename = 'test_line.xml'
     #no layout
     #filename = "E_coli_Millard2016.xml" 
     #filename = 'feedback-self.xml' 
+
     #part layout
     #filename = "LinearChain.xml"
     #filename = "Feedback-Sauro.xml"

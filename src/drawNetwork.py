@@ -443,10 +443,10 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
     if complex_shape == '':
         if shapeIdx == 1: #rectangle
             # if alias_node == 'alias':
-            #     drawRectangle (canvas, x, y, width, height, 
+            #     _drawRectangle (canvas, x, y, width, height, 
             #                   outline, fill, linewidth, dash = True)
             # else:
-            #     drawRectangle (canvas, x, y, width, height, 
+            #     _drawRectangle (canvas, x, y, width, height, 
             #                   outline, fill, linewidth)
             if alias_node == 'alias':
                 _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = True)
@@ -731,7 +731,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             except:
                 pass
             #rct_center_position =  [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
-            #drawLine(canvas, rct_center_position[0], rct_center_position[1], arcCenter[0], arcCenter[1], lineColor, linewidth)
+            #_drawLine(canvas, rct_center_position[0], rct_center_position[1], arcCenter[0], arcCenter[1], lineColor, linewidth)
             _drawLine(canvas, arrow_end_pt[0], arrow_end_pt[1], arcCenter[0], arcCenter[1], lineColor, linewidth)
         for i in range (nProducts):
             c2 = prd_position[i] 
@@ -755,7 +755,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             except:
                 pass
             #prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
-            #drawLine(canvas, arcCenter[0], arcCenter[1], prd_center_position[0], prd_center_position[1], lineColor, linewidth)
+            #_drawLine(canvas, arcCenter[0], arcCenter[1], prd_center_position[0], prd_center_position[1], lineColor, linewidth)
             _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_head_pt[0], arrow_head_pt[1], lineColor, linewidth)
     #draw modifiers:
     modifier_lineColor = skia.Color(128, 0, 128)
@@ -781,9 +781,9 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                         modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)   
         # mod_start_x = .5*mod_dimension[i][0] + mod_position[i][0]
         # mod_start_y = .5*mod_dimension[i][1] + mod_position[i][1] 
-        # drawLine(canvas, arcCenter[0], arcCenter[1], mod_start_x, mod_start_y,
+        # _drawLine(canvas, arcCenter[0], arcCenter[1], mod_start_x, mod_start_y,
         #  modifier_lineColor, modifier_linewidth)  
-        # drawCircle(canvas, arcCenter[0]-modifier_linewidth, arcCenter[1]-modifier_linewidth, 
+        # _drawCircle(canvas, arcCenter[0]-modifier_linewidth, arcCenter[1]-modifier_linewidth, 
         # 2*modifier_linewidth, 2*modifier_linewidth,
         #                 modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)     
 

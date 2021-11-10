@@ -341,7 +341,6 @@ def main(sbmlStr, reactionLineType):
                             #text_font_size = group.getFontSize() #can not give an int
                             text_render.append([idList,text_line_color,text_line_width])
 
- 
         model = simplesbml.loadSBMLStr(sbmlStr)
         numFloatingNodes  = model.getNumFloatingSpecies()
         FloatingNodes_ids = model.getListOfFloatingSpecies()
@@ -1017,6 +1016,7 @@ def main(sbmlStr, reactionLineType):
 if __name__ == '__main__':
 
     dirname = "test_sbml_files"
+    #dirname = "sample_sbml"
     #simple files
     filename = "test.xml" 
     #filename = 'test_line.xml' 
@@ -1037,7 +1037,7 @@ if __name__ == '__main__':
     #filename = 'testbigmodel.xml' 
     #modifiers
     #filename = 'test_modifier.xml' 
-    #filename = 'test_modifier_comp.xml' works from the excel file DataFrame_sample.xlsx
+    #filename = 'test_modifier_comp.xml'
     #filename = "BorisEJB.xml"
 
 
@@ -1051,9 +1051,12 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        (df_CompartmentData, df_NodeData, df_ReactionData) = main(sbmlStr, reactionLineType)
-        df_CompartmentData.to_csv("CompartmentData.csv", index=False)
-        df_NodeData.to_csv("NodeData.csv", index=False)
-        df_ReactionData.to_csv("ReactionData.csv", index=False)
+        try:
+            (df_CompartmentData, df_NodeData, df_ReactionData) = main(sbmlStr, reactionLineType)
+            df_CompartmentData.to_csv("CompartmentData.csv", index=False)
+            df_NodeData.to_csv("NodeData.csv", index=False)
+            df_ReactionData.to_csv("ReactionData.csv", index=False)
+        except:
+            print("Invalid SBML!")
 
 
