@@ -13,4 +13,6 @@ all the information about Compartment, Node and Reaction from an SBML file to cs
 
 ## Documentation
 
+Please see the Documentation at .. for more details.
+
 
