@@ -1,5 +1,5 @@
 # SBMLDiagrams
-[![Coverage](https://codecov.io/gh/sunnyXu/SBMLDiagrams/branch/master/graph/badge.svg)](https://codecov.io/gh/sunnyXu/SBMLDiagrams)
+[![Coverage](https://codecov.io/gh/sunnyXu/SBMLDiagrams/branch/main/graph/badge.svg)](https://codecov.io/gh/sunnyXu/SBMLDiagrams)
 
 [![Coverage](https://coveralls.io/repos/github/sunnyXu/SBMLDiagrams/badge.svg?branch=main)](https://coveralls.io/github/sunnyXu/SBMLDiagrams?branch=main)
 
