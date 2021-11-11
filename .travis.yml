@@ -16,12 +16,13 @@ install:
 # - "pip install coveralls"
 
 # command to run tests, e.g. python setup.py test
-script:
-  "coverage run -m unittest discover -s . -p '*_unit_test.py'"
-
-
 #script:
-#    - pytest -s --cov=nba_scraper test_unit.py
+#  "coverage run -m unittest discover -s . -p '*_unit_test.py'"
+
+
+script:
+    - pytest -s --cov=nba_scraper tests/test_importSBML.py
+    - pytest -s --cov=nba_scraper tests/test_exportSBML_via_importSBML.py
 
 env:
     - CODECOV_TOKEN='cec7e21c-30fb-4155-b026-fa239c9ccb5e' #IF ONLY YOU HAVE A PRIVATE REPOSITORY
