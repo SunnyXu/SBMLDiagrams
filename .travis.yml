@@ -23,8 +23,8 @@ script:
 #script:
 #    - pytest -s --cov=nba_scraper test_unit.py
 
-#env:
-#    - CODECOV_TOKEN='cec7e21c-30fb-4155-b026-fa239c9ccb5e' #IF ONLY YOU HAVE A PRIVATE REPOSITORY
+env:
+    - CODECOV_TOKEN='cec7e21c-30fb-4155-b026-fa239c9ccb5e' #IF ONLY YOU HAVE A PRIVATE REPOSITORY
 
 after_success:
     - codecov
