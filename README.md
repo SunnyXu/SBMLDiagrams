@@ -1,7 +1,7 @@
 # SBMLDiagrams
 [![Coverage](https://codecov.io/gh/sunnyXu/SBMLDiagrams/branch/main/graph/badge.svg)](https://codecov.io/gh/sunnyXu/SBMLDiagrams)
 
-[![Coverage](https://coveralls.io/repos/github/sunnyXu/SBMLDiagrams/badge.svg?branch=main)](https://coveralls.io/github/sunnyXu/SBMLDiagrams?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/SunnyXu/SBMLDiagrams/badge.svg?branch=main)](https://coveralls.io/github/SunnyXu/SBMLDiagrams?branch=main)
 
 [![Build Status](https://app.travis-ci.com/SunnyXu/SBMLDiagrams.svg?branch=main)](https://app.travis-ci.com/SunnyXu/SBMLDiagrams)
 
