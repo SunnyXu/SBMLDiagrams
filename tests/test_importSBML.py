@@ -10,11 +10,13 @@ IGNORE_TEST = False
 class TestKineticLaw(unittest.TestCase):
 
   def setUp(self):
-    dirname = "" #same folder as the main.py
-    filename = "test.xml" 
     reactionLineType = 'bezier' #'linear' or 'bezier'
     complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
-    f = open(os.path.join(dirname, filename), 'r')
+
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+    TEST_PATH = os.path.join(TEST_FOLDER, "test.xml")
+    f = open(TEST_PATH, 'r')
     sbmlStr = f.read()
     f.close()
     self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.main(sbmlStr, reactionLineType)

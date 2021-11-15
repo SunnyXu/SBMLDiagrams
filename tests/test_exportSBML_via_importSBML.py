@@ -1,4 +1,5 @@
 import unittest
+import os
 from src import importSBML
 from src import exportSBML
 import pandas as pd
@@ -13,9 +14,12 @@ class TestKineticLaw(unittest.TestCase):
   def setUp(self):
     reactionLineType = 'bezier' #'linear' or 'bezier'
     complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
-    df_CompartmentData = pd.read_csv('CompartmentData.csv') 
-    df_NodeData = pd.read_csv('NodeData.csv')
-    df_ReactionData = pd.read_csv('ReactionData.csv')
+    
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "initiate_csv_files")
+    df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, "CompartmentData.csv")) 
+    df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, "NodeData.csv"))
+    df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, "ReactionData.csv"))
     sbmlStr_layout_render = exportSBML.main(df_CompartmentData, df_NodeData, df_ReactionData)
     self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.main(sbmlStr_layout_render, reactionLineType)
 
