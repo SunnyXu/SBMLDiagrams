@@ -732,9 +732,12 @@ def main(df_CompartmentData, df_NodeData, df_ReactionData):
 
 if __name__ == '__main__':
 
-    df_CompartmentData = pd.read_csv('initiate_csv_files//CompartmentData.csv') 
-    df_NodeData = pd.read_csv('initiate_csv_files//NodeData.csv')
-    df_ReactionData = pd.read_csv('initiate_csv_files//ReactionData.csv')
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "initiate_csv_files")
+
+    df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
+    df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
+    df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
     # df_CompartmentData = pd.read_csv('CompartmentData.csv') 
     # df_NodeData = pd.read_csv('NodeData.csv')
     # df_ReactionData = pd.read_csv('ReactionData.csv')

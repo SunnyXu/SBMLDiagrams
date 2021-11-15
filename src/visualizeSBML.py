@@ -648,7 +648,10 @@ def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileNa
 
 
 if __name__ == '__main__':
-    dirname = "test_sbml_files"
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+
+    #dirname = "test_sbml_files"
     #dirname = "sample_sbml"
     #dirname = ''
     #simple files
@@ -684,7 +687,7 @@ if __name__ == '__main__':
     output_fileName = 'output' #filename or '' 
     complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
 
-    f = open(os.path.join(dirname, filename), 'r')
+    f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 

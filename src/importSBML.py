@@ -1014,8 +1014,10 @@ def main(sbmlStr, reactionLineType):
 
 
 if __name__ == '__main__':
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    dirname = "test_sbml_files"
+    #dirname = "test_sbml_files"
     #dirname = "sample_sbml"
     #simple files
     filename = "test.xml" 
@@ -1044,7 +1046,7 @@ if __name__ == '__main__':
     #check
     reactionLineType = 'bezier' #'linear' or 'bezier'
 
-    f = open(os.path.join(dirname, filename), 'r')
+    f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
