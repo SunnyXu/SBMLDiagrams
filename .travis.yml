@@ -17,8 +17,8 @@ install:
 
 # command to run tests, e.g. python setup.py test
 script:
-  "coverage run -m unittest discover -s . -p '*_unit_test.py'"
-  "pytest -s --cov=nba_scraper '*_unit_test.py'"
+  "coverage run -m unittest discover -s . -p 'tests/test*.py'"
+  "pytest -s --cov=nba_scraper 'tests/test*.py'"
 
 env:
     - CODECOV_TOKEN='cec7e21c-30fb-4155-b026-fa239c9ccb5e' #IF ONLY YOU HAVE A PRIVATE REPOSITORY
