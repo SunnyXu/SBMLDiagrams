@@ -152,11 +152,11 @@
             
   <div class="section" id="functions">
 <span id="id1"></span><h1>functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-drawNetwork"></span><p>Created on Fri Jul 16 09:57:30 2021
+<span class="target" id="module-SBMLDiagrams.drawNetwork"></span><p>Created on Fri Jul 16 09:57:30 2021
 &#64;author: hsauro and Jin Xu</p>
 <dl class="py function">
-<dt id="drawNetwork.addCompartment">
-<code class="sig-prename descclassname">drawNetwork.</code><code class="sig-name descname">addCompartment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">canvas</span></em>, <em class="sig-param"><span class="n">position</span></em>, <em class="sig-param"><span class="n">dimension</span></em>, <em class="sig-param"><span class="n">comp_border_color</span></em>, <em class="sig-param"><span class="n">comp_fill_color</span></em>, <em class="sig-param"><span class="n">comp_border_width</span></em><span class="sig-paren">)</span><a class="headerlink" href="#drawNetwork.addCompartment" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.drawNetwork.addCompartment">
+<code class="sig-prename descclassname">SBMLDiagrams.drawNetwork.</code><code class="sig-name descname">addCompartment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">canvas</span></em>, <em class="sig-param"><span class="n">position</span></em>, <em class="sig-param"><span class="n">dimension</span></em>, <em class="sig-param"><span class="n">comp_border_color</span></em>, <em class="sig-param"><span class="n">comp_fill_color</span></em>, <em class="sig-param"><span class="n">comp_border_width</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.drawNetwork.addCompartment" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a compartment.</p>
 <dl>
 <dt>Args:  </dt><dd><p>canvas: skia.Surface().getCanvas().</p>
@@ -170,8 +170,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="drawNetwork.addNode">
-<code class="sig-prename descclassname">drawNetwork.</code><code class="sig-name descname">addNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">canvas</span></em>, <em class="sig-param"><span class="n">floating_boundary_node</span></em>, <em class="sig-param"><span class="n">alias_node</span></em>, <em class="sig-param"><span class="n">position</span></em>, <em class="sig-param"><span class="n">dimension</span></em>, <em class="sig-param"><span class="n">spec_border_color</span></em>, <em class="sig-param"><span class="n">spec_fill_color</span></em>, <em class="sig-param"><span class="n">spec_border_width</span></em>, <em class="sig-param"><span class="n">shapeIdx</span></em>, <em class="sig-param"><span class="n">complex_shape</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#drawNetwork.addNode" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.drawNetwork.addNode">
+<code class="sig-prename descclassname">SBMLDiagrams.drawNetwork.</code><code class="sig-name descname">addNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">canvas</span></em>, <em class="sig-param"><span class="n">floating_boundary_node</span></em>, <em class="sig-param"><span class="n">alias_node</span></em>, <em class="sig-param"><span class="n">position</span></em>, <em class="sig-param"><span class="n">dimension</span></em>, <em class="sig-param"><span class="n">spec_border_color</span></em>, <em class="sig-param"><span class="n">spec_fill_color</span></em>, <em class="sig-param"><span class="n">spec_border_width</span></em>, <em class="sig-param"><span class="n">shapeIdx</span></em>, <em class="sig-param"><span class="n">complex_shape</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.drawNetwork.addNode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a node.</p>
 <dl>
 <dt>Args:  </dt><dd><p>canvas: skia.Surface().getCanvas().</p>
@@ -189,8 +189,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="drawNetwork.addReaction">
-<code class="sig-prename descclassname">drawNetwork.</code><code class="sig-name descname">addReaction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">canvas</span></em>, <em class="sig-param"><span class="n">rct_position</span></em>, <em class="sig-param"><span class="n">prd_position</span></em>, <em class="sig-param"><span class="n">mod_position</span></em>, <em class="sig-param"><span class="n">center_position</span></em>, <em class="sig-param"><span class="n">handles</span></em>, <em class="sig-param"><span class="n">rct_dimension</span></em>, <em class="sig-param"><span class="n">prd_dimension</span></em>, <em class="sig-param"><span class="n">mod_dimension</span></em>, <em class="sig-param"><span class="n">reaction_line_color</span></em>, <em class="sig-param"><span class="n">reaction_line_width</span></em>, <em class="sig-param"><span class="n">reaction_line_type</span><span class="o">=</span><span class="default_value">'bezier'</span></em>, <em class="sig-param"><span class="n">show_bezier_handles</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#drawNetwork.addReaction" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.drawNetwork.addReaction">
+<code class="sig-prename descclassname">SBMLDiagrams.drawNetwork.</code><code class="sig-name descname">addReaction</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">canvas</span></em>, <em class="sig-param"><span class="n">rct_position</span></em>, <em class="sig-param"><span class="n">prd_position</span></em>, <em class="sig-param"><span class="n">mod_position</span></em>, <em class="sig-param"><span class="n">center_position</span></em>, <em class="sig-param"><span class="n">handles</span></em>, <em class="sig-param"><span class="n">rct_dimension</span></em>, <em class="sig-param"><span class="n">prd_dimension</span></em>, <em class="sig-param"><span class="n">mod_dimension</span></em>, <em class="sig-param"><span class="n">reaction_line_color</span></em>, <em class="sig-param"><span class="n">reaction_line_width</span></em>, <em class="sig-param"><span class="n">reaction_line_type</span><span class="o">=</span><span class="default_value">'bezier'</span></em>, <em class="sig-param"><span class="n">show_bezier_handles</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.drawNetwork.addReaction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a reaction.</p>
 <dl>
 <dt>Args:  </dt><dd><p>canvas: skia.Surface().getCanvas().</p>
@@ -211,8 +211,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="drawNetwork.addText">
-<code class="sig-prename descclassname">drawNetwork.</code><code class="sig-name descname">addText</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">canvas</span></em>, <em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">position</span></em>, <em class="sig-param"><span class="n">dimension</span></em>, <em class="sig-param"><span class="n">text_line_color</span></em>, <em class="sig-param"><span class="n">text_line_width</span></em><span class="sig-paren">)</span><a class="headerlink" href="#drawNetwork.addText" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.drawNetwork.addText">
+<code class="sig-prename descclassname">SBMLDiagrams.drawNetwork.</code><code class="sig-name descname">addText</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">canvas</span></em>, <em class="sig-param"><span class="n">node_id</span></em>, <em class="sig-param"><span class="n">position</span></em>, <em class="sig-param"><span class="n">dimension</span></em>, <em class="sig-param"><span class="n">text_line_color</span></em>, <em class="sig-param"><span class="n">text_line_width</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.drawNetwork.addText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add the text.</p>
 <dl>
 <dt>Args:  </dt><dd><p>canvas: skia.Surface().getCanvas().</p>
@@ -226,8 +226,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt id="drawNetwork.draw">
-<code class="sig-prename descclassname">drawNetwork.</code><code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">surface</span></em>, <em class="sig-param"><span class="n">fileName</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">file_format</span><span class="o">=</span><span class="default_value">'PNG'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#drawNetwork.draw" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.drawNetwork.draw">
+<code class="sig-prename descclassname">SBMLDiagrams.drawNetwork.</code><code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">surface</span></em>, <em class="sig-param"><span class="n">fileName</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">file_format</span><span class="o">=</span><span class="default_value">'PNG'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.drawNetwork.draw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Display the diagram and save it to the local.</p>
 <dl>
 <dt>Args:  </dt><dd><p>surface: skia.Surface().</p>

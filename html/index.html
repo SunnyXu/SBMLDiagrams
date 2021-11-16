@@ -210,7 +210,7 @@ py test_importSBML.py. The tests should run without error.
 <ol class="arabic simple">
 <li><p>Visualize an SBML file to a PNG.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">visualizeSBML</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">visualizeSBML</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
@@ -233,7 +233,7 @@ py test_importSBML.py. The tests should run without error.
 <ol class="arabic simple" start="2">
 <li><p>Import an SBML file to a set of csv files to edit.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">importSBML</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">importSBML</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
 <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;test.xml&quot;</span>
@@ -256,7 +256,7 @@ py test_importSBML.py. The tests should run without error.
 <ol class="arabic simple" start="3">
 <li><p>Export an SBML file based on the information from a set of csv files.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">src</span> <span class="kn">import</span> <span class="n">exportSBML</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">exportSBML</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="n">df_CompartmentData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;path//to//CompartmentData.csv&#39;</span><span class="p">)</span>
