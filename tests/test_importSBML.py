@@ -1,6 +1,6 @@
 import unittest
 import os
-from src import importSBML
+from SBMLDiagrams import importSBML
 
 IGNORE_TEST = False
 

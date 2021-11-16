@@ -1,7 +1,7 @@
 import unittest
 import os
-from src import importSBML
-from src import exportSBML
+from SBMLDiagrams import importSBML
+from SBMLDiagrams import exportSBML
 import pandas as pd
 
 IGNORE_TEST = False
