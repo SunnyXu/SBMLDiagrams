@@ -8,7 +8,7 @@ Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu
 """
 
-import drawNetwork
+from SBMLDiagrams import drawNetwork
 import os
 import skia
 import simplesbml
