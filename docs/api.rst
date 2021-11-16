@@ -3,18 +3,20 @@
 api
 =============
  
-.. automodule:: visualizeSBML
-  :members:
-  :undoc-members:
-  :show-inheritance:
  
 
-.. automodule:: importSBML
+.. automodule:: SBMLDiagrams.importSBML
   :members:
   :undoc-members:
   :show-inheritance:
 
-.. automodule:: exportSBML
+.. automodule:: SBMLDiagrams.exportSBML
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
+
+.. automodule:: SBMLDiagrams.visualizeSBML
   :members:
   :undoc-members:
   :show-inheritance:

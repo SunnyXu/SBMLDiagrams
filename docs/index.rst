@@ -78,7 +78,7 @@ Examples
 
 .. code-block:: python
 
-   from src import visualizeSBML
+   from SBMLDiagrams import visualizeSBML
    import os 
 
    dirname = "path//to"
@@ -102,7 +102,7 @@ Examples
 
 .. code-block:: python
 
-   from src import importSBML
+   from SBMLDiagrams import importSBML
    import os
    dirname = "path//to"
    filename = "test.xml"
@@ -126,7 +126,7 @@ Examples
 
 .. code-block:: python
 
-   from src import exportSBML
+   from SBMLDiagrams import exportSBML
    import pandas as pd
 
    df_CompartmentData = pd.read_csv('path//to//CompartmentData.csv')
