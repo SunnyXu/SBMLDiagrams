@@ -1,6 +1,7 @@
-from setuptools import setup
-import os
+from setuptools import setup, find_packages
+import os.path
 import sys
+import codecs
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -25,7 +26,7 @@ def get_version(rel_path):
 setup(
     name='SBMLDiagrams',
     packages=['SBMLDiagrams'],
-    version=version['SBMLDiagrams/_version.py'],
+    version=get_version('SBMLDiagrams/_version.py'),
     description='Visualize, edit and write SBML files.',
     long_description=long_description,
     long_description_content_type='text/markdown',
