@@ -86,7 +86,7 @@ Examples
    reactionLineType = 'bezier' #'linear' or 'bezier'
    showBezierHandles = True #True: show the Bezier handles, False: do not show 
    fileFormat = 'PNG' # 'PNG' or 'JPEG'
-   ouput_fileNmae = 'ouput' # a certain filename or ''
+   output_fileName = 'ouput' # a certain filename or ''
    complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
    f = open(os.path.join(dirname, filename), 'r')
    sbmlStr = f.read()
@@ -114,7 +114,7 @@ Examples
       print("Empty SBML!")
    else:
       try:
-         df_CompartmentData, df_NdeData, df_reactionData = importSBML.main(sbmlStr, reactionLineType)
+         df_CompartmentData, df_NodeData, df_ReactionData = importSBML.main(sbmlStr, reactionLineType)
          df_CompartmentData.to_csv("CompartmentData.csv", index = False)
          df_NodeData.to_csv("NodeData.csv", index = False)
          df_ReactionData.to_csv("ReactionData.csv", index = False)
