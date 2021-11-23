@@ -8,7 +8,7 @@ all the information about Compartment, Node and Reaction from an SBML file to cs
 ## Installation
 
 ``pip install SBMLDiagrams``
-
+(comming soon)
 
 ## Documentation
 Please see documentation at https://sunnyxu.github.io/SBMLDiagrams/ for details.
