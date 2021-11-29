@@ -23,47 +23,11 @@ SBML file to csv files by importSBML. On the other hand, it supports users to
 generate SBML files based on the information of csv files. Users can edit the 
 csv files and update the information so that can generate a new SBML file via exportSBML.
 
---------------------------------
-Setup environment and validation
---------------------------------
-
-1) Clone the SBMLDiagrams repository.
-
-.. code-block:: bash
-
-   git clone https://github.com/SunnyXu/SBMLDiagrams
-   
-
-2) Create a virtual environment for the project.
-	
-.. code-block:: bash
-
-   cd SBMLDiagrams
-   py -m venv kv
-   source kv/Scripts/activate 
-   py -m pip install -r requirements.txt
-
-
-3) To verify the setup.
-
-.. code-block:: bash
-
-   export PYTHONPATH=`pwd`
-   cd tests
-   py test_importSBML.py. The tests should run without error.
-
-
-------------
-Requirements
-------------
-
-The package was written initially by python 3.8.
-
 ------------
 Installation 
 ------------
 
-To install SBMLDiagrams use (comming soon)
+To install SBMLDiagrams use
 
 .. code-block:: python
    
@@ -72,7 +36,6 @@ To install SBMLDiagrams use (comming soon)
 --------
 Examples
 --------
-(needs double check after pypi) 
 
 1) Visualize an SBML file to a PNG.
 
