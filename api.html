@@ -156,12 +156,12 @@
 <span class="target" id="module-SBMLDiagrams.importSBML"></span><p>Created on Mon Aug 23 13:25:34 2021</p>
 <p>&#64;author: Jin Xu</p>
 <dl class="py function">
-<dt id="SBMLDiagrams.importSBML.main">
-<code class="sig-prename descclassname">SBMLDiagrams.importSBML.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sbmlStr</span></em>, <em class="sig-param"><span class="n">reactionLineType</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.importSBML.main" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.importSBML.load">
+<code class="sig-prename descclassname">SBMLDiagrams.importSBML.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sbmlStr</span></em>, <em class="sig-param"><span class="n">reactionLineType</span><span class="o">=</span><span class="default_value">'bezier'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.importSBML.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the information of an SBML file to a set of dataframe.</p>
 <dl>
 <dt>Args:  </dt><dd><p>sbmlStr: str-the string of the input sbml file.</p>
-<p>reactionLineType: str-type of the reaction line: ‘linear’ or ‘bezier’.</p>
+<p>reactionLineType: str-type of the reaction line: ‘linear’ or ‘bezier’ (default).</p>
 </dd>
 <dt>Returns:</dt><dd><p>df_CompartmentData: DataFrame-Compartment information.</p>
 <p>df_NodeData: DataFrame-Node information.</p>
@@ -173,8 +173,8 @@
 <span class="target" id="module-SBMLDiagrams.exportSBML"></span><p>Created on Mon Aug 23 13:25:34 2021</p>
 <p>&#64;author: Jin Xu</p>
 <dl class="py function">
-<dt id="SBMLDiagrams.exportSBML.main">
-<code class="sig-prename descclassname">SBMLDiagrams.exportSBML.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df_CompartmentData</span></em>, <em class="sig-param"><span class="n">df_NodeData</span></em>, <em class="sig-param"><span class="n">df_ReactionData</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.exportSBML.main" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.exportSBML.export">
+<code class="sig-prename descclassname">SBMLDiagrams.exportSBML.</code><code class="sig-name descname">export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df_CompartmentData</span></em>, <em class="sig-param"><span class="n">df_NodeData</span></em>, <em class="sig-param"><span class="n">df_ReactionData</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.exportSBML.export" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write the information of a set of dataframe to an SBML string.</p>
 <dl>
 <dt>Args:  </dt><dd><p>df_CompartmentData: DataFrame-Compartment information.</p>
@@ -189,16 +189,16 @@
 <span class="target" id="module-SBMLDiagrams.visualizeSBML"></span><p>Created on Mon Aug 23 13:25:34 2021</p>
 <p>&#64;author: Jin Xu</p>
 <dl class="py function">
-<dt id="SBMLDiagrams.visualizeSBML.main">
-<code class="sig-prename descclassname">SBMLDiagrams.visualizeSBML.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sbmlStr</span></em>, <em class="sig-param"><span class="n">reactionLineType</span></em>, <em class="sig-param"><span class="n">showBezierHandles</span></em>, <em class="sig-param"><span class="n">fileFormat</span></em>, <em class="sig-param"><span class="n">output_fileName</span></em>, <em class="sig-param"><span class="n">complexShape</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.visualizeSBML.main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Visualization from an sbml string to a PNG/JPG file.</p>
+<dt id="SBMLDiagrams.visualizeSBML.display">
+<code class="sig-prename descclassname">SBMLDiagrams.visualizeSBML.</code><code class="sig-name descname">display</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sbmlStr</span></em>, <em class="sig-param"><span class="n">reactionLineType</span><span class="o">=</span><span class="default_value">'bezier'</span></em>, <em class="sig-param"><span class="n">showBezierHandles</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fileFormat</span><span class="o">=</span><span class="default_value">'PNG'</span></em>, <em class="sig-param"><span class="n">output_fileName</span><span class="o">=</span><span class="default_value">'output'</span></em>, <em class="sig-param"><span class="n">complexShape</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.visualizeSBML.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Visualization from an sbml string to a PNG/JPG/PDF file.</p>
 <dl>
 <dt>Args:  </dt><dd><p>sbmlStr: str-the string of the input sbml file.</p>
-<p>reactionLineType: str-type of the reaction line: ‘linear’ or ‘bezier’.</p>
-<p>showBezierHandles: bool-show the Bezier handles (True) or not (False).</p>
-<p>fileFormat: str-output file type: ‘PNG’ or ‘JPEG’.</p>
-<p>output_fileName: str-filename: ‘output’ or ‘’.</p>
-<p>complexShape: str-type of complex shapes: ‘’ or ‘monomer’ or ‘dimer’ or ‘trimer’ or ‘tetramer’.</p>
+<p>reactionLineType: str-type of the reaction line: ‘linear’ or ‘bezier’ (default).</p>
+<p>showBezierHandles: bool-show the Bezier handles (True as default) or not (False).</p>
+<p>fileFormat: str-output file type: ‘PNG’ (default), ‘JPEG’ or ‘PDF’.</p>
+<p>output_fileName: str-filename: ‘output’ (default) or ‘’.</p>
+<p>complexShape: str-type of complex shapes: ‘’ (default) or ‘monomer’ or ‘dimer’ or ‘trimer’ or ‘tetramer’.</p>
 </dd>
 </dl>
 </dd></dl>
