@@ -312,8 +312,8 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = True, file
                 temp_id = Comps_ids[i]
                 vol= model.getCompartmentVolume(i)
                 if temp_id == "_compartment_default_":
-                    dimension = [900, 900]
-                    position = [10, 10]
+                    dimension = [1000, 1000]
+                    position = [0, 0]
                     #comp_border_color = (255, 255, 255, 0) #the last digit for transparent
                     #comp_fill_color = (255, 255, 255, 0)
                     comp_border_color = (255, 255, 255)
@@ -335,8 +335,8 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = True, file
                     else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
                         # modify the compartment size using the max_rec function above
-                        dimension = [900,900]
-                        position = [10,10]
+                        dimension = [1000,1000]
+                        position = [0,0]
                         #comp_fill_color = (255, 255, 255, 0)
                         #comp_border_color = (255, 255, 255, 0)
                         comp_fill_color = (255, 255, 255)
@@ -538,8 +538,8 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = True, file
             for i in range(numComps):
                 temp_id = Comps_ids[i]
                 vol= model.getCompartmentVolume(i)
-                dimension = [900,900]
-                position = [10,10]
+                dimension = [1000,1000]
+                position = [0,0]
                 drawNetwork.addCompartment(canvas, position, dimension,
                                             comp_border_color, comp_fill_color, comp_border_width)
             spec_id_list = [] 

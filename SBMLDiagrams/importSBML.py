@@ -365,8 +365,8 @@ def load(sbmlStr, reactionLineType = 'bezier'):
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
                 if temp_id == "_compartment_default_":
-                    dimension = [900, 900]
-                    position = [10, 10]
+                    dimension = [1000, 1000]
+                    position = [0, 0]
                     #comp_border_color = [255, 255, 255, 0] #the last digit for transparent
                     #comp_fill_color = [255, 255, 255, 0]
                     comp_border_color = [255, 255, 255]
@@ -408,8 +408,8 @@ def load(sbmlStr, reactionLineType = 'bezier'):
                         # dimension = [800,800]
                         # position = [40,40]
                         # the whole size of the compartment: 4000*2500
-                        dimension = [900,900]
-                        position = [10,10]
+                        dimension = [1000,1000]
+                        position = [0,0]
                         #comp_fill_color = [255, 255, 255, 0]
                         #comp_border_color = [255, 255, 255, 0]
                         comp_fill_color = [255, 255, 255]
@@ -787,8 +787,8 @@ def load(sbmlStr, reactionLineType = 'bezier'):
                 temp_id = Comps_ids[i]
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
-                dimension = [900,900]
-                position = [10,10]
+                dimension = [1000,1000]
+                position = [0,0]
 
                 CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
                 CompartmentData_row_dct[NETIDX].append(netIdx)

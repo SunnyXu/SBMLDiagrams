@@ -339,10 +339,10 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
             compartmentGlyph.setId(compG_id)
             compartmentGlyph.setCompartmentId(comp_id)
             bb_id  = "bb_" + comp_id
-            pos_x  = 10
-            pos_y  = 10
-            width  = 900
-            height = 900
+            pos_x  = 0
+            pos_y  = 0
+            width  = 1000
+            height = 1000
             compartmentGlyph.setBoundingBox(BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
         
             for i in range(numNodes):
