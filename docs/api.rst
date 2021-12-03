@@ -15,7 +15,6 @@ api
   :undoc-members:
   :show-inheritance:
 
-
 .. automodule:: SBMLDiagrams.visualizeSBML
   :members:
   :undoc-members:

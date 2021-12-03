@@ -57,7 +57,7 @@ COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIF
 
 
 
-def main(sbmlStr, reactionLineType): 
+def load(sbmlStr, reactionLineType = 'bezier'): 
 
     """
     Save the information of an SBML file to a set of dataframe.
@@ -65,7 +65,7 @@ def main(sbmlStr, reactionLineType):
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'.
+        reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
 
     Returns:
         df_CompartmentData: DataFrame-Compartment information.
@@ -365,7 +365,7 @@ def main(sbmlStr, reactionLineType):
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
                 if temp_id == "_compartment_default_":
-                    dimension = [3900, 2400]
+                    dimension = [900, 900]
                     position = [10, 10]
                     #comp_border_color = [255, 255, 255, 0] #the last digit for transparent
                     #comp_fill_color = [255, 255, 255, 0]
@@ -408,7 +408,7 @@ def main(sbmlStr, reactionLineType):
                         # dimension = [800,800]
                         # position = [40,40]
                         # the whole size of the compartment: 4000*2500
-                        dimension = [3900,2400]
+                        dimension = [900,900]
                         position = [10,10]
                         #comp_fill_color = [255, 255, 255, 0]
                         #comp_border_color = [255, 255, 255, 0]
@@ -787,7 +787,7 @@ def main(sbmlStr, reactionLineType):
                 temp_id = Comps_ids[i]
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
-                dimension = [3900,2400]
+                dimension = [900,900]
                 position = [10,10]
 
                 CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
@@ -1017,34 +1017,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #dirname = "test_sbml_files"
-    #dirname = "sample_sbml"
-    #simple files
     filename = "test.xml" 
-    #filename = 'test_line.xml' 
-    #no layout 
-    #filename = "E_coli_Millard2016.xml" 
-    #filename = 'feedback-self.xml' #does not work
-    #part layout
-    #filename = "LinearChain.xml" 
-    #filename = "Feedback-Sauro.xml" 
-    #filename = "Jana_WolfGlycolysis.xml" 
-    #whole layout  
-    #filename = 'test_center.xml' 
-    #filename = 'test_handles.xml'
-    #filename = 'test_arrows.xml'
-    #filename = 'test_no_comp.xml'
-    #filename = 'test_comp.xml'
-    #invalid sbml 
-    #filename = 'testbigmodel.xml' 
-    #modifiers
-    #filename = 'test_modifier.xml' 
-    #filename = 'test_modifier_comp.xml'
-    #filename = "BorisEJB.xml"
-
-
-    #check
-    reactionLineType = 'bezier' #'linear' or 'bezier'
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -1054,7 +1027,7 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         try:
-            (df_CompartmentData, df_NodeData, df_ReactionData) = main(sbmlStr, reactionLineType)
+            (df_CompartmentData, df_NodeData, df_ReactionData) = load(sbmlStr)
             df_CompartmentData.to_csv("CompartmentData.csv", index=False)
             df_NodeData.to_csv("NodeData.csv", index=False)
             df_ReactionData.to_csv("ReactionData.csv", index=False)

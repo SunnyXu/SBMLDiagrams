@@ -10,8 +10,6 @@ IGNORE_TEST = False
 class TestKineticLaw(unittest.TestCase):
 
   def setUp(self):
-    reactionLineType = 'bezier' #'linear' or 'bezier'
-    complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
 
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
@@ -19,7 +17,7 @@ class TestKineticLaw(unittest.TestCase):
     f = open(TEST_PATH, 'r')
     sbmlStr = f.read()
     f.close()
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.main(sbmlStr, reactionLineType)
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.load(sbmlStr)
 
   def testCompartment1(self):
     # Test all the column names

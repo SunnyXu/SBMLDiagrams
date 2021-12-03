@@ -59,4 +59,4 @@ html_static_path = ['_static']
 
 # add sourcecode to path
 import sys, os
-sys.path.insert(0, os.path.abspath('../src'))
+sys.path.insert(0, os.path.abspath('../SBMLDiagrams'))

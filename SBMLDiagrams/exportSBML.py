@@ -16,7 +16,7 @@ import pandas as pd
 import math
 
 
-def main(df_CompartmentData, df_NodeData, df_ReactionData):
+def export(df_CompartmentData, df_NodeData, df_ReactionData):
 
     """
     Write the information of a set of dataframe to an SBML string. 
@@ -341,8 +341,8 @@ def main(df_CompartmentData, df_NodeData, df_ReactionData):
             bb_id  = "bb_" + comp_id
             pos_x  = 10
             pos_y  = 10
-            width  = 3900
-            height = 2400
+            width  = 900
+            height = 900
             compartmentGlyph.setBoundingBox(BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
         
             for i in range(numNodes):
@@ -738,11 +738,8 @@ if __name__ == '__main__':
     df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
     df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
     df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
-    # df_CompartmentData = pd.read_csv('CompartmentData.csv') 
-    # df_NodeData = pd.read_csv('NodeData.csv')
-    # df_ReactionData = pd.read_csv('ReactionData.csv')
 
-    sbmlStr_layout_render = main(df_CompartmentData, df_NodeData, df_ReactionData)
+    sbmlStr_layout_render = export(df_CompartmentData, df_NodeData, df_ReactionData)
 
     f = open("output.xml", "w")
     f.write(sbmlStr_layout_render)

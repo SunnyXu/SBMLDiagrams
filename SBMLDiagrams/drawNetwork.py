@@ -4,7 +4,7 @@
 # This file includes all the functions to visualize or edit the SBML file.
 """
 Created on Fri Jul 16 09:57:30 2021
-@author: hsauro and Jin Xu
+@author: Jin Xu and Herbert Sauro
 """
 
 import math
@@ -536,9 +536,9 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
 
         reaction_line_width: float-reaction line width.
 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'.
+        reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
 
-        showBezierHandles: bool-show the Bezier handles (True) or not (False).
+        showBezierHandles: bool-show the Bezier handles (True as default) or not (False).
 
     """
     
@@ -823,17 +823,17 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 
 def draw(surface, fileName = '', file_format = 'PNG'):
-
     """
     Display the diagram and save it to the local.
 
     Args:  
         surface: skia.Surface().
 
-        fileName: str-the name for the generated file: either the input filename or a randomly generated filename.
+        fileName: str-the name for the generated file: either the input filename or a randomly generated filename if '' (default).
         
-        fileFormat = 'PNG' #'PNG' or 'JPEG'.
+        fileFormat = 'PDF' #'PNG' (default), 'JPEG' or 'PDF'.
     """ 
+
     if fileName == '':
         random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
         #tmpfileName = os.path.join(tempfile.gettempdir(), random_string)    
@@ -842,24 +842,54 @@ def draw(surface, fileName = '', file_format = 'PNG'):
         if file_format == 'PNG':
             tmpfileName = tmpfileName + '.png'
             image.save(tmpfileName, skia.kPNG)
+            pil_im = Image.open(tmpfileName)
+            display(pil_im)
+            pil_im.show()
         elif file_format == 'JPEG':
             tmpfileName = tmpfileName + '.jpg'
             image.save(tmpfileName, skia.kJPEG)
+            pil_im = Image.open(tmpfileName)
+            display(pil_im)
+            pil_im.show()
+        elif file_format == 'PDF':
+            tmpfileNamepdf = tmpfileName + '.pdf'
+            tmpfileName = tmpfileName + '.png'
+            image.save(tmpfileName, skia.kPNG)
+            pil_im = Image.open(tmpfileName)
+            display(pil_im)
+            pil_im.show() 
+            imagepdf = pil_im.convert('RGB')
+            imagepdf.save(tmpfileNamepdf)
+            os.remove(tmpfileName)
+
         #self.surface.write_to_png(tmpfileName)
-        pil_im = Image.open(tmpfileName)
-        display(pil_im)
-        pil_im.show()
+        # pil_im = Image.open(tmpfileName)
+        # display(pil_im)
+        # pil_im.show()
     else:
-        tmpfileName = os.path.join(os.getcwd())
+        fileName = os.path.join(os.getcwd(),fileName)
         image = surface.makeImageSnapshot()
         if file_format == 'PNG':
             fileName = fileName + '.png'
             image.save(fileName, skia.kPNG)
+            pil_im = Image.open(fileName)
+            display(pil_im)
+            pil_im.show() 
         elif file_format == 'JPEG':
             fileName = fileName + '.jpg'
-            image.save(fileName, skia.kJPEG)   
-        pil_im = Image.open(fileName)
-        display(pil_im)
-        pil_im.show()            
-    
+            image.save(fileName, skia.kJPEG) 
+            pil_im = Image.open(fileName)
+            display(pil_im)
+            pil_im.show()   
+        elif file_format == 'PDF':
+            fileNamepdf = fileName + '.pdf'
+            fileName = fileName + '.png'
+            image.save(fileName, skia.kPNG)
+            pil_im = Image.open(fileName)
+            display(pil_im)
+            pil_im.show() 
+            imagepdf = pil_im.convert('RGB')
+            imagepdf.save(fileNamepdf)
+            os.remove(fileName)
+
 

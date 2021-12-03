@@ -12,16 +12,14 @@ IGNORE_TEST = False
 class TestKineticLaw(unittest.TestCase):
 
   def setUp(self):
-    reactionLineType = 'bezier' #'linear' or 'bezier'
-    complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
     
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "initiate_csv_files")
     df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, "CompartmentData.csv")) 
     df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, "NodeData.csv"))
     df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, "ReactionData.csv"))
-    sbmlStr_layout_render = exportSBML.main(df_CompartmentData, df_NodeData, df_ReactionData)
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.main(sbmlStr_layout_render, reactionLineType)
+    sbmlStr_layout_render = exportSBML.export(df_CompartmentData, df_NodeData, df_ReactionData)
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.load(sbmlStr_layout_render)
 
   def testCompartment1(self):
     # Test all the column names

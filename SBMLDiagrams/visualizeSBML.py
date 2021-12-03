@@ -8,36 +8,35 @@ Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu
 """
 
-from SBMLDiagrams import drawNetwork
 import os
 import skia
 import simplesbml
 from libsbml import *
 import math
 import random as _random
+import drawNetwork
 
-
-def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileName, complexShape):
+def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = True, fileFormat = 'PNG', output_fileName = 'output', complexShape = ''):
 
     """
-    Visualization from an sbml string to a PNG/JPG file.
+    Visualization from an sbml string to a PNG/JPG/PDF file.
 
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier'.
+        reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
 
-        showBezierHandles: bool-show the Bezier handles (True) or not (False).
+        showBezierHandles: bool-show the Bezier handles (True as default) or not (False).
 
-        fileFormat: str-output file type: 'PNG' or 'JPEG'.
+        fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
-        output_fileName: str-filename: 'output' or ''.
+        output_fileName: str-filename: 'output' (default) or ''.
         
-        complexShape: str-type of complex shapes: '' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'.  
+        complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' or 'tetramer'.  
 
     """
 
-    surface = skia.Surface(3940, 2430)
+    surface = skia.Surface(1000, 1000)
     canvas = surface.getCanvas()
     
     def hex_to_rgb(value):
@@ -313,7 +312,7 @@ def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileNa
                 temp_id = Comps_ids[i]
                 vol= model.getCompartmentVolume(i)
                 if temp_id == "_compartment_default_":
-                    dimension = [3900, 2400]
+                    dimension = [900, 900]
                     position = [10, 10]
                     #comp_border_color = (255, 255, 255, 0) #the last digit for transparent
                     #comp_fill_color = (255, 255, 255, 0)
@@ -336,11 +335,7 @@ def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileNa
                     else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
                         # modify the compartment size using the max_rec function above
-                        # random assigned network:
-                        # dimension = [800,800]
-                        # position = [40,40]
-                        # the whole size of the compartment: 4000*2500
-                        dimension = [3900,2400]
+                        dimension = [900,900]
                         position = [10,10]
                         #comp_fill_color = (255, 255, 255, 0)
                         #comp_border_color = (255, 255, 255, 0)
@@ -536,14 +531,14 @@ def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileNa
                                                 shapeIdx, complex_shape=complexShape)
                             drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)                
                             id_list.append(temp_id)
-    
+
         else: # there is no layout information, assign position randomly and size as default
             comp_id_list = Comps_ids
             nodeIdx_temp = 0 #to track the node index    
             for i in range(numComps):
                 temp_id = Comps_ids[i]
                 vol= model.getCompartmentVolume(i)
-                dimension = [3900,2400]
+                dimension = [900,900]
                 position = [10,10]
                 drawNetwork.addCompartment(canvas, position, dimension,
                                             comp_border_color, comp_fill_color, comp_border_width)
@@ -640,10 +635,10 @@ def main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileNa
                                     spec_border_color, spec_fill_color, spec_border_width,
                                     shapeIdx, complex_shape=complexShape)
                 drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)
+
         drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat ) 
     except:
       print("invalid SBML file")
-
 
 
 
@@ -651,52 +646,18 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #dirname = "test_sbml_files"
-    #dirname = "sample_sbml"
-    #dirname = ''
-    #simple files
     filename = "test.xml"
-    #filename = 'test_line.xml'
-    #no layout
-    #filename = "E_coli_Millard2016.xml" 
-    #filename = 'feedback-self.xml' 
-
-    #part layout
-    #filename = "LinearChain.xml"
-    #filename = "Feedback-Sauro.xml"
     #filename = "Jana_WolfGlycolysis.xml"
-    #whole layout
-    #filename = 'test_center.xml' 
-    #filename = 'test_handles.xml'
-    #filename = 'test_arrows.xml'
-    #filename = 'test_no_comp.xml'
-    #filename = 'test_comp.xml'
-    #invalid sbml
-    #filename = 'testbigmodel.xml'
-    #modifiers
-    #filename = 'test_modifier.xml'
-    #filename = 'test_modifier_comp.xml'
-    #filename = "BorisEJB.xml"
-
-    #filename = "output.xml"
-
-    #check
-    reactionLineType = 'bezier' #'linear' or 'bezier'
-    showBezierHandles = True #True: show the Bezier handles, False: do not show
-    fileFormat = 'PNG' #'PNG' or 'JPEG'
-    output_fileName = 'output' #filename or '' 
-    complexShape = '' #'' or 'monomer' or 'dimer' or 'trimer' or 'tetramer'
+    #filename = "test_comp.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
-
-
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        main(sbmlStr, reactionLineType, showBezierHandles, fileFormat, output_fileName, complexShape)
+        display(sbmlStr, fileFormat = 'PDF')
 
 
 
