@@ -14,7 +14,7 @@ import simplesbml
 from libsbml import *
 import math
 import random as _random
-import drawNetwork
+from SBMLDiagrams import drawNetwork
 
 def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = True, fileFormat = 'PNG', output_fileName = 'output', complexShape = ''):
 
@@ -646,8 +646,8 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
-    #filename = "Jana_WolfGlycolysis.xml"
+    #filename = "test.xml"
+    filename = "Jana_WolfGlycolysis.xml"
     #filename = "test_comp.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
