@@ -1,5 +1,5 @@
 coverage
-numpy
+numpy>=1.15.4
 pandas
 python-libsbml
 pip>20

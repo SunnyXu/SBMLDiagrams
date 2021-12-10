@@ -1,2 +1,0 @@
-net_idx,idx,id,sources,targets,rate_law,modifiers,fill_color,line_thickness,center_pos,handles,bezier
-0,0,r_0,[0],[1],E0 * (k0 * x_1 - k0r * x_0),[],"[91, 176, 253]",3.0,"[334.0, 231.0]","[[386.0, 231.0], [386.0, 231.0], [386.0, 231.0]]",TRUE

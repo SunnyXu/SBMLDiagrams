@@ -2,11 +2,6 @@
 # This script was written by Jin Xu and available on Github
 # https://github.com/SunnyXu/SBMLDiagrams
 
-"""
-Created on Mon Aug 23 13:25:34 2021
-
-@author: Jin Xu
-"""
 
 from inspect import Parameter
 import os
@@ -140,9 +135,15 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
             rct = [] # id list of the rcts
             prd = []
             mod = []
-            rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
-            prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
-            mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
+            try:
+                rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
+                prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
+                mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
+            except:
+                rct_list = df_ReactionData.iloc[i]['sources']
+                prd_list = df_ReactionData.iloc[i]['targets']
+                mod_list = df_ReactionData.iloc[i]['modifiers']
+
             rct_num = len(rct_list)
             prd_num = len(prd_list)
             mod_num = len(mod_list)
@@ -295,8 +296,12 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
                     compartmentGlyph.setId(compG_id)
                     compartmentGlyph.setCompartmentId(comp_id)
                     bb_id  = "bb_" + comp_id
-                    position_list = list(df_CompartmentData.iloc[i]['position'][1:-1].split(","))
-                    size_list = list(df_CompartmentData.iloc[i]['size'][1:-1].split(","))
+                    try:
+                        position_list = list(df_CompartmentData.iloc[i]['position'][1:-1].split(","))
+                        size_list = list(df_CompartmentData.iloc[i]['size'][1:-1].split(","))
+                    except:
+                        position_list = df_CompartmentData.iloc[i]['position']
+                        size_list = df_CompartmentData.iloc[i]['size']
                     pos_x  = float(position_list[0])
                     pos_y  = float(position_list[1])
                     width  = float(size_list[0])
@@ -311,8 +316,12 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
                 speciesGlyph.setId(specG_id)
                 speciesGlyph.setSpeciesId(spec_id)
                 bb_id  = "bb_" + spec_id + '_idx_' + str(spec_index)
-                position_list = list(df_NodeData.iloc[i]['position'][1:-1].split(","))
-                size_list = list(df_NodeData.iloc[i]['size'][1:-1].split(","))
+                try:
+                    position_list = list(df_NodeData.iloc[i]['position'][1:-1].split(","))
+                    size_list = list(df_NodeData.iloc[i]['size'][1:-1].split(","))
+                except:
+                    position_list = df_NodeData.iloc[i]['position']
+                    size_list = df_NodeData.iloc[i]['size']
                 pos_x  = float(position_list[0])
                 pos_y  = float(position_list[1])
                 width  = float(size_list[0])
@@ -323,8 +332,12 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
                 textGlyph.setId(textG_id)
                 bb_id  = "bb_spec_text_" + spec_id + '_idx_' + str(spec_index)
-                position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
-                size_list = list(df_NodeData.iloc[i]['txt_size'][1:-1].split(","))
+                try:
+                    position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
+                    size_list = list(df_NodeData.iloc[i]['txt_size'][1:-1].split(","))
+                except:
+                    position_list = df_NodeData.iloc[i]['txt_position']
+                    size_list = df_NodeData.iloc[i]['txt_size']
                 pos_x_text  = float(position_list[0])
                 pos_y_text  = float(position_list[1])
                 width_text  = float(size_list[0])
@@ -354,8 +367,12 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
                 speciesGlyph.setId(specG_id)
                 speciesGlyph.setSpeciesId(spec_id)
                 bb_id  = "bb_" + spec_id + '_idx_' + str(spec_index)
-                position_list = list(df_NodeData.iloc[i]['position'][1:-1].split(","))
-                size_list = list(df_NodeData.iloc[i]['size'][1:-1].split(","))
+                try:
+                    position_list = list(df_NodeData.iloc[i]['position'][1:-1].split(","))
+                    size_list = list(df_NodeData.iloc[i]['size'][1:-1].split(","))
+                except:
+                    position_list = df_NodeData.iloc[i]['position']
+                    size_list = df_NodeData.iloc[i]['size']
                 pos_x  = float(position_list[0])
                 pos_y  = float(position_list[1])
                 width  = float(size_list[0])
@@ -365,8 +382,12 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
                 textGlyph.setId(textG_id)
-                position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
-                size_list = list(df_NodeData.iloc[i]['txt_size'][1:-1].split(","))
+                try:
+                    position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
+                    size_list = list(df_NodeData.iloc[i]['txt_size'][1:-1].split(","))
+                except:
+                    position_list = df_NodeData.iloc[i]['txt_position']
+                    size_list = df_NodeData.iloc[i]['txt_size']
                 pos_x_text  = float(position_list[0])
                 pos_y_text  = float(position_list[1])
                 width_text  = float(size_list[0])
@@ -388,9 +409,14 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
             rct = [] # id list of the rcts
             prd = []
             mod = []
-            rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
-            prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
-            mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
+            try:
+                rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
+                prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
+                mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
+            except:
+                rct_list = df_ReactionData.iloc[i]['sources']
+                prd_list = df_ReactionData.iloc[i]['targets']
+                mod_list = df_ReactionData.iloc[i]['modifiers']
             rct_index = []
             prd_index = []
             mod_index = []
@@ -422,13 +448,21 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
             center_x = 0.
             center_y = 0.
             for j in range(rct_num):
-                src_position = list(df_NodeData.iloc[int(rct_list[j])]['position'][1:-1].split(","))
-                src_dimension = list(df_NodeData.iloc[int(rct_list[j])]['size'][1:-1].split(",")) 
+                try:
+                    src_position = list(df_NodeData.iloc[int(rct_list[j])]['position'][1:-1].split(","))
+                    src_dimension = list(df_NodeData.iloc[int(rct_list[j])]['size'][1:-1].split(",")) 
+                except:
+                    src_position = df_NodeData.iloc[int(rct_list[j])]['position']
+                    src_dimension = df_NodeData.iloc[int(rct_list[j])]['size']
                 center_x += float(src_position[0])+.5*float(src_dimension[0])
                 center_y += float(src_position[1])+.5*float(src_dimension[1])
             for j in range(prd_num):
-                dst_position = list(df_NodeData.iloc[int(prd_list[j])]['position'][1:-1].split(","))
-                dst_dimension = list(df_NodeData.iloc[int(prd_list[j])]['size'][1:-1].split(",")) 
+                try:
+                    dst_position = list(df_NodeData.iloc[int(prd_list[j])]['position'][1:-1].split(","))
+                    dst_dimension = list(df_NodeData.iloc[int(prd_list[j])]['size'][1:-1].split(",")) 
+                except:
+                    dst_position = df_NodeData.iloc[int(prd_list[j])]['position']
+                    dst_dimension = df_NodeData.iloc[int(prd_list[j])]['size']
                 center_x += float(dst_position[0])+.5*float(dst_dimension[0])
                 center_y += float(dst_position[1])+.5*float(dst_dimension[1])
             center_x = center_x/(rct_num + prd_num) 
@@ -447,19 +481,27 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
                 handles.append([dst_handle_x,dst_handle_y])
 
             try:
-                center_pos = list(df_ReactionData.iloc[i]['center_pos'][1:-1].split(","))
-                handles_list_pre = list(df_ReactionData.iloc[i]['handles'][1:-1].split(","))
+                try:
+                    center_pos = list(df_ReactionData.iloc[i]['center_pos'][1:-1].split(","))
+                    handles_list_pre = list(df_ReactionData.iloc[i]['handles'][1:-1].split(","))
+                except:
+                    center_pos = df_ReactionData.iloc[i]['center_pos']
+                    handles_list_pre = df_ReactionData.iloc[i]['handles']
+                
                 handles_pre = []
                 handles = []
-                for i in range(len(handles_list_pre)):
-                    temp = handles_list_pre[i]
-                    if temp.find('[') != -1:
-                        temp_update = temp.replace('[', '')
-                    elif temp.find(']') != -1:
-                        temp_update = temp.replace(']', '')
-                    handles_pre.append(float(temp_update))
-                for i in range(0,len(handles_pre),2):
-                    handles.append([handles_pre[i], handles_pre[i+1]])
+                if type(handles_list_pre[0]) is str:
+                    for i in range(len(handles_list_pre)):
+                        temp = handles_list_pre[i]
+                        if temp.find('[') != -1:
+                            temp_update = temp.replace('[', '')
+                        elif temp.find(']') != -1:
+                            temp_update = temp.replace(']', '')
+                        handles_pre.append(float(temp_update))
+                    for i in range(0,len(handles_pre),2):
+                        handles.append([handles_pre[i], handles_pre[i+1]])
+                else:
+                    handles = handles_list_pre
                 center_value = [float(center_pos[0]),float(center_pos[1])]
             except:
                 center_value = center_position
@@ -487,8 +529,12 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
                 cb.setBasePoint1(Point(layoutns, handle1[0], handle1[1]))
                 cb.setBasePoint2(Point(layoutns, handle2[0], handle2[1]))
 
-                src_position = list(df_NodeData.iloc[int(rct_list[j])]['position'][1:-1].split(","))
-                src_dimension = list(df_NodeData.iloc[int(rct_list[j])]['size'][1:-1].split(",")) 
+                try:
+                    src_position = list(df_NodeData.iloc[int(rct_list[j])]['position'][1:-1].split(","))
+                    src_dimension = list(df_NodeData.iloc[int(rct_list[j])]['size'][1:-1].split(",")) 
+                except:
+                    src_position = df_NodeData.iloc[int(rct_list[j])]['position']
+                    src_dimension = df_NodeData.iloc[int(rct_list[j])]['size']
                 pos_x = float(src_position[0])
                 pos_y = float(src_position[1])
                 width = float(src_dimension[0])
@@ -513,8 +559,12 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
                 cb.setBasePoint1(Point(layoutns, handle1[0], handle2[1]))
                 cb.setBasePoint2(Point(layoutns, handle2[0], handle2[1]))
 
-                dst_position = list(df_NodeData.iloc[int(prd_list[j])]['position'][1:-1].split(","))
-                dst_dimension = list(df_NodeData.iloc[int(prd_list[j])]['size'][1:-1].split(","))     
+                try:
+                    dst_position = list(df_NodeData.iloc[int(prd_list[j])]['position'][1:-1].split(","))
+                    dst_dimension = list(df_NodeData.iloc[int(prd_list[j])]['size'][1:-1].split(","))
+                except:
+                    dst_position = df_NodeData.iloc[int(prd_list[j])]['position']
+                    dst_dimension = df_NodeData.iloc[int(prd_list[j])]['size']     
 
                 pos_x = float(dst_position[0])
                 pos_y = float(dst_position[1])
@@ -567,8 +617,12 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
             for i in range(numCompartments):
                 comp_id = df_CompartmentData.iloc[i]['id']
                 if comp_id != '_compartment_default':
-                    fill_color        = list(df_CompartmentData.iloc[i]['fill_color'][1:-1].split(","))
-                    border_color      = list(df_CompartmentData.iloc[i]['border_color'][1:-1].split(","))
+                    try:
+                        fill_color   = list(df_CompartmentData.iloc[i]['fill_color'][1:-1].split(","))
+                        border_color = list(df_CompartmentData.iloc[i]['border_color'][1:-1].split(","))
+                    except:    
+                        fill_color   = df_CompartmentData.iloc[i]['fill_color']
+                        border_color = df_CompartmentData.iloc[i]['border_color']
                     comp_border_width = float(df_CompartmentData.iloc[i]['border_width'])
                     fill_color_str    = '#%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]))
                     border_color_str  = '#%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]))
@@ -622,14 +676,21 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
             spec_id = df_NodeData.iloc[i]['id']  
             spec_shapeIdx = int(df_NodeData.iloc[i]['shape_idx'])
             try: 
-                spec_fill_color   = list(df_NodeData.iloc[i]['fill_color'][1:-1].split(","))
-                spec_border_color = list(df_NodeData.iloc[i]['border_color'][1:-1].split(","))
+                try:
+                    spec_fill_color   = list(df_NodeData.iloc[i]['fill_color'][1:-1].split(","))
+                    spec_border_color = list(df_NodeData.iloc[i]['border_color'][1:-1].split(","))
+                except:
+                    spec_fill_color   = df_NodeData.iloc[i]['fill_color']
+                    spec_border_color = df_NodeData.iloc[i]['border_color']
                 spec_fill_color_str   = '#%02x%02x%02x' % (int(spec_fill_color[0]),int(spec_fill_color[1]),int(spec_fill_color[2]))
                 spec_border_color_str = '#%02x%02x%02x' % (int(spec_border_color[0]),int(spec_border_color[1]),int(spec_border_color[2]))
                 spec_border_width = float(df_NodeData.iloc[i]['border_width'])
 
                 #text_font_size = int(df_NodeData.iloc[i]['txt_font_size'])
-                font_color = list(df_NodeData.iloc[i]['txt_font_color'][1:-1].split(","))
+                try:
+                    font_color = list(df_NodeData.iloc[i]['txt_font_color'][1:-1].split(","))
+                except:
+                    font_color = df_NodeData.iloc[i]['txt_font_color']
                 text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
                 text_line_width = float(df_NodeData.iloc[i]['txt_line_width'])
             except: #text-only: set default species/node with white color
@@ -709,7 +770,11 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
         if numReactions != 0:
             for i in range(numReactions):
                 rxn_id = df_ReactionData.iloc[i]['id']
-                reaction_fill_color     = list(df_ReactionData.iloc[i]['fill_color'][1:-1].split(","))
+                try:
+                    reaction_fill_color = list(df_ReactionData.iloc[i]['fill_color'][1:-1].split(","))
+                except:
+                    reaction_fill_color = df_ReactionData.iloc[i]['fill_color']
+                
                 reaction_fill_color_str = '#%02x%02x%02x' % (int(reaction_fill_color[0]),int(reaction_fill_color[1]),int(reaction_fill_color[2]))           
                 reaction_line_thickness = float(df_ReactionData.iloc[i]['line_thickness'])
 
@@ -730,18 +795,23 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
         raise ValueError('There is no node or no reaction!')
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    DIR = os.path.dirname(os.path.abspath(__file__))
-    TEST_FOLDER = os.path.join(DIR, "initiate_csv_files")
+#     DIR = os.path.dirname(os.path.abspath(__file__))
+#     TEST_FOLDER = os.path.join(DIR, "initiate_excel_files")
 
-    df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
-    df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
-    df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
+#     # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
+#     # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
+#     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
 
-    sbmlStr_layout_render = export(df_CompartmentData, df_NodeData, df_ReactionData)
+#     xls = pd.ExcelFile('test.xlsx')
+#     df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
+#     df_NodeData = pd.read_excel(xls, 'NodeData')
+#     df_ReactionData = pd.read_excel(xls, 'ReactionData')
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+#     sbmlStr_layout_render = export(df_CompartmentData, df_NodeData, df_ReactionData)
+
+#     f = open("output.xml", "w")
+#     f.write(sbmlStr_layout_render)
+#     f.close()
         

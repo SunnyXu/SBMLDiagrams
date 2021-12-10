@@ -383,13 +383,13 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
     Args:  
         canvas: skia.Surface().getCanvas().
 
-        position: 1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
 
-        dimension: 1*2 matrix-size of the rectangle [width, height].
+        dimension: list-1*2 matrix-size of the rectangle [width, height].
 
-        comp_border_color: 1*3 matrix-compartment border color.
+        comp_border_color: list-rgb 1*3 matrix-compartment border color.
 
-        comp_fill_color: 1*2 matrix-compartment fill color.
+        comp_fill_color: list-rgb 1*3 matrix-compartment fill color.
 
         comp_border_width: float-compartment border line width.
         
@@ -417,13 +417,13 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 
         alias_node: str-alias node ('alias') or not ('').
 
-        position: 1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
 
-        dimension: 1*2 matrix-size of the rectangle [width, height].
+        dimension: list-1*2 matrix-size of the rectangle [width, height].
 
-        spec_border_color: 1*3 matrix-species border color.
+        spec_border_color: list-rgb 1*3 matrix-species border color.
 
-        spec_fill_color: 1*3 matrix-species fill color.
+        spec_fill_color: list-rgb 1*3 matrix-species fill color.
 
         spec_border_width: float-compartment border line width.
 
@@ -516,23 +516,23 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
     Args:  
         canvas: skia.Surface().getCanvas().
 
-        rct_position: list of 1*2 matrix: positions of each reactant.
+        rct_position: list-1*2 matrix: positions of each reactant.
 
-        prd_position: list of 1*2 matrix: positions of each product.
+        prd_position: list-1*2 matrix: positions of each product.
 
-        mod_position: list of 1*2 matrix: positions of each modifier.
+        mod_position: list-1*2 matrix: positions of each modifier.
 
-        center_position: 1*2 matrix: position of the center.
+        center_position: list-1*2 matrix: position of the center.
 
-        handles: list of 1*2 matrix: position of the handles: [center handle, reactant handles, product handles].
+        handles: list-: position of the handles: [center handle, reactant handles, product handles].
 
-        rct_dimension: list of 1*2 matrix: dimension/size of each reactant.
+        rct_dimension: list-1*2 matrix: dimension/size of each reactant.
 
-        prd_dimension: list of 1*2 matrix: dimension/size of each product.
+        prd_dimension: list-1*2 matrix: dimension/size of each product.
 
-        mod_dimension: list of 1*2 matrix: dimension/size of each modifier.
+        mod_dimension: list-1*2 matrix: dimension/size of each modifier.
 
-        reaction_line_color: 1*3 matrix-species fill color.
+        reaction_line_color: list-rgb 1*3 matrix-species fill color.
 
         reaction_line_width: float-reaction line width.
 
@@ -797,11 +797,11 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
 
         node_id: str-the content of the text.
 
-        position: 1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
 
-        dimension: 1*2 matrix-size of the rectangle [width, height].
+        dimension: list-1*2 matrix-size of the rectangle [width, height].
 
-        text_line_color: 1*3 matrix-text line color.
+        text_line_color: list-rgb 1*3 matrix-text line color.
 
         text_line_width: float-text line width.
 
