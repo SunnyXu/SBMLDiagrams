@@ -14,9 +14,10 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run tests and collect coverage
         run: |
-          coverage run -m unittest tests/test_importSBML.py
-          coverage run -m unittest tests/test_exportSBML_via_importSBML.py
-          coverage run -m unittest tests/test_editSBML.py
+          #coverage run -m unittest tests/test_importSBML.py
+          #coverage run -m unittest tests/test_exportSBML_via_importSBML.py
+          #coverage run -m unittest tests/test_editSBML.py
+          coverage run -m unittest tests/test_*.py
           coverage xml
           
       - name: Upload coverage to Codecov
