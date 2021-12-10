@@ -18,7 +18,7 @@ jobs:
           #coverage run -m unittest tests/test_exportSBML_via_importSBML.py
           #coverage run -m unittest tests/test_editSBML.py
           coverage run -m unittest discover -s . -p 'tests/test_*.py'
-          #coverage xml
+          coverage xml
           
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
