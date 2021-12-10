@@ -642,19 +642,19 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = True, file
 
 
 if __name__ == '__main__':
-    DIR = os.path.dirname(os.path.abspath(__file__))
-    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+#     DIR = os.path.dirname(os.path.abspath(__file__))
+#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
+#     filename = "test.xml"
 
-    f = open(os.path.join(TEST_FOLDER, filename), 'r')
-    sbmlStr = f.read()
-    f.close()
+#     f = open(os.path.join(TEST_FOLDER, filename), 'r')
+#     sbmlStr = f.read()
+#     f.close()
 
-    if len(sbmlStr) == 0:
-        print("empty sbml")
-    else:
-        display(sbmlStr, fileFormat = 'JPEG')
+#     if len(sbmlStr) == 0:
+#         print("empty sbml")
+#     else:
+#         display(sbmlStr, fileFormat = 'JPEG')
 
 
 
