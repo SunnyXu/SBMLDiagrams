@@ -3,6 +3,7 @@ import os
 from SBMLDiagrams import importSBML
 from SBMLDiagrams import exportSBML
 import pandas as pd
+from openpyxl import *
 
 IGNORE_TEST = False
 
