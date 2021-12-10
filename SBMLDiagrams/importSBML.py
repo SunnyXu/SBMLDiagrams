@@ -1008,37 +1008,36 @@ def load(sbmlStr, reactionLineType = 'bezier'):
        raise ValueError('Invalid SBML!')
 
 
-# if __name__ == '__main__':
-#     DIR = os.path.dirname(os.path.abspath(__file__))
-#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+if __name__ == '__main__':
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-#     #filename = "test.xml" 
-#     #filename = "feedback.xml"
-#     #filename = "LinearChain.xml"
-#     #filename = "test_comp.xml"
-#     #filename = "test_no_comp.xml"
-#     #filename = "test_modifier.xml"
-#     filename = "testbigmodel.xml"
+    filename = "test.xml" 
+    #filename = "feedback.xml"
+    #filename = "LinearChain.xml"
+    #filename = "test_comp.xml"
+    #filename = "test_no_comp.xml"
+    #filename = "test_modifier.xml"
 
-#     f = open(os.path.join(TEST_FOLDER, filename), 'r')
-#     sbmlStr = f.read()
-#     f.close()
+    f = open(os.path.join(TEST_FOLDER, filename), 'r')
+    sbmlStr = f.read()
+    f.close()
 
-#     if len(sbmlStr) == 0:
-#         print("empty sbml")
-#     else:
-#         try:
-#             (df_CompartmentData, df_NodeData, df_ReactionData) = load(sbmlStr)
-#             # df_CompartmentData.to_csv("CompartmentData.csv", index=False)
-#             # df_NodeData.to_csv("NodeData.csv", index=False)
-#             # df_ReactionData.to_csv("ReactionData.csv", index=False)
+    if len(sbmlStr) == 0:
+        print("empty sbml")
+    else:
+        try:
+            (df_CompartmentData, df_NodeData, df_ReactionData) = load(sbmlStr)
+            # df_CompartmentData.to_csv("CompartmentData.csv", index=False)
+            # df_NodeData.to_csv("NodeData.csv", index=False)
+            # df_ReactionData.to_csv("ReactionData.csv", index=False)
 
-#             writer = pd.ExcelWriter('testbigmodel.xlsx')
-#             df_CompartmentData.to_excel(writer, sheet_name='CompartmentData')
-#             df_NodeData.to_excel(writer, sheet_name='NodeData')
-#             df_ReactionData.to_excel(writer, sheet_name='ReactionData')
-#             writer.save()
-#         except:
-#            print("Invalid SBML!")
+            writer = pd.ExcelWriter('testbigmodel.xlsx')
+            df_CompartmentData.to_excel(writer, sheet_name='CompartmentData')
+            df_NodeData.to_excel(writer, sheet_name='NodeData')
+            df_ReactionData.to_excel(writer, sheet_name='ReactionData')
+            writer.save()
+        except:
+           print("Invalid SBML!")
 
 
