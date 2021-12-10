@@ -177,7 +177,7 @@ DataFrame and update the information so that can generate a new SBML file via ex
 <div class="section" id="examples">
 <h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li><p>Visualize an SBML file to a PDF.</p></li>
+<li><p>Visualize an SBML file to a PNG.</p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">visualizeSBML</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -192,14 +192,49 @@ DataFrame and update the information so that can generate a new SBML file via ex
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empty SBML!&quot;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-   <span class="n">visualizeSBML</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">,</span> <span class="n">fileFormat</span> <span class="o">=</span> <span class="s1">&#39;PNG&#39;</span><span class="p">)</span>
+   <span class="n">visualizeSBML</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">,</span> <span class="n">reactionLineType</span> <span class="o">=</span> <span class="s1">&#39;bezier&#39;</span><span class="p">,</span> <span class="n">showBezierHandles</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> \
+   <span class="n">fileFormat</span> <span class="o">=</span> <span class="s1">&#39;PNG&#39;</span><span class="p">,</span> <span class="n">output_fileName</span> <span class="o">=</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="n">complexShape</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Import an SBML file to a set of csv files to edit.</p></li>
+<li><p>Edit and write to an SBML file.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">importSBML</span>
+<span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">exportSBML</span>
+<span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">editSBML</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">TEST_FOLDER</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">sbmlStr</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="p">(</span><span class="n">df_CompartmentData</span><span class="p">,</span> <span class="n">df_NodeData</span><span class="p">,</span> <span class="n">df_ReactionData</span><span class="p">)</span> <span class="o">=</span> <span class="n">importSBML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span>
+<span class="n">df_CompartmentData_update</span> <span class="o">=</span>  <span class="n">editSBML</span><span class="o">.</span><span class="n">setCompartment</span><span class="p">(</span><span class="n">df_CompartmentData</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> \
+     <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1000.</span><span class="p">,</span> <span class="mf">1000.</span><span class="p">],</span> <span class="n">fill_color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span> \
+     <span class="n">border_color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span> <span class="n">border_width</span> <span class="o">=</span> <span class="mf">2.</span><span class="p">)</span>
+<span class="n">df_NodeData_update</span> <span class="o">=</span> <span class="n">editSBML</span><span class="o">.</span><span class="n">setNode</span><span class="p">(</span><span class="n">df_NodeData</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">floating_node</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> \
+     <span class="n">position</span> <span class="o">=</span> <span class="p">[</span><span class="mf">413.</span><span class="p">,</span> <span class="mf">216.</span><span class="p">],</span> <span class="n">size</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="n">shape_idx</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>\
+     <span class="n">txt_position</span> <span class="o">=</span> <span class="p">[</span><span class="mf">413.</span><span class="p">,</span> <span class="mf">216.</span><span class="p">],</span> <span class="n">txt_size</span> <span class="o">=</span> <span class="p">[</span><span class="mf">50.</span><span class="p">,</span> <span class="mf">30.</span><span class="p">],</span> \
+     <span class="n">fill_color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">204</span><span class="p">,</span> <span class="mi">153</span><span class="p">],</span> <span class="n">border_color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="n">border_width</span> <span class="o">=</span> <span class="mf">2.</span><span class="p">,</span> \
+     <span class="n">txt_font_color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">txt_line_width</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">)</span>
+<span class="n">df_ReactionData_update</span> <span class="o">=</span> <span class="n">editSBML</span><span class="o">.</span><span class="n">setReaction</span><span class="p">(</span><span class="n">df_ReactionData</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> \
+        <span class="n">fill_color</span> <span class="o">=</span> <span class="p">[</span><span class="mi">91</span><span class="p">,</span> <span class="mi">176</span><span class="p">,</span> <span class="mi">253</span><span class="p">],</span> <span class="n">line_thickness</span> <span class="o">=</span> <span class="mf">3.</span><span class="p">,</span> \
+     <span class="n">bezier</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="n">sbmlStr_layout_render</span> <span class="o">=</span> <span class="n">exportSBML</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">df_CompartmentData_update</span><span class="p">,</span> <span class="n">df_NodeData_update</span><span class="p">,</span> <span class="n">df_ReactionData_update</span><span class="p">)</span>
+
+<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sbmlStr_layout_render</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Import an SBML file to an excel file to edit.</p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">importSBML</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
 <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
 <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;test.xml&quot;</span>
 <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
@@ -210,22 +245,27 @@ DataFrame and update the information so that can generate a new SBML file via ex
 <span class="k">else</span><span class="p">:</span>
    <span class="k">try</span><span class="p">:</span>
       <span class="n">df_CompartmentData</span><span class="p">,</span> <span class="n">df_NodeData</span><span class="p">,</span> <span class="n">df_ReactionData</span> <span class="o">=</span> <span class="n">importSBML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">,</span> <span class="n">reactionLineType</span><span class="p">)</span>
-      <span class="n">df_CompartmentData</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;CompartmentData.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-      <span class="n">df_NodeData</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;NodeData.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-      <span class="n">df_ReactionData</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;ReactionData.csv&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+      <span class="n">writer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="s1">&#39;test.xlsx&#39;</span><span class="p">)</span>
+      <span class="n">df_CompartmentData</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;CompartmentData&#39;</span><span class="p">)</span>
+      <span class="n">df_NodeData</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;NodeData&#39;</span><span class="p">)</span>
+      <span class="n">df_ReactionData</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;ReactionData&#39;</span><span class="p">)</span>
+      <span class="n">writer</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
    <span class="k">except</span><span class="p">:</span>
       <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Invalid SBML!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="3">
-<li><p>Export an SBML file based on the information from a set of csv files.</p></li>
+<ol class="arabic simple" start="4">
+<li><p>Export an SBML file based on the information from an excel file.</p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">exportSBML</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">df_CompartmentData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;path//to//CompartmentData.csv&#39;</span><span class="p">)</span>
-<span class="n">df_NodeData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;path//to//NodeData.csv&#39;</span><span class="p">)</span>
-<span class="n">df_ReactionData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;path//to//ReactionData.csv&#39;</span><span class="p">)</span>
+<span class="n">xls</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="s1">&#39;path//to//test.xlsx&#39;</span><span class="p">)</span>
+<span class="n">df_CompartmentData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls</span><span class="p">,</span> <span class="s1">&#39;CompartmentData&#39;</span><span class="p">)</span>
+<span class="n">df_NodeData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls</span><span class="p">,</span> <span class="s1">&#39;NodeData&#39;</span><span class="p">)</span>
+<span class="n">df_ReactionData</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls</span><span class="p">,</span> <span class="s1">&#39;ReactionData&#39;</span><span class="p">)</span>
+
 <span class="n">sbmlStr_layout_render</span> <span class="o">=</span> <span class="n">exportSBML</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">df_CompartmentData</span><span class="p">,</span> <span class="n">df_NodeData</span><span class="p">,</span> <span class="n">df_ReactionData</span><span class="p">)</span>
 <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sbmlStr_layout_render</span><span class="p">)</span>

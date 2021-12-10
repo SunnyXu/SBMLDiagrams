@@ -5,6 +5,11 @@ api
  
  
 
+.. automodule:: SBMLDiagrams.visualizeSBML
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
 .. automodule:: SBMLDiagrams.importSBML
   :members:
   :undoc-members:
@@ -15,7 +20,7 @@ api
   :undoc-members:
   :show-inheritance:
 
-.. automodule:: SBMLDiagrams.visualizeSBML
+.. automodule:: SBMLDiagrams.editSBML
   :members:
   :undoc-members:
   :show-inheritance:
