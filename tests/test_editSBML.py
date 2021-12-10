@@ -3,6 +3,7 @@ import os
 from SBMLDiagrams import importSBML
 from SBMLDiagrams import editSBML
 from pandas.testing import assert_frame_equal
+from openpyxl import *
 
 IGNORE_TEST = False
 
