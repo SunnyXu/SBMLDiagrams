@@ -1,7 +1,6 @@
 import unittest
 import os
 from SBMLDiagrams import importSBML
-from openpyxl import *
 
 IGNORE_TEST = False
 
