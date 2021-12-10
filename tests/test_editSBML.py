@@ -137,12 +137,12 @@ class TestEditSBML(unittest.TestCase):
     # setCompartment without editing anything but using default
     if IGNORE_TEST:
       return    
-    df_NodeData_update = editSBML.setCompartment(self.df_NodeData, 0)
-    df_NodeData_feedback_update = editSBML.setCompartment(self.df_NodeData_feedback, 0)
-    df_NodeData_LinearChain_update = editSBML.setCompartment(self.df_NodeData_LinearChain, 0)
-    df_NodeData_test_no_comp_update = editSBML.setCompartment(self.df_NodeData_test_no_comp, 0)
-    df_NodeData_test_comp_update = editSBML.setCompartment(self.df_NodeData_test_comp, 0)
-    df_NodeData_test_modifier_update = editSBML.setCompartment(self.df_NodeData_test_modifier, 0)
+    df_NodeData_update = editSBML.setNode(self.df_NodeData, 0)
+    df_NodeData_feedback_update = editSBML.setNode(self.df_NodeData_feedback, 0)
+    df_NodeData_LinearChain_update = editSBML.setNode(self.df_NodeData_LinearChain, 0)
+    df_NodeData_test_no_comp_update = editSBML.setNode(self.df_NodeData_test_no_comp, 0)
+    df_NodeData_test_comp_update = editSBML.setNode(self.df_NodeData_test_comp, 0)
+    df_NodeData_test_modifier_update = editSBML.setNode(self.df_NodeData_test_modifier, 0)
     self.assertTrue(df_NodeData_update.equals(self.df_NodeData))
     self.assertTrue(df_NodeData_feedback_update.equals(self.df_NodeData_feedback))
     self.assertTrue(df_NodeData_LinearChain_update.equals(self.df_NodeData_LinearChain))

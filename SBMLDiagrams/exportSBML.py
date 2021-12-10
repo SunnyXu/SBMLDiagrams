@@ -795,23 +795,23 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
         raise ValueError('There is no node or no reaction!')
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    DIR = os.path.dirname(os.path.abspath(__file__))
-    TEST_FOLDER = os.path.join(DIR, "initiate_excel_files")
+#     DIR = os.path.dirname(os.path.abspath(__file__))
+#     TEST_FOLDER = os.path.join(DIR, "initiate_excel_files")
 
-    # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
-    # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
-    # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
+#     # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
+#     # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
+#     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
 
-    xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
-    df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
-    df_NodeData = pd.read_excel(xls, 'NodeData')
-    df_ReactionData = pd.read_excel(xls, 'ReactionData')
+#     xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
+#     df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
+#     df_NodeData = pd.read_excel(xls, 'NodeData')
+#     df_ReactionData = pd.read_excel(xls, 'ReactionData')
 
-    sbmlStr_layout_render = export(df_CompartmentData, df_NodeData, df_ReactionData)
+#     sbmlStr_layout_render = export(df_CompartmentData, df_NodeData, df_ReactionData)
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+#     f = open("output.xml", "w")
+#     f.write(sbmlStr_layout_render)
+#     f.close()
         

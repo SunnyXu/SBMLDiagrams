@@ -167,24 +167,24 @@ def setReaction(df_ReactionData, idx, \
 
     return df_ReactionData_temp
 
-if __name__ == '__main__':
-    DIR = os.path.dirname(os.path.abspath(__file__))
-    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+# if __name__ == '__main__':
+#     DIR = os.path.dirname(os.path.abspath(__file__))
+#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+#     filename = "test.xml" 
 
-    f = open(os.path.join(TEST_FOLDER, filename), 'r')
-    sbmlStr = f.read()
-    f.close()
+#     f = open(os.path.join(TEST_FOLDER, filename), 'r')
+#     sbmlStr = f.read()
+#     f.close()
 
-    (df_CompartmentData, df_NodeData, df_ReactionData) = importSBML.load(sbmlStr)
-    df_CompartmentData_update = setCompartment(df_CompartmentData, 0)
-    df_NodeData_update = setNode(df_NodeData, 0, floating_node=False)
-    df_ReactionData_update = setReaction(df_ReactionData, 0, bezier = False)
-    sbmlStr_layout_render = exportSBML.export(df_CompartmentData_update, df_NodeData_update, df_ReactionData_update)
+#     (df_CompartmentData, df_NodeData, df_ReactionData) = importSBML.load(sbmlStr)
+#     df_CompartmentData_update = setCompartment(df_CompartmentData, 0)
+#     df_NodeData_update = setNode(df_NodeData, 0, floating_node=False)
+#     df_ReactionData_update = setReaction(df_ReactionData, 0, bezier = False)
+#     sbmlStr_layout_render = exportSBML.export(df_CompartmentData_update, df_NodeData_update, df_ReactionData_update)
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+#     f = open("output.xml", "w")
+#     f.write(sbmlStr_layout_render)
+#     f.close()
     
 
