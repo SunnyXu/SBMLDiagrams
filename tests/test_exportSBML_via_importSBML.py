@@ -10,7 +10,7 @@ IGNORE_TEST = False
 #############################
 # Tests
 #############################
-class TestKineticLaw(unittest.TestCase):
+class TestExportSBML(unittest.TestCase):
 
   def setUp(self):
     

@@ -9,7 +9,7 @@ IGNORE_TEST = False
 #############################
 # Tests
 #############################
-class TestKineticLaw(unittest.TestCase):
+class TestEditSBML(unittest.TestCase):
 
   def setUp(self):
     DIR = os.path.dirname(os.path.abspath(__file__))
