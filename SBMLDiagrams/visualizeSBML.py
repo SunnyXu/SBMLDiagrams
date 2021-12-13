@@ -645,7 +645,8 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
 #     DIR = os.path.dirname(os.path.abspath(__file__))
 #     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-#     filename = "test.xml"
+#     #filename = "test.xml"
+#     filename = "test_no_comp.xml"
 
 #     f = open(os.path.join(TEST_FOLDER, filename), 'r')
 #     sbmlStr = f.read()
