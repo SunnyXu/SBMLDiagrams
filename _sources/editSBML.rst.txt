@@ -1,0 +1,12 @@
+.. _editSBML:
+ 
+editSBML
+=============
+ 
+ 
+
+.. automodule:: SBMLDiagrams.editSBML
+  :members:
+  :undoc-members:
+  :show-inheritance:
+

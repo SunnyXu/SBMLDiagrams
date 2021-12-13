@@ -1,11 +1,12 @@
-.. _functions:
+.. _exportSBML:
  
-functions
+exportSBML
 =============
  
-.. automodule:: SBMLDiagrams.drawNetwork
+ 
+
+.. automodule:: SBMLDiagrams.exportSBML
   :members:
   :undoc-members:
   :show-inheritance:
- 
 
