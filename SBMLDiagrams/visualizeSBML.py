@@ -15,7 +15,7 @@ import math
 import random as _random
 from SBMLDiagrams import drawNetwork
 
-def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = True, fileFormat = 'PNG', output_fileName = 'output', complexShape = ''):
+def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fileFormat = 'PNG', output_fileName = 'output', complexShape = ''):
 
     """
     Visualization from an sbml string to a PNG/JPG/PDF file.

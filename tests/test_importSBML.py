@@ -39,6 +39,7 @@ class TestImportSBML(unittest.TestCase):
     f_test_modifier.close()
     self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = \
       importSBML.load(sbmlStr_test)
+    self.df = importSBML.load(sbmlStr_test)
     self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback = \
       importSBML.load(sbmlStr_feedback)
     self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain = \
@@ -630,6 +631,44 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(test_no_comp)
     self.assertTrue(test_comp)
     self.assertTrue(test_modifier)
+
+  def testGetCompartment(self):
+    # Test all the get functions about compartment
+    if IGNORE_TEST:
+      return  
+    self.assertTrue(importSBML.getCompartmentPosition(self.df,0) == [0, 0])
+    self.assertTrue(importSBML.getCompartmentSize(self.df,0) == [1000, 1000])
+    self.assertTrue(importSBML.getCompartmentFillColor(self.df,0) == [255, 255, 255])
+    self.assertTrue(importSBML.getCompartmentBorderColor(self.df,0) == [255, 255, 255])
+    self.assertTrue(importSBML.getCompartmentBorderWidth(self.df,0) == 2.)
+
+  def testGetNode(self):
+    # Test all the get functions about node
+
+    if IGNORE_TEST:
+      return  
+    self.assertTrue(importSBML.isFloatingNode(self.df,0) == True)
+    self.assertTrue(importSBML.getNodePosition(self.df,0) == [413.0, 216.0])
+    self.assertTrue(importSBML.getNodeSize(self.df,0) == [50.0, 30.0])
+    self.assertTrue(importSBML.getNodeShape(self.df,0) == (1, 'reactangle'))
+    self.assertTrue(importSBML.getNodeTextPosition(self.df,0) == [413.0, 216.0])
+    self.assertTrue(importSBML.getNodeTextSize(self.df,0) == [50.0, 30.0])
+    self.assertTrue(importSBML.getNodeFillColor(self.df,0) == [255, 204, 153])
+    self.assertTrue(importSBML.getNodeBorderColor(self.df,0) == [255, 108, 9])
+    self.assertTrue(importSBML.getNodeBorderWidth(self.df,0) == 2.)
+    self.assertTrue(importSBML.getNodeTextFontColor(self.df,0) == [0, 0, 0])
+    self.assertTrue(importSBML.getNodeTextLineWidth(self.df,0) == 1.)
+
+
+  def testGetReaction(self):
+    # Test all the get functions about reaction
+
+    if IGNORE_TEST:
+      return
+
+    self.assertTrue(importSBML.getReactionFillColor(self.df,0) == [91, 176, 253])
+    self.assertTrue(importSBML.getReactionLineThickness(self.df,0) == 3.)
+    self.assertTrue(importSBML.isBezierReactionType(self.df,0) == True)
 
 if __name__ == '__main__':
   unittest.main()

@@ -23,15 +23,17 @@ class TestExportSBML(unittest.TestCase):
     # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, "CompartmentData.csv")) 
     # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, "NodeData.csv"))
     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, "ReactionData.csv"))
-    sbmlStr_layout_render = exportSBML.export(df_CompartmentData, df_NodeData, df_ReactionData)
+    df = (df_CompartmentData, df_NodeData, df_ReactionData)
+    sbmlStr_layout_render = exportSBML.export(df)
     self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = importSBML.load(sbmlStr_layout_render)
     
     xls_feedback = pd.ExcelFile(os.path.join(TEST_FOLDER, 'feedback.xlsx'))
     df_CompartmentData_feedback = pd.read_excel(xls_feedback, 'CompartmentData')
     df_NodeData_feedback = pd.read_excel(xls_feedback, 'NodeData')
     df_ReactionData_feedback = pd.read_excel(xls_feedback, 'ReactionData')
-    sbmlStr_layout_render_feedback = exportSBML.export(df_CompartmentData_feedback, \
+    df_feedback = (df_CompartmentData_feedback, \
       df_NodeData_feedback, df_ReactionData_feedback)
+    sbmlStr_layout_render_feedback = exportSBML.export(df_feedback)
     self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback \
        = importSBML.load(sbmlStr_layout_render_feedback)
 
@@ -39,8 +41,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_LinearChain = pd.read_excel(xls_LinearChain, 'CompartmentData')
     df_NodeData_LinearChain = pd.read_excel(xls_LinearChain, 'NodeData')
     df_ReactionData_LinearChain = pd.read_excel(xls_LinearChain, 'ReactionData')
-    sbmlStr_layout_render_LinearChain = exportSBML.export(df_CompartmentData_LinearChain, \
+    df_LinearChain = (df_CompartmentData_LinearChain, \
       df_NodeData_LinearChain, df_ReactionData_LinearChain)
+    sbmlStr_layout_render_LinearChain = exportSBML.export(df_LinearChain)
     self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain \
        = importSBML.load(sbmlStr_layout_render_LinearChain)
 
@@ -48,8 +51,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_test_no_comp = pd.read_excel(xls_test_no_comp, 'CompartmentData')
     df_NodeData_test_no_comp = pd.read_excel(xls_test_no_comp, 'NodeData')
     df_ReactionData_test_no_comp = pd.read_excel(xls_test_no_comp, 'ReactionData')
-    sbmlStr_layout_render_test_no_comp = exportSBML.export(df_CompartmentData_test_no_comp, \
+    df_test_no_comp = (df_CompartmentData_test_no_comp, \
       df_NodeData_test_no_comp, df_ReactionData_test_no_comp)
+    sbmlStr_layout_render_test_no_comp = exportSBML.export(df_test_no_comp)
     self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, \
       self.df_ReactionData_test_no_comp = importSBML.load(sbmlStr_layout_render_test_no_comp)
 
@@ -57,8 +61,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_test_comp = pd.read_excel(xls_test_comp, 'CompartmentData')
     df_NodeData_test_comp = pd.read_excel(xls_test_comp, 'NodeData')
     df_ReactionData_test_comp = pd.read_excel(xls_test_comp, 'ReactionData')
-    sbmlStr_layout_render_test_comp = exportSBML.export(df_CompartmentData_test_comp, \
+    df_test_comp = (df_CompartmentData_test_comp, \
       df_NodeData_test_comp, df_ReactionData_test_comp)
+    sbmlStr_layout_render_test_comp = exportSBML.export(df_test_comp)
     self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, \
       self.df_ReactionData_test_comp = importSBML.load(sbmlStr_layout_render_test_comp)
 
@@ -66,8 +71,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_test_modifier = pd.read_excel(xls_test_modifier, 'CompartmentData')
     df_NodeData_test_modifier = pd.read_excel(xls_test_modifier, 'NodeData')
     df_ReactionData_test_modifier = pd.read_excel(xls_test_modifier, 'ReactionData')
-    sbmlStr_layout_render_test_modifier = exportSBML.export(df_CompartmentData_test_modifier, \
+    df_test_modifier = (df_CompartmentData_test_modifier, \
       df_NodeData_test_modifier, df_ReactionData_test_modifier)
+    sbmlStr_layout_render_test_modifier = exportSBML.export(df_test_modifier)
     self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, \
       self.df_ReactionData_test_modifier = importSBML.load(sbmlStr_layout_render_test_modifier)
 

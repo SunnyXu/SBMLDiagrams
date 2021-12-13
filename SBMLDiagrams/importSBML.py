@@ -2,6 +2,10 @@
 # This script was written by Jin Xu and available on Github
 # https://github.com/SunnyXu/SBMLDiagrams
 
+"""
+Created on Mon Aug 23 13:25:34 2021
+@author: Jin Xu
+"""
 
 import os
 import simplesbml
@@ -63,6 +67,8 @@ def load(sbmlStr, reactionLineType = 'bezier'):
         reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
 
     Returns:
+        (df_CompartmentData, df_NodeData, df_ReactionData): tuple
+
         df_CompartmentData: DataFrame-Compartment information.
 
         df_NodeData: DataFrame-Node information.
@@ -1007,6 +1013,289 @@ def load(sbmlStr, reactionLineType = 'bezier'):
     except:
        raise ValueError('Invalid SBML!')
 
+def getCompartmentPosition(df, idx):
+    """
+    Get the position of a compartment with its certain compartment index
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the compartment
+
+    Returns:
+        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+    """
+    return df[0].iloc[idx]["position"]
+
+def getCompartmentSize(df, idx):
+    """
+    Get the size of a compartment with its certain compartment index
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData) 
+        
+        idx: int-the index of the compartment
+
+    Returns:
+        size: list-1*2 matrix-size of the rectangle [width, height].
+    """
+    return df[0].iloc[idx]["size"]
+
+def getCompartmentFillColor(df, idx):
+    """
+    Get the fill color of a compartment with its certain compartment index
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData) 
+        
+        idx: int-the index of the compartment
+
+    Returns:
+        fill_color: list-rgb 1*3 matrix-compartment fill color.
+    """
+    return df[0].iloc[idx]["fill_color"]
+
+def getCompartmentBorderColor(df, idx):
+    """
+    Get the border color of a compartment with its certain index
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData) 
+        
+        idx: int-the index of the compartment
+
+    Returns:
+        border_color: list-rgb 1*3 matrix-compartment border color.
+    """
+    return df[0].iloc[idx]["border_color"]
+
+def getCompartmentBorderWidth(df, idx):
+    """
+    Get the border width of a compartment with its certain compartment index
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the compartment
+
+    Returns:
+        border_width: float-compartment border line width.
+    """
+    return df[0].iloc[idx]["border_width"]
+
+def isFloatingNode(df, idx):
+    """
+    Judge whether a node is floating node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the Node
+
+    Returns:
+        floating_node: str-floating node (True) or not (False).
+    """
+    return bool(df[1].iloc[idx]["floating_node"])
+
+def getNodePosition(df, idx):
+    """
+    Get the position of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the Node
+
+    Returns:
+        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+    """
+    return df[1].iloc[idx]["position"]
+
+def getNodeSize(df, idx):
+    """
+    Get the size of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the node
+
+    Returns:
+        size: list-1*2 matrix-size of the rectangle [width, height].
+    """
+    return df[1].iloc[idx]["size"]
+
+def getNodeShape(df, idx):
+    """
+    Get the shape index and the shape of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the node
+
+    Returns:
+        (shape_idx, shape): tuple
+        
+        shape_idx: int-1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+        
+        shape: str
+    """
+    shape_idx = 0
+    shape = "text_only"
+    shape_idx = df[1].iloc[idx]["shape_idx"]
+    if shape_idx == 1:
+        shape = "reactangle"
+    elif shape_idx == 2:
+        shape = "circle"
+    elif shape_idx == 3:
+        shape = "hexagon"
+    elif shape_idx == 4:
+        shape = "line"
+    elif shape_idx == 5:
+        shape = "triangle"
+    return (shape_idx, shape)
+
+
+def getNodeTextPosition(df, idx):
+    """
+    Get the text position of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData) 
+        
+        idx: int-the index of node
+
+    Returns:
+        txt_position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+    """
+    return df[1].iloc[idx]["txt_position"]
+    
+def getNodeTextSize(df, idx):
+    """
+    Get the text size of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData) 
+        
+        idx: int-the index of the node
+
+    Returns:
+        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+    """
+    return df[1].iloc[idx]["txt_size"]
+
+def getNodeFillColor(df, idx):
+    """
+    Get the fill color of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the node
+
+    Returns:
+        fill_color: list-rgb 1*3 matrix-node fill color.
+    """
+    return df[1].iloc[idx]["fill_color"]
+
+def getNodeBorderColor(df, idx):
+    """
+    Get the border color of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData) 
+        
+        idx: int-the index of the node
+
+    Returns:
+        border_color: list-rgb 1*3 matrix-node border color.
+    """
+    return df[1].iloc[idx]["border_color"]
+
+def getNodeBorderWidth(df, idx):
+    """
+    Get the border width of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the node
+
+    Returns:
+        border_width: float-node border line width.
+    """
+    return df[1].iloc[idx]["border_width"]
+
+def getNodeTextFontColor(df, idx):
+    """
+    Get the text font color of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData) 
+        
+        idx: int-the index of the node
+
+    Returns:
+        txt_font_color: list-rgb 1*3 matrix-node text font color.
+    """
+    return df[1].iloc[idx]["txt_font_color"]
+
+def getNodeTextLineWidth(df, idx):
+    """
+    Get the text line width of a node with its certain node idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the node
+
+    Returns:
+        txt_line_width: float-node text line width.
+    """
+    return df[1].iloc[idx]["txt_line_width"]
+
+def getReactionFillColor(df, idx):
+    """
+    Get the fill color of a reaction with its certain reaction idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the reaction
+
+    Returns:
+        fill_color: list-rgb 1*3 matrix-reaction fill color.
+    """
+    return df[2].iloc[idx]["fill_color"]
+
+def getReactionLineThickness(df, idx):
+    """
+    Get the line thickness of a reaction with its certain reaction idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the reaction
+
+    Returns:
+        line_thickness: float-reaction border line width.
+    """
+    return df[2].iloc[idx]["line_thickness"]
+
+def isBezierReactionType(df, idx):
+    """
+    Judge whether it is a bezier reaction curve with its certain reaction idx
+
+    Args: 
+        df: DataFrame-(df_CompartmentData, df_NodeData, df_ReactionData)
+        
+        idx: int-the index of the reaction
+
+    Returns:
+        bezier: bool-bezier reaction (True) or not (False)
+    """
+    return bool(df[2].iloc[idx]["bezier"])
 
 # if __name__ == '__main__':
 #     DIR = os.path.dirname(os.path.abspath(__file__))
@@ -1027,15 +1316,37 @@ def load(sbmlStr, reactionLineType = 'bezier'):
 #         print("empty sbml")
 #     else:
 #         try:
-#             (df_CompartmentData, df_NodeData, df_ReactionData) = load(sbmlStr)
-#             # df_CompartmentData.to_csv("CompartmentData.csv", index=False)
-#             # df_NodeData.to_csv("NodeData.csv", index=False)
-#             # df_ReactionData.to_csv("ReactionData.csv", index=False)
+#             df = load(sbmlStr)
+
+#             print(getCompartmentPosition(df,0))
+#             print(getCompartmentSize(df,0))
+#             print(getCompartmentFillColor(df,0))
+#             print(getCompartmentBorderColor(df,0))
+#             print(getCompartmentBorderWidth(df,0))
+
+#             print(isFloatingNode(df,0))
+#             print(getNodePosition(df,0))
+#             print(getNodeSize(df,0))
+#             print(getNodeShape(df,0))
+#             print(getNodeTextPosition(df,0))
+#             print(getNodeTextSize(df,0))
+#             print(getNodeFillColor(df,0))
+#             print(getNodeBorderColor(df,0))
+#             print(getNodeBorderWidth(df,0))
+#             print(getNodeTextFontColor(df,0))
+#             print(getNodeTextLineWidth(df,0))
+
+#             print(getReactionFillColor(df,0))
+#             print(getReactionLineThickness(df,0))
+#             print(isBezierReactionType(df,0))
 
 #             writer = pd.ExcelWriter('testbigmodel.xlsx')
-#             df_CompartmentData.to_excel(writer, sheet_name='CompartmentData')
-#             df_NodeData.to_excel(writer, sheet_name='NodeData')
-#             df_ReactionData.to_excel(writer, sheet_name='ReactionData')
+#             df[0].to_excel(writer, sheet_name='CompartmentData')
+#             df[1].to_excel(writer, sheet_name='NodeData')
+#             df[2].to_excel(writer, sheet_name='ReactionData')
+#             # df[0].to_csv("CompartmentData.csv", index=False)
+#             # df[1].to_csv("NodeData.csv", index=False)
+#             # df[2].to_csv("ReactionData.csv", index=False)
 #             writer.save()
 #         except:
 #            print("Invalid SBML!")

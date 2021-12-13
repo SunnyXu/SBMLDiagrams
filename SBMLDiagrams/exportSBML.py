@@ -2,6 +2,10 @@
 # This script was written by Jin Xu and available on Github
 # https://github.com/SunnyXu/SBMLDiagrams
 
+"""
+Created on Mon Aug 23 13:25:34 2021
+@author: Jin Xu
+"""
 
 from inspect import Parameter
 import os
@@ -11,12 +15,14 @@ import pandas as pd
 import math
 
 
-def export(df_CompartmentData, df_NodeData, df_ReactionData):
+def export(df):
 
     """
     Write the information of a set of dataframe to an SBML string. 
 
     Args:  
+        (df_CompartmentData, df_NodeData, df_ReactionData): tuple
+
         df_CompartmentData: DataFrame-Compartment information.
 
         df_NodeData: DataFrame-Node information.
@@ -40,6 +46,10 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
         res = []
         [res.append(x) for x in list_update if x not in res and not x.isdigit()]
         return res
+
+    df_CompartmentData = df[0]
+    df_NodeData = df[1]
+    df_ReactionData = df[2]
 
     isReversible = True
     numNodes = len(df_NodeData)
@@ -809,7 +819,9 @@ def export(df_CompartmentData, df_NodeData, df_ReactionData):
 #     df_NodeData = pd.read_excel(xls, 'NodeData')
 #     df_ReactionData = pd.read_excel(xls, 'ReactionData')
 
-#     sbmlStr_layout_render = export(df_CompartmentData, df_NodeData, df_ReactionData)
+#     df = (df_CompartmentData, df_NodeData, df_ReactionData)
+
+#     sbmlStr_layout_render = export(df)
 
 #     f = open("output.xml", "w")
 #     f.write(sbmlStr_layout_render)

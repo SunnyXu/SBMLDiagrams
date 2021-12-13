@@ -40,6 +40,7 @@ class TestEditSBML(unittest.TestCase):
     f_test_modifier.close()
     self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = \
       importSBML.load(sbmlStr_test)
+    self.df = importSBML.load(sbmlStr_test)
     self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback = \
       importSBML.load(sbmlStr_feedback)
     self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain = \
@@ -131,6 +132,27 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_CompartmentData_test_modifier_update.at[idx,"border_color"] == border_color_update) 
     self.assertTrue(df_CompartmentData_test_modifier_update.at[idx,"border_width"] == border_width_update)
 
+  def testSetCompartment3(self):
+    # setCompartment one by one
+    if IGNORE_TEST:
+      return    
+    position = [1, 0]
+    size = [900, 900]
+    fill_color = [255, 255, 254]
+    border_color = [255, 255, 254]
+    border_width = 2.
+
+    df_update = editSBML.setCompartmentPosition(self.df, 0, position)
+    df_update = editSBML.setCompartmentSize(df_update, 0, size)
+    df_update = editSBML.setCompartmentFillColor(df_update, 0, fill_color)
+    df_update = editSBML.setCompartmentBorderColor(df_update, 0, border_color)
+    df_update = editSBML.setCompartmentBorderWidth(df_update, 0, border_width)
+
+    self.assertTrue(importSBML.getCompartmentPosition(df_update, 0) == position)
+    self.assertTrue(importSBML.getCompartmentSize(df_update, 0) == size)
+    self.assertTrue(importSBML.getCompartmentFillColor(df_update, 0) == fill_color)
+    self.assertTrue(importSBML.getCompartmentBorderColor(df_update, 0) == border_color)
+    self.assertTrue(importSBML.getCompartmentBorderWidth(df_update, 0) == border_width)
 
 
   def testSetNode1(self):
@@ -264,6 +286,46 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_NodeData_test_modifier_update.at[idx,"txt_line_width"] == txt_line_width_update) 
 
 
+  def testSetNode3(self):
+    # set node one by one
+    if IGNORE_TEST:
+      return    
+    floating_node = True
+    position = [412., 216.]
+    size = [50., 29.]
+    shapeIdx = 2
+    txt_position = [412., 216.]
+    txt_size = [50., 29.]
+    fill_color = [255, 204, 154]
+    border_color = [255, 109, 9]
+    border_width = 3.
+    txt_font_color = [0, 0, 0]
+    txt_line_width = 1.
+
+    df_update = editSBML.setFloatingBoundaryNode(self.df, 0, floating_node)
+    df_update = editSBML.setNodePosition(df_update, 0, position)
+    df_update = editSBML.setNodeSize(df_update, 0, size)
+    df_update = editSBML.setNodeShapeIdx(df_update, 0, shapeIdx)
+    df_update = editSBML.setNodeTextPosition(df_update, 0, txt_position)
+    df_update = editSBML.setNodeTextSize(df_update, 0, txt_size)
+    df_update = editSBML.setNodeFillColor(df_update, 0, fill_color)
+    df_update = editSBML.setNodeBorderColor(df_update, 0, border_color)
+    df_update = editSBML.setNodeBorderWidth(df_update, 0, border_width)
+    df_update = editSBML.setNodeTextFontColor(df_update, 0, txt_font_color)
+    df_update = editSBML.setNodeTextLineWidth(df_update, 0, txt_line_width)
+    
+    self.assertTrue(importSBML.isFloatingNode(df_update, 0) == floating_node)
+    self.assertTrue(importSBML.getNodePosition(df_update, 0) == position)
+    self.assertTrue(importSBML.getNodeSize(df_update, 0) == size)
+    self.assertTrue(importSBML.getNodeShape(df_update, 0)[0] == shapeIdx)
+    self.assertTrue(importSBML.getNodeTextPosition(df_update, 0) == txt_position)
+    self.assertTrue(importSBML.getNodeTextSize(df_update, 0) == txt_size)
+    self.assertTrue(importSBML.getNodeFillColor(df_update, 0) == fill_color)
+    self.assertTrue(importSBML.getNodeBorderColor(df_update, 0) == border_color)
+    self.assertTrue(importSBML.getNodeBorderWidth(df_update, 0) == border_width)
+    self.assertTrue(importSBML.getNodeTextFontColor(df_update, 0) == txt_font_color)
+    self.assertTrue(importSBML.getNodeTextLineWidth(df_update, 0) == txt_line_width)
+
   def testSetReaction1(self):
     # setReaction without editing anything but using default
     if IGNORE_TEST:
@@ -325,6 +387,23 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_ReactionData_test_modifier_update.at[idx,"fill_color"] == fill_color_update) 
     self.assertTrue(df_ReactionData_test_modifier_update.at[idx,"line_thickness"] == line_thickness_update) 
     self.assertTrue(df_ReactionData_test_modifier_update.at[idx,"bezier"] == bezier_update) 
+
+  def testSetReaction3(self):
+    # set reaction one by one
+    if IGNORE_TEST:
+      return    
+
+    fill_color = [92, 176, 252]
+    line_thickness = 2.
+    bezier = False
+
+    df_update = editSBML.setReactionFillColor(self.df, 0, fill_color)
+    df_update = editSBML.setReactionLineThickness(df_update, 0, line_thickness)
+    df_update = editSBML.setBezierReactionType(df_update, 0., bezier)
+
+    self.assertTrue(importSBML.getReactionFillColor(df_update, 0) == fill_color)
+    self.assertTrue(importSBML.getReactionLineThickness(df_update, 0) == line_thickness)
+    self.assertTrue(importSBML.isBezierReactionType(df_update, 0) == bezier)
 
 
 if __name__ == '__main__':

@@ -1,11 +1,12 @@
-.. _functions:
+.. _importSBML:
  
-functions
+importSBML
 =============
  
-.. automodule:: SBMLDiagrams.drawNetwork
+ 
+
+.. automodule:: SBMLDiagrams.importSBML
   :members:
   :undoc-members:
   :show-inheritance:
- 
 
