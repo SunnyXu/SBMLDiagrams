@@ -508,7 +508,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
   
 def addReaction(canvas, rct_position, prd_position, mod_position, center_position, handles,
                 rct_dimension, prd_dimension, mod_dimension, reaction_line_color, reaction_line_width, 
-                reaction_line_type = 'bezier', show_bezier_handles = True):
+                reaction_line_type = 'bezier', show_bezier_handles = False):
     
     """
     Add a reaction.
@@ -538,7 +538,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
 
         reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
 
-        showBezierHandles: bool-show the Bezier handles (True as default) or not (False).
+        showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
     """
     

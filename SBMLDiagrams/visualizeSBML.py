@@ -25,7 +25,7 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
 
         reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
 
-        showBezierHandles: bool-show the Bezier handles (True as default) or not (False).
+        showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
         fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
@@ -654,7 +654,7 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
 #     if len(sbmlStr) == 0:
 #         print("empty sbml")
 #     else:
-#         display(sbmlStr, fileFormat = 'JPEG')
+#         display(sbmlStr, fileFormat='PNG')
 
 
 
