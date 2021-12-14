@@ -179,7 +179,7 @@ def setNode(df_NodeData, idx, floating_node = '', position = '', size = '', shap
     Args:
         df_CompartmentData: DataFrame-Node initial information.
         
-        idx: int-compartment index.
+        idx: int-node index.
         
         floating_node: bool-floating node (True) or not (False).
         
@@ -532,7 +532,7 @@ def setReactionFillColor(df, idx, fill_color):
     Args:  
         df: DataFrame-initial information.
 
-        idx: int-node index.
+        idx: int-reaction index.
 
         fill_color: list-rgb 1*3 matrix-reaction fill color.
 
@@ -554,7 +554,7 @@ def setReactionLineThickness(df, idx, line_thickness):
     Args:  
         df: DataFrame-initial information.
 
-        idx: int-node index.
+        idx: int-reaction index.
 
         line_thickness: float-reaction border line width.
 
@@ -576,7 +576,7 @@ def setBezierReactionType(df, idx, bezier):
     Args:  
         df: DataFrame-initial information.
 
-        idx: int-node index.
+        idx: int-reaction index.
 
         bezier: bool-bezier reaction (True) or not (False)
 

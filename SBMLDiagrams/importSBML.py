@@ -1010,8 +1010,11 @@ def load(sbmlStr, reactionLineType = 'bezier'):
 
         return (df_CompartmentData, df_NodeData, df_ReactionData) 
 
-    except:
-       raise ValueError('Invalid SBML!')
+    # except:
+    #    raise ValueError('Invalid SBML!')
+
+    except Exception as e:
+        print(e)
 
 def getCompartmentPosition(df, idx):
     """

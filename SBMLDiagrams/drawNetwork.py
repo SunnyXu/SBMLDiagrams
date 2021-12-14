@@ -853,14 +853,16 @@ def draw(surface, fileName = '', file_format = 'PNG'):
             #pil_im.show()
         elif file_format == 'PDF':
             tmpfileNamepdf = tmpfileName + '.pdf'
-            tmpfileName = tmpfileName + '.png'
-            image.save(tmpfileName, skia.kPNG)
-            pil_im = Image.open(tmpfileName)
-            display(pil_im)
-            #pil_im.show() 
-            imagepdf = pil_im.convert('RGB')
-            imagepdf.save(tmpfileNamepdf)
-            os.remove(tmpfileName)
+            try:
+                tmpfileName = tmpfileName + '.png'
+                image.save(tmpfileName, skia.kPNG)
+                pil_im = Image.open(tmpfileName)
+                display(pil_im)
+                #pil_im.show() 
+                imagepdf = pil_im.convert('RGB')
+                imagepdf.save(tmpfileNamepdf)
+            finally:
+                os.remove(tmpfileName)
 
         #self.surface.write_to_png(tmpfileName)
         # pil_im = Image.open(tmpfileName)
@@ -884,12 +886,14 @@ def draw(surface, fileName = '', file_format = 'PNG'):
         elif file_format == 'PDF':
             fileNamepdf = fileName + '.pdf'
             fileName = fileName + '.png'
-            image.save(fileName, skia.kPNG)
-            pil_im = Image.open(fileName)
-            display(pil_im)
-            #pil_im.show() 
-            imagepdf = pil_im.convert('RGB')
-            imagepdf.save(fileNamepdf)
-            os.remove(fileName)
+            try:
+                image.save(fileName, skia.kPNG)
+                pil_im = Image.open(fileName)
+                display(pil_im)
+                #pil_im.show() 
+                imagepdf = pil_im.convert('RGB')
+                imagepdf.save(fileNamepdf)
+            finally:
+                os.remove(fileName)
 
 

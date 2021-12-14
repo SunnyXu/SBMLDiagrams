@@ -659,7 +659,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        display(sbmlStr, fileFormat='PNG')
+        display(sbmlStr, fileFormat='PDF')
 
 
 
