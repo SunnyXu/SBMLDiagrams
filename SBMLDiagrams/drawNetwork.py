@@ -844,20 +844,20 @@ def draw(surface, fileName = '', file_format = 'PNG'):
             image.save(tmpfileName, skia.kPNG)
             pil_im = Image.open(tmpfileName)
             display(pil_im)
-            pil_im.show()
+            #pil_im.show()
         elif file_format == 'JPEG':
             tmpfileName = tmpfileName + '.jpg'
             image.save(tmpfileName, skia.kJPEG)
             pil_im = Image.open(tmpfileName)
             display(pil_im)
-            pil_im.show()
+            #pil_im.show()
         elif file_format == 'PDF':
             tmpfileNamepdf = tmpfileName + '.pdf'
             tmpfileName = tmpfileName + '.png'
             image.save(tmpfileName, skia.kPNG)
             pil_im = Image.open(tmpfileName)
             display(pil_im)
-            pil_im.show() 
+            #pil_im.show() 
             imagepdf = pil_im.convert('RGB')
             imagepdf.save(tmpfileNamepdf)
             os.remove(tmpfileName)
@@ -874,20 +874,20 @@ def draw(surface, fileName = '', file_format = 'PNG'):
             image.save(fileName, skia.kPNG)
             pil_im = Image.open(fileName)
             display(pil_im)
-            pil_im.show() 
+            #pil_im.show() 
         elif file_format == 'JPEG':
             fileName = fileName + '.jpg'
             image.save(fileName, skia.kJPEG) 
             pil_im = Image.open(fileName)
             display(pil_im)
-            pil_im.show()   
+            #pil_im.show()   
         elif file_format == 'PDF':
             fileNamepdf = fileName + '.pdf'
             fileName = fileName + '.png'
             image.save(fileName, skia.kPNG)
             pil_im = Image.open(fileName)
             display(pil_im)
-            pil_im.show() 
+            #pil_im.show() 
             imagepdf = pil_im.convert('RGB')
             imagepdf.save(fileNamepdf)
             os.remove(fileName)
