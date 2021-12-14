@@ -68,15 +68,18 @@ Examples
    from SBMLDiagrams.exportSBML import *
    import os
 
-   f = open(os.path.join(TEST_FOLDER, filename), 'r')
+   dirname = "path//to"
+   filename = "test.xml"
+
+   f = open(os.path.join(dirname, filename), 'r')
    sbmlStr = f.read()
    f.close()
 
    df = load(sbmlStr)
 
-   getCompartmentPosition(df,0)
-   getNodeFillColor(df,0)
-   isBezierReactionType(df,0)
+   print(getCompartmentPosition(df,0))
+   print(getNodeFillColor(df,0))
+   print(isBezierReactionType(df,0))
 
    df = setCompartmentFillColor(df, 0, [255, 255, 255])
    df = setNodeSize(df, 0, [50.0, 30.0])
