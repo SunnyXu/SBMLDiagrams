@@ -636,26 +636,30 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
                 drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)
 
         drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat ) 
-    except:
-      print("invalid SBML file")
+
+    except Exception as e:
+        print(e)
+
+    # except:
+    #     print("invalid SBML file")
 
 
+if __name__ == '__main__':
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-# if __name__ == '__main__':
-#     DIR = os.path.dirname(os.path.abspath(__file__))
-#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+    filename = "test.xml"
+    #filename = "test_no_comp.xml"
+    #filename = "testbigmodel.xml"
 
-#     #filename = "test.xml"
-#     filename = "test_no_comp.xml"
+    f = open(os.path.join(TEST_FOLDER, filename), 'r')
+    sbmlStr = f.read()
+    f.close()
 
-#     f = open(os.path.join(TEST_FOLDER, filename), 'r')
-#     sbmlStr = f.read()
-#     f.close()
-
-#     if len(sbmlStr) == 0:
-#         print("empty sbml")
-#     else:
-#         display(sbmlStr, fileFormat='PNG')
+    if len(sbmlStr) == 0:
+        print("empty sbml")
+    else:
+        display(sbmlStr, fileFormat='PNG')
 
 
 
