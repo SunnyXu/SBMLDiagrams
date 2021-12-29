@@ -15,7 +15,7 @@ import math
 import random as _random
 from SBMLDiagrams import drawNetwork
 
-def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fileFormat = 'PNG', output_fileName = 'output', complexShape = ''):
+def display(sbmlStr, surface_size = [1000, 1000], fileFormat = 'PNG', output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', showBezierHandles = False):
 
     """
     Visualization from an sbml string to a PNG/JPG/PDF file.
@@ -35,7 +35,7 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
 
     """
 
-    surface = skia.Surface(1000, 1000)
+    surface = skia.Surface(surface_size[0], surface_size[1])
     canvas = surface.getCanvas()
     
     def hex_to_rgb(value):
@@ -89,18 +89,6 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
                     comp_dimension_list.append([width,height])
                     comp_position_list.append([pos_x,pos_y])
                     
-                    # for i in range(numSpecGlyphs):
-                    #     specGlyph = layout.getSpeciesGlyph(i)
-                    #     spec_id = specGlyph.getSpeciesId()
-                    #     spec_id_list.append(spec_id)
-                    #     boundingbox = specGlyph.getBoundingBox()
-                    #     height = boundingbox.getHeight()
-                    #     width = boundingbox.getWidth()
-                    #     pos_x = boundingbox.getX()
-                    #     pos_y = boundingbox.getY()
-                    #     spec_dimension_list.append([width,height])
-                    #     spec_position_list.append([pos_x,pos_y])
-
                 reaction_id_list = []
                 reaction_center_list = []
                 kinetics_list = []
@@ -115,12 +103,6 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
                 for i in range(numReactionGlyphs):
                     reactionGlyph = layout.getReactionGlyph(i)
                     curve = reactionGlyph.getCurve()
-                    # listOfCurveSegments = curve.getListOfCurveSegments()
-                    # for j in range(len(listOfCurveSegments)):
-                    #     #center_x = curve.getCurveSegment(j).getStart().x()
-                    #     #center_y = curve.getCurveSegment(j).getStart().y()
-                    #     center_x = curve.getCurveSegment(j).getStart().getXOffset()
-                    #     center_y = curve.getCurveSegment(j).getStart().getYOffset()
                     for segment in curve.getListOfCurveSegments():
                         center_x = segment.getStart().getXOffset()
                         center_y = segment.getStart().getYOffset()
@@ -311,7 +293,7 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
                 temp_id = Comps_ids[i]
                 vol= model.getCompartmentVolume(i)
                 if temp_id == "_compartment_default_":
-                    dimension = [1000, 1000]
+                    dimension = [surface_size[0], surface_size[1]]
                     position = [0, 0]
                     #comp_border_color = (255, 255, 255, 0) #the last digit for transparent
                     #comp_fill_color = (255, 255, 255, 0)
@@ -334,7 +316,7 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
                     else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
                         # modify the compartment size using the max_rec function above
-                        dimension = [1000,1000]
+                        dimension = [surface_size[0], surface_size[1]]
                         position = [0,0]
                         #comp_fill_color = (255, 255, 255, 0)
                         #comp_border_color = (255, 255, 255, 0)
@@ -363,19 +345,6 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
                 prd_num = len(prd_specGlyph_handle_list[i])
                 mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
 
-                # for j in range(rct_num):
-                #     temp_specGlyph_id = rct_specGlyph_list[i][j]
-                #     for k in range(numSpec_in_reaction):
-                #         if temp_specGlyph_id == specGlyph_id_list[k]:
-                #             src_position.append(spec_position_list[k])
-                #             src_dimension.append(spec_dimension_list[k])
-
-                # for j in range(prd_num):
-                #     temp_specGlyph_id = prd_specGlyph_list[i][j]
-                #     for k in range(numSpec_in_reaction):
-                #         if temp_specGlyph_id == specGlyph_id_list[k]:
-                #             dst_position.append(spec_position_list[k])
-                #             dst_dimension.append(spec_dimension_list[k])
 
                 for j in range(rct_num):
                     temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
@@ -419,7 +388,6 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
                     handles = [center_position]
                     handles.extend(src_handle)
                     handles.extend(dst_handle)   
-                    #print(handles)
                     drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                     center_position, handles, src_dimension, dst_dimension, mod_dimension,
                     reaction_line_color, reaction_line_width,
@@ -445,7 +413,6 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
                         dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
                         dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                         handles.append([dst_handle_x,dst_handle_y])
-                    #print(handles)
                     drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                     center_position, handles, src_dimension, dst_dimension, mod_dimension,
                     reaction_line_color, reaction_line_width,
@@ -537,7 +504,7 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
             for i in range(numComps):
                 temp_id = Comps_ids[i]
                 vol= model.getCompartmentVolume(i)
-                dimension = [1000,1000]
+                dimension = [surface_size[0], surface_size[1]]
                 position = [0,0]
                 drawNetwork.addCompartment(canvas, position, dimension,
                                             comp_border_color, comp_fill_color, comp_border_width)
@@ -640,9 +607,6 @@ def display(sbmlStr, reactionLineType = 'bezier', showBezierHandles = False, fil
     except Exception as e:
         print(e)
 
-    # except:
-    #     print("invalid SBML file")
-
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
@@ -659,7 +623,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        display(sbmlStr, fileFormat='PDF')
+        display(sbmlStr, fileFormat='PNG')
 
 
 
