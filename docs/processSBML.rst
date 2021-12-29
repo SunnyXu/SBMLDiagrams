@@ -1,11 +1,12 @@
-.. _importSBML:
+.. _processSBML:
  
-importSBML
+
+processSBML
 =============
  
  
 
-.. automodule:: SBMLDiagrams.importSBML
+.. automodule:: SBMLDiagrams.processSBML
   :members:
   :undoc-members:
   :show-inheritance:

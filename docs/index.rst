@@ -10,20 +10,18 @@ Welcome to SBMLDiagrams's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   importSBML
-   editSBML
-   exportSBML
    visualizeSBML
-   drawNetwork
+   processSBML
 
 ------------
 Introduction
 ------------
 
-SBMLDiagrams can visualize SBML to PNG/JPG/PDF files by visualizeSBML. On one hand, 
-users can get all the information about Compartment, Node and Reaction from an 
-SBML file by importSBML. On the other hand, it supports users to generate SBML files by exportSBML.
-Users can also edit and update an SBML file via editSBML.
+SBMLDiagrams can visualize SBML to PNG/JPG/PDF files by visualizeSBML. 
+It also supports users to import, edit or export an SBML file. 
+This package supports SBML level 3, including layout and render. 
+Namely, it does not only provide position and color information but also supports different shapes of nodes or alias nodes. 
+If you use any part of this python package, please cite the Gihub website (https://github.com/SunnyXu/SBMLDiagrams).
 
 ------------
 Installation 
@@ -63,26 +61,29 @@ Examples
 
 .. code-block:: python
 
-   from SBMLDiagrams.importSBML import *
-   from SBMLDiagrams.editSBML import *
-   from SBMLDiagrams.exportSBML import *
+   from SBMLDiagrams.processSBML import *
    import os
 
-   f = open(os.path.join(TEST_FOLDER, filename), 'r')
+   dirname = "path//to"
+   filename = "test.xml"
+
+   f = open(os.path.join(dirname, filename), 'r')
    sbmlStr = f.read()
    f.close()
 
    df = load(sbmlStr)
 
-   getCompartmentPosition(df,0)
-   getNodeFillColor(df,0)
-   isBezierReactionType(df,0)
+   print(df.getCompartmentPosition("compartment_id"))
+   print(df.getNodeFillColor("node_id"))
+   print(df.isBezierReactionType("reaction_id"))
 
-   df = setCompartmentFillColor(df, 0, [255, 255, 255])
-   df = setNodeSize(df, 0, [50.0, 30.0])
-   df = setReactionLineThickness(df, 0, 3.)
+   df.setCompartmentFillColor("compartment_id", "white")
+   df.setCompartmentBorderColor("compartment_id", [255, 255, 255])
+   df.setNodeSize("node_id", [50.0, 30.0])
+   df.setNodeTextFontColor("node_id", "#000000")
+   df.setReactionLineThickness("reaction_id", 3.)
 
-   sbmlStr_layout_render = export(df)
+   sbmlStr_layout_render = df.export()
 
    f = open("output.xml", "w")
    f.write(sbmlStr_layout_render)

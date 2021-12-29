@@ -1,6 +1,7 @@
 import unittest
 import os
-from SBMLDiagrams import importSBML
+from SBMLDiagrams.processSBML import *
+from SBMLDiagrams.processSBML import _SBMLToDF
 
 IGNORE_TEST = False
 
@@ -8,6 +9,7 @@ IGNORE_TEST = False
 # Tests
 #############################
 class TestImportSBML(unittest.TestCase):
+#tests for _SBMLToDF, get, set, export in importSBML module
 
   def setUp(self):
 
@@ -37,36 +39,35 @@ class TestImportSBML(unittest.TestCase):
     f_test_modifier = open(TEST_PATH_test_modifier, 'r')
     sbmlStr_test_modifier = f_test_modifier.read()
     f_test_modifier.close()
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = \
-      importSBML.load(sbmlStr_test)
-    self.df = importSBML.load(sbmlStr_test)
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = _SBMLToDF(sbmlStr_test)
     self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback = \
-      importSBML.load(sbmlStr_feedback)
+      _SBMLToDF(sbmlStr_feedback)
     self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain = \
-      importSBML.load(sbmlStr_LinearChain)
+      _SBMLToDF(sbmlStr_LinearChain)
     self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, self.df_ReactionData_test_no_comp = \
-      importSBML.load(sbmlStr_test_no_comp)
+      _SBMLToDF(sbmlStr_test_no_comp)
     self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, self.df_ReactionData_test_comp = \
-      importSBML.load(sbmlStr_test_comp)
+      _SBMLToDF(sbmlStr_test_comp)
     self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, self.df_ReactionData_test_modifier = \
-      importSBML.load(sbmlStr_test_modifier)
+      _SBMLToDF(sbmlStr_test_modifier)
+    self.df = load(sbmlStr_test)
 
   def testCompartment1(self):
     # Test all the column names
     if IGNORE_TEST:
       return    
     test = all(item in self.df_CompartmentData.columns \
-      for item in importSBML.COLUMN_NAME_df_CompartmentData)
+      for item in COLUMN_NAME_df_CompartmentData)
     test_feedback = all(item in self.df_CompartmentData_feedback.columns \
-      for item in importSBML.COLUMN_NAME_df_CompartmentData)
+      for item in COLUMN_NAME_df_CompartmentData)
     test_LinearChain = all(item in self.df_CompartmentData_LinearChain.columns \
-      for item in importSBML.COLUMN_NAME_df_CompartmentData)
+      for item in COLUMN_NAME_df_CompartmentData)
     test_no_comp = all(item in self.df_CompartmentData_test_no_comp.columns \
-      for item in importSBML.COLUMN_NAME_df_CompartmentData)
+      for item in COLUMN_NAME_df_CompartmentData)
     test_comp = all(item in self.df_CompartmentData_test_comp.columns \
-      for item in importSBML.COLUMN_NAME_df_CompartmentData)
+      for item in COLUMN_NAME_df_CompartmentData)
     test_modifier = all(item in self.df_CompartmentData_test_modifier.columns \
-      for item in importSBML.COLUMN_NAME_df_CompartmentData)
+      for item in COLUMN_NAME_df_CompartmentData)
     self.assertTrue(test)
     self.assertTrue(test_feedback)
     self.assertTrue(test_LinearChain)
@@ -90,28 +91,28 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return    
     list_compartment = []
-    list_compartment += self.df_CompartmentData[importSBML.COLUMN_NAME_df_CompartmentData[0]].tolist()
-    list_compartment += self.df_CompartmentData[importSBML.COLUMN_NAME_df_CompartmentData[1]].tolist()
+    list_compartment += self.df_CompartmentData[COLUMN_NAME_df_CompartmentData[0]].tolist()
+    list_compartment += self.df_CompartmentData[COLUMN_NAME_df_CompartmentData[1]].tolist()
     test = all(isinstance(item, int) for item in list_compartment)
     list_compartment_feedback = []
-    list_compartment_feedback += self.df_CompartmentData_feedback[importSBML.COLUMN_NAME_df_CompartmentData[0]].tolist()
-    list_compartment_feedback += self.df_CompartmentData_feedback[importSBML.COLUMN_NAME_df_CompartmentData[1]].tolist()
+    list_compartment_feedback += self.df_CompartmentData_feedback[COLUMN_NAME_df_CompartmentData[0]].tolist()
+    list_compartment_feedback += self.df_CompartmentData_feedback[COLUMN_NAME_df_CompartmentData[1]].tolist()
     test_feedback = all(isinstance(item, int) for item in list_compartment_feedback)
     list_compartment_LinearChain = []
-    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[importSBML.COLUMN_NAME_df_CompartmentData[0]].tolist()
-    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[importSBML.COLUMN_NAME_df_CompartmentData[1]].tolist()
+    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[COLUMN_NAME_df_CompartmentData[0]].tolist()
+    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[COLUMN_NAME_df_CompartmentData[1]].tolist()
     test_LinearChain = all(isinstance(item, int) for item in list_compartment_LinearChain)
     list_compartment_test_no_comp = []
-    list_compartment_test_no_comp += self.df_CompartmentData_test_no_comp[importSBML.COLUMN_NAME_df_CompartmentData[0]].tolist()
-    list_compartment_test_no_comp += self.df_CompartmentData_test_no_comp[importSBML.COLUMN_NAME_df_CompartmentData[1]].tolist()
+    list_compartment_test_no_comp += self.df_CompartmentData_test_no_comp[COLUMN_NAME_df_CompartmentData[0]].tolist()
+    list_compartment_test_no_comp += self.df_CompartmentData_test_no_comp[COLUMN_NAME_df_CompartmentData[1]].tolist()
     test_no_comp = all(isinstance(item, int) for item in list_compartment_test_no_comp)
     list_compartment_test_comp = []
-    list_compartment_test_comp += self.df_CompartmentData_test_comp[importSBML.COLUMN_NAME_df_CompartmentData[0]].tolist()
-    list_compartment_test_comp += self.df_CompartmentData_test_comp[importSBML.COLUMN_NAME_df_CompartmentData[1]].tolist()
+    list_compartment_test_comp += self.df_CompartmentData_test_comp[COLUMN_NAME_df_CompartmentData[0]].tolist()
+    list_compartment_test_comp += self.df_CompartmentData_test_comp[COLUMN_NAME_df_CompartmentData[1]].tolist()
     test_comp = all(isinstance(item, int) for item in list_compartment_test_comp)
     list_compartment_test_modifier = []
-    list_compartment_test_modifier += self.df_CompartmentData_test_modifier[importSBML.COLUMN_NAME_df_CompartmentData[0]].tolist()
-    list_compartment_test_modifier += self.df_CompartmentData_test_modifier[importSBML.COLUMN_NAME_df_CompartmentData[1]].tolist()
+    list_compartment_test_modifier += self.df_CompartmentData_test_modifier[COLUMN_NAME_df_CompartmentData[0]].tolist()
+    list_compartment_test_modifier += self.df_CompartmentData_test_modifier[COLUMN_NAME_df_CompartmentData[1]].tolist()
     test_modifier = all(isinstance(item, int) for item in list_compartment_test_modifier)
     self.assertTrue(test)
     self.assertTrue(test_feedback)
@@ -126,25 +127,25 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return    
     list_compartment = []
-    list_compartment += self.df_CompartmentData[importSBML.COLUMN_NAME_df_CompartmentData[2]].tolist()
+    list_compartment += self.df_CompartmentData[COLUMN_NAME_df_CompartmentData[2]].tolist()
     test = all(isinstance(item, str) for item in list_compartment)
     list_compartment_feedback = []
-    list_compartment_feedback += self.df_CompartmentData_feedback[importSBML.COLUMN_NAME_df_CompartmentData[2]].tolist()
+    list_compartment_feedback += self.df_CompartmentData_feedback[COLUMN_NAME_df_CompartmentData[2]].tolist()
     test_feedback = all(isinstance(item, str) for item in list_compartment_feedback)
     list_compartment_feedback = []
-    list_compartment_feedback += self.df_CompartmentData_feedback[importSBML.COLUMN_NAME_df_CompartmentData[2]].tolist()
+    list_compartment_feedback += self.df_CompartmentData_feedback[COLUMN_NAME_df_CompartmentData[2]].tolist()
     test_feedback = all(isinstance(item, str) for item in list_compartment_feedback)
     list_compartment_LinearChain = []
-    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[importSBML.COLUMN_NAME_df_CompartmentData[2]].tolist()
+    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[COLUMN_NAME_df_CompartmentData[2]].tolist()
     test_LinearChain = all(isinstance(item, str) for item in list_compartment_LinearChain)
     list_compartment_test_no_comp = []
-    list_compartment_test_no_comp += self.df_CompartmentData_test_no_comp[importSBML.COLUMN_NAME_df_CompartmentData[2]].tolist()
+    list_compartment_test_no_comp += self.df_CompartmentData_test_no_comp[COLUMN_NAME_df_CompartmentData[2]].tolist()
     test_no_comp = all(isinstance(item, str) for item in list_compartment_test_no_comp)
     list_compartment_test_comp = []
-    list_compartment_test_comp += self.df_CompartmentData_test_comp[importSBML.COLUMN_NAME_df_CompartmentData[2]].tolist()
+    list_compartment_test_comp += self.df_CompartmentData_test_comp[COLUMN_NAME_df_CompartmentData[2]].tolist()
     test_comp = all(isinstance(item, str) for item in list_compartment_test_comp)
     list_compartment_test_modifier = []
-    list_compartment_test_modifier += self.df_CompartmentData_test_modifier[importSBML.COLUMN_NAME_df_CompartmentData[2]].tolist()
+    list_compartment_test_modifier += self.df_CompartmentData_test_modifier[COLUMN_NAME_df_CompartmentData[2]].tolist()
     test_modifier = all(isinstance(item, str) for item in list_compartment_test_modifier)
     self.assertTrue(test)
     self.assertTrue(test_feedback)
@@ -193,25 +194,25 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return    
     list_compartment = []
-    list_compartment += self.df_CompartmentData[importSBML.COLUMN_NAME_df_CompartmentData[7]].tolist()
+    list_compartment += self.df_CompartmentData[COLUMN_NAME_df_CompartmentData[7]].tolist()
     test = all(isinstance(item, float) for item in list_compartment)
     list_compartment_feedback = []
-    list_compartment_feedback += self.df_CompartmentData_feedback[importSBML.COLUMN_NAME_df_CompartmentData[7]].tolist()
+    list_compartment_feedback += self.df_CompartmentData_feedback[COLUMN_NAME_df_CompartmentData[7]].tolist()
     test_feedback = all(isinstance(item, float) for item in list_compartment_feedback)
     list_compartment_LinearChain = []
-    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[importSBML.COLUMN_NAME_df_CompartmentData[7]].tolist()
+    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[COLUMN_NAME_df_CompartmentData[7]].tolist()
     test_LinearChain = all(isinstance(item, float) for item in list_compartment_LinearChain)
     list_compartment_LinearChain = []
-    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[importSBML.COLUMN_NAME_df_CompartmentData[7]].tolist()
+    list_compartment_LinearChain += self.df_CompartmentData_LinearChain[COLUMN_NAME_df_CompartmentData[7]].tolist()
     test_LinearChain = all(isinstance(item, float) for item in list_compartment_LinearChain)
     list_compartment_test_no_comp = []
-    list_compartment_test_no_comp += self.df_CompartmentData_test_no_comp[importSBML.COLUMN_NAME_df_CompartmentData[7]].tolist()
+    list_compartment_test_no_comp += self.df_CompartmentData_test_no_comp[COLUMN_NAME_df_CompartmentData[7]].tolist()
     test_no_comp = all(isinstance(item, float) for item in list_compartment_test_no_comp)
     list_compartment_test_comp = []
-    list_compartment_test_comp += self.df_CompartmentData_test_comp[importSBML.COLUMN_NAME_df_CompartmentData[7]].tolist()
+    list_compartment_test_comp += self.df_CompartmentData_test_comp[COLUMN_NAME_df_CompartmentData[7]].tolist()
     test_comp = all(isinstance(item, float) for item in list_compartment_test_comp)
     list_compartment_test_modifier = []
-    list_compartment_test_modifier += self.df_CompartmentData_test_modifier[importSBML.COLUMN_NAME_df_CompartmentData[7]].tolist()
+    list_compartment_test_modifier += self.df_CompartmentData_test_modifier[COLUMN_NAME_df_CompartmentData[7]].tolist()
     test_modifier = all(isinstance(item, float) for item in list_compartment_test_modifier)
 
     self.assertTrue(test)
@@ -225,17 +226,17 @@ class TestImportSBML(unittest.TestCase):
     # Test all the column names
     if IGNORE_TEST:
       return    
-    test = all(item in self.df_NodeData.columns for item in importSBML.COLUMN_NAME_df_NodeData)
+    test = all(item in self.df_NodeData.columns for item in COLUMN_NAME_df_NodeData)
     test_feedback = all(item in self.df_NodeData_feedback.columns \
-      for item in importSBML.COLUMN_NAME_df_NodeData)
+      for item in COLUMN_NAME_df_NodeData)
     test_LinearChain = all(item in self.df_NodeData_LinearChain.columns \
-      for item in importSBML.COLUMN_NAME_df_NodeData)
+      for item in COLUMN_NAME_df_NodeData)
     test_no_comp = all(item in self.df_NodeData_test_no_comp.columns \
-      for item in importSBML.COLUMN_NAME_df_NodeData)
+      for item in COLUMN_NAME_df_NodeData)
     test_comp = all(item in self.df_NodeData_test_comp.columns \
-      for item in importSBML.COLUMN_NAME_df_NodeData)
+      for item in COLUMN_NAME_df_NodeData)
     test_modifier = all(item in self.df_NodeData_test_modifier.columns \
-      for item in importSBML.COLUMN_NAME_df_NodeData)
+      for item in COLUMN_NAME_df_NodeData)
     self.assertTrue(test)
     self.assertTrue(test_feedback)
     self.assertTrue(test_LinearChain)
@@ -357,28 +358,28 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return    
     list_node = []
-    list_node += self.df_NodeData[importSBML.COLUMN_NAME_df_NodeData[4]].tolist()
-    list_node += self.df_NodeData[importSBML.COLUMN_NAME_df_NodeData[5]].tolist()
+    list_node += self.df_NodeData[COLUMN_NAME_df_NodeData[4]].tolist()
+    list_node += self.df_NodeData[COLUMN_NAME_df_NodeData[5]].tolist()
     test = all(isinstance(item, str) for item in list_node)
     list_node_feedback = []
-    list_node_feedback += self.df_NodeData_feedback[importSBML.COLUMN_NAME_df_NodeData[4]].tolist()
-    list_node_feedback += self.df_NodeData_feedback[importSBML.COLUMN_NAME_df_NodeData[5]].tolist()
+    list_node_feedback += self.df_NodeData_feedback[COLUMN_NAME_df_NodeData[4]].tolist()
+    list_node_feedback += self.df_NodeData_feedback[COLUMN_NAME_df_NodeData[5]].tolist()
     test_feedback = all(isinstance(item, str) for item in list_node_feedback)
     list_node_LinearChain = []
-    list_node_LinearChain += self.df_NodeData_LinearChain[importSBML.COLUMN_NAME_df_NodeData[4]].tolist()
-    list_node_LinearChain += self.df_NodeData_LinearChain[importSBML.COLUMN_NAME_df_NodeData[5]].tolist()
+    list_node_LinearChain += self.df_NodeData_LinearChain[COLUMN_NAME_df_NodeData[4]].tolist()
+    list_node_LinearChain += self.df_NodeData_LinearChain[COLUMN_NAME_df_NodeData[5]].tolist()
     test_LinearChain = all(isinstance(item, str) for item in list_node_LinearChain)
     list_node_test_no_comp = []
-    list_node_test_no_comp += self.df_NodeData_test_no_comp[importSBML.COLUMN_NAME_df_NodeData[4]].tolist()
-    list_node_test_no_comp += self.df_NodeData_test_no_comp[importSBML.COLUMN_NAME_df_NodeData[5]].tolist()
+    list_node_test_no_comp += self.df_NodeData_test_no_comp[COLUMN_NAME_df_NodeData[4]].tolist()
+    list_node_test_no_comp += self.df_NodeData_test_no_comp[COLUMN_NAME_df_NodeData[5]].tolist()
     test_no_comp = all(isinstance(item, str) for item in list_node_test_no_comp)
     list_node_test_comp = []
-    list_node_test_comp += self.df_NodeData_test_comp[importSBML.COLUMN_NAME_df_NodeData[4]].tolist()
-    list_node_test_comp += self.df_NodeData_test_comp[importSBML.COLUMN_NAME_df_NodeData[5]].tolist()
+    list_node_test_comp += self.df_NodeData_test_comp[COLUMN_NAME_df_NodeData[4]].tolist()
+    list_node_test_comp += self.df_NodeData_test_comp[COLUMN_NAME_df_NodeData[5]].tolist()
     test_comp = all(isinstance(item, str) for item in list_node_test_comp)
     list_node_test_modifier = []
-    list_node_test_modifier += self.df_NodeData_test_modifier[importSBML.COLUMN_NAME_df_NodeData[4]].tolist()
-    list_node_test_modifier += self.df_NodeData_test_modifier[importSBML.COLUMN_NAME_df_NodeData[5]].tolist()
+    list_node_test_modifier += self.df_NodeData_test_modifier[COLUMN_NAME_df_NodeData[4]].tolist()
+    list_node_test_modifier += self.df_NodeData_test_modifier[COLUMN_NAME_df_NodeData[5]].tolist()
     test_modifier = all(isinstance(item, str) for item in list_node_test_modifier)
 
     self.assertTrue(test)
@@ -394,34 +395,34 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return    
     list_node = []
-    list_node += self.df_NodeData[importSBML.COLUMN_NAME_df_NodeData[6]].tolist()
-    list_node += self.df_NodeData[importSBML.COLUMN_NAME_df_NodeData[14]].tolist()
-    list_node += self.df_NodeData[importSBML.COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node += self.df_NodeData[COLUMN_NAME_df_NodeData[6]].tolist()
+    list_node += self.df_NodeData[COLUMN_NAME_df_NodeData[14]].tolist()
+    list_node += self.df_NodeData[COLUMN_NAME_df_NodeData[16]].tolist()
     test = all(isinstance(item, float) for item in list_node)
     list_node_feedback = []
-    list_node_feedback += self.df_NodeData_feedback[importSBML.COLUMN_NAME_df_NodeData[6]].tolist()
-    list_node_feedback += self.df_NodeData_feedback[importSBML.COLUMN_NAME_df_NodeData[14]].tolist()
-    list_node_feedback += self.df_NodeData_feedback[importSBML.COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_feedback += self.df_NodeData_feedback[COLUMN_NAME_df_NodeData[6]].tolist()
+    list_node_feedback += self.df_NodeData_feedback[COLUMN_NAME_df_NodeData[14]].tolist()
+    list_node_feedback += self.df_NodeData_feedback[COLUMN_NAME_df_NodeData[16]].tolist()
     test_feedback = all(isinstance(item, float) for item in list_node_feedback)
     list_node_LinearChain = []
-    list_node_LinearChain += self.df_NodeData_LinearChain[importSBML.COLUMN_NAME_df_NodeData[6]].tolist()
-    list_node_LinearChain += self.df_NodeData_LinearChain[importSBML.COLUMN_NAME_df_NodeData[14]].tolist()
-    list_node_LinearChain += self.df_NodeData_LinearChain[importSBML.COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_LinearChain += self.df_NodeData_LinearChain[COLUMN_NAME_df_NodeData[6]].tolist()
+    list_node_LinearChain += self.df_NodeData_LinearChain[COLUMN_NAME_df_NodeData[14]].tolist()
+    list_node_LinearChain += self.df_NodeData_LinearChain[COLUMN_NAME_df_NodeData[16]].tolist()
     test_LinearChain = all(isinstance(item, float) for item in list_node_LinearChain)
     list_node_test_no_comp = []
-    list_node_test_no_comp += self.df_NodeData_test_no_comp[importSBML.COLUMN_NAME_df_NodeData[6]].tolist()
-    list_node_test_no_comp += self.df_NodeData_test_no_comp[importSBML.COLUMN_NAME_df_NodeData[14]].tolist()
-    list_node_test_no_comp += self.df_NodeData_test_no_comp[importSBML.COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_test_no_comp += self.df_NodeData_test_no_comp[COLUMN_NAME_df_NodeData[6]].tolist()
+    list_node_test_no_comp += self.df_NodeData_test_no_comp[COLUMN_NAME_df_NodeData[14]].tolist()
+    list_node_test_no_comp += self.df_NodeData_test_no_comp[COLUMN_NAME_df_NodeData[16]].tolist()
     test_no_comp = all(isinstance(item, float) for item in list_node_test_no_comp)
     list_node_test_comp = []
-    list_node_test_comp += self.df_NodeData_test_comp[importSBML.COLUMN_NAME_df_NodeData[6]].tolist()
-    list_node_test_comp += self.df_NodeData_test_comp[importSBML.COLUMN_NAME_df_NodeData[14]].tolist()
-    list_node_test_comp += self.df_NodeData_test_comp[importSBML.COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_test_comp += self.df_NodeData_test_comp[COLUMN_NAME_df_NodeData[6]].tolist()
+    list_node_test_comp += self.df_NodeData_test_comp[COLUMN_NAME_df_NodeData[14]].tolist()
+    list_node_test_comp += self.df_NodeData_test_comp[COLUMN_NAME_df_NodeData[16]].tolist()
     test_comp = all(isinstance(item, float) for item in list_node_test_comp)
     list_node_test_modifier = []
-    list_node_test_modifier += self.df_NodeData_test_modifier[importSBML.COLUMN_NAME_df_NodeData[6]].tolist()
-    list_node_test_modifier += self.df_NodeData_test_modifier[importSBML.COLUMN_NAME_df_NodeData[14]].tolist()
-    list_node_test_modifier += self.df_NodeData_test_modifier[importSBML.COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_test_modifier += self.df_NodeData_test_modifier[COLUMN_NAME_df_NodeData[6]].tolist()
+    list_node_test_modifier += self.df_NodeData_test_modifier[COLUMN_NAME_df_NodeData[14]].tolist()
+    list_node_test_modifier += self.df_NodeData_test_modifier[COLUMN_NAME_df_NodeData[16]].tolist()
     test_modifier = all(isinstance(item, float) for item in list_node_test_modifier)
 
     self.assertTrue(test)
@@ -435,17 +436,17 @@ class TestImportSBML(unittest.TestCase):
     # Test all the column names
     if IGNORE_TEST:
       return    
-    test = all(item in self.df_ReactionData.columns for item in importSBML.COLUMN_NAME_df_ReactionData)
+    test = all(item in self.df_ReactionData.columns for item in COLUMN_NAME_df_ReactionData)
     test_feedback = all(item in self.df_ReactionData_feedback.columns \
-      for item in importSBML.COLUMN_NAME_df_ReactionData)
+      for item in COLUMN_NAME_df_ReactionData)
     test_LinearChain = all(item in self.df_ReactionData_LinearChain.columns \
-      for item in importSBML.COLUMN_NAME_df_ReactionData)
+      for item in COLUMN_NAME_df_ReactionData)
     test_no_comp = all(item in self.df_ReactionData_test_no_comp.columns \
-      for item in importSBML.COLUMN_NAME_df_ReactionData)
+      for item in COLUMN_NAME_df_ReactionData)
     test_comp = all(item in self.df_ReactionData_test_comp.columns \
-      for item in importSBML.COLUMN_NAME_df_ReactionData)
+      for item in COLUMN_NAME_df_ReactionData)
     test_modifier = all(item in self.df_ReactionData_test_modifier.columns \
-      for item in importSBML.COLUMN_NAME_df_ReactionData)
+      for item in COLUMN_NAME_df_ReactionData)
     self.assertTrue(test)
     self.assertTrue(test_feedback)
     self.assertTrue(test_LinearChain)
@@ -630,34 +631,39 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(test_LinearChain)
     self.assertTrue(test_no_comp)
     self.assertTrue(test_comp)
-    self.assertTrue(test_modifier)
+    self.assertTrue(test_modifier) 
 
   def testGetCompartment(self):
     # Test all the get functions about compartment
     if IGNORE_TEST:
       return  
-    self.assertTrue(importSBML.getCompartmentPosition(self.df,0) == [0, 0])
-    self.assertTrue(importSBML.getCompartmentSize(self.df,0) == [1000, 1000])
-    self.assertTrue(importSBML.getCompartmentFillColor(self.df,0) == [255, 255, 255])
-    self.assertTrue(importSBML.getCompartmentBorderColor(self.df,0) == [255, 255, 255])
-    self.assertTrue(importSBML.getCompartmentBorderWidth(self.df,0) == 2.)
+    self.assertTrue(self.df.getCompartmentPosition("_compartment_default_")[0] == [0, 0])
+    self.assertTrue(self.df.getCompartmentSize("_compartment_default_")[0] == [1000, 1000])
+    self.assertTrue(self.df.getCompartmentFillColor("_compartment_default_")[0] == \
+      [[255, 255, 255, 1.0], 'White', '#FFFFFF'])
+    self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_")[0] == \
+      [[255, 255, 255, 1.0], 'White', '#FFFFFF'])
+    self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_")[0] == 2.)
 
   def testGetNode(self):
     # Test all the get functions about node
 
     if IGNORE_TEST:
       return  
-    self.assertTrue(importSBML.isFloatingNode(self.df,0) == True)
-    self.assertTrue(importSBML.getNodePosition(self.df,0) == [413.0, 216.0])
-    self.assertTrue(importSBML.getNodeSize(self.df,0) == [50.0, 30.0])
-    self.assertTrue(importSBML.getNodeShape(self.df,0) == (1, 'reactangle'))
-    self.assertTrue(importSBML.getNodeTextPosition(self.df,0) == [413.0, 216.0])
-    self.assertTrue(importSBML.getNodeTextSize(self.df,0) == [50.0, 30.0])
-    self.assertTrue(importSBML.getNodeFillColor(self.df,0) == [255, 204, 153])
-    self.assertTrue(importSBML.getNodeBorderColor(self.df,0) == [255, 108, 9])
-    self.assertTrue(importSBML.getNodeBorderWidth(self.df,0) == 2.)
-    self.assertTrue(importSBML.getNodeTextFontColor(self.df,0) == [0, 0, 0])
-    self.assertTrue(importSBML.getNodeTextLineWidth(self.df,0) == 1.)
+    self.assertTrue(self.df.isFloatingNode("x_1")[0] == True)
+    self.assertTrue(self.df.getNodePosition("x_1")[0] == [413.0, 216.0])
+    self.assertTrue(self.df.getNodeSize("x_1")[0] == [50.0, 30.0])
+    self.assertTrue(self.df.getNodeShape("x_1")[0] == (1, 'reactangle'))
+    self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == [413.0, 216.0])
+    self.assertTrue(self.df.getNodeTextSize("x_1")[0] == [50.0, 30.0])
+    self.assertTrue(self.df.getNodeFillColor("x_1")[0] == \
+      [[255, 204, 153, 1.0], '', '#FFCC99'])
+    self.assertTrue(self.df.getNodeBorderColor("x_1")[0] == \
+      [[255, 108, 9, 1.0], '', '#FF6C09'])
+    self.assertTrue(self.df.getNodeBorderWidth("x_1")[0] == 2.)
+    self.assertTrue(self.df.getNodeTextFontColor("x_1")[0] == \
+      [[0, 0, 0, 1.0], 'Black', '#000000'])
+    self.assertTrue(self.df.getNodeTextLineWidth("x_1")[0] == 1.)
 
 
   def testGetReaction(self):
@@ -666,9 +672,104 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return
 
-    self.assertTrue(importSBML.getReactionFillColor(self.df,0) == [91, 176, 253])
-    self.assertTrue(importSBML.getReactionLineThickness(self.df,0) == 3.)
-    self.assertTrue(importSBML.isBezierReactionType(self.df,0) == True)
+    self.assertTrue(self.df.getReactionFillColor("r_0")[0] == \
+      [[91, 176, 253, 1.0], '', '#5BB0FD'])
+    self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == 3.)
+    self.assertTrue(self.df.isBezierReactionType("r_0")[0] == True)
+
+  def testSetCompartment(self):
+    # Test all the get functions about compartment
+    if IGNORE_TEST:
+      return  
+
+    position = [1, 0]
+    size = [900, 900]
+    fill_color = [255, 255, 254]
+    border_color = [255, 255, 254]
+    border_width = 2.
+
+    self.df.setCompartmentPosition('_compartment_default_', position)
+    self.df.setCompartmentSize('_compartment_default_', size)
+    self.df.setCompartmentFillColor('_compartment_default_', fill_color)
+    self.df.setCompartmentBorderColor('_compartment_default_', border_color)
+    self.df.setCompartmentBorderWidth('_compartment_default_', border_width)
+
+    self.assertTrue(self.df.getCompartmentPosition("_compartment_default_")[0] == position)
+    self.assertTrue(self.df.getCompartmentSize("_compartment_default_")[0] == size)
+    self.assertTrue(self.df.getCompartmentFillColor("_compartment_default_")[0][0][0:-1] == fill_color)
+    self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_")[0][0][0:-1] == border_color)
+    self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_")[0] == border_width)
+
+  def testSetNode(self):
+    # Test all the get functions about node
+
+    if IGNORE_TEST:
+      return  
+
+    floating_node = True
+    position = [412., 216.]
+    size = [50., 29.]
+    shapeIdx = 2
+    txt_position = [412., 216.]
+    txt_size = [50., 29.]
+    fill_color = [255, 204, 154]
+    border_color = [255, 109, 9]
+    border_width = 3.
+    txt_font_color = "#000000"
+    txt_line_width = 1.
+    
+    self.df.setFloatingBoundaryNode("x_1", floating_node)
+    self.df.setNodePosition("x_1", position)
+    self.df.setNodeSize("x_1", size)
+    self.df.setNodeShapeIdx("x_1", shapeIdx)
+    self.df.setNodeTextPosition("x_1", txt_position)
+    self.df.setNodeTextSize("x_1", txt_size)
+    self.df.setNodeFillColor("x_1", fill_color)
+    self.df.setNodeBorderColor("x_1", border_color)
+    self.df.setNodeBorderWidth("x_1", border_width)
+    self.df.setNodeTextFontColor("x_1", txt_font_color)
+    self.df.setNodeTextLineWidth("x_1", txt_line_width)
+
+    self.assertTrue(self.df.isFloatingNode("x_1")[0] == floating_node)
+    self.assertTrue(self.df.getNodePosition("x_1")[0] == position)
+    self.assertTrue(self.df.getNodeSize("x_1")[0] == size)
+    self.assertTrue(self.df.getNodeShape("x_1")[0][0] == shapeIdx)
+    self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == txt_position)
+    self.assertTrue(self.df.getNodeTextSize("x_1")[0] == txt_size)
+    self.assertTrue(self.df.getNodeFillColor("x_1")[0][0][0:-1] == fill_color)
+    self.assertTrue(self.df.getNodeBorderColor("x_1")[0][0][0:-1] == border_color)
+    self.assertTrue(self.df.getNodeBorderWidth("x_1")[0] == border_width)
+    self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0][0:-1] == [0,0,0])
+    self.assertTrue(self.df.getNodeTextLineWidth("x_1")[0] == txt_line_width)
+
+
+  def testSetReaction(self):
+    # Test all the get functions about reaction
+
+    if IGNORE_TEST:
+      return
+    
+    fill_color = "orange"
+    line_thickness = 2.
+    bezier = False
+
+    self.df.setReactionFillColor("r_0", fill_color)
+    self.df.setReactionLineThickness("r_0", line_thickness)
+    self.df.setBezierReactionType("r_0", bezier)
+
+    self.assertTrue(self.df.getReactionFillColor("r_0")[0][0][0:-1] == [255, 165, 0])
+    self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == line_thickness)
+    self.assertTrue(self.df.isBezierReactionType("r_0")[0] == bezier)
+
+  def testExport(self):
+    # Test the export function
+
+    if IGNORE_TEST:
+      return
+
+    sbmlStr_layout_render = self.df.export()
+    self.assertTrue(isinstance(sbmlStr_layout_render, str))
+
 
 if __name__ == '__main__':
   unittest.main()

@@ -15,7 +15,7 @@ import pandas as pd
 import math
 
 
-def export(df):
+def _DFToSBML(df):
 
     """
     Write the information of a set of dataframe to an SBML string. 
@@ -805,6 +805,7 @@ def export(df):
         raise ValueError('There is no node or no reaction!')
 
 
+
 # if __name__ == '__main__':
 
 #     DIR = os.path.dirname(os.path.abspath(__file__))
@@ -821,7 +822,7 @@ def export(df):
 
 #     df = (df_CompartmentData, df_NodeData, df_ReactionData)
 
-#     sbmlStr_layout_render = export(df)
+#     sbmlStr_layout_render = _DFToSBML(df)
 
 #     f = open("output.xml", "w")
 #     f.write(sbmlStr_layout_render)
