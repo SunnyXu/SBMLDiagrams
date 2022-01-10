@@ -21,7 +21,7 @@ def _drawRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash 
     Draw a rectangle on canvas.
 
     Args:  
-        canvas: skia.Surface().getCanvas().
+        canvas: skia.Canvas.
         x: float-left up corner position_x
         y: float-left up corner position_y
         width: float-width of the rectangle
@@ -62,7 +62,7 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
     Draw a rounded rectangle on canvas.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
+        canvas: skia.Canvas
         x: float-left up corner position_x
         y: float-left up corner position_y
         width: float-width of the rectangle
@@ -104,7 +104,7 @@ def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
     Draw a circle within a certain size of rectangle on canvas.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
+        canvas: skia.Canvas
         x1: float-left up corner position_x of the rectangle
         y1: float-left up corner position_y of the rectangle
         w: float-width of the rectangle
@@ -148,7 +148,7 @@ def _drawDimer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
     Draw a dimer (two circles) within a certain size of rectangle on canvas.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
+        canvas: skia.Canvas
         x1: float-left up corner position_x of the rectangle
         y1: float-left up corner position_y of the rectangle
         w: float-width of the rectangle
@@ -196,7 +196,7 @@ def _drawTrimer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
     Draw a trimer (three circles) within a certain size of rectangle on canvas.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
+        canvas: skia.Canvas
         x1: float-left up corner position_x of the rectangle
         y1: float-left up corner position_y of the rectangle
         w: float-width of the rectangle
@@ -248,7 +248,7 @@ def _drawTetramer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False)
     Draw a Tetramer (four circles) within a certain size of rectangle on canvas.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
+        canvas: skia.Canvas
         x1: float-left up corner position_x of the rectangle
         y1: float-left up corner position_y of the rectangle
         w: float-width of the rectangle
@@ -304,7 +304,7 @@ def _drawPolygon (canvas, pts, outline, fill, linewidth, dash = False):
     Draw a polygon.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
+        canvas: skia.Canvas
         pts: list of 1*2 matrix: positions of the vertices/corners of the polygon
         outline: skia.Color()-border color
         fill: skia.Color()-fill color
@@ -348,7 +348,7 @@ def _drawLine (canvas, x1, y1, x2, y2, fill, linewidth, dash = False):
     Draw a line.
 
     Args:  
-        canvas: skia.Surface().getCanvas()
+        canvas: skia.Canvas
         x1: float-position_x of one end of the line
         y1: float-position_y of one end of the line
         x2: float-position_x of the other end of the line
@@ -376,20 +376,19 @@ def _drawLine (canvas, x1, y1, x2, y2, fill, linewidth, dash = False):
     canvas.drawLine (x1, y1, x2, y2, paint)
     
 def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_color, comp_border_width):
-
     """
     Add a compartment.
 
     Args:  
-        canvas: skia.Surface().getCanvas().
+        canvas: skia.Canvas.
 
         position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
 
         dimension: list-1*2 matrix-size of the rectangle [width, height].
 
-        comp_border_color: list-rgb 1*3 matrix-compartment border color.
+        comp_border_color: list-rgba 1*4 matrix-compartment border color.
 
-        comp_fill_color: list-rgb 1*3 matrix-compartment fill color.
+        comp_fill_color: list-rgba 1*4 matrix-compartment fill color.
 
         comp_border_width: float-compartment border line width.
         
@@ -397,11 +396,12 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
 
     [x, y] = position
     [width, height] = dimension
-    outline = skia.Color(comp_border_color[0], comp_border_color[1], comp_border_color[2])
-    fill = skia.Color(comp_fill_color[0], comp_fill_color[1], comp_fill_color[2])
+    outline = skia.Color(comp_border_color[0], comp_border_color[1], comp_border_color[2], comp_border_color[3])
+    fill = skia.Color(comp_fill_color[0], comp_fill_color[1], comp_fill_color[2], comp_fill_color[3])
     linewidth = comp_border_width    
-    _drawRectangle (canvas, x, y, width, height, 
-                  outline=outline, fill = fill, linewidth=linewidth)
+    # _drawRectangle (canvas, x, y, width, height, 
+    #               outline=outline, fill = fill, linewidth=linewidth)
+    _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth)
   
     
 def addNode(canvas, floating_boundary_node, alias_node, position, dimension, 
@@ -411,7 +411,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
     Add a node.
 
     Args:  
-        canvas: skia.Surface().getCanvas().
+        canvas: skia.Canvas.
 
         floating_boundary_node: str-floating node ('floating') or not ('boundary').
 
@@ -421,9 +421,9 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 
         dimension: list-1*2 matrix-size of the rectangle [width, height].
 
-        spec_border_color: list-rgb 1*3 matrix-species border color.
+        spec_border_color: list-rgba 1*4 matrix-species border color.
 
-        spec_fill_color: list-rgb 1*3 matrix-species fill color.
+        spec_fill_color: list-rgba 1*4 matrix-species fill color.
 
         spec_border_width: float-compartment border line width.
 
@@ -435,8 +435,8 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 
     [x, y] = position
     [width, height] = dimension
-    outline = skia.Color(spec_border_color[0], spec_border_color[1], spec_border_color[2])
-    fill = skia.Color(spec_fill_color[0], spec_fill_color[1], spec_fill_color[2])
+    outline = skia.Color(spec_border_color[0], spec_border_color[1], spec_border_color[2], spec_border_color[3])
+    fill = skia.Color(spec_fill_color[0], spec_fill_color[1], spec_fill_color[2], spec_fill_color[3])
     linewidth = spec_border_width  
     if floating_boundary_node == 'boundary':
         linewidth = 2*linewidth
@@ -508,7 +508,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
     Add a reaction.
 
     Args:  
-        canvas: skia.Surface().getCanvas().
+        canvas: skia.Canvas.
 
         rct_position: list-1*2 matrix: positions of each reactant.
 
@@ -526,7 +526,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
 
         mod_dimension: list-1*2 matrix: dimension/size of each modifier.
 
-        reaction_line_color: list-rgb 1*3 matrix-species fill color.
+        reaction_line_color: list-rgba 1*4 matrix-species fill color.
 
         reaction_line_width: float-reaction line width.
 
@@ -602,7 +602,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
         Draw an arrow.
 
         Args:  
-            canvas: skia.Surface().getCanvas()
+            canvas: skia.Canvas
             pts: list of 1*2 matrix: points of the arrows
             fill: skia.Color(): color of the arrow
         """
@@ -660,7 +660,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
     arcCenter = center_position
     linewidth = reaction_line_width
     lineType = reaction_line_type
-    lineColor = skia.Color(reaction_line_color[0], reaction_line_color[1], reaction_line_color[2])
+    lineColor = skia.Color(reaction_line_color[0], reaction_line_color[1], reaction_line_color[2], reaction_line_color[3])
     arrow_s1 = 5*reaction_line_width #height of the arrow
     arrow_s2 = 4*reaction_line_width #width of the arrow
     if lineType == 'bezier':
@@ -776,7 +776,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
     Add the text.
 
     Args:  
-        canvas: skia.Surface().getCanvas().
+        canvas: skia.Canvas.
 
         node_id: str-the content of the text.
 
@@ -784,7 +784,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
 
         dimension: list-1*2 matrix-size of the rectangle [width, height].
 
-        text_line_color: list-rgb 1*3 matrix-text line color.
+        text_line_color: list-rgba 1*4 matrix-text line color.
 
         text_line_width: float-text line width.
 
@@ -793,7 +793,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
     #fontSize = 11
     #scalingFactor = 1.
     #fontSize_virtual = fontSize*scalingFactor 
-    fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2])    
+    fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
     paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)  
     #paintText = skia.Paint(Colot = fontColor)  
     font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()))
@@ -810,11 +810,11 @@ def draw(surface, fileName = '', file_format = 'PNG'):
     Display the diagram and save it to the local.
 
     Args:  
-        surface: skia.Surface().
+        surface: skia.Surface.
 
         fileName: str-the name for the generated file: either the input filename or a randomly generated filename if '' (default).
         
-        fileFormat = 'PDF' #'PNG' (default), 'JPEG' or 'PDF'.
+        fileFormat = 'PNG' (default) or 'JPEG'.
     """ 
 
     if fileName == '':
@@ -834,18 +834,18 @@ def draw(surface, fileName = '', file_format = 'PNG'):
             pil_im = Image.open(tmpfileName)
             display(pil_im)
             #pil_im.show()
-        elif file_format == 'PDF':
-            tmpfileNamepdf = tmpfileName + '.pdf'
-            try:
-                tmpfileName = tmpfileName + '.png'
-                image.save(tmpfileName, skia.kPNG)
-                pil_im = Image.open(tmpfileName)
-                display(pil_im)
-                #pil_im.show() 
-                imagepdf = pil_im.convert('RGB')
-                imagepdf.save(tmpfileNamepdf)
-            finally:
-                os.remove(tmpfileName)
+        # elif file_format == 'PDF':
+        #     tmpfileNamepdf = tmpfileName + '.pdf'
+        #     try:
+        #         tmpfileName = tmpfileName + '.png'
+        #         image.save(tmpfileName, skia.kPNG)
+        #         pil_im = Image.open(tmpfileName)
+        #         display(pil_im)
+        #         #pil_im.show() 
+        #         imagepdf = pil_im.convert('RGB')
+        #         imagepdf.save(tmpfileNamepdf)
+        #     finally:
+        #         os.remove(tmpfileName)
 
         #self.surface.write_to_png(tmpfileName)
 
@@ -864,17 +864,17 @@ def draw(surface, fileName = '', file_format = 'PNG'):
             pil_im = Image.open(fileName)
             display(pil_im)
             #pil_im.show()   
-        elif file_format == 'PDF':
-            fileNamepdf = fileName + '.pdf'
-            fileName = fileName + '.png'
-            try:
-                image.save(fileName, skia.kPNG)
-                pil_im = Image.open(fileName)
-                display(pil_im)
-                #pil_im.show() 
-                imagepdf = pil_im.convert('RGB')
-                imagepdf.save(fileNamepdf)
-            finally:
-                os.remove(fileName)
+        # elif file_format == 'PDF':
+        #     fileNamepdf = fileName + '.pdf'
+        #     fileName = fileName + '.png'
+        #     try:
+        #         image.save(fileName, skia.kPNG)
+        #         pil_im = Image.open(fileName)
+        #         display(pil_im)
+        #         #pil_im.show() 
+        #         imagepdf = pil_im.convert('RGB')
+        #         imagepdf.save(fileNamepdf)
+        #     finally:
+        #         os.remove(fileName)
 
 

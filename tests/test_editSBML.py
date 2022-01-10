@@ -31,17 +31,20 @@ class TestEditSBML(unittest.TestCase):
     fill_color = [255, 255, 254]
     border_color = [255, 255, 254]
     border_width = 2.
+    opacity = 0.
 
     df_update = editSBML._setCompartmentPosition(self.df, "_compartment_default_", position)
     df_update = editSBML._setCompartmentSize(df_update, "_compartment_default_", size)
-    df_update = editSBML._setCompartmentFillColor(df_update, "_compartment_default_", fill_color)
-    df_update = editSBML._setCompartmentBorderColor(df_update, "_compartment_default_", border_color)
+    df_update = editSBML._setCompartmentFillColor(df_update, "_compartment_default_", fill_color, opacity = opacity)
+    df_update = editSBML._setCompartmentBorderColor(df_update, "_compartment_default_", border_color, opacity = opacity)
     df_update = editSBML._setCompartmentBorderWidth(df_update, "_compartment_default_", border_width)
 
     self.assertTrue(df_update[0].iloc[0]["position"] == position)
-    self.assertTrue(df_update[0].iloc[0]["size"] == size)  
-    self.assertTrue(df_update[0].iloc[0]["fill_color"] == fill_color)
-    self.assertTrue(df_update[0].iloc[0]["border_color"] == border_color)
+    self.assertTrue(df_update[0].iloc[0]["size"] == size) 
+    self.assertTrue(df_update[0].iloc[0]["fill_color"][0:-1] == fill_color)
+    self.assertTrue(df_update[0].iloc[0]["fill_color"][3] == int(opacity*255/1.))
+    self.assertTrue(df_update[0].iloc[0]["border_color"][0:-1] == border_color)
+    self.assertTrue(df_update[0].iloc[0]["border_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[0].iloc[0]["border_width"] == border_width)
 
 
@@ -60,6 +63,7 @@ class TestEditSBML(unittest.TestCase):
     border_width = 3.
     txt_font_color = [0, 0, 0]
     txt_line_width = 1.
+    opacity = 1.
 
     df_update = editSBML._setFloatingBoundaryNode(self.df, "x_1", floating_node)
     df_update = editSBML._setNodePosition(df_update, "x_1", position)
@@ -67,10 +71,10 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setNodeShapeIdx(df_update, "x_1", shapeIdx)
     df_update = editSBML._setNodeTextPosition(df_update, "x_1", txt_position)
     df_update = editSBML._setNodeTextSize(df_update, "x_1", txt_size)
-    df_update = editSBML._setNodeFillColor(df_update, "x_1", fill_color)
-    df_update = editSBML._setNodeBorderColor(df_update, "x_1", border_color)
+    df_update = editSBML._setNodeFillColor(df_update, "x_1", fill_color, opacity = opacity)
+    df_update = editSBML._setNodeBorderColor(df_update, "x_1", border_color, opacity = opacity)
     df_update = editSBML._setNodeBorderWidth(df_update, "x_1", border_width)
-    df_update = editSBML._setNodeTextFontColor(df_update, "x_1", txt_font_color)
+    df_update = editSBML._setNodeTextFontColor(df_update, "x_1", txt_font_color, opacity = opacity)
     df_update = editSBML._setNodeTextLineWidth(df_update, "x_1", txt_line_width)
     
     self.assertTrue(df_update[1].iloc[0]["floating_node"] == floating_node)
@@ -79,10 +83,13 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[1].iloc[0]["shape_idx"] == shapeIdx)
     self.assertTrue(df_update[1].iloc[0]["txt_position"] == txt_position)
     self.assertTrue(df_update[1].iloc[0]["txt_size"] == txt_size)
-    self.assertTrue(df_update[1].iloc[0]["fill_color"] == fill_color)
-    self.assertTrue(df_update[1].iloc[0]["border_color"] == border_color)
+    self.assertTrue(df_update[1].iloc[0]["fill_color"][0:-1] == fill_color)
+    self.assertTrue(df_update[1].iloc[0]["fill_color"][3] == int(opacity*255/1.))
+    self.assertTrue(df_update[1].iloc[0]["border_color"][0:-1] == border_color)
+    self.assertTrue(df_update[1].iloc[0]["border_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[1].iloc[0]["border_width"] == border_width)
-    self.assertTrue(df_update[1].iloc[0]["txt_font_color"] == txt_font_color)
+    self.assertTrue(df_update[1].iloc[0]["txt_font_color"][0:-1] == txt_font_color)
+    self.assertTrue(df_update[1].iloc[0]["txt_font_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[1].iloc[0]["txt_line_width"] == txt_line_width)
 
   def testSetReaction(self):
@@ -91,14 +98,16 @@ class TestEditSBML(unittest.TestCase):
       return    
 
     fill_color = [92, 176, 252]
+    opacity = 0.5
     line_thickness = 2.
     bezier = False
 
-    df_update = editSBML._setReactionFillColor(self.df, "r_0", fill_color)
+    df_update = editSBML._setReactionFillColor(self.df, "r_0", fill_color, opacity = opacity)
     df_update = editSBML._setReactionLineThickness(df_update, "r_0", line_thickness)
     df_update = editSBML._setBezierReactionType(df_update, "r_0", bezier)
 
-    self.assertTrue(df_update[2].iloc[0]["fill_color"] == fill_color)
+    self.assertTrue(df_update[2].iloc[0]["fill_color"][0:-1] == fill_color)
+    self.assertTrue(df_update[2].iloc[0]["fill_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[2].iloc[0]["line_thickness"] == line_thickness)
     self.assertTrue(df_update[2].iloc[0]["bezier"] == bezier)
 

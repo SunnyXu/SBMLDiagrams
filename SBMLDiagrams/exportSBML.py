@@ -55,7 +55,7 @@ def _DFToSBML(df):
     numNodes = len(df_NodeData)
     numReactions = len(df_ReactionData)
 
-    if numNodes != 0 or numReactions != 0 :
+    if numNodes != 0:
         numCompartments = len(df_CompartmentData)      
     # #######################################
 
@@ -617,11 +617,6 @@ def _DFToSBML(df):
         rInfo.setName("Render Information")
         rInfo.setProgramName("RenderInformation")
         rInfo.setProgramVersion("1.0")
-
-        # add some colors
-        # color = rInfo.createColorDefinition()
-        # color.setId("black")
-        # color.setColorValue("#000000")
         
         if numCompartments != 0:  
             for i in range(numCompartments):
@@ -634,9 +629,16 @@ def _DFToSBML(df):
                         fill_color   = df_CompartmentData.iloc[i]['fill_color']
                         border_color = df_CompartmentData.iloc[i]['border_color']
                     comp_border_width = float(df_CompartmentData.iloc[i]['border_width'])
-                    fill_color_str    = '#%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]))
-                    border_color_str  = '#%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]))
-                
+                    if len(fill_color) == 4:
+                        fill_color_str    = '#%02x%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]),int(fill_color[3]))
+                    elif len(fill_color) == 3:
+                        fill_color_str    = '#%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]))
+                   
+                    if len(border_color) == 4:    
+                        border_color_str  = '#%02x%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]),int(border_color[3]))
+                    elif len(border_color) == 3:
+                        border_color_str  = '#%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]))
+
 
                     color = rInfo.createColorDefinition()
                     color.setId("comp_fill_color" + "_" + comp_id)
@@ -659,10 +661,8 @@ def _DFToSBML(df):
         else:
             comp_border_width = 2.
             #set default compartment with white color
-            #fill_color_str = '#00ffffff'
-            #border_color_str = '#00ffffff'
-            fill_color_str = '#ffffff'
-            border_color_str = '#ffffff'
+            fill_color_str = '#ffffffff'
+            border_color_str = '#ffffffff'
 
             color = rInfo.createColorDefinition()
             color.setId("comp_fill_color")
@@ -692,8 +692,16 @@ def _DFToSBML(df):
                 except:
                     spec_fill_color   = df_NodeData.iloc[i]['fill_color']
                     spec_border_color = df_NodeData.iloc[i]['border_color']
-                spec_fill_color_str   = '#%02x%02x%02x' % (int(spec_fill_color[0]),int(spec_fill_color[1]),int(spec_fill_color[2]))
-                spec_border_color_str = '#%02x%02x%02x' % (int(spec_border_color[0]),int(spec_border_color[1]),int(spec_border_color[2]))
+                if len(spec_fill_color) == 4:
+                    spec_fill_color_str   = '#%02x%02x%02x%02x' % (int(spec_fill_color[0]),int(spec_fill_color[1]),int(spec_fill_color[2]),int(spec_fill_color[3]))
+                elif len(spec_fill_color) == 3:
+                    spec_fill_color_str   = '#%02x%02x%02x' % (int(spec_fill_color[0]),int(spec_fill_color[1]),int(spec_fill_color[2]))
+               
+                if len(spec_border_color) == 4:    
+                    spec_border_color_str = '#%02x%02x%02x%02x' % (int(spec_border_color[0]),int(spec_border_color[1]),int(spec_border_color[2]),int(spec_border_color[3]))
+                elif len(spec_border_color) == 3:
+                    spec_border_color_str = '#%02x%02x%02x' % (int(spec_border_color[0]),int(spec_border_color[1]),int(spec_border_color[2]))   
+
                 spec_border_width = float(df_NodeData.iloc[i]['border_width'])
 
                 #text_font_size = int(df_NodeData.iloc[i]['txt_font_size'])
@@ -701,16 +709,17 @@ def _DFToSBML(df):
                     font_color = list(df_NodeData.iloc[i]['txt_font_color'][1:-1].split(","))
                 except:
                     font_color = df_NodeData.iloc[i]['txt_font_color']
-                text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
+                if len(font_color) == 4:
+                    text_line_color_str =  '#%02x%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]),int(font_color[3]))
+                elif len(font_color) == 3:
+                    text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
                 text_line_width = float(df_NodeData.iloc[i]['txt_line_width'])
             except: #text-only: set default species/node with white color
-                spec_fill_color_str = '#ffffff'
-                spec_border_color_str = '#ffffff'
-                #spec_fill_color_str = '#00ffffff'
-                #spec_border_color_str = '#00ffffff'
+                spec_fill_color_str = '#ffffffff'
+                spec_border_color_str = '#ffffffff'
                 spec_border_width = 2.
                 #text_font_size = 11
-                text_line_color_str = '#000000'
+                text_line_color_str = '#000000ff'
                 text_line_width = 1.
 
 
@@ -785,7 +794,10 @@ def _DFToSBML(df):
                 except:
                     reaction_fill_color = df_ReactionData.iloc[i]['fill_color']
                 
-                reaction_fill_color_str = '#%02x%02x%02x' % (int(reaction_fill_color[0]),int(reaction_fill_color[1]),int(reaction_fill_color[2]))           
+                if len(reaction_fill_color) == 4:
+                    reaction_fill_color_str = '#%02x%02x%02x%02x' % (int(reaction_fill_color[0]),int(reaction_fill_color[1]),int(reaction_fill_color[2]),int(reaction_fill_color[3]))           
+                elif len(reaction_fill_color) == 3:
+                    reaction_fill_color_str = '#%02x%02x%02x' % (int(reaction_fill_color[0]),int(reaction_fill_color[1]),int(reaction_fill_color[2]))           
                 reaction_line_thickness = float(df_ReactionData.iloc[i]['line_thickness'])
 
                 color = rInfo.createColorDefinition()
@@ -802,7 +814,7 @@ def _DFToSBML(df):
     
         return sbmlStr_layout_render
     else:
-        raise ValueError('There is no node or no reaction!')
+        raise ValueError('There is no node!')
 
 
 

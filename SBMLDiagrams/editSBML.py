@@ -17,17 +17,17 @@ color_xls = pd.ExcelFile(os.path.join(DIR, 'colors.xlsx'))
 df_color = pd.read_excel(color_xls, sheet_name = 'colors')
 df_color["html_name"] = df_color["html_name"].str.lower()
 
-def _color_to_rgb(color):
+def _color_to_rgb(color, opacity):
     def _hex_to_rgb(value):
         value = value.lstrip('#')
         return [int(value[i:i+2], 16) for i in (0, 2, 4)]
 
-    #rgb
+    #rgba
     rgb = []
     if isinstance(color, list) and len(color) == 3:
         rgb = color.copy()
     elif isinstance(color, str):
-        if '#' in color: #hex_string
+        if '#' in color and len(color) == 7: #hex_string
             rgb = _hex_to_rgb(color)
         else: #html_name
             if color.lower() in df_color.values:
@@ -35,8 +35,13 @@ def _color_to_rgb(color):
                 rgb_pre = df_color.iloc[index]["decimal_rgb"]
                 rgb_pre = rgb_pre[1:-1].split(",")
                 rgb = [int(x) for x in rgb_pre]
-    return rgb
 
+    if rgb == [] or opacity > 1. or opacity < 0.:
+        raise ValueError('Please enter a color or/and opacity in a valid format!')
+    else:
+        rgba = rgb.copy()
+        rgba.append(int(opacity*255/1.))
+    return rgba
 
 def _setCompartmentPosition(df, id, position):
 
@@ -86,7 +91,7 @@ def _setCompartmentSize(df, id, size):
 
     return df_temp
 
-def _setCompartmentFillColor(df, id, fill_color):
+def _setCompartmentFillColor(df, id, fill_color, opacity):
 
     """
     Set the compartment fill color
@@ -96,7 +101,9 @@ def _setCompartmentFillColor(df, id, fill_color):
 
         id: str-compartment id.
 
-        fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+        fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -104,16 +111,14 @@ def _setCompartmentFillColor(df, id, fill_color):
     """
     df_CompartmentData_temp = df[0].copy()      
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
-    fill_color = _color_to_rgb(fill_color)
-    if fill_color == []:
-        raise ValueError('Please enter a color in a valid format!')
+    fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"fill_color"] = fill_color
     df_temp = (df_CompartmentData_temp, df[1], df[2])
 
     return df_temp
 
-def _setCompartmentBorderColor(df, id, border_color):
+def _setCompartmentBorderColor(df, id, border_color, opacity):
 
     """
     Set the compartment border color
@@ -123,7 +128,9 @@ def _setCompartmentBorderColor(df, id, border_color):
 
         id: str-compartment id.
 
-        border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+        border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -132,9 +139,7 @@ def _setCompartmentBorderColor(df, id, border_color):
 
     df_CompartmentData_temp = df[0].copy()
     idx_list = df[0].index[df[0]["id"] == id].tolist()  
-    border_color = _color_to_rgb(border_color)
-    if border_color == []:
-        raise ValueError('Please enter a color in a valid format!')
+    border_color = _color_to_rgb(border_color, opacity)
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"border_color"] = border_color
     df_temp = (df_CompartmentData_temp, df[1], df[2])
@@ -309,7 +314,7 @@ def _setNodeTextSize(df, id, txt_size):
 
     return df_temp
 
-def _setNodeFillColor(df, id, fill_color):
+def _setNodeFillColor(df, id, fill_color, opacity):
 
     """
     Set the node fill color.
@@ -319,7 +324,9 @@ def _setNodeFillColor(df, id, fill_color):
 
         id: str-node id.
 
-        fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+        fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -328,16 +335,14 @@ def _setNodeFillColor(df, id, fill_color):
 
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
-    fill_color = _color_to_rgb(fill_color)
-    if fill_color == []:
-        raise ValueError('Please enter a color in a valid format!')
+    fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
     df_temp = (df[0], df_NodeData_temp, df[2])
 
     return df_temp
 
-def _setNodeBorderColor(df, id, border_color):
+def _setNodeBorderColor(df, id, border_color, opacity):
 
     """
     Set the node border color.
@@ -347,7 +352,9 @@ def _setNodeBorderColor(df, id, border_color):
 
         id: str-node id.
 
-        border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+        border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -355,9 +362,7 @@ def _setNodeBorderColor(df, id, border_color):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
-    border_color = _color_to_rgb(border_color)
-    if border_color == []:
-        raise ValueError('Please enter a color in a valid format!')
+    border_color = _color_to_rgb(border_color, opacity)
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"border_color"] = border_color
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -388,7 +393,7 @@ def _setNodeBorderWidth(df, id, border_width):
 
     return df_temp
 
-def _setNodeTextFontColor(df, id, txt_font_color):
+def _setNodeTextFontColor(df, id, txt_font_color, opacity):
 
     """
     Set the node text font color.
@@ -398,7 +403,9 @@ def _setNodeTextFontColor(df, id, txt_font_color):
 
         id: str-node id.
 
-        txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+        txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -406,9 +413,7 @@ def _setNodeTextFontColor(df, id, txt_font_color):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
-    txt_font_color = _color_to_rgb(txt_font_color)
-    if txt_font_color == []:
-        raise ValueError('Please enter a color in a valid format!')
+    txt_font_color = _color_to_rgb(txt_font_color, opacity)
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_font_color"] = txt_font_color
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -439,7 +444,7 @@ def _setNodeTextLineWidth(df, id, txt_line_width):
 
     return df_temp
 
-def _setReactionFillColor(df, id, fill_color):
+def _setReactionFillColor(df, id, fill_color, opacity):
 
     """
     Set the reaction fill color.
@@ -449,7 +454,9 @@ def _setReactionFillColor(df, id, fill_color):
 
         id: str-reaction id.
 
-        fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+        fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -457,9 +464,7 @@ def _setReactionFillColor(df, id, fill_color):
     """
     df_ReactionData_temp = df[2].copy()
     idx_list = df[2].index[df[2]["id"] == id].tolist()
-    fill_color = _color_to_rgb(fill_color)
-    if fill_color == []:
-        raise ValueError('Please enter a color in a valid format!')
+    fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"fill_color"] = fill_color
     df_temp = (df[0], df[1], df_ReactionData_temp)

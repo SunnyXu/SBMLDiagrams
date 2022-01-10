@@ -640,9 +640,9 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getCompartmentPosition("_compartment_default_")[0] == [0, 0])
     self.assertTrue(self.df.getCompartmentSize("_compartment_default_")[0] == [1000, 1000])
     self.assertTrue(self.df.getCompartmentFillColor("_compartment_default_")[0] == \
-      [[255, 255, 255, 1.0], 'White', '#FFFFFF'])
+      [[255, 255, 255, 255], 'White', '#FFFFFFFF'])
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_")[0] == \
-      [[255, 255, 255, 1.0], 'White', '#FFFFFF'])
+      [[255, 255, 255, 255], 'White', '#FFFFFFFF'])
     self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_")[0] == 2.)
 
   def testGetNode(self):
@@ -657,12 +657,12 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == [413.0, 216.0])
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == [50.0, 30.0])
     self.assertTrue(self.df.getNodeFillColor("x_1")[0] == \
-      [[255, 204, 153, 1.0], '', '#FFCC99'])
+      [[255, 204, 153, 255], '', '#FFCC99FF'])
     self.assertTrue(self.df.getNodeBorderColor("x_1")[0] == \
-      [[255, 108, 9, 1.0], '', '#FF6C09'])
+      [[255, 108, 9, 255], '', '#FF6C09FF'])
     self.assertTrue(self.df.getNodeBorderWidth("x_1")[0] == 2.)
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0] == \
-      [[0, 0, 0, 1.0], 'Black', '#000000'])
+      [[0, 0, 0, 255], 'Black', '#000000FF'])
     self.assertTrue(self.df.getNodeTextLineWidth("x_1")[0] == 1.)
 
 
@@ -673,7 +673,7 @@ class TestImportSBML(unittest.TestCase):
       return
 
     self.assertTrue(self.df.getReactionFillColor("r_0")[0] == \
-      [[91, 176, 253, 1.0], '', '#5BB0FD'])
+      [[91, 176, 253, 255], '', '#5BB0FDFF'])
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == 3.)
     self.assertTrue(self.df.isBezierReactionType("r_0")[0] == True)
 
@@ -687,17 +687,20 @@ class TestImportSBML(unittest.TestCase):
     fill_color = [255, 255, 254]
     border_color = [255, 255, 254]
     border_width = 2.
+    opacity = 0.
 
     self.df.setCompartmentPosition('_compartment_default_', position)
     self.df.setCompartmentSize('_compartment_default_', size)
-    self.df.setCompartmentFillColor('_compartment_default_', fill_color)
+    self.df.setCompartmentFillColor('_compartment_default_', fill_color, opacity = opacity)
     self.df.setCompartmentBorderColor('_compartment_default_', border_color)
     self.df.setCompartmentBorderWidth('_compartment_default_', border_width)
 
     self.assertTrue(self.df.getCompartmentPosition("_compartment_default_")[0] == position)
     self.assertTrue(self.df.getCompartmentSize("_compartment_default_")[0] == size)
     self.assertTrue(self.df.getCompartmentFillColor("_compartment_default_")[0][0][0:-1] == fill_color)
+    self.assertTrue(self.df.getCompartmentFillColor("_compartment_default_")[0][0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_")[0][0][0:-1] == border_color)
+    self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_")[0][0][3] == 255)
     self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_")[0] == border_width)
 
   def testSetNode(self):
@@ -717,6 +720,7 @@ class TestImportSBML(unittest.TestCase):
     border_width = 3.
     txt_font_color = "#000000"
     txt_line_width = 1.
+    opacity = 1.
     
     self.df.setFloatingBoundaryNode("x_1", floating_node)
     self.df.setNodePosition("x_1", position)
@@ -724,8 +728,8 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodeShapeIdx("x_1", shapeIdx)
     self.df.setNodeTextPosition("x_1", txt_position)
     self.df.setNodeTextSize("x_1", txt_size)
-    self.df.setNodeFillColor("x_1", fill_color)
-    self.df.setNodeBorderColor("x_1", border_color)
+    self.df.setNodeFillColor("x_1", fill_color, opacity = opacity)
+    self.df.setNodeBorderColor("x_1", border_color, opacity = opacity)
     self.df.setNodeBorderWidth("x_1", border_width)
     self.df.setNodeTextFontColor("x_1", txt_font_color)
     self.df.setNodeTextLineWidth("x_1", txt_line_width)
@@ -737,9 +741,12 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == txt_position)
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == txt_size)
     self.assertTrue(self.df.getNodeFillColor("x_1")[0][0][0:-1] == fill_color)
+    self.assertTrue(self.df.getNodeFillColor("x_1")[0][0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getNodeBorderColor("x_1")[0][0][0:-1] == border_color)
+    self.assertTrue(self.df.getNodeBorderColor("x_1")[0][0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getNodeBorderWidth("x_1")[0] == border_width)
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0][0:-1] == [0,0,0])
+    self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0][3] == 255)
     self.assertTrue(self.df.getNodeTextLineWidth("x_1")[0] == txt_line_width)
 
 
@@ -750,14 +757,16 @@ class TestImportSBML(unittest.TestCase):
       return
     
     fill_color = "orange"
+    opacity = 0.5
     line_thickness = 2.
     bezier = False
 
-    self.df.setReactionFillColor("r_0", fill_color)
+    self.df.setReactionFillColor("r_0", fill_color, opacity = opacity)
     self.df.setReactionLineThickness("r_0", line_thickness)
     self.df.setBezierReactionType("r_0", bezier)
 
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][0][0:-1] == [255, 165, 0])
+    self.assertTrue(self.df.getReactionFillColor("r_0")[0][0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == line_thickness)
     self.assertTrue(self.df.isBezierReactionType("r_0")[0] == bezier)
 

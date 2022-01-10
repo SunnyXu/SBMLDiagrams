@@ -77,10 +77,10 @@ Examples
    print(df.getNodeFillColor("node_id"))
    print(df.isBezierReactionType("reaction_id"))
 
-   df.setCompartmentFillColor("compartment_id", "white")
+   df.setCompartmentFillColor("compartment_id", "white", opacity = 0.5)
    df.setCompartmentBorderColor("compartment_id", [255, 255, 255])
    df.setNodeSize("node_id", [50.0, 30.0])
-   df.setNodeTextFontColor("node_id", "#000000")
+   df.setNodeTextFontColor("node_id", "#000000", opacity = 1.)
    df.setReactionLineThickness("reaction_id", 3.)
 
    sbmlStr_layout_render = df.export()

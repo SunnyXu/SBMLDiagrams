@@ -69,21 +69,22 @@ def _rgb_to_color(rgb):
         rgb: list-1*3 or 1*4 matrix for a decimal rgb or rgba.
 
     Returns:
-        color: list-[decimal_rgb), html_name, hex_string]
+        color: list-[decimal_rgb, html_name, hex_string]
     
     """
     color = []
     if len(rgb) == 3:
         #decial_rgba:
         rgba = rgb.copy()
-        a = 1. # default is fully opaque, the value should be float between 0. to 1.
+        a = 255 # default is fully opaque, the value should be int 255.
         rgba.append(a)
         #hex_string:
-        hex_str = '#%02X%02X%02X' % (rgb[0],rgb[1],rgb[2])
+        hex_str = '#%02X%02X%02X%02X' % (rgba[0],rgba[1],rgba[2],rgba[3])
         #html_name:
         html_name = ''
-        if hex_str in df_color.values:
-            index = df_color.index[df_color["hex_string"] == hex_str].tolist()[0] #row index 
+        hex_str_search = hex_str[0:-2]
+        if hex_str_search in df_color.values:
+            index = df_color.index[df_color["hex_string"] == hex_str_search].tolist()[0] #row index 
             html_name = df_color.iloc[index]["html_name"]
         color.append(rgba)
         color.append(html_name)
@@ -92,11 +93,12 @@ def _rgb_to_color(rgb):
         #decial_rgba:
         rgba = rgb.copy()
         #hex_string:
-        hex_str = '#%02X%02X%02X' % (rgb[0],rgb[1],rgb[2])
+        hex_str = '#%02X%02X%02X%02X' % (rgba[0],rgba[1],rgba[2],rgba[3])
         #html_name:
         html_name = ''
-        if hex_str in df_color.values:
-            index = df_color.index[df_color["hex_string"] == hex_str].tolist()[0] #row index 
+        hex_str_search = hex_str[0:-2]
+        if hex_str_search in df_color.values:
+            index = df_color.index[df_color["hex_string"] == hex_str_search].tolist()[0] #row index 
             html_name = df_color.iloc[index]["html_name"]
         color.append(rgba)
         color.append(html_name)
@@ -128,7 +130,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
 
     def hex_to_rgb(value):
         value = value.lstrip('#')
-        return [int(value[i:i+2], 16) for i in (0, 2, 4)]
+        if len(value) == 6:
+            value = value + 'ff'
+        return [int(value[i:i+2], 16) for i in (0, 2, 4, 6)]
 
     df_CompartmentData = pd.DataFrame(columns = COLUMN_NAME_df_CompartmentData)
     df_NodeData = pd.DataFrame(columns = COLUMN_NAME_df_NodeData)
@@ -148,15 +152,15 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
     spec_concentration_list = []
     
     #set the default values without render info:
-    comp_fill_color = [158, 169, 255]
-    comp_border_color = [0, 29, 255]
+    comp_fill_color = [158, 169, 255, 200]
+    comp_border_color = [0, 29, 255, 255]
     comp_border_width = 2.0
-    spec_fill_color = [255, 204, 153]
-    spec_border_color = [255, 108, 9]
+    spec_fill_color = [255, 204, 153, 200]
+    spec_border_color = [255, 108, 9, 255]
     spec_border_width = 2.0
-    reaction_line_color = [129, 123, 255]
+    reaction_line_color = [91, 176, 253, 255]
     reaction_line_width = 3.0
-    text_line_color = [0,0,0]
+    text_line_color = [0, 0, 0, 255]
     text_line_width = 1.
     
     try: #invalid sbml
@@ -304,8 +308,49 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                     prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
                     mod_specGlyph_list.append(mod_specGlyph_temp_list)
 
+                #orphan nodes
+                for i in range(numSpecGlyphs):
+                    specGlyph = layout.getSpeciesGlyph(i)
+                    specGlyph_id = specGlyph.getId()
+                    if specGlyph_id not in specGlyph_id_list:
+                        specGlyph_id_list.append(specGlyph_id)
+                        spec_id = specGlyph.getSpeciesId()
+                        spec_id_list.append(spec_id)
+                        spec_specGlyph_id_list.append([spec_id,specGlyph_id])
+                        boundingbox = specGlyph.getBoundingBox()
+                        height = boundingbox.getHeight()
+                        width = boundingbox.getWidth()
+                        pos_x = boundingbox.getX()
+                        pos_y = boundingbox.getY()
+                        spec_dimension_list.append([width,height])
+                        spec_position_list.append([pos_x,pos_y])
+                        for k in range(numSpecGlyphs):
+                            textGlyph_temp = layout.getTextGlyph(k)
+                            temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            if temp_specGlyph_id == specGlyph_id:
+                                textGlyph = textGlyph_temp
+                        try:
+                            text_boundingbox = textGlyph.getBoundingBox()
+                            text_pos_x = text_boundingbox.getX()
+                            text_pos_y = text_boundingbox.getY()   
+                            text_dim_w = text_boundingbox.getWidth()
+                            text_dim_h = text_boundingbox.getHeight()
+                        except:
+                            text_pos_x = pos_x
+                            text_pos_y = pos_y   
+                            text_dim_w = width
+                            text_dim_h = height
+                        spec_text_position_list.append([text_pos_x, text_pos_y])
+                        spec_text_dimension_list.append([text_dim_w, text_dim_h])
+                        try:
+                            concentration = spec.getInitialConcentration()
+                        except:
+                            concentration = 1.
+                        spec_concentration_list.append(concentration)
+
                 #print(reaction_mod_list)
                 #print(mod_specGlyph_list)
+                #print(spec_specGlyph_id_list)
 
                 rPlugin = layout.getPlugin("render")
                 if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
@@ -403,10 +448,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                 if temp_id == "_compartment_default_":
                     dimension = [1000, 1000]
                     position = [0, 0]
-                    #comp_border_color = [255, 255, 255, 0] #the last digit for transparent
-                    #comp_fill_color = [255, 255, 255, 0]
-                    comp_border_color = [255, 255, 255]
-                    comp_fill_color = [255, 255, 255]
+                    comp_border_color = [255, 255, 255, 255]
+                    comp_fill_color = [255, 255, 255, 255]
                     CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
                     CompartmentData_row_dct[NETIDX].append(netIdx)
                     CompartmentData_row_dct[IDX].append(i)
@@ -446,10 +489,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                         # the whole size of the compartment: 4000*2500
                         dimension = [1000,1000]
                         position = [0,0]
-                        #comp_fill_color = [255, 255, 255, 0]
-                        #comp_border_color = [255, 255, 255, 0]
-                        comp_fill_color = [255, 255, 255]
-                        comp_border_color = [255, 255, 255]
+                        comp_fill_color = [255, 255, 255, 255]
+                        comp_border_color = [255, 255, 255, 255]
 
                     CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
                     CompartmentData_row_dct[NETIDX].append(netIdx)
@@ -473,9 +514,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
 
             id_list = []
             node_idx_specGlyphid_list = []
-            #numSpecGlyphs is larger than numSpec_in_reaction if there orphan nodes
-            if numSpecGlyphs > numSpec_in_reaction:
-                print("Orphan nodes are removed.")
+            # orphan nodes have been considered, so numSpec_in_reaction should equals to numSpecGlyphs
+            # if numSpecGlyphs > numSpec_in_reaction:
+            #     print("Orphan nodes are removed.")
             for i in range (numSpec_in_reaction):
                 temp_id = spec_specGlyph_id_list[i][0]
                 temp_concentration = spec_concentration_list[i]
@@ -1107,7 +1148,7 @@ class load:
         Returns:
             fill_color_list: list of fill_color
 
-            fill_color: list-[rgba 1*4 matrix, html_name str, hex str]
+            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
         """
         idx_list = self.df[0].index[self.df[0]["id"] == id].tolist() #row index
         fill_color_list =[] 
@@ -1128,7 +1169,7 @@ class load:
         Returns:
             border_color_list: list of border_color
 
-            border_color: list-[rgba 1*4 matrix, html_name str, hex str]
+            border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
 
         """
         idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
@@ -1311,13 +1352,15 @@ class load:
         Returns:
             fill_color_list: list of fill_color
 
-            fill_color: list-[rgba 1*4 matrix, html_name str, hex str]
+            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         fill_color_list =[] 
         for i in range(len(idx_list)):
             rgb = self.df[1].iloc[idx_list[i]]["fill_color"]
+            #print(rgb)
+            #print(type(rgb))
             color = _rgb_to_color(rgb)
             fill_color_list.append(color)
 
@@ -1335,7 +1378,7 @@ class load:
         Returns:
             border_color_list: list of border_color
 
-            border_color: list-[rgba 1*4 matrix, html_name str, hex str]
+            border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
@@ -1375,7 +1418,7 @@ class load:
         Returns:
             txt_font_color_list: list of txt_font_color
 
-            txt_font_color: list-[rgba 1*4 matrix, html_name str, hex str]
+            txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
@@ -1416,7 +1459,7 @@ class load:
         Returns:
             fill_color_list: list of fill_color
 
-            fill_color: list-[rgba 1*4 matrix, html_name str, hex str]
+            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         fill_color_list =[] 
@@ -1489,29 +1532,33 @@ class load:
         self.df = editSBML._setCompartmentSize(self.df, id, size)
         return self.df
 
-    def setCompartmentFillColor(self, id, fill_color):
+    def setCompartmentFillColor(self, id, fill_color, opacity = 1.):
         """
         Set the compartment fill color
 
         Args:  
             id: str-compartment iid.
 
-            fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+            fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
-        self.df = editSBML._setCompartmentFillColor(self.df, id, fill_color)
+        self.df = editSBML._setCompartmentFillColor(self.df, id, fill_color, opacity)
         return self.df
 
-    def setCompartmentBorderColor(self, id, border_color):       
+    def setCompartmentBorderColor(self, id, border_color, opacity = 1.):       
         """
         Set the compartment border color
 
         Args:  
             id: str-compartment id.
 
-            border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+            border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
         """
-        self.df = editSBML._setCompartmentBorderColor(self.df, id, border_color)
+        self.df = editSBML._setCompartmentBorderColor(self.df, id, border_color, opacity)
         return self.df
 
     def setCompartmentBorderWidth(self, id, border_width):
@@ -1598,28 +1645,32 @@ class load:
         self.df = editSBML._setNodeTextSize(self.df, id, txt_size)
         return self.df
  
-    def setNodeFillColor(self, id, fill_color):
+    def setNodeFillColor(self, id, fill_color, opacity = 1.):
         """
         Set the node fill color.
 
         Args:  
             id: str-node id.
 
-            fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+            fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
-        self.df = editSBML._setNodeFillColor(self.df, id, fill_color)
+        self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity)
         return self.df
 
-    def setNodeBorderColor(self, id, border_color):
+    def setNodeBorderColor(self, id, border_color, opacity = 1.):
         """
         Set the node border color.
 
         Args:  
             id: str-node id.
 
-            border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+            border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
-        self.df = editSBML._setNodeBorderColor(self.df, id, border_color)
+        self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity)
         return self.df
 
     def setNodeBorderWidth(self, id, border_width):
@@ -1634,16 +1685,18 @@ class load:
         self.df = editSBML._setNodeBorderWidth(self.df, id, border_width)
         return self.df
 
-    def setNodeTextFontColor(self, id, txt_font_color):
+    def setNodeTextFontColor(self, id, txt_font_color, opacity = 1.):
         """
         Set the node text font color.
 
         Args:  
             id: str-node id.
 
-            txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+            txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
-        self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color)
+        self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity)
         return self.df
 
     def setNodeTextLineWidth(self, id, txt_line_width):
@@ -1658,16 +1711,18 @@ class load:
         self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width)
         return self.df
 
-    def setReactionFillColor(self, id, fill_color):
+    def setReactionFillColor(self, id, fill_color, opacity = 1.):
         """
         Set the reaction fill color.
 
         Args:  
             id: str-reaction id.
 
-            fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string.
+            fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
-        self.df = editSBML._setReactionFillColor(self.df, id, fill_color)
+        self.df = editSBML._setReactionFillColor(self.df, id, fill_color, opacity)
         return self.df
 
     def setReactionLineThickness(self, id, line_thickness):
@@ -1705,74 +1760,75 @@ class load:
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
 
-if __name__ == '__main__':
-    DIR = os.path.dirname(os.path.abspath(__file__))
-    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+# if __name__ == '__main__':
+#     DIR = os.path.dirname(os.path.abspath(__file__))
+#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
-    #filename = "feedback.xml"
-    #filename = "LinearChain.xml"
-    #filename = "test_comp.xml"
-    #filename = "test_no_comp.xml"
-    #filename = "test_modifier.xml"
+#     #filename = "test.xml" 
+#     filename = "no_rxn.xml"
+#     #filename = "test_4.xml"
+#     #filename = "feedback.xml"
+#     #filename = "LinearChain.xml"
+#     #filename = "test_comp.xml"
+#     #filename = "test_no_comp.xml"
+#     #filename = "test_modifier.xml"
 
-    f = open(os.path.join(TEST_FOLDER, filename), 'r')
-    sbmlStr = f.read()
-    f.close()
+#     f = open(os.path.join(TEST_FOLDER, filename), 'r')
+#     sbmlStr = f.read()
+#     f.close()
 
-    df = load(sbmlStr)
+#     df = load(sbmlStr)
 
-    # print(df.getCompartmentPosition("_compartment_default_"))
-    # print(df.getCompartmentSize("_compartment_default_"))
-    # print(df.getCompartmentFillColor("_compartment_default_"))
-    # print(df.getCompartmentBorderColor("_compartment_default_"))
-    # print(df.getCompartmentBorderWidth("_compartment_default_"))
+#     # print(df.getCompartmentPosition("_compartment_default_"))
+#     # print(df.getCompartmentSize("_compartment_default_"))
+#     # print(df.getCompartmentFillColor("_compartment_default_"))
+#     # print(df.getCompartmentBorderColor("_compartment_default_"))
+#     # print(df.getCompartmentBorderWidth("_compartment_default_"))
 
-    # print(df.isFloatingNode("x_1"))
-    # print(df.getNodePosition("x_1"))
-    # print(df.getNodeSize("x_1"))
-    # print(df.getNodeShape("x_1"))
-    # print(df.getNodeTextPosition("x_1"))
-    # print(df.getNodeTextSize("x_1"))
-    # print(df.getNodeFillColor("x_1"))
-    # print(df.getNodeBorderColor("x_1"))
-    # print(df.getNodeBorderWidth("x_1"))
-    # print(df.getNodeTextFontColor("x_1"))
-    # print(df.getNodeTextLineWidth("x_1"))
+#     # print(df.isFloatingNode("x_1"))
+#     # print(df.getNodePosition("x_1"))
+#     # print(df.getNodeSize("x_1"))
+#     # print(df.getNodeShape("x_1"))
+#     # print(df.getNodeTextPosition("x_1"))
+#     # print(df.getNodeTextSize("x_1"))
+#     # print(df.getNodeFillColor("x_1"))
+#     # print(df.getNodeBorderColor("x_1"))
+#     # print(df.getNodeBorderWidth("x_1"))
+#     # print(df.getNodeTextFontColor("x_1"))
+#     # print(df.getNodeTextLineWidth("x_1"))
 
-    # print(df.getReactionFillColor("r_0"))
-    # print(df.getReactionLineThickness("r_0"))
-    # print(df.isBezierReactionType("r_0"))
+#     # print(df.getReactionFillColor("r_0"))
+#     # print(df.getReactionLineThickness("r_0"))
+#     # print(df.isBezierReactionType("r_0"))
 
-    # df.setCompartmentPosition('_compartment_default_', [0,0])
-    # df.setCompartmentSize('_compartment_default_', [1000, 1000])
-    # df.setCompartmentFillColor('_compartment_default_', [255, 255, 255])
-    df.setCompartmentBorderColor('_compartment_default_', [255, 255, 255])
-    # df.setCompartmentBorderWidth('_compartment_default_', 2.)
+#     # df.setCompartmentPosition('_compartment_default_', [0,0])
+#     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
+#     # df.setCompartmentFillColor('_compartment_default_', [255, 255, 255])
+#     # df.setCompartmentBorderColor('_compartment_default_', [255, 255, 255])
+#     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
-    # df.setFloatingBoundaryNode("x_1", True)
-    # df.setNodePosition("x_1", [413.0, 216.0])
-    # df.setNodeSize("x_1", [50.0, 30.0])
-    # df.setNodeShapeIdx("x_1", 1)
-    # df.setNodeTextPosition("x_1", [413., 216.])
-    # df.setNodeTextSize("x_1", [50, 31])
-    # df.setNodeFillColor("x_1", [255, 204, 153])
-    # df.setNodeBorderColor("x_1", [255, 108, 9])
-    # df.setNodeBorderWidth("x_1", 2.)
-    # df.setNodeTextFontColor("x_1", [0, 0, 0])
-    # df.setNodeTextLineWidth("x_1", 1.)
+#     # df.setFloatingBoundaryNode("x_1", True)
+#     # df.setNodePosition("x_1", [413.0, 216.0])
+#     # df.setNodeSize("x_1", [50.0, 30.0])
+#     # df.setNodeShapeIdx("x_1", 1)
+#     # df.setNodeTextPosition("x_1", [413., 216.])
+#     # df.setNodeTextSize("x_1", [50, 31])
+#     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
+#     # df.setNodeBorderColor("x_1", [255, 108, 9])
+#     # df.setNodeBorderWidth("x_1", 2.)
+#     # df.setNodeTextFontColor("x_1", [0, 0, 0])
+#     # df.setNodeTextLineWidth("x_1", 1.)
 
-    # df.setReactionFillColor("r_0", [91, 176, 253])
-    # df.setReactionLineThickness("r_0", 3.)
-    # df.setBezierReactionType("r_0", True)
+#     # df.setReactionFillColor("r_0", [91, 176, 253])
+#     # df.setReactionLineThickness("r_0", 3.)
+#     # df.setBezierReactionType("r_0", True)
 
-    # df.export()
 
-    # sbmlStr_layout_render = df.export()
+#     sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+#     f = open("output.xml", "w")
+#     f.write(sbmlStr_layout_render)
+#     f.close()
 
 
 
