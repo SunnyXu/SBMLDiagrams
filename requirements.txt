@@ -7,3 +7,4 @@ simplesbml
 tellurium
 skia-python
 setuptools>=42
+openpyxl
