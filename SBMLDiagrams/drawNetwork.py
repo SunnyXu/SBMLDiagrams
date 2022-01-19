@@ -11,6 +11,7 @@ import math
 import random, tempfile, string, os
 from PIL import Image               # to load images
 from IPython.display import display
+from numpy.core.fromnumeric import _transpose_dispatcher
 from numpy.core.numeric import cross # to display images
 import skia
 
@@ -770,7 +771,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
         2*modifier_linewidth, 2*modifier_linewidth,
                         modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
 
-def addText(canvas, node_id, position, dimension, text_line_color, text_line_width):
+def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, fontSize = 12):
 
     """
     Add the text.
@@ -789,20 +790,27 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
         text_line_width: float-text line width.
 
     """ 
-    id = node_id
-    #fontSize = 11
-    #scalingFactor = 1.
-    #fontSize_virtual = fontSize*scalingFactor 
-    fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
-    paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)  
-    #paintText = skia.Paint(Colot = fontColor)  
-    font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()))
-    #font = skia.Font(skia.Typeface())
-    text = skia.TextBlob.MakeFromString(id, font)
-    twidth = font.measureText(id)
-    theight = font.getSize() 
-    position_x = position[0] + .5*(dimension[0] - twidth)
-    position_y = position[1] + dimension[1] - .5*(dimension[1] - theight)
+    
+    #self code start
+    id = node_id 
+    #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
+    stop_flag = 0
+    while stop_flag == 0:
+        fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
+        paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
+        font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
+
+        text = skia.TextBlob.MakeFromString(id, font)
+        twidth = font.measureText(id)
+        #theight = font.getSize() 
+        theight = font.getSpacing()
+        if dimension[0] > twidth and dimension[1] > theight:
+            position_x = position[0] + .5*(dimension[0] - twidth)
+            position_y = position[1] + dimension[1] - .5*(dimension[1] - theight)
+            stop_flag = 1
+        else:
+            # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
+            fontSize = fontSize - 1.
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 
 def draw(surface, fileName = '', file_format = 'PNG'):

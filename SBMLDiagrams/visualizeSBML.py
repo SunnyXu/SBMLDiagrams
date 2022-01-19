@@ -310,7 +310,10 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                     if color_list[k][0] == group.getStroke():
                                         text_line_color = hex_to_rgb(color_list[k][1])
                                 text_line_width = group.getStrokeWidth()
+                                #print(text_line_width)
+                                #text_font_size = group.getFontSize()  #cannot give the fontsize
                                 #text_font_size = group.getFontSize()
+                                #print(group)
                                 text_render.append([idList,text_line_color,text_line_width])
 
         #try: 
@@ -661,25 +664,29 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
 
 
-# if __name__ == '__main__':
-#     DIR = os.path.dirname(os.path.abspath(__file__))
-#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+if __name__ == '__main__':
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-#     #filename = "test_4.xml"
-#     filename = "no_rxn.xml"
-#     #filename = "node_grid.xml"
-#     #filename = "test_no_comp.xml"
-#     #filename = "testbigmodel.xml"
-#     #filename = "output.xml"
+    #filename = "test_4.xml"
+    #filename = "no_rxn.xml"
+    #filename = "node_grid.xml"
+    #filename = "test_no_comp.xml"
+    #filename = "testbigmodel.xml"
+    #filename = "output.xml"
 
-#     f = open(os.path.join(TEST_FOLDER, filename), 'r')
-#     sbmlStr = f.read()
-#     f.close()
+    #txt font examples
+    #filename = "Jana_WolfGlycolysis.xml"
+    filename = "test_font.xml"
 
-#     if len(sbmlStr) == 0:
-#         print("empty sbml")
-#     else:
-#         display(sbmlStr, fileFormat='PNG')
+    f = open(os.path.join(TEST_FOLDER, filename), 'r')
+    sbmlStr = f.read()
+    f.close()
+
+    if len(sbmlStr) == 0:
+        print("empty sbml")
+    else:
+        display(sbmlStr, fileFormat='PNG')
 
 
 
