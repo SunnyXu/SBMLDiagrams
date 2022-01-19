@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1" xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1" level="3" version="1" layout:required="false" render:required="false">
+  <model id="Model_layout">
+    <listOfCompartments>
+      <compartment id="_compartment_default_" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="x_0" compartment="_compartment_default_" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="x_1" compartment="_compartment_default_" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="x_2" compartment="_compartment_default_" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="x_3" compartment="_compartment_default_" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="x_4" compartment="_compartment_default_" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <layout:listOfLayouts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1">
+      <layout:layout layout:id="Layout_1">
+        <layout:dimensions layout:width="800" layout:height="800"/>
+        <layout:listOfCompartmentGlyphs>
+          <layout:compartmentGlyph layout:id="CompG__compartment_default_" layout:compartment="_compartment_default_">
+            <layout:boundingBox layout:id="bb__compartment_default_">
+              <layout:position layout:x="10" layout:y="10"/>
+              <layout:dimensions layout:width="3900" layout:height="2400"/>
+            </layout:boundingBox>
+          </layout:compartmentGlyph>
+        </layout:listOfCompartmentGlyphs>
+        <layout:listOfSpeciesGlyphs>
+          <layout:speciesGlyph layout:id="SpecG_x_0_idx_0" layout:species="x_0">
+            <layout:boundingBox layout:id="bb_x_0_idx_0">
+              <layout:position layout:x="183" layout:y="89"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_x_1_idx_1" layout:species="x_1">
+            <layout:boundingBox layout:id="bb_x_1_idx_1">
+              <layout:position layout:x="358" layout:y="89"/>
+              <layout:dimensions layout:width="39" layout:height="39"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_x_2_idx_2" layout:species="x_2">
+            <layout:boundingBox layout:id="bb_x_2_idx_2">
+              <layout:position layout:x="548" layout:y="91"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_x_3_idx_3" layout:species="x_3">
+            <layout:boundingBox layout:id="bb_x_3_idx_3">
+              <layout:position layout:x="248" layout:y="250"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_x_4_idx_4" layout:species="x_4">
+            <layout:boundingBox layout:id="bb_x_4_idx_4">
+              <layout:position layout:x="465" layout:y="246"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+        </layout:listOfSpeciesGlyphs>
+        <layout:listOfTextGlyphs>
+          <layout:textGlyph layout:id="TextG_x_0_idx_0" layout:originOfText="SpecG_x_0_idx_0" layout:graphicalObject="SpecG_x_0_idx_0">
+            <layout:boundingBox layout:id="bb_spec_text_x_0_idx_0">
+              <layout:position layout:x="183" layout:y="89"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_x_1_idx_1" layout:originOfText="SpecG_x_1_idx_1" layout:graphicalObject="SpecG_x_1_idx_1">
+            <layout:boundingBox layout:id="bb_spec_text_x_1_idx_1">
+              <layout:position layout:x="358" layout:y="89"/>
+              <layout:dimensions layout:width="39" layout:height="39"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_x_2_idx_2" layout:originOfText="SpecG_x_2_idx_2" layout:graphicalObject="SpecG_x_2_idx_2">
+            <layout:boundingBox layout:id="bb_spec_text_x_2_idx_2">
+              <layout:position layout:x="548" layout:y="91"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_x_3_idx_3" layout:originOfText="SpecG_x_3_idx_3" layout:graphicalObject="SpecG_x_3_idx_3">
+            <layout:boundingBox layout:id="bb_spec_text_x_3_idx_3">
+              <layout:position layout:x="248" layout:y="250"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_x_4_idx_4" layout:originOfText="SpecG_x_4_idx_4" layout:graphicalObject="SpecG_x_4_idx_4">
+            <layout:boundingBox layout:id="bb_spec_text_x_4_idx_4">
+              <layout:position layout:x="465" layout:y="246"/>
+              <layout:dimensions layout:width="50" layout:height="30"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+        </layout:listOfTextGlyphs>
+        <render:listOfRenderInformation xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1">
+          <render:renderInformation render:id="info" render:name="Render Information" render:programName="RenderInformation" render:programVersion="1.0">
+            <render:listOfColorDefinitions>
+              <render:colorDefinition render:id="comp_fill_color" render:value="#ffffff"/>
+              <render:colorDefinition render:id="comp_border_color" render:value="#ffffff"/>
+              <render:colorDefinition render:id="spec_fill_color_x_0" render:value="#ffcc99c8"/>
+              <render:colorDefinition render:id="spec_border_color_x_0" render:value="#ff6c09"/>
+              <render:colorDefinition render:id="text_line_color_x_0" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_x_1" render:value="#80ff80c8"/>
+              <render:colorDefinition render:id="spec_border_color_x_1" render:value="#ff6c09"/>
+              <render:colorDefinition render:id="text_line_color_x_1" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_x_2" render:value="#ffcc99c8"/>
+              <render:colorDefinition render:id="spec_border_color_x_2" render:value="#1552f2"/>
+              <render:colorDefinition render:id="text_line_color_x_2" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_x_3" render:value="#ffcc99c8"/>
+              <render:colorDefinition render:id="spec_border_color_x_3" render:value="#ff6c09"/>
+              <render:colorDefinition render:id="text_line_color_x_3" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_x_4" render:value="#ffcc9933"/>
+              <render:colorDefinition render:id="spec_border_color_x_4" render:value="#ff6c09"/>
+              <render:colorDefinition render:id="text_line_color_x_4" render:value="#000000"/>
+            </render:listOfColorDefinitions>
+            <render:listOfStyles>
+              <render:style render:id="compStyle" render:typeList="COMPARTMENTGLYPH" render:idList="_compartment_default_">
+                <render:g render:stroke="comp_border_color" render:stroke-width="2" render:fill="comp_fill_color">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specStyle_x_0" render:typeList="SPECIESGLYPH" render:idList="x_0">
+                <render:g render:stroke="spec_border_color_x_0" render:stroke-width="2" render:fill="spec_fill_color_x_0">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_0">
+                <render:g render:stroke="text_line_color_x_0" render:stroke-width="1" render:font-size="11"/>
+              </render:style>
+              <render:style render:id="specStyle_x_1" render:typeList="SPECIESGLYPH" render:idList="x_1">
+                <render:g render:stroke="spec_border_color_x_1" render:stroke-width="2" render:fill="spec_fill_color_x_1">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_1">
+                <render:g render:stroke="text_line_color_x_1" render:stroke-width="1" render:font-size="11"/>
+              </render:style>
+              <render:style render:id="specStyle_x_2" render:typeList="SPECIESGLYPH" render:idList="x_2">
+                <render:g render:stroke="spec_border_color_x_2" render:stroke-width="2" render:fill="spec_fill_color_x_2">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="75%" render:y="7%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="25%" render:y="7%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="25%" render:y="86%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="75%" render:y="86%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_2">
+                <render:g render:stroke="text_line_color_x_2" render:stroke-width="1" render:font-size="11"/>
+              </render:style>
+              <render:style render:id="specStyle_x_3" render:typeList="SPECIESGLYPH" render:idList="x_3">
+                <render:g render:stroke="spec_border_color_x_3" render:stroke-width="2" render:fill="spec_fill_color_x_3">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_3">
+                <render:g render:stroke="text_line_color_x_3" render:stroke-width="1" render:font-size="11"/>
+              </render:style>
+              <render:style render:id="specStyle_x_4" render:typeList="SPECIESGLYPH" render:idList="x_4">
+                <render:g render:stroke="spec_border_color_x_4" render:stroke-width="2" render:fill="spec_fill_color_x_4">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="25%" render:y="7%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="25%" render:y="86%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_4">
+                <render:g render:stroke="text_line_color_x_4" render:stroke-width="1" render:font-size="11"/>
+              </render:style>
+            </render:listOfStyles>
+          </render:renderInformation>
+        </render:listOfRenderInformation>
+      </layout:layout>
+    </layout:listOfLayouts>
+  </model>
+</sbml>
