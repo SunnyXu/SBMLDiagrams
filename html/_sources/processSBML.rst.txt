@@ -1,11 +1,12 @@
-.. _exportSBML:
+.. _processSBML:
  
-exportSBML
+
+processSBML
 =============
  
  
 
-.. automodule:: SBMLDiagrams.exportSBML
+.. automodule:: SBMLDiagrams.processSBML
   :members:
   :undoc-members:
   :show-inheritance:

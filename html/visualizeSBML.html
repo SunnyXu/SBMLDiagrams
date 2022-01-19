@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="drawNetwork" href="drawNetwork.html" />
-    <link rel="prev" title="exportSBML" href="exportSBML.html" /> 
+    <link rel="next" title="processSBML" href="processSBML.html" />
+    <link rel="prev" title="Welcome to SBMLDiagrams’s documentation!" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -84,11 +84,8 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="importSBML.html">importSBML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="editSBML.html">editSBML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="exportSBML.html">exportSBML</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">visualizeSBML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="drawNetwork.html">drawNetwork</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processSBML.html">processSBML</a></li>
 </ul>
 
             
@@ -160,14 +157,16 @@
 &#64;author: Jin Xu</p>
 <dl class="py function">
 <dt id="SBMLDiagrams.visualizeSBML.display">
-<code class="sig-prename descclassname">SBMLDiagrams.visualizeSBML.</code><code class="sig-name descname">display</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sbmlStr</span></em>, <em class="sig-param"><span class="n">reactionLineType</span><span class="o">=</span><span class="default_value">'bezier'</span></em>, <em class="sig-param"><span class="n">showBezierHandles</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fileFormat</span><span class="o">=</span><span class="default_value">'PNG'</span></em>, <em class="sig-param"><span class="n">output_fileName</span><span class="o">=</span><span class="default_value">'output'</span></em>, <em class="sig-param"><span class="n">complexShape</span><span class="o">=</span><span class="default_value">''</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.visualizeSBML.display" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">SBMLDiagrams.visualizeSBML.</code><code class="sig-name descname">display</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sbmlStr</span></em>, <em class="sig-param"><span class="n">imageSize</span><span class="o">=</span><span class="default_value">[1000, 1000]</span></em>, <em class="sig-param"><span class="n">fileFormat</span><span class="o">=</span><span class="default_value">'PNG'</span></em>, <em class="sig-param"><span class="n">output_fileName</span><span class="o">=</span><span class="default_value">'output'</span></em>, <em class="sig-param"><span class="n">complexShape</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">reactionLineType</span><span class="o">=</span><span class="default_value">'bezier'</span></em>, <em class="sig-param"><span class="n">showBezierHandles</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.visualizeSBML.display" title="Permalink to this definition">¶</a></dt>
 <dd><p>Visualization from an sbml string to a PNG/JPG/PDF file.</p>
 <dl>
 <dt>Args:  </dt><dd><p>sbmlStr: str-the string of the input sbml file.</p>
-<p>reactionLineType: str-type of the reaction line: ‘linear’ or ‘bezier’ (default).</p>
+<p>reactionLineType: str-type of the reaction line: ‘linear’ or ‘bezier’ (default).
+If there is no layout information from the SBML file, all reaction line will be drawn in
+straight lines even set as ‘bezier’.</p>
 <p>showBezierHandles: bool-show the Bezier handles (True) or not (False as default).</p>
 <p>fileFormat: str-output file type: ‘PNG’ (default), ‘JPEG’ or ‘PDF’.</p>
-<p>output_fileName: str-filename: ‘output’ (default) or ‘’.</p>
+<p>output_fileName: str-filename: ‘output’ (default) or ‘’ (result in a random file name) or ‘fileName’ (self-designed file name).</p>
 <p>complexShape: str-type of complex shapes: ‘’ (default) or ‘monomer’ or ‘dimer’ or ‘trimer’ or ‘tetramer’.</p>
 </dd>
 </dl>
@@ -183,10 +182,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="drawNetwork.html" class="btn btn-neutral float-right" title="drawNetwork" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="processSBML.html" class="btn btn-neutral float-right" title="processSBML" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="exportSBML.html" class="btn btn-neutral float-left" title="exportSBML" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to SBMLDiagrams’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

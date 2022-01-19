@@ -36,7 +36,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="importSBML" href="importSBML.html" /> 
+    <link rel="next" title="visualizeSBML" href="visualizeSBML.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -83,11 +83,8 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="importSBML.html">importSBML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="editSBML.html">editSBML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="exportSBML.html">exportSBML</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualizeSBML.html">visualizeSBML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="drawNetwork.html">drawNetwork</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processSBML.html">processSBML</a></li>
 </ul>
 
             
@@ -158,19 +155,17 @@
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="importSBML.html">importSBML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="editSBML.html">editSBML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="exportSBML.html">exportSBML</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualizeSBML.html">visualizeSBML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="drawNetwork.html">drawNetwork</a></li>
+<li class="toctree-l1"><a class="reference internal" href="processSBML.html">processSBML</a></li>
 </ul>
 </div>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>SBMLDiagrams can visualize SBML to PNG/JPG/PDF files by visualizeSBML. On one hand,
-users can get all the information about Compartment, Node and Reaction from an
-SBML file by importSBML. On the other hand, it supports users to generate SBML files by exportSBML.
-Users can also edit and update an SBML file via editSBML.</p>
+<p>SBMLDiagrams can visualize SBML to PNG/JPG/PDF files by visualizeSBML. It also supports users to
+import, edit or export an SBML file. This package supports SBML level 3, including layout and render.
+In detail, it does not only provide position, size and color information for different graphical
+objects but also supports different shapes of nodes or alias nodes. If you use any part of this
+python package, please cite the Gihub website (<a class="reference external" href="https://github.com/SunnyXu/SBMLDiagrams">https://github.com/SunnyXu/SBMLDiagrams</a>).</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
@@ -203,9 +198,7 @@ Users can also edit and update an SBML file via editSBML.</p>
 <ol class="arabic simple" start="2">
 <li><p>Import, edit and write to an SBML file.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams.importSBML</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">SBMLDiagrams.editSBML</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">SBMLDiagrams.exportSBML</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams.processSBML</span> <span class="kn">import</span> <span class="o">*</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
@@ -217,15 +210,17 @@ Users can also edit and update an SBML file via editSBML.</p>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">getCompartmentPosition</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">getNodeFillColor</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">isBezierReactionType</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">getCompartmentPosition</span><span class="p">(</span><span class="s2">&quot;compartment_id&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">getNodeFillColor</span><span class="p">(</span><span class="s2">&quot;node_id&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">isBezierReactionType</span><span class="p">(</span><span class="s2">&quot;reaction_id&quot;</span><span class="p">))</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">setCompartmentFillColor</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">])</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">setNodeSize</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">])</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">setReactionLineThickness</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">3.</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">setCompartmentFillColor</span><span class="p">(</span><span class="s2">&quot;compartment_id&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">setCompartmentBorderColor</span><span class="p">(</span><span class="s2">&quot;compartment_id&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">setNodeSize</span><span class="p">(</span><span class="s2">&quot;node_id&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">50.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">setNodeTextFontColor</span><span class="p">(</span><span class="s2">&quot;node_id&quot;</span><span class="p">,</span> <span class="s2">&quot;#000000&quot;</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">setReactionLineThickness</span><span class="p">(</span><span class="s2">&quot;reaction_id&quot;</span><span class="p">,</span> <span class="mf">3.</span><span class="p">)</span>
 
-<span class="n">sbmlStr_layout_render</span> <span class="o">=</span> <span class="n">export</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">sbmlStr_layout_render</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">export</span><span class="p">()</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sbmlStr_layout_render</span><span class="p">)</span>
@@ -243,7 +238,7 @@ Users can also edit and update an SBML file via editSBML.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="importSBML.html" class="btn btn-neutral float-right" title="importSBML" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="visualizeSBML.html" class="btn btn-neutral float-right" title="visualizeSBML" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
     </div>
