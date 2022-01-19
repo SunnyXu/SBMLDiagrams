@@ -664,29 +664,29 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
 
 
-if __name__ == '__main__':
-    DIR = os.path.dirname(os.path.abspath(__file__))
-    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+# if __name__ == '__main__':
+#     DIR = os.path.dirname(os.path.abspath(__file__))
+#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test_4.xml"
-    #filename = "no_rxn.xml"
-    #filename = "node_grid.xml"
-    #filename = "test_no_comp.xml"
-    #filename = "testbigmodel.xml"
-    #filename = "output.xml"
+#     #filename = "test_4.xml"
+#     #filename = "no_rxn.xml"
+#     #filename = "node_grid.xml"
+#     #filename = "test_no_comp.xml"
+#     #filename = "testbigmodel.xml"
+#     #filename = "output.xml"
 
-    #txt font examples
-    #filename = "Jana_WolfGlycolysis.xml"
-    filename = "test_font.xml"
+#     #txt font examples
+#     #filename = "Jana_WolfGlycolysis.xml"
+#     filename = "test_font.xml"
 
-    f = open(os.path.join(TEST_FOLDER, filename), 'r')
-    sbmlStr = f.read()
-    f.close()
+#     f = open(os.path.join(TEST_FOLDER, filename), 'r')
+#     sbmlStr = f.read()
+#     f.close()
 
-    if len(sbmlStr) == 0:
-        print("empty sbml")
-    else:
-        display(sbmlStr, fileFormat='PNG')
+#     if len(sbmlStr) == 0:
+#         print("empty sbml")
+#     else:
+#         display(sbmlStr, fileFormat='PNG')
 
 
 
