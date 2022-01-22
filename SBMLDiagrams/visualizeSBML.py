@@ -15,8 +15,9 @@ import math
 import random as _random
 import string
 from SBMLDiagrams import drawNetwork
+from SBMLDiagrams import styleSBML
 
-def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', showBezierHandles = False):
+def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', newStyleClass = None):
 
     """
     Visualization from an sbml string to a PNG/JPG/PDF file.
@@ -34,8 +35,11 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
         output_fileName: str-filename: 'output' (default) or '' (result in a random file name) or 'fileName' (self-designed file name).
         
-        complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' or 'tetramer'.  
+        complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' or 'tetramer'.
 
+        color_style: pre-existing color style for the graph
+
+        newStyleClass: user-customized new color style
     """
 
     def draw_on_canvas(canvas):
@@ -58,15 +62,12 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
         shapeIdx = 1
         
         #set the default values without render info:
-        comp_fill_color = (158, 169, 255, 200)
-        comp_border_color = (0, 29, 255, 255)
+        color_style = newStyleClass
+        if not newStyleClass:
+            color_style = styleSBML.Style(styleName)
         comp_border_width = 2.0
-        spec_fill_color = (255, 204, 153, 200)
-        spec_border_color = (255, 108, 9, 255)
         spec_border_width = 2.0
-        reaction_line_color = (91, 176, 253, 255)
         reaction_line_width = 3.0
-        text_line_color = (0, 0, 0, 255)
         text_line_width = 1.
 
         try: #invalid sbml    
@@ -263,17 +264,18 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                             if 'COMPARTMENTGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
-                                        comp_fill_color = hex_to_rgb(color_list[k][1])
+                                        color_style.setCompFillColor(hex_to_rgb(color_list[k][1]))
                                     if color_list[k][0] == group.getStroke():
-                                        comp_border_color = hex_to_rgb(color_list[k][1])
+                                        color_style.setCompBorderColor(hex_to_rgb(color_list[k][1]))
                                 comp_border_width = group.getStrokeWidth()
-                                comp_render.append([idList,comp_fill_color,comp_border_color,comp_border_width])
+                                comp_render.append([idList, color_style.getCompFillColor(),
+                                                    color_style.getCompBorderColor(),comp_border_width])
                             elif 'SPECIESGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
-                                        spec_fill_color = hex_to_rgb(color_list[k][1])
+                                        color_style.setSpecFillColor(hex_to_rgb(color_list[k][1]))
                                     if color_list[k][0] == group.getStroke():
-                                        spec_border_color = hex_to_rgb(color_list[k][1])
+                                        color_style.setSpecBorderColor(hex_to_rgb(color_list[k][1]))
                                 spec_border_width = group.getStrokeWidth()
                                 name_list = []
                                 for element in group.getListOfElements():
@@ -297,24 +299,25 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                 else:
                                     shapeIdx = 0
 
-                                spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,shapeIdx])
+                                spec_render.append([idList,color_style.getSpecFillColor(),
+                                                    color_style.getSpecBorderColor(),spec_border_width,shapeIdx])
 
                             elif 'REACTIONGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
-                                        reaction_line_color = hex_to_rgb(color_list[k][1])
+                                        color_style.setReactionLineColor(hex_to_rgb(color_list[k][1]))
                                 reaction_line_width = group.getStrokeWidth()
-                                rxn_render.append([idList, reaction_line_color,reaction_line_width])
+                                rxn_render.append([idList, color_style.getReactionLineColor(), reaction_line_width])
                             elif 'TEXTGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
-                                        text_line_color = hex_to_rgb(color_list[k][1])
+                                        color_style.setTextLineColor(hex_to_rgb(color_list[k][1]))
                                 text_line_width = group.getStrokeWidth()
                                 #print(text_line_width)
                                 #text_font_size = group.getFontSize()  #cannot give the fontsize
                                 #text_font_size = group.getFontSize()
                                 #print(group)
-                                text_render.append([idList,text_line_color,text_line_width])
+                                text_render.append([idList,color_style.getTextLineColor(),text_line_width])
 
         #try: 
             model = simplesbml.loadSBMLStr(sbmlStr)
@@ -338,10 +341,11 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                     if temp_id == "_compartment_default_":
                         dimension = [1000, 1000]
                         position = [0, 0]
-                        comp_border_color = (255, 255, 255, 255)
-                        comp_fill_color = (255, 255, 255, 255)
+                        color_style.setCompBorderColor((255, 255, 255, 255))
+                        color_style.setCompFillColor((255, 255, 255, 255))
                         drawNetwork.addCompartment(canvas, position, dimension,
-                                                comp_border_color, comp_fill_color, comp_border_width)
+                                                color_style.getCompBorderColor(),
+                                                   color_style.getCompFillColor(), comp_border_width)
                     else:
                         if len(comp_id_list) != 0:
                         #if mplugin is not None:                    
@@ -351,18 +355,19 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                     position = comp_position_list[j]
                             for j in range(len(comp_render)):
                                 if temp_id == comp_render[j][0]:
-                                    comp_fill_color = comp_render[j][1]
-                                    comp_border_color = comp_render[j][2]
+                                    color_style.setCompFillColor(comp_render[j][1])
+                                    color_style.setCompBorderColor(comp_render[j][2])
                                     comp_border_width = comp_render[j][3]
                         else:# no layout info about compartment,
                             # then the whole size of the canvas is the compartment size
                             # modify the compartment size using the max_rec function above
                             dimension = [1000, 1000]
                             position = [0,0]
-                            comp_fill_color = (255, 255, 255, 255)
-                            comp_border_color = (255, 255, 255, 255)
+                            color_style.setCompBorderColor((255, 255, 255, 255))
+                            color_style.setCompFillColor((255, 255, 255, 255))
                         drawNetwork.addCompartment(canvas, position, dimension,
-                                                comp_border_color, comp_fill_color, comp_border_width)
+                                                color_style.getCompBorderColor(), color_style.getCompFillColor(),
+                                                   comp_border_width)
                 #add reactions before adding nodes to help with the line positions
                 numSpec_in_reaction = len(spec_specGlyph_id_list)
                 for i in range (numReactionGlyphs):
@@ -419,7 +424,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
                     for j in range(len(rxn_render)):
                         if temp_id == rxn_render[j][0]:
-                            reaction_line_color = rxn_render[j][1]
+                            color_style.setReactionLineColor(rxn_render[j][1])
                             reaction_line_width = rxn_render[j][2]
                     try: 
                         center_position = reaction_center_list[i]
@@ -429,7 +434,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         handles.extend(dst_handle)   
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                        reaction_line_color, reaction_line_width,
+                        color_style.getReactionLineColor(), reaction_line_width,
                         reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
                     except:
                         center_x = 0.
@@ -454,7 +459,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                             handles.append([dst_handle_x,dst_handle_y])
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                        reaction_line_color, reaction_line_width,
+                        color_style.getReactionLineColor(), reaction_line_width,
                         reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
                             
                 id_list = []
@@ -473,68 +478,72 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                             if temp_id not in id_list:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        spec_fill_color = spec_render[k][1]
-                                        spec_border_color = spec_render[k][2]
+                                        color_style.setSpecFillColor(spec_render[k][1])
+                                        color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
-                                        text_line_color = text_render[k][1]
+                                        color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
-                                                    spec_border_color, spec_fill_color, spec_border_width,
-                                                    shapeIdx, complex_shape = complexShape)
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)
+                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                    spec_border_width, shapeIdx, complex_shape = complexShape)
+                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                                    color_style.getTextLineColor(), text_line_width)
                                 id_list.append(temp_id)                    
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        spec_fill_color = spec_render[k][1]
-                                        spec_border_color = spec_render[k][2]
+                                        color_style.setSpecFillColor(spec_render[k][1])
+                                        color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
-                                        text_line_color = text_render[k][1]
+                                        color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                 drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
-                                                    spec_border_color, spec_fill_color, spec_border_width,
-                                                    shapeIdx, complex_shape=complexShape)
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)
+                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                    spec_border_width, shapeIdx, complex_shape=complexShape)
+                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                                    color_style.getTextLineColor(), text_line_width)
                                 id_list.append(temp_id)
                     for j in range(numBoundaryNodes):
                         if temp_id == BoundaryNodes_ids[j]:
                             if temp_id not in id_list:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        spec_fill_color = spec_render[k][1]
-                                        spec_border_color = spec_render[k][2]
+                                        color_style.setSpecFillColor(spec_render[k][1])
+                                        color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
-                                        text_line_color = text_render[k][1]
-                                        text_line_width = text_render[k][2]        
+                                        color_style.setTextLineColor(text_render[k][1])
+                                        text_line_width = text_render[k][2]
                                 drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
-                                                    spec_border_color, spec_fill_color, spec_border_width,
-                                                    shapeIdx, complex_shape=complexShape)
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)
+                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                    spec_border_width, shapeIdx, complex_shape=complexShape)
+                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                                    color_style.getTextLineColor(), text_line_width)
                                 id_list.append(temp_id)
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        spec_fill_color = spec_render[k][1]
-                                        spec_border_color = spec_render[k][2]
+                                        color_style.setSpecFillColor(spec_render[k][1])
+                                        color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
-                                        text_line_color = text_render[k][1]
+                                        color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2] 
                                 drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
-                                                    spec_border_color, spec_fill_color, spec_border_width,
-                                                    shapeIdx, complex_shape=complexShape)
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension, text_line_color, text_line_width)                
+                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                    spec_border_width, shapeIdx, complex_shape=complexShape)
+                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                                    color_style.getTextLineColor(), text_line_width)
                                 id_list.append(temp_id)
 
             else: # there is no layout information, assign position randomly and size as default
@@ -546,7 +555,8 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                     dimension = [1000, 1000]
                     position = [0,0]
                     drawNetwork.addCompartment(canvas, position, dimension,
-                                                comp_border_color, comp_fill_color, comp_border_width)
+                                                color_style.getCompBorderColor(), color_style.getCompFillColor(),
+                                               comp_border_width)
                 spec_id_list = [] 
                 spec_dimension_list = []
                 spec_position_list = []
@@ -617,7 +627,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         handles.append([dst_handle_x,dst_handle_y])
                     drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                     center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                    reaction_line_color, reaction_line_width,
+                    color_style.getReactionLineColor(), reaction_line_width,
                     reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
             
                 for i in range (numFloatingNodes):
@@ -627,9 +637,9 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                             position = spec_position_list[k]
                             dimension = spec_dimension_list[k]
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
-                                        spec_border_color, spec_fill_color, spec_border_width,
+                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width,
                                         shapeIdx, complex_shape=complexShape)
-                    drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)   
+                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), text_line_width)
                 for i in range (numBoundaryNodes):
                     temp_id = BoundaryNodes_ids[i]
                     for k in range(numNodes):
@@ -637,9 +647,9 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                             position = spec_position_list[k]
                             dimension = spec_dimension_list[k]
                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
-                                        spec_border_color, spec_fill_color, spec_border_width,
+                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width,
                                         shapeIdx, complex_shape=complexShape)
-                    drawNetwork.addText(canvas, temp_id, position, dimension, text_line_color, text_line_width)
+                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), text_line_width)
 
         except Exception as e:
             print(e)
