@@ -258,7 +258,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
                         for j in range (0, info.getNumStyles()):
                             style = info.getStyle(j)
-                            group = color_style.getGroup()
+                            group = style.getGroup()
                             typeList = style.createTypeString()
                             idList = style.createIdString()
                             if 'COMPARTMENTGLYPH' in typeList:
