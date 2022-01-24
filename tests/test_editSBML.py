@@ -97,15 +97,21 @@ class TestEditSBML(unittest.TestCase):
     if IGNORE_TEST:
       return    
 
+    center_pos = [334.0, 232.0]
+    handles = [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]]
     fill_color = [92, 176, 252]
     opacity = 0.5
     line_thickness = 2.
     bezier = False
 
-    df_update = editSBML._setReactionFillColor(self.df, "r_0", fill_color, opacity = opacity)
+    df_update = editSBML._setReactionCenterPosition(self.df, "r_0", center_pos)
+    df_update = editSBML._setReactionHandlePositions(df_update, "r_0", handles)
+    df_update = editSBML._setReactionFillColor(df_update, "r_0", fill_color, opacity = opacity)
     df_update = editSBML._setReactionLineThickness(df_update, "r_0", line_thickness)
     df_update = editSBML._setBezierReactionType(df_update, "r_0", bezier)
 
+    self.assertTrue(df_update[2].iloc[0]["center_pos"] == center_pos)
+    self.assertTrue(df_update[2].iloc[0]["handles"] == handles)
     self.assertTrue(df_update[2].iloc[0]["fill_color"][0:-1] == fill_color)
     self.assertTrue(df_update[2].iloc[0]["fill_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[2].iloc[0]["line_thickness"] == line_thickness)
