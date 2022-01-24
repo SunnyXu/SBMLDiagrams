@@ -17,7 +17,9 @@ import string
 from SBMLDiagrams import drawNetwork
 from SBMLDiagrams import styleSBML
 
-def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', newStyleClass = None):
+def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileName = 'output', \
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default',\
+    newStyleClass = None):
 
     """
     Visualization from an sbml string to a PNG/JPG/PDF file.
@@ -25,17 +27,19 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
-        If there is no layout information from the SBML file, all reaction line will be drawn in
-        straight lines even set as 'bezier'.
-
-        showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
+        imageSize: list-1*2 matrix-size of the rectangle [width, height]
 
         fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
         output_fileName: str-filename: 'output' (default) or '' (result in a random file name) or 'fileName' (self-designed file name).
         
         complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' or 'tetramer'.
+
+        reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
+        If there is no layout information from the SBML file, all reaction line will be drawn in
+        straight lines even set as 'bezier'.
+
+        showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
         color_style: pre-existing color style for the graph
 
@@ -258,6 +262,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
                         for j in range (0, info.getNumStyles()):
                             style = info.getStyle(j)
+                            #group = color_style.getGroup()
                             group = style.getGroup()
                             typeList = style.createTypeString()
                             idList = style.createIdString()
@@ -678,16 +683,17 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 #     DIR = os.path.dirname(os.path.abspath(__file__))
 #     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-#     #filename = "test_4.xml"
-#     #filename = "no_rxn.xml"
-#     #filename = "node_grid.xml"
+#     filename = "test.xml"
+#     #filename = "feedback.xml"
+#     #filename = "LinearChain.xml"
 #     #filename = "test_no_comp.xml"
-#     #filename = "testbigmodel.xml"
-#     #filename = "output.xml"
+#     #filename = "mass_action_rxn.xml"
+#     #filename = "test_comp.xml"
+#     #filename = "test_modifier.xml"
+#     #filename = "node_grid.xml"
 
-#     #txt font examples
 #     #filename = "Jana_WolfGlycolysis.xml"
-#     filename = "test_font.xml"
+
 
 #     f = open(os.path.join(TEST_FOLDER, filename), 'r')
 #     sbmlStr = f.read()

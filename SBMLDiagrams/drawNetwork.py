@@ -804,7 +804,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
         twidth = font.measureText(id)
         #theight = font.getSize() 
         theight = font.getSpacing()
-        if dimension[0] > twidth and dimension[1] > theight:
+        if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
             position_x = position[0] + .5*(dimension[0] - twidth)
             position_y = position[1] + dimension[1] - .5*(dimension[1] - theight)
             stop_flag = 1
