@@ -785,9 +785,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                     center_position = reaction_center_list[i]
                     #print(reaction_center_list)
                     center_handle = reaction_center_handle_list[i]
-                    #handles = [center_handle]
-                    #handles.extend(src_handle)
-                    #handles.extend(dst_handle)   
+                    handles = [center_handle]
+                    handles.extend(src_handle)
+                    handles.extend(dst_handle)   
                     #print(handles)
                     ReactionData_row_dct = {k:[] for k in COLUMN_NAME_df_ReactionData}
                     ReactionData_row_dct[NETIDX].append(netIdx)
@@ -1762,6 +1762,7 @@ class load:
         """
         self.df = editSBML._setReactionCenterPosition(self.df, id, position)
         return self.df
+    
 
     def setReactionHandlePositions(self, id, position):
         """
@@ -1773,6 +1774,63 @@ class load:
             position: list-position of the handles: [center handle, reactant handles, product handles].
         """
         self.df = editSBML._setReactionHandlePositions(self.df, id, position)
+        return self.df
+
+    def setReactionDefaultCenterAndHandlePositions(self, id):
+        """
+        Set detault center and handle positions.
+
+        Args:  
+            id: str-reaction id.
+            
+        """
+        
+        center_x = 0.
+        center_y = 0.
+
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        rct_list = []
+        prd_list = []
+        rct_list.append(self.df[2].iloc[idx_list[0]]["sources"])
+        prd_list.append(self.df[2].iloc[idx_list[0]]["targets"])
+
+        rct_num = len(rct_list[0])
+        prd_num = len(prd_list[0])
+        src_position = []
+        src_dimension = []
+        dst_position = []
+        dst_dimension = []
+        for i in range(rct_num):
+            temp_idx = self.df[1].index[self.df[1]["idx"] == rct_list[0][i]].tolist()[0]
+            src_position.append(self.df[1].iloc[temp_idx]["position"])
+            src_dimension.append(self.df[1].iloc[temp_idx]["size"])
+        for i in range(prd_num):
+            temp_idx = self.df[1].index[self.df[1]["idx"] == prd_list[0][i]].tolist()[0]
+            dst_position.append(self.df[1].iloc[temp_idx]["position"])
+            dst_dimension.append(self.df[1].iloc[temp_idx]["size"])
+  
+        for j in range(rct_num):
+            center_x += src_position[j][0]+.5*src_dimension[j][0]
+            center_y += src_position[j][1]+.5*src_dimension[j][1]
+        for j in range(prd_num):
+            center_x += dst_position[j][0]+.5*dst_dimension[j][0]
+            center_y += dst_position[j][1]+.5*dst_dimension[j][1]
+        center_x = center_x/(rct_num + prd_num) 
+        center_y = center_y/(rct_num + prd_num)
+        center_position = [center_x, center_y]
+        handles = [center_position]
+        for j in range(rct_num):
+            src_handle_x = .5*(center_position[0] + src_position[j][0] + .5*src_dimension[j][0])
+            src_handle_y = .5*(center_position[1] + src_position[j][1] + .5*src_dimension[j][1])
+            handles.append([src_handle_x,src_handle_y])
+        for j in range(prd_num):
+            dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
+            dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
+            handles.append([dst_handle_x,dst_handle_y])
+
+        self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
+        self.df = editSBML._setReactionHandlePositions(self.df, id, handles)
+
         return self.df
 
     def setReactionFillColor(self, id, fill_color, opacity = 1.):
@@ -1824,23 +1882,23 @@ class load:
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
 
-if __name__ == '__main__':
-    DIR = os.path.dirname(os.path.abspath(__file__))
-    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+# if __name__ == '__main__':
+#     DIR = os.path.dirname(os.path.abspath(__file__))
+#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-#     filename = "mass_action_rxn.xml"
-    filename = "test.xml" 
-# #     filename = "no_rxn.xml"
-# #     #filename = "test_4.xml"
-# #     #filename = "feedback.xml"
-# #     #filename = "LinearChain.xml"
-# #     #filename = "test_comp.xml"
-# #     #filename = "test_no_comp.xml"
-# #     #filename = "test_modifier.xml"
+    # filename = "mass_action_rxn.xml"
+    # filename = "test.xml" 
+    # filename = "no_rxn.xml"
+    # filename = "test_4.xml"
+    # filename = "feedback.xml"
+    # filename = "LinearChain.xml"
+    # filename = "test_comp.xml"
+    # filename = "test_no_comp.xml"
+    # filename = "test_modifier.xml"
 
-    f = open(os.path.join(TEST_FOLDER, filename), 'r')
-    sbmlStr = f.read()
-    f.close()
+    # f = open(os.path.join(TEST_FOLDER, filename), 'r')
+    # sbmlStr = f.read()
+    # f.close()
 
     # df_excel = _SBMLToDF(sbmlStr)
     # writer = pd.ExcelWriter('test.xlsx')
@@ -1849,71 +1907,72 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    df = load(sbmlStr)
+    # df = load(sbmlStr)
 
-#     print(df.getCompartmentPosition("_compartment_default_"))
-#     print(df.getCompartmentSize("_compartment_default_"))
-#     print(df.getCompartmentFillColor("_compartment_default_"))
-#     print(df.getCompartmentBorderColor("_compartment_default_"))
-#     print(df.getCompartmentBorderWidth("_compartment_default_"))
+    # print(df.getCompartmentPosition("_compartment_default_"))
+    # print(df.getCompartmentSize("_compartment_default_"))
+    # print(df.getCompartmentFillColor("_compartment_default_"))
+    # print(df.getCompartmentBorderColor("_compartment_default_"))
+    # print(df.getCompartmentBorderWidth("_compartment_default_"))
 
-#     print(df.isFloatingNode("x_1"))
-#     print(df.getNodePosition("x_1"))
-#     print(df.getNodeSize("x_1"))
-#     print(df.getNodeShape("x_1"))
-#     print(df.getNodeTextPosition("x_1"))
-#     print(df.getNodeTextSize("x_1"))
-#     print(df.getNodeFillColor("x_1"))
-#     print(df.getNodeBorderColor("x_1"))
-#     print(df.getNodeBorderWidth("x_1"))
-#     print(df.getNodeTextFontColor("x_1"))
-#     print(df.getNodeTextLineWidth("x_1"))
+    # print(df.isFloatingNode("x_1"))
+    # print(df.getNodePosition("x_1"))
+    # print(df.getNodeSize("x_1"))
+    # print(df.getNodeShape("x_1"))
+    # print(df.getNodeTextPosition("x_1"))
+    # print(df.getNodeTextSize("x_1"))
+    # print(df.getNodeFillColor("x_1"))
+    # print(df.getNodeBorderColor("x_1"))
+    # print(df.getNodeBorderWidth("x_1"))
+    # print(df.getNodeTextFontColor("x_1"))
+    # print(df.getNodeTextLineWidth("x_1"))
 
-#     print(df.getReactionFillColor("r_0"))
-#     print(df.getReactionLineThickness("r_0"))
-#     print(df.isBezierReactionType("r_0"))
-    print("center_position:", df.getReactionCenterPosition("r_0"))
-    print("handle_position:", df.getReactionHandlePositions("r_0"))
+    # print(df.getReactionFillColor("r_0"))
+    # print(df.getReactionLineThickness("r_0"))
+    # print(df.isBezierReactionType("r_0"))
+    # print("center_position:", df.getReactionCenterPosition("r_0"))
+    # print("handle_position:", df.getReactionHandlePositions("r_0"))
 
-#     df.setCompartmentPosition('_compartment_default_', [0,0])
-#     df.setCompartmentSize('_compartment_default_', [1000, 1000])
-#     df.setCompartmentFillColor('_compartment_default_', [255, 255, 255])
-#     df.setCompartmentBorderColor('_compartment_default_', [255, 255, 255])
-#     df.setCompartmentBorderWidth('_compartment_default_', 2.)
+    # df.setCompartmentPosition('_compartment_default_', [0,0])
+    # df.setCompartmentSize('_compartment_default_', [1000, 1000])
+    # df.setCompartmentFillColor('_compartment_default_', [255, 255, 255])
+    # df.setCompartmentBorderColor('_compartment_default_', [255, 255, 255])
+    # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
-#     df.setFloatingBoundaryNode("x_1", True)
-    df.setNodePosition("x_1", [100.0, 100.0])
-    df.setNodeTextPosition("x_1", [100.0, 100.0])
-#     print(df.getNodePosition("x_1"))
-#     df.setNodeSize("x_1", [50.0, 30.0])
-#     df.setNodeShapeIdx("x_1", 1)
-#     df.setNodeTextPosition("x_1", [413., 216.])
-#     df.setNodeTextSize("x_1", [50, 31])
-#     df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
-#     df.setNodeBorderColor("x_1", [255, 108, 9])
-#     df.setNodeBorderWidth("x_1", 2.)
-#     df.setNodeTextFontColor("x_1", [0, 0, 0])
-#     df.setNodeTextLineWidth("x_1", 1.)
+    # df.setFloatingBoundaryNode("x_1", True)
+    # df.setNodePosition("x_1", [100.0, 100.0])
+    # df.setNodeTextPosition("x_1", [100.0, 100.0])
+    # print(df.getNodePosition("x_1"))
+    # df.setNodeSize("x_1", [50.0, 30.0])
+    # df.setNodeShapeIdx("x_1", 1)
+    # df.setNodeTextPosition("x_1", [413., 216.])
+    # df.setNodeTextSize("x_1", [50, 31])
+    # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
+    # df.setNodeBorderColor("x_1", [255, 108, 9])
+    # df.setNodeBorderWidth("x_1", 2.)
+    # df.setNodeTextFontColor("x_1", [0, 0, 0])
+    # df.setNodeTextLineWidth("x_1", 1.)
 
-#     df.setReactionFillColor("r_0", [91, 176, 253])
-#     df.setReactionLineThickness("r_0", 3.)
-#     df.setBezierReactionType("r_0", True)
-    df.setReactionCenterPosition("r_0", [334.0, 232.0])
-    df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
-    print("center_position after:", df.getReactionCenterPosition("r_0"))
-    print("handle_position after:", df.getReactionHandlePositions("r_0"))
+    # df.setReactionFillColor("r_0", [91, 176, 253])
+    # df.setReactionLineThickness("r_0", 3.)
+    # df.setBezierReactionType("r_0", True)
+    # df.setReactionCenterPosition("r_0", [334.0, 232.0])
+    # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
+    # print("center_position after:", df.getReactionCenterPosition("r_0"))
+    # print("handle_position after:", df.getReactionHandlePositions("r_0"))
+    # df.setReactionDefaultCenterAndHandlePositions("reaction_0")
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    if len(sbmlStr_layout_render) == 0:
-        print("empty sbml")
-    else:
-        visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
+    # if len(sbmlStr_layout_render) == 0:
+    #     print("empty sbml")
+    # else:
+    #     visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
 
 
 

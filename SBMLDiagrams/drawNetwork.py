@@ -519,7 +519,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
 
         center_position: list-1*2 matrix: position of the center.
 
-        handles: list-: position of the handles: [center handle, reactant handles, product handles].
+        handles: list-position of the handles: [center handle, reactant handles, product handles].
 
         rct_dimension: list-1*2 matrix: dimension/size of each reactant.
 
