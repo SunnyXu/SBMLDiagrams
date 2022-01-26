@@ -847,8 +847,10 @@ class TestImportSBML(unittest.TestCase):
 
     self.assertTrue(self.df.getReactionCenterPosition("r_0")[0] == \
       [334.0, 231.0])
+    # self.assertTrue(self.df.getReactionHandlePositions("r_0")[0] == \
+      # [[334.0, 231.0], [386.0, 231.0], [282.0, 231.0]])
     self.assertTrue(self.df.getReactionHandlePositions("r_0")[0] == \
-      [[334.0, 231.0], [386.0, 231.0], [282.0, 231.0]])
+      [[386.0, 231.0], [386.0, 231.0], [386.0, 231.0]])
     self.assertTrue(self.df.getReactionFillColor("r_0")[0] == \
       [[91, 176, 253, 255], '', '#5BB0FDFF'])
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == 3.)

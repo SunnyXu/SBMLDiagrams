@@ -463,13 +463,19 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                     CompartmentData_row_dct[FILLCOLOR].append(comp_fill_color)
                     CompartmentData_row_dct[BORDERWIDTH].append(comp_border_width)
                     
-                    for j in range(len(COLUMN_NAME_df_CompartmentData)):
-                        try: 
-                            CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
-                        except:
-                            CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = ''
-                    df_CompartmentData = df_CompartmentData.append(CompartmentData_row_dct, ignore_index=True)
-     
+                    # for j in range(len(COLUMN_NAME_df_CompartmentData)):
+                    #     try: 
+                    #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
+                    #     except:
+                    #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = ''
+                    #df_CompartmentData = df_CompartmentData.append(CompartmentData_row_dct, ignore_index=True)
+                    
+                    if len(df_CompartmentData) == 0:
+                        df_CompartmentData = pd.DataFrame(CompartmentData_row_dct)
+                    else:
+                        df_CompartmentData = pd.concat([df_CompartmentData,\
+                            pd.DataFrame(CompartmentData_row_dct)], ignore_index=True)
+
                 else:
                     if len(comp_id_list) != 0:
                     #if mplugin is not None:                    
@@ -504,13 +510,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                     CompartmentData_row_dct[BORDERCOLOR].append(comp_border_color)
                     CompartmentData_row_dct[FILLCOLOR].append(comp_fill_color)
                     CompartmentData_row_dct[BORDERWIDTH].append(comp_border_width)
-                    for j in range(len(COLUMN_NAME_df_CompartmentData)):
-                        try: 
-                            CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
-                        except:
-                            CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = ''
-                    df_CompartmentData = df_CompartmentData.append(CompartmentData_row_dct, ignore_index=True)
-
+                    # for j in range(len(COLUMN_NAME_df_CompartmentData)):
+                    #     try: 
+                    #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
+                    #     except:
+                    #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = ''
+                    # df_CompartmentData = df_CompartmentData.append(CompartmentData_row_dct, ignore_index=True)
+                    if len(df_CompartmentData) == 0:
+                        df_CompartmentData = pd.DataFrame(CompartmentData_row_dct)
+                    else:
+                        df_CompartmentData = pd.concat([df_CompartmentData,\
+                            pd.DataFrame(CompartmentData_row_dct)], ignore_index=True)
 
             numSpec_in_reaction = len(spec_specGlyph_id_list)
 
@@ -567,12 +577,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                             #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
-                            for j in range(len(COLUMN_NAME_df_NodeData)):
-                                try: 
-                                    NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
-                                except:
-                                    NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
-                            df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                            # for j in range(len(COLUMN_NAME_df_NodeData)):
+                            #     try: 
+                            #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
+                            #     except:
+                            #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
+                            # df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                            if len(df_NodeData) == 0:
+                                df_NodeData = pd.DataFrame(NodeData_row_dct)
+                            else:
+                                df_NodeData = pd.concat([df_NodeData,\
+                                    pd.DataFrame(NodeData_row_dct)], ignore_index=True)
                     
                         else:
                             original_idx = id_list.index(temp_id)
@@ -608,12 +623,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                             #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
-                            for j in range(len(COLUMN_NAME_df_NodeData)):
-                                try: 
-                                    NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
-                                except:
-                                    NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
-                            df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                            # for j in range(len(COLUMN_NAME_df_NodeData)):
+                            #     try: 
+                            #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
+                            #     except:
+                            #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
+                            # df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                            if len(df_NodeData) == 0:
+                                df_NodeData = pd.DataFrame(NodeData_row_dct)
+                            else:
+                                df_NodeData = pd.concat([df_NodeData,\
+                                    pd.DataFrame(NodeData_row_dct)], ignore_index=True)
                 for j in range(numBoundaryNodes):
                     if temp_id == BoundaryNodes_ids[j]:
                         if temp_id not in id_list:
@@ -649,12 +669,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                             #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
-                            for j in range(len(COLUMN_NAME_df_NodeData)):
-                                try: 
-                                    NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
-                                except:
-                                    NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
-                            df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                            # for j in range(len(COLUMN_NAME_df_NodeData)):
+                            #     try: 
+                            #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
+                            #     except:
+                            #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
+                            # df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                            if len(df_NodeData) == 0:
+                                df_NodeData = pd.DataFrame(NodeData_row_dct)
+                            else:
+                                df_NodeData = pd.concat([df_NodeData,\
+                                    pd.DataFrame(NodeData_row_dct)], ignore_index=True)
                         else:
                             for k in range(len(spec_render)):
                                 if temp_id == spec_render[k][0]:
@@ -688,12 +713,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                             #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
-                            for j in range(len(COLUMN_NAME_df_NodeData)):
-                                try: 
-                                    NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
-                                except:
-                                    NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
-                            df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                            # for j in range(len(COLUMN_NAME_df_NodeData)):
+                            #     try: 
+                            #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
+                            #     except:
+                            #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
+                            # df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                            if len(df_NodeData) == 0:
+                                df_NodeData = pd.DataFrame(NodeData_row_dct)
+                            else:
+                                df_NodeData = pd.concat([df_NodeData,\
+                                    pd.DataFrame(NodeData_row_dct)], ignore_index=True)
     
 
             for i in range (numReactionGlyphs):
@@ -805,13 +835,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                         ReactionData_row_dct[BEZIER].append('TRUE')
                     else:
                         ReactionData_row_dct[BEZIER].append('FALSE')
-                    for j in range(len(COLUMN_NAME_df_ReactionData)):
-                        try: 
-                            ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
-                        except:
-                            ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ''
-                    df_ReactionData = df_ReactionData.append(ReactionData_row_dct, ignore_index=True)
-                
+                    # for j in range(len(COLUMN_NAME_df_ReactionData)):
+                    #     try: 
+                    #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
+                    #     except:
+                    #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ''
+                    # df_ReactionData = df_ReactionData.append(ReactionData_row_dct, ignore_index=True)
+                    if len(df_ReactionData) == 0:
+                        df_ReactionData = pd.DataFrame(ReactionData_row_dct)
+                    else:
+                        df_ReactionData = pd.concat([df_ReactionData,\
+                            pd.DataFrame(ReactionData_row_dct)], ignore_index=True)
                 except:
                     center_x = 0.
                     center_y = 0.
@@ -850,13 +884,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                         ReactionData_row_dct[BEZIER].append('TRUE')
                     else:
                         ReactionData_row_dct[BEZIER].append('FALSE')
-                    for j in range(len(COLUMN_NAME_df_ReactionData)):
-                        try: 
-                            ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
-                        except:
-                            ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ''
-                    df_ReactionData = df_ReactionData.append(ReactionData_row_dct, ignore_index=True)
-   
+                    # for j in range(len(COLUMN_NAME_df_ReactionData)):
+                    #     try: 
+                    #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
+                    #     except:
+                    #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ''
+                    # df_ReactionData = df_ReactionData.append(ReactionData_row_dct, ignore_index=True)
+                    if len(df_ReactionData) == 0:
+                        df_ReactionData = pd.DataFrame(ReactionData_row_dct)
+                    else:
+                        df_ReactionData = pd.concat([df_ReactionData,\
+                            pd.DataFrame(ReactionData_row_dct)], ignore_index=True)
 
         else: # there is no layout information, assign position randomly and size as default
     
@@ -879,13 +917,18 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                 CompartmentData_row_dct[BORDERCOLOR].append(comp_border_color)
                 CompartmentData_row_dct[FILLCOLOR].append(comp_fill_color)
                 CompartmentData_row_dct[BORDERWIDTH].append(comp_border_width)
-                for j in range(len(COLUMN_NAME_df_CompartmentData)):
-                    try: 
-                        CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
-                    except:
-                        CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = ''
-                df_CompartmentData = df_CompartmentData.append(CompartmentData_row_dct, ignore_index=True)
-            
+                # for j in range(len(COLUMN_NAME_df_CompartmentData)):
+                #     try: 
+                #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
+                #     except:
+                #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = ''
+                # df_CompartmentData = df_CompartmentData.append(CompartmentData_row_dct, ignore_index=True)
+                if len(df_CompartmentData) == 0:
+                    df_CompartmentData = pd.DataFrame(CompartmentData_row_dct)
+                else:
+                    df_CompartmentData = pd.concat([df_CompartmentData,\
+                        pd.DataFrame(CompartmentData_row_dct)], ignore_index=True)
+
             spec_id_list = [] 
             spec_dimension_list = []
             spec_position_list = []
@@ -947,12 +990,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                 #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                 NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                 NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
-                for j in range(len(COLUMN_NAME_df_NodeData)):
-                    try: 
-                        NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
-                    except:
-                        NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
-                df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                # for j in range(len(COLUMN_NAME_df_NodeData)):
+                #     try: 
+                #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
+                #     except:
+                #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
+                # df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                if len(df_NodeData) == 0:
+                    df_NodeData = pd.DataFrame(NodeData_row_dct)
+                else:
+                    df_NodeData = pd.concat([df_NodeData,\
+                        pd.DataFrame(NodeData_row_dct)], ignore_index=True)
             for i in range (numBoundaryNodes):
                 temp_id = BoundaryNodes_ids[i]
                 comp_id = model.getCompartmentIdSpeciesIsIn(temp_id)
@@ -985,12 +1033,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                 #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                 NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                 NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
-                for j in range(len(COLUMN_NAME_df_NodeData)):
-                    try: 
-                        NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
-                    except:
-                        NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
-                df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                # for j in range(len(COLUMN_NAME_df_NodeData)):
+                #     try: 
+                #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
+                #     except:
+                #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = ''
+                # df_NodeData = df_NodeData.append(NodeData_row_dct, ignore_index=True)
+                if len(df_NodeData) == 0:
+                    df_NodeData = pd.DataFrame(NodeData_row_dct)
+                else:
+                    df_NodeData = pd.concat([df_NodeData,\
+                        pd.DataFrame(NodeData_row_dct)], ignore_index=True)
     
             for i in range (numRxns):
                 src_idx_list = []
@@ -1079,12 +1132,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                     ReactionData_row_dct[BEZIER].append('TRUE')
                 else:
                     ReactionData_row_dct[BEZIER].append('FALSE')
-                for j in range(len(COLUMN_NAME_df_ReactionData)):
-                    try: 
-                        ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
-                    except:
-                        ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ''
-                df_ReactionData = df_ReactionData.append(ReactionData_row_dct, ignore_index=True)  
+                # for j in range(len(COLUMN_NAME_df_ReactionData)):
+                #     try: 
+                #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
+                #     except:
+                #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ''
+                # df_ReactionData = df_ReactionData.append(ReactionData_row_dct, ignore_index=True)
+                if len(df_ReactionData) == 0:
+                    df_ReactionData = pd.DataFrame(ReactionData_row_dct)
+                else:
+                    df_ReactionData = pd.concat([df_ReactionData,\
+                        pd.DataFrame(ReactionData_row_dct)], ignore_index=True)  
 
         return (df_CompartmentData, df_NodeData, df_ReactionData) 
 
@@ -1796,16 +1854,26 @@ class load:
 
         rct_num = len(rct_list[0])
         prd_num = len(prd_list[0])
+
+        rct_id_list = []
+        prd_id_list = []
+        for i in range(rct_num):
+            temp_idx = self.df[1].index[self.df[1]["idx"] == rct_list[0][i]].tolist()[0]
+            rct_id_list.append(self.df[1].iloc[temp_idx]["id"])
+        for i in range(prd_num):
+            temp_idx = self.df[1].index[self.df[1]["idx"] == prd_list[0][i]].tolist()[0]
+            prd_id_list.append(self.df[1].iloc[temp_idx]["id"])
+
         src_position = []
         src_dimension = []
         dst_position = []
         dst_dimension = []
         for i in range(rct_num):
-            temp_idx = self.df[1].index[self.df[1]["idx"] == rct_list[0][i]].tolist()[0]
+            temp_idx = self.df[1].index[self.df[1]["id"] == rct_id_list[i]].tolist()[0]
             src_position.append(self.df[1].iloc[temp_idx]["position"])
             src_dimension.append(self.df[1].iloc[temp_idx]["size"])
         for i in range(prd_num):
-            temp_idx = self.df[1].index[self.df[1]["idx"] == prd_list[0][i]].tolist()[0]
+            temp_idx = self.df[1].index[self.df[1]["id"] == prd_id_list[i]].tolist()[0]
             dst_position.append(self.df[1].iloc[temp_idx]["position"])
             dst_dimension.append(self.df[1].iloc[temp_idx]["size"])
   
@@ -1819,6 +1887,7 @@ class load:
         center_y = center_y/(rct_num + prd_num)
         center_position = [center_x, center_y]
         handles = [center_position]
+        #handles = []
         for j in range(rct_num):
             src_handle_x = .5*(center_position[0] + src_position[j][0] + .5*src_dimension[j][0])
             src_handle_y = .5*(center_position[1] + src_position[j][1] + .5*src_dimension[j][1])
@@ -1827,7 +1896,10 @@ class load:
             dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
             dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
             handles.append([dst_handle_x,dst_handle_y])
-
+        # print(src_position)
+        # print(dst_position)
+        # print("center:", center_position)
+        # print("handle:", handles)
         self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
         self.df = editSBML._setReactionHandlePositions(self.df, id, handles)
 
@@ -1882,12 +1954,12 @@ class load:
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
 
-# if __name__ == '__main__':
-#     DIR = os.path.dirname(os.path.abspath(__file__))
-#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+if __name__ == '__main__':
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     # filename = "mass_action_rxn.xml"
-    # filename = "test.xml" 
+    filename = "test.xml" 
     # filename = "no_rxn.xml"
     # filename = "test_4.xml"
     # filename = "feedback.xml"
@@ -1896,18 +1968,18 @@ class load:
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
 
-    # f = open(os.path.join(TEST_FOLDER, filename), 'r')
-    # sbmlStr = f.read()
-    # f.close()
+    f = open(os.path.join(TEST_FOLDER, filename), 'r')
+    sbmlStr = f.read()
+    f.close()
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('test.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('test.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    writer.save()
 
-    # df = load(sbmlStr)
+    df = load(sbmlStr)
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -1917,7 +1989,7 @@ class load:
 
     # print(df.isFloatingNode("x_1"))
     # print(df.getNodePosition("x_1"))
-    # print(df.getNodeSize("x_1"))
+    print(df.getNodeSize("x_1"))
     # print(df.getNodeShape("x_1"))
     # print(df.getNodeTextPosition("x_1"))
     # print(df.getNodeTextSize("x_1"))
@@ -1943,6 +2015,7 @@ class load:
     # df.setNodePosition("x_1", [100.0, 100.0])
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # print(df.getNodePosition("x_1"))
+    # print(df.getNodePosition("x_0"))
     # df.setNodeSize("x_1", [50.0, 30.0])
     # df.setNodeShapeIdx("x_1", 1)
     # df.setNodeTextPosition("x_1", [413., 216.])
@@ -1958,21 +2031,23 @@ class load:
     # df.setBezierReactionType("r_0", True)
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
     # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
-    # print("center_position after:", df.getReactionCenterPosition("r_0"))
-    # print("handle_position after:", df.getReactionHandlePositions("r_0"))
-    # df.setReactionDefaultCenterAndHandlePositions("reaction_0")
+    print("center_position after:", df.getReactionCenterPosition("r_0"))
+    print("handle_position after:", df.getReactionHandlePositions("r_0"))
+    df.setReactionDefaultCenterAndHandlePositions("r_0")
+    print("center_position after:", df.getReactionCenterPosition("r_0"))
+    print("handle_position after:", df.getReactionHandlePositions("r_0"))
 
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
-    # if len(sbmlStr_layout_render) == 0:
-    #     print("empty sbml")
-    # else:
-    #     visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
+    if len(sbmlStr_layout_render) == 0:
+        print("empty sbml")
+    else:
+        visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
 
 
 
