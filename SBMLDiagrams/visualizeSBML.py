@@ -344,7 +344,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
                     if temp_id == "_compartment_default_":
-                        dimension = [1000, 1000]
+                        dimension = imageSize
                         position = [0, 0]
                         color_style.setCompBorderColor((255, 255, 255, 255))
                         color_style.setCompFillColor((255, 255, 255, 255))
@@ -366,7 +366,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         else:# no layout info about compartment,
                             # then the whole size of the canvas is the compartment size
                             # modify the compartment size using the max_rec function above
-                            dimension = [1000, 1000]
+                            dimension = imageSize
                             position = [0,0]
                             color_style.setCompBorderColor((255, 255, 255, 255))
                             color_style.setCompFillColor((255, 255, 255, 255))
@@ -437,6 +437,10 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         handles = [center_position]
                         handles.extend(src_handle)
                         handles.extend(dst_handle)   
+                        # print('rct:', src_position, src_dimension)
+                        # print('prd:', dst_position, dst_dimension)
+                        # print('center:', center_position)
+                        # print('handles:', handles)
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
                         color_style.getReactionLineColor(), reaction_line_width,
@@ -491,6 +495,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                     if temp_id == text_render[k][0]:
                                         color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
+                                print("test")
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width, shapeIdx, complex_shape = complexShape)
@@ -557,7 +562,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
-                    dimension = [1000, 1000]
+                    dimension = imageSize
                     position = [0,0]
                     drawNetwork.addCompartment(canvas, position, dimension,
                                                 color_style.getCompBorderColor(), color_style.getCompFillColor(),
@@ -679,30 +684,30 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
 
 
-# if __name__ == '__main__':
-#     DIR = os.path.dirname(os.path.abspath(__file__))
-#     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
+if __name__ == '__main__':
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-#     filename = "test.xml"
-#     #filename = "feedback.xml"
-#     #filename = "LinearChain.xml"
-#     #filename = "test_no_comp.xml"
-#     #filename = "mass_action_rxn.xml"
-#     #filename = "test_comp.xml"
-#     #filename = "test_modifier.xml"
-#     #filename = "node_grid.xml"
+    #filename = "test.xml"
+    #filename = "feedback.xml"
+    #filename = "LinearChain.xml"
+    #filename = "test_no_comp.xml"
+    #filename = "mass_action_rxn.xml"
+    #filename = "test_comp.xml"
+    #filename = "test_modifier.xml"
+    #filename = "node_grid.xml"
 
-#     #filename = "Jana_WolfGlycolysis.xml"
+    #filename = "Jana_WolfGlycolysis.xml"
+    filename = "100nodes.sbml"
 
+    f = open(os.path.join(TEST_FOLDER, filename), 'r')
+    sbmlStr = f.read()
+    f.close()
 
-#     f = open(os.path.join(TEST_FOLDER, filename), 'r')
-#     sbmlStr = f.read()
-#     f.close()
-
-#     if len(sbmlStr) == 0:
-#         print("empty sbml")
-#     else:
-#         display(sbmlStr, fileFormat='PNG')
+    if len(sbmlStr) == 0:
+        print("empty sbml")
+    else:
+        display(sbmlStr, fileFormat='PNG', reactionLineType='linear')
 
 
 

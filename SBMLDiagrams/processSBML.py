@@ -13,6 +13,7 @@ from libsbml import *
 import math
 import random as _random
 import pandas as pd
+from sympy import comp
 from SBMLDiagrams import exportSBML
 from SBMLDiagrams import editSBML
 from SBMLDiagrams import visualizeSBML
@@ -110,7 +111,7 @@ def _rgb_to_color(rgb):
 
     return color
 
-def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'): 
+def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [1000, 1000]): 
     """
     Save the information of an SBML file to a set of dataframe.
 
@@ -448,7 +449,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
                 if temp_id == "_compartment_default_":
-                    dimension = [1000, 1000]
+                    dimension = compartmentDefaultSize
                     position = [0, 0]
                     comp_border_color = [255, 255, 255, 255]
                     comp_fill_color = [255, 255, 255, 255]
@@ -495,8 +496,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                         # dimension = [800,800]
                         # position = [40,40]
                         # the whole size of the compartment: 4000*2500
-                        dimension = [1000,1000]
+                        dimension = compartmentDefaultSize
                         position = [0,0]
+                        #If there is no render info about the compartments given from sbml,
+                        #they will be set as white. 
                         comp_fill_color = [255, 255, 255, 255]
                         comp_border_color = [255, 255, 255, 255]
 
@@ -904,8 +907,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                 temp_id = Comps_ids[i]
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
-                dimension = [1000,1000]
+                dimension = compartmentDefaultSize
                 position = [0,0]
+                comp_border_color = [255, 255, 255, 255]
+                comp_fill_color = [255, 255, 255, 255]
 
                 CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
                 CompartmentData_row_dct[NETIDX].append(netIdx)
@@ -1155,7 +1160,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
 class load:
     def __init__(self, sbmlstr):
         self.sbmlstr = sbmlstr
-        #self.df = _SBMLToDF(self.sbmlstr, reactionLineType='bezier')
         self.df = _SBMLToDF(self.sbmlstr)
 
     def getCompartmentPosition(self, id):
@@ -1896,8 +1900,8 @@ class load:
             dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
             dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
             handles.append([dst_handle_x,dst_handle_y])
-        # print(src_position)
-        # print(dst_position)
+        # print('rct:', src_position, src_dimension)
+        # print('prd:', dst_position, dst_dimension)
         # print("center:", center_position)
         # print("handle:", handles)
         self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        

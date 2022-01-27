@@ -15,7 +15,13 @@ import pandas as pd
 import math
 
 
-def _DFToSBML(df):
+def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
+
+    # writer = pd.ExcelWriter('5nodes.xlsx')
+    # df[0].to_excel(writer, sheet_name='CompartmentData')
+    # df[1].to_excel(writer, sheet_name='NodeData')
+    # df[2].to_excel(writer, sheet_name='ReactionData')
+    # writer.save()
 
     """
     Write the information of a set of dataframe to an SBML string. 
@@ -364,8 +370,8 @@ def _DFToSBML(df):
             bb_id  = "bb_" + comp_id
             pos_x  = 0
             pos_y  = 0
-            width  = 1000
-            height = 1000
+            width  = compartmentDefaultSize[0]
+            height = compartmentDefaultSize[1]
             compartmentGlyph.setBoundingBox(BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
         
             for i in range(numNodes):
