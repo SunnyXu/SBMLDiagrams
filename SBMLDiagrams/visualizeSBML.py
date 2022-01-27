@@ -8,14 +8,71 @@ Created on Mon Aug 23 13:25:34 2021
 """
 
 import os
+from collections import defaultdict
+
 import skia
 import simplesbml
 from libsbml import *
+import cv2
+import numpy as np
 import math
 import random as _random
 import string
 from SBMLDiagrams import drawNetwork
 from SBMLDiagrams import styleSBML
+
+
+def animate(simulationData, baseImageArray, posDict, numDigit=5, folderName='animation', offset=20,
+            textColor=None, textWidth=None, textDimension=None):
+    """
+    Animation for tellurium simulation
+
+    Args:
+        simulationData: numpy array for the simulation data
+
+        baseImageArray: base image array used for generating the change
+
+        posDict: position dictionary for the Floating Species
+
+        numDigit: number of digits saved for display
+
+        folderName: generated images folder place
+
+        offset: text offset from the center of the compartment
+
+        textColor: text color
+
+        textWidth: text width
+
+        textDimension: text dimension size
+
+    Returns:
+    """
+    for i in range(len(simulationData)):
+        surface = skia.Surface(np.array(baseImageArray, copy=True))
+        canvas = surface.getCanvas()
+        for letter, pos in posDict.items():
+            new_pos = [pos[0] - offset, pos[1] - offset]
+            drawNetwork.addText(canvas, str(simulationData[letter][i])[:numDigit],
+                                new_pos, [40, 60], (0, 0, 0, 255), 1.)
+        drawNetwork.draw(surface, folderName='animation', fileName='a' + str(i), file_format='PNG')
+
+    imgs = []
+    size = None
+    files = sorted(os.listdir(os.getcwd() + '/' + folderName))
+    for filename in files:
+        imgName = os.path.join(os.getcwd() + '/' + folderName, filename)
+        img = cv2.imread(imgName)
+        height, width, layers = img.shape
+        size = (width, height)
+        imgs.append(img)
+
+    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, "output.mp4"), cv2.VideoWriter_fourcc(*'MP4V'),
+                          1, size)
+
+    for i in range(len(imgs)):
+        out.write(imgs[i])
+    out.release()
 
 def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default',\
@@ -44,6 +101,9 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
         color_style: pre-existing color style for the graph
 
         newStyleClass: user-customized new color style
+
+    Returns:
+        The tuple of base image's array, position dictionary for the Floating Species, color style of the image
     """
 
     def draw_on_canvas(canvas):
@@ -63,6 +123,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
         spec_position_list = []
         spec_text_position_list = []
         spec_text_dimension_list = []
+        floatingNodes_pos_dict = defaultdict(list)
         shapeIdx = 1
         
         #set the default values without render info:
@@ -491,6 +552,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                     if temp_id == text_render[k][0]:
                                         color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
+                                floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width, shapeIdx, complex_shape = complexShape)
@@ -508,6 +570,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                     if temp_id == text_render[k][0]:
                                         color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
+                                floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width, shapeIdx, complex_shape=complexShape)
@@ -641,6 +704,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         if spec_id_list[k] == temp_id:
                             position = spec_position_list[k]
                             dimension = spec_dimension_list[k]
+                    floatingNodes_pos_dict['[' + temp_id + ']'] = position
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width,
                                         shapeIdx, complex_shape=complexShape)
@@ -658,12 +722,14 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
         except Exception as e:
             print(e)
+        return floatingNodes_pos_dict, color_style
 
+    baseImageArray = []
     if fileFormat == "PNG" or fileFormat == "JPEG":
         surface = skia.Surface(imageSize[0], imageSize[1])
         canvas = surface.getCanvas()
-        draw_on_canvas(canvas)
-        drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat)
+        pos_dict, color_style = draw_on_canvas(canvas)
+        baseImageArray = drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat)
     else: #fileFormat == "PDF"
         if output_fileName == '':
             random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
@@ -675,8 +741,8 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
         stream = skia.FILEWStream(fileNamepdf)
         with skia.PDF.MakeDocument(stream) as document:
             with document.page(imageSize[0], imageSize[1]) as canvas:
-                draw_on_canvas(canvas)
-
+                pos_dict, color_style = draw_on_canvas(canvas)
+    return baseImageArray, pos_dict, color_style
 
 
 # if __name__ == '__main__':

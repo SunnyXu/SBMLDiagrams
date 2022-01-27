@@ -818,7 +818,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
             fontSize = fontSize - 1.
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 
-def draw(surface, fileName = '', file_format = 'PNG'):
+def draw(surface, folderName = '', fileName = '', file_format = 'PNG'):
     """
     Display the diagram and save it to the local.
 
@@ -826,13 +826,19 @@ def draw(surface, fileName = '', file_format = 'PNG'):
         surface: skia.Surface.
 
         fileName: str-the name for the generated file: either the input filename or a randomly generated filename if '' (default).
-        
-        fileFormat = 'PNG' (default) or 'JPEG'.
-    """ 
 
+        folderName = name for the folder to save the images
+
+        fileFormat = 'PNG' (default) or 'JPEG'.
+
+    Returns:
+        the drew image array
+    """ 
+    if folderName:
+        if not os.path.exists(os.getcwd() + '/' + folderName):
+            os.makedirs(os.getcwd() + '/' + folderName)
     if fileName == '':
         random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-        #tmpfileName = os.path.join(tempfile.gettempdir(), random_string)    
         tmpfileName = os.path.join(os.getcwd(), random_string)
         image = surface.makeImageSnapshot()
         if file_format == 'PNG':
@@ -863,7 +869,7 @@ def draw(surface, fileName = '', file_format = 'PNG'):
         #self.surface.write_to_png(tmpfileName)
 
     else:
-        fileName = os.path.join(os.getcwd(),fileName)
+        fileName = os.path.join(os.getcwd() + '/' + folderName,fileName)
         image = surface.makeImageSnapshot()
         if file_format == 'PNG':
             fileName = fileName + '.png'
@@ -889,5 +895,5 @@ def draw(surface, fileName = '', file_format = 'PNG'):
         #         imagepdf.save(fileNamepdf)
         #     finally:
         #         os.remove(fileName)
-
+    return image.toarray()
 
