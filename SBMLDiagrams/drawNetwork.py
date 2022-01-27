@@ -682,9 +682,10 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
                 if arrow_end_pt == None:
                     arrow_end_pt = _cross_point(center_position, c1, s1) 
-                    #rct_handle_position coulbe be inside the node
-                pts.append(arrow_end_pt)
-                _drawBezier(pts, lineColor, linewidth)
+                    #rct_handle_position could be inside the node
+                if arrow_end_pt != None:
+                    pts.append(arrow_end_pt)
+                    _drawBezier(pts, lineColor, linewidth)
             except:
                 rct_center_position =  [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
                 pts.append(rct_center_position)
