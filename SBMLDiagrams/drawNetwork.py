@@ -442,6 +442,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
     if floating_boundary_node == 'boundary':
         linewidth = 2*linewidth
     if complex_shape == '':
+        #shapeIdx = 0 
         if shapeIdx == 1: #rectangle
             if alias_node == 'alias':
                 _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = True)
@@ -519,7 +520,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
 
         center_position: list-1*2 matrix: position of the center.
 
-        handles: list-: position of the handles: [center handle, reactant handles, product handles].
+        handles: list-position of the handles: [center handle, reactant handles, product handles].
 
         rct_dimension: list-1*2 matrix: dimension/size of each reactant.
 
@@ -696,6 +697,9 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             try:
                 #to calculate the head point of the arrow called arrow_head_pt
                 arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
+                if arrow_head_pt == None: #prd_handle_position could be inside the node
+                    prd_handle_position = center_position
+                    arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
                 #draw the arrow:
                 points = [arrow_head_pt]
                 dis_rct_arc_center = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)      
@@ -708,6 +712,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 pts_y_r = pts_y_m - (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/dis_rct_arc_center
                 pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/dis_rct_arc_center
                 points.append([pts_x_r,pts_y_r])
+                #print(points)
                 _drawArrow(canvas, points, lineColor)
                 if arrow_head_pt != None:
                     pts.append(arrow_head_pt)
@@ -804,7 +809,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
         twidth = font.measureText(id)
         #theight = font.getSize() 
         theight = font.getSpacing()
-        if dimension[0] > twidth and dimension[1] > theight:
+        if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
             position_x = position[0] + .5*(dimension[0] - twidth)
             position_y = position[1] + dimension[1] - .5*(dimension[1] - theight)
             stop_flag = 1

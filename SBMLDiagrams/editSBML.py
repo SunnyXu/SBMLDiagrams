@@ -446,6 +446,54 @@ def _setNodeTextLineWidth(df, id, txt_line_width):
 
     return df_temp
 
+def _setReactionCenterPosition(df, id, position):
+
+    """
+    Set the reaction center position.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-reaction id.
+        
+        position: list-1*2 matrix-[position_x, position_y]
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_ReactionData_temp = df[2].copy()
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    for i in range(len(idx_list)):
+        df_ReactionData_temp.at[idx_list[i],"center_pos"] = position
+    df_temp = (df[0], df[1], df_ReactionData_temp)
+    
+    return df_temp
+
+def _setReactionHandlePositions(df, id, position):
+
+    """
+    Set the reaction handle positions.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-reaction id.
+        
+        position: list-position of the handles: [center handle, reactant handles, product handles].
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_ReactionData_temp = df[2].copy()
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    for i in range(len(idx_list)):
+        df_ReactionData_temp.at[idx_list[i],"handles"] = position
+    df_temp = (df[0], df[1], df_ReactionData_temp)
+    
+    return df_temp
+
 def _setReactionFillColor(df, id, fill_color, opacity):
 
     """
