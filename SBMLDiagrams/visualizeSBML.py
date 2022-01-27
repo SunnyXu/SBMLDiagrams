@@ -6,11 +6,9 @@
 Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu
 """
-
 import os
 import skia
 import simplesbml
-from libsbml import *
 import math
 import random as _random
 import string
