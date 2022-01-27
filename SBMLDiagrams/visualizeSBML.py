@@ -16,6 +16,59 @@ import random as _random
 import string
 from SBMLDiagrams import drawNetwork
 from SBMLDiagrams import styleSBML
+from collections import defaultdict
+import numpy as np
+import cv2
+
+def animate(simulationData, baseImageArray, posDict, numDigit = 5, folderName = 'animation', offset = 20,
+            textColor = None, textWidth = None, textDimension = None):
+    """
+    Animation for tellurium simulation
+
+    Args:
+        simulationData: numpy array for the simulation data
+
+        baseImageArray: base image array used for generating the change
+
+        posDict: position dictionary for the Floating Species
+
+        numDigit: number of digits saved for display
+
+        folderName: generated images folder place
+
+        offset: text offset from the center of the compartment
+
+        textColor: text color
+
+        textWidth: text width
+
+        textDimension: text dimension size
+
+    Returns:
+    """
+    for i in range(len(simulationData)):
+        surface = skia.Surface(np.array(baseImageArray, copy=True))
+        canvas = surface.getCanvas()
+        for letter, pos in posDict.items():
+            new_pos = [pos[0] - offset, pos[1] - offset]
+            drawNetwork.addText(canvas, str(simulationData[letter][i])[:numDigit], 
+                                new_pos, [40, 60], (0, 0, 0, 255), 1.)
+        drawNetwork.draw(surface, folderName='animation', fileName='a' + str(i), file_format='PNG')
+        
+    imgs = []
+    files = sorted(os.listdir(os.getcwd() + '/' + folderName))
+    for filename in files:
+        imgName = os.path.join(os.getcwd() + '/' + folderName, filename)
+        img = cv2.imread(imgName)
+        height, width, layers = img.shape
+        size = (width, height)
+        imgs.append(img)
+
+    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, "output.mp4"), cv2.VideoWriter_fourcc(*'MP4V'), 1, size)
+
+    for i in range(len(imgs)):
+        out.write(imgs[i])
+    out.release()
 
 def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', newStyleClass = None):
 
@@ -40,6 +93,9 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
         color_style: pre-existing color style for the graph
 
         newStyleClass: user-customized new color style
+
+    Returns:
+        The tuple of base image's array, position dictionary for the Floating Species, color style of the image
     """
 
     def draw_on_canvas(canvas):
@@ -59,8 +115,9 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
         spec_position_list = []
         spec_text_position_list = []
         spec_text_dimension_list = []
+        floatingNodes_pos_dict = defaultdict(list)
         shapeIdx = 1
-        
+
         #set the default values without render info:
         color_style = newStyleClass
         if not newStyleClass:
@@ -70,17 +127,17 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
         reaction_line_width = 3.0
         text_line_width = 1.
 
-        try: #invalid sbml    
+        try: #invalid sbml
             ### from here for layout ###
             document = readSBMLFromString(sbmlStr)
             model_layout = document.getModel()
             mplugin = model_layout.getPlugin("layout")
             if mplugin is not None:
-                layout = mplugin.getLayout(0)    
+                layout = mplugin.getLayout(0)
                 if layout is not None:
                     numCompGlyphs = layout.getNumCompartmentGlyphs()
                     numSpecGlyphs = layout.getNumSpeciesGlyphs()
-                    numReactionGlyphs = layout.getNumReactionGlyphs() 
+                    numReactionGlyphs = layout.getNumReactionGlyphs()
                     for i in range(numCompGlyphs):
                         compGlyph = layout.getCompartmentGlyph(i)
                         temp_id = compGlyph.getCompartmentId()
@@ -92,7 +149,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         pos_y = boundingbox.getY()
                         comp_dimension_list.append([width,height])
                         comp_position_list.append([pos_x,pos_y])
-                        
+
                     reaction_id_list = []
                     reaction_center_list = []
                     kinetics_list = []
@@ -103,7 +160,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                     prd_specGlyph_handle_list = []
                     reaction_mod_list = []
                     mod_specGlyph_list = []
-                    
+
                     for i in range(numReactionGlyphs):
                         reactionGlyph = layout.getReactionGlyph(i)
                         curve = reactionGlyph.getCurve()
@@ -116,34 +173,34 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         reaction = model_layout.getReaction(reaction_id)
                         kinetics = reaction.getKineticLaw().getFormula()
                         kinetics_list.append(kinetics)
-                        
+
                         temp_mod_list = []
                         for j in range(len(reaction.getListOfModifiers())):
                             modSpecRef = reaction.getModifier(j)
                             temp_mod_list.append(modSpecRef.getSpecies())
-                        reaction_mod_list.append(temp_mod_list)       
-                        
+                        reaction_mod_list.append(temp_mod_list)
+
                         numSpecRefGlyphs = reactionGlyph.getNumSpeciesReferenceGlyphs()
 
                         #rct_specGlyph_temp_list = []
                         #prd_specGlyph_temp_list = []
                         rct_specGlyph_handles_temp_list = []
-                        prd_specGlyph_handles_temp_list = [] 
+                        prd_specGlyph_handles_temp_list = []
                         mod_specGlyph_temp_list = []
 
                         for j in range(numSpecRefGlyphs):
                             specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
                             #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
-                                                
-                            curve = specRefGlyph.getCurve()                             
+
+                            curve = specRefGlyph.getCurve()
                             for segment in curve.getListOfCurveSegments():
                                     # print(segment.getStart().getXOffset())
                                     # print(segment.getStart().getYOffset())
                                     # print(segment.getEnd().getXOffset())
                                     # print(segment.getEnd().getYOffset())
                                     try:
-                                        center_handle = [segment.getBasePoint1().getXOffset(), 
-                                                    segment.getBasePoint1().getYOffset()]                                
+                                        center_handle = [segment.getBasePoint1().getXOffset(),
+                                                    segment.getBasePoint1().getYOffset()]
                                         spec_handle = [segment.getBasePoint2().getXOffset(),
                                                 segment.getBasePoint2().getYOffset()]
                                     except:
@@ -153,7 +210,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                             role = specRefGlyph.getRoleString()
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
                             specGlyph = layout.getSpeciesGlyph(specGlyph_id)
-                            
+
                             for k in range(numSpecGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
                                 temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
@@ -166,16 +223,16 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                             height = spec_boundingbox.getHeight()
                             pos_x = spec_boundingbox.getX()
                             pos_y = spec_boundingbox.getY()
-                            
+
                             try:
                                 text_boundingbox = textGlyph.getBoundingBox()
                                 text_pos_x = text_boundingbox.getX()
-                                text_pos_y = text_boundingbox.getY()   
+                                text_pos_y = text_boundingbox.getY()
                                 text_dim_w = text_boundingbox.getWidth()
                                 text_dim_h = text_boundingbox.getHeight()
                             except:
                                 text_pos_x = pos_x
-                                text_pos_y = pos_y   
+                                text_pos_y = pos_y
                                 text_dim_w = width
                                 text_dim_h = height
 
@@ -196,12 +253,12 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                 prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
                             elif role == "modifier": #it is a modifier
                                 mod_specGlyph_temp_list.append(specGlyph_id)
-                            
+
                         #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                         #prd_specGlyph_list.append(prd_specGlyph_temp_list)
                         reaction_center_handle_list.append(center_handle)
                         rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
-                        prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
+                        prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list)
                         mod_specGlyph_list.append(mod_specGlyph_temp_list)
 
                     #orphan nodes
@@ -228,12 +285,12 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                             try:
                                 text_boundingbox = textGlyph.getBoundingBox()
                                 text_pos_x = text_boundingbox.getX()
-                                text_pos_y = text_boundingbox.getY()   
+                                text_pos_y = text_boundingbox.getY()
                                 text_dim_w = text_boundingbox.getWidth()
                                 text_dim_h = text_boundingbox.getHeight()
                             except:
                                 text_pos_x = pos_x
-                                text_pos_y = pos_y   
+                                text_pos_y = pos_y
                                 text_dim_w = width
                                 text_dim_h = height
                             spec_text_position_list.append([text_pos_x, text_pos_y])
@@ -319,7 +376,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                 #print(group)
                                 text_render.append([idList,color_style.getTextLineColor(),text_line_width])
 
-        #try: 
+        #try:
             model = simplesbml.loadSBMLStr(sbmlStr)
             numFloatingNodes  = model.getNumFloatingSpecies()
             FloatingNodes_ids = model.getListOfFloatingSpecies()
@@ -348,7 +405,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                                    color_style.getCompFillColor(), comp_border_width)
                     else:
                         if len(comp_id_list) != 0:
-                        #if mplugin is not None:                    
+                        #if mplugin is not None:
                             for j in range(numCompGlyphs):
                                 if comp_id_list[j] == temp_id:
                                     dimension = comp_dimension_list[j]
@@ -374,7 +431,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                     #src = []
                     #dst = []
                     src_position = []
-                    src_dimension = [] 
+                    src_dimension = []
                     dst_position = []
                     dst_dimension = []
                     mod_position = []
@@ -426,12 +483,12 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         if temp_id == rxn_render[j][0]:
                             color_style.setReactionLineColor(rxn_render[j][1])
                             reaction_line_width = rxn_render[j][2]
-                    try: 
+                    try:
                         center_position = reaction_center_list[i]
                         center_handle = reaction_center_handle_list[i]
                         handles = [center_position]
                         handles.extend(src_handle)
-                        handles.extend(dst_handle)   
+                        handles.extend(dst_handle)
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
                         color_style.getReactionLineColor(), reaction_line_width,
@@ -445,7 +502,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         for j in range(prd_num):
                             center_x += dst_position[j][0]+.5*dst_dimension[j][0]
                             center_y += dst_position[j][1]+.5*dst_dimension[j][1]
-                        center_x = center_x/(rct_num + prd_num) 
+                        center_x = center_x/(rct_num + prd_num)
                         center_y = center_y/(rct_num + prd_num)
                         center_position = [center_x, center_y]
                         handles = [center_position]
@@ -461,7 +518,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
                         color_style.getReactionLineColor(), reaction_line_width,
                         reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
-                            
+
                 id_list = []
                 # orphan nodes have been considered, so numSpec_in_reaction should equals to numSpecGlyphs
                 # if numSpecGlyphs > numSpec_in_reaction:
@@ -486,12 +543,13 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                     if temp_id == text_render[k][0]:
                                         color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
+                                floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width, shapeIdx, complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width)
-                                id_list.append(temp_id)                    
+                                id_list.append(temp_id)
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
@@ -503,6 +561,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                     if temp_id == text_render[k][0]:
                                         color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
+                                floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width, shapeIdx, complex_shape=complexShape)
@@ -538,7 +597,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         color_style.setTextLineColor(text_render[k][1])
-                                        text_line_width = text_render[k][2] 
+                                        text_line_width = text_render[k][2]
                                 drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width, shapeIdx, complex_shape=complexShape)
@@ -548,7 +607,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
             else: # there is no layout information, assign position randomly and size as default
                 comp_id_list = Comps_ids
-                nodeIdx_temp = 0 #to track the node index    
+                nodeIdx_temp = 0 #to track the node index
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
@@ -557,7 +616,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                     drawNetwork.addCompartment(canvas, position, dimension,
                                                 color_style.getCompBorderColor(), color_style.getCompFillColor(),
                                                comp_border_width)
-                spec_id_list = [] 
+                spec_id_list = []
                 spec_dimension_list = []
                 spec_position_list = []
                 for i in range (numFloatingNodes):
@@ -597,7 +656,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         for k in range(numNodes):
                             if spec_id_list[k] == prd_id:
                                 dst_position.append(spec_position_list[k])
-                                dst_dimension.append(spec_dimension_list[k])  
+                                dst_dimension.append(spec_dimension_list[k])
                     modifiers = model.getListOfModifiers(temp_id)
                     for j in range(mod_num):
                         mod_id = modifiers[j]
@@ -613,7 +672,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                     for j in range(prd_num):
                         center_x += dst_position[j][0]+.5*dst_dimension[j][0]
                         center_y += dst_position[j][1]+.5*dst_dimension[j][1]
-                    center_x = center_x/(rct_num + prd_num) 
+                    center_x = center_x/(rct_num + prd_num)
                     center_y = center_y/(rct_num + prd_num)
                     center_position = [center_x, center_y]
                     handles = [center_position]
@@ -629,7 +688,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                     center_position, handles, src_dimension, dst_dimension, mod_dimension,
                     color_style.getReactionLineColor(), reaction_line_width,
                     reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
-            
+
                 for i in range (numFloatingNodes):
                     temp_id = FloatingNodes_ids[i]
                     for k in range(numNodes):
@@ -640,6 +699,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width,
                                         shapeIdx, complex_shape=complexShape)
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), text_line_width)
+                    floatingNodes_pos_dict['[' + temp_id + ']'] = position
                 for i in range (numBoundaryNodes):
                     temp_id = BoundaryNodes_ids[i]
                     for k in range(numNodes):
@@ -653,12 +713,14 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
         except Exception as e:
             print(e)
+        return floatingNodes_pos_dict, color_style
 
+    baseImageArray = []
     if fileFormat == "PNG" or fileFormat == "JPEG":
         surface = skia.Surface(imageSize[0], imageSize[1])
         canvas = surface.getCanvas()
-        draw_on_canvas(canvas)
-        drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat)
+        pos_dict, color_style = draw_on_canvas(canvas)
+        baseImageArray = drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat)
     else: #fileFormat == "PDF"
         if output_fileName == '':
             random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
@@ -670,7 +732,8 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
         stream = skia.FILEWStream(fileNamepdf)
         with skia.PDF.MakeDocument(stream) as document:
             with document.page(imageSize[0], imageSize[1]) as canvas:
-                draw_on_canvas(canvas)
+                pos_dict, color_style = draw_on_canvas(canvas)
+    return baseImageArray, pos_dict, color_style
 
 
 
