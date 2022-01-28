@@ -119,8 +119,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     species.setInitialConcentration(float(df_NodeData.iloc[i]['concentration']))	
                     species.setHasOnlySubstanceUnits(False)
                     species.setBoundaryCondition(False)
-                    species.setConstant(False)             
-                    if df_NodeData.iloc[i]['floating_node'] == False:
+                    species.setConstant(False)            
+                    if df_NodeData.iloc[i]['floating_node'] == 'FALSE':
                         species.setBoundaryCondition(True)
                         species.setConstant(True)   
         else: #set default compartment
@@ -142,7 +142,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     species.setHasOnlySubstanceUnits(False)
                     species.setBoundaryCondition(False)
                     species.setConstant(False)             
-                    if df_NodeData.iloc[i]['floating_node'] == False:
+                    if df_NodeData.iloc[i]['floating_node'] == 'FALSE':
                         species.setBoundaryCondition(True)
                         species.setConstant(True)
         # create reactions:
