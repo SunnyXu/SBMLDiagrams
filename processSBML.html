@@ -365,6 +365,19 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="SBMLDiagrams.processSBML.load.getReactionCenterPosition">
+<code class="sig-name descname">getReactionCenterPosition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.getReactionCenterPosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the center position of a reaction with its certain reaction id</p>
+<dl>
+<dt>Args: </dt><dd><p>id: str-the id of the reaction</p>
+</dd>
+<dt>Returns:</dt><dd><p>line_center_position_list: list of center_position</p>
+<p>center_position:  list-1*2 matrix: position of the center</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="SBMLDiagrams.processSBML.load.getReactionFillColor">
 <code class="sig-name descname">getReactionFillColor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.getReactionFillColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the fill color of a reaction with its certain reaction id</p>
@@ -373,6 +386,19 @@
 </dd>
 <dt>Returns:</dt><dd><p>fill_color_list: list of fill_color</p>
 <p>fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ‘’), hex str (8 digits)]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="SBMLDiagrams.processSBML.load.getReactionHandlePositions">
+<code class="sig-name descname">getReactionHandlePositions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.getReactionHandlePositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the handle positions of a reaction with its certain reaction id</p>
+<dl>
+<dt>Args: </dt><dd><p>id: str-the id of the reaction</p>
+</dd>
+<dt>Returns:</dt><dd><p>line_handle_positions_list: list of handle_positions</p>
+<p>handle_positions: list-position of the handles: [center handle, reactant handles, product handles].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -609,6 +635,27 @@
 </dd></dl>
 
 <dl class="py method">
+<dt id="SBMLDiagrams.processSBML.load.setReactionCenterPosition">
+<code class="sig-name descname">setReactionCenterPosition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">position</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setReactionCenterPosition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the reaction center position.</p>
+<dl>
+<dt>Args:  </dt><dd><p>id: str-reaction id.</p>
+<p>position: list-1*2 matrix-[position_x, position_y].</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="SBMLDiagrams.processSBML.load.setReactionDefaultCenterAndHandlePositions">
+<code class="sig-name descname">setReactionDefaultCenterAndHandlePositions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setReactionDefaultCenterAndHandlePositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set detault center and handle positions.</p>
+<dl class="simple">
+<dt>Args:  </dt><dd><p>id: str-reaction id.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="SBMLDiagrams.processSBML.load.setReactionFillColor">
 <code class="sig-name descname">setReactionFillColor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">fill_color</span></em>, <em class="sig-param"><span class="n">opacity</span><span class="o">=</span><span class="default_value">1.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setReactionFillColor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the reaction fill color.</p>
@@ -616,6 +663,17 @@
 <dt>Args:  </dt><dd><p>id: str-reaction id.</p>
 <p>fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).</p>
 <p>opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="SBMLDiagrams.processSBML.load.setReactionHandlePositions">
+<code class="sig-name descname">setReactionHandlePositions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">position</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setReactionHandlePositions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the reaction handle positions.</p>
+<dl>
+<dt>Args:  </dt><dd><p>id: str-reaction id.</p>
+<p>position: list-position of the handles: [center handle, reactant handles, product handles].</p>
 </dd>
 </dl>
 </dd></dl>
