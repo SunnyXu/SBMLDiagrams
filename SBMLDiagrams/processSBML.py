@@ -110,7 +110,7 @@ def _rgb_to_color(rgb):
 
     return color
 
-def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [1000, 1000]): 
+def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [3900, 2400]): 
     """
     Save the information of an SBML file to a set of dataframe.
 
@@ -1962,7 +1962,7 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     # filename = "mass_action_rxn.xml"
-    filename = "test.xml" 
+    # filename = "test.xml" 
     # filename = "no_rxn.xml"
     # filename = "test_4.xml"
     # filename = "feedback.xml"
@@ -1970,6 +1970,7 @@ if __name__ == '__main__':
     # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
+    filename = "5nodes.sbml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -1992,7 +1993,7 @@ if __name__ == '__main__':
 
     # print(df.isFloatingNode("x_1"))
     # print(df.getNodePosition("x_1"))
-    print(df.getNodeSize("x_1"))
+    # print(df.getNodeSize("x_1"))
     # print(df.getNodeShape("x_1"))
     # print(df.getNodeTextPosition("x_1"))
     # print(df.getNodeTextSize("x_1"))
@@ -2034,11 +2035,11 @@ if __name__ == '__main__':
     # df.setBezierReactionType("r_0", True)
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
     # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
-    print("center_position after:", df.getReactionCenterPosition("r_0"))
-    print("handle_position after:", df.getReactionHandlePositions("r_0"))
-    df.setReactionDefaultCenterAndHandlePositions("r_0")
-    print("center_position after:", df.getReactionCenterPosition("r_0"))
-    print("handle_position after:", df.getReactionHandlePositions("r_0"))
+    # print("center_position after:", df.getReactionCenterPosition("r_0"))
+    # print("handle_position after:", df.getReactionHandlePositions("r_0"))
+    # df.setReactionDefaultCenterAndHandlePositions("r_0")
+    # print("center_position after:", df.getReactionCenterPosition("r_0"))
+    # print("handle_position after:", df.getReactionHandlePositions("r_0"))
 
 
     sbmlStr_layout_render = df.export()
