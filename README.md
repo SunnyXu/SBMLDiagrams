@@ -14,7 +14,7 @@ We also plan to interface SBMLDiagrams to NetworkX to exploit the variety of lay
 
 Here is a figure example visualized by SBMLDiagrams:
 
-![alt text](https://github.com/SunnyXu/SBMLDiagrams/blob/main/docs/Figures/Jana_WolfGlycolysis.png?raw=true)
+![alt text](https://github.com/SunnyXu/SBMLDiagrams/blob/main/docs/Figures/Jana_WolfGlycolysis.png?raw=true =250x250)
 
 Please see more figure examples in the documentation.
 
