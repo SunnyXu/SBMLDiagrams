@@ -731,6 +731,9 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             try:
                 #to calculate the end point of the arrow called arrow_end_pt
                 arrow_end_pt = _cross_point(arcCenter, c1, s1) 
+                if arrow_end_pt == None:
+                    #arcCenter is inside the node
+                    arrow_end_pt = [c1[0]+.5*s1[0],c1[1]+.5*s1[1]]
             except:
                 pass
             _drawLine(canvas, arrow_end_pt[0], arrow_end_pt[1], arcCenter[0], arcCenter[1], lineColor, linewidth)
@@ -740,6 +743,9 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             try:
                 #to calculate the head point of the arrow called arrow_head_pt
                 arrow_head_pt = _cross_point(arcCenter, c2, s2) 
+                if arrow_head_pt == None:
+                    #arcCenter is inside the node
+                    arrow_head_pt = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
                 #draw the arrow:
                 points = [arrow_head_pt]
                 dis_rct_arc_center = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)      
