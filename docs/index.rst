@@ -33,9 +33,9 @@ To install SBMLDiagrams use
    
    pip install SBMLDiagrams
 
---------
-Examples
---------
+-------------
+Code Examples
+-------------
 
 1) Visualize an SBML file to a PNG.
 
@@ -89,6 +89,34 @@ Examples
    f.write(sbmlStr_layout_render)
    f.close()
 
+---------------
+Figure Examples
+---------------
+
+1) An example without compartment. There are different shapes of nodes with different fill colors. 
+Texts can be placed outside the nodes with designed positions. There are also reactions with different 
+fill colors. x_1 is an example of alias node.
+
+.. image:: Figures/test_no_comp.png
+  :width: 400
 
 
+2) An example with compartments. The compartments are filled with different colors. There are 
+different shapes of nodes with different border colors. x_1 and x_5 are examples of alias nodes.
+
+.. image:: Figures/test_comp.png
+  :width: 400
+
+
+3) An example with only nodes (no reactions in the network). There are five types of node shapes
+ with different fill colors and border colors.
+
+.. image:: Figures/node_grid.png
+  :width: 400
+
+
+4) An example with long text contents.
+
+.. image:: Figures/Jana_WolfGlycolysis.png
+  :width: 400
 
