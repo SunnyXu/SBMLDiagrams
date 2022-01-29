@@ -41,7 +41,7 @@ Code Examples
 
 .. code-block:: python
 
-   from SBMLDiagrams.visualizeSBML import *
+   from SBMLDiagrams import visualizeSBML
    import os 
 
    dirname = "path//to"
@@ -54,14 +54,14 @@ Code Examples
    if len(sbmlStr) == 0:
       print("Empty SBML!")
    else:
-      display(sbmlStr,fileFormat = 'PNG')
+      visualizeSBML.display(sbmlStr,fileFormat = 'PNG')
 
 
 2) Import, edit and write to an SBML file.
 
 .. code-block:: python
 
-   from SBMLDiagrams.processSBML import *
+   from SBMLDiagrams import processSBML
    import os
 
    dirname = "path//to"
@@ -71,7 +71,7 @@ Code Examples
    sbmlStr = f.read()
    f.close()
 
-   df = load(sbmlStr)
+   df = processSBML.load(sbmlStr)
 
    print(df.getCompartmentPosition("compartment_id"))
    print(df.getNodeFillColor("node_id"))
