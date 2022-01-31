@@ -165,11 +165,15 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [39
     text_line_color = [0, 0, 0, 255]
     text_line_width = 1.
     
+    mplugin = None
     try: #invalid sbml
         ### from here for layout ###
         document = libsbml.readSBMLFromString(sbmlStr)
         model_layout = document.getModel()
-        mplugin = model_layout.getPlugin("layout")
+        try:
+            mplugin = model_layout.getPlugin("layout")
+        except:
+            print("There is no layout.")
         if mplugin is not None:
             layout = mplugin.getLayout(0)    
             if layout is not None:
@@ -1984,7 +1988,8 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    # df = load(sbmlStr)
+    #df = load(sbmlStr)
+    #df = load("dfgdg")
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
