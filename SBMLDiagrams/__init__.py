@@ -1,9 +1,9 @@
-try:
-  from . import _version
-except:
-    from SBMLDiagrams import _version
+# try:
+#   from . import _version
+# except:
+#     from SBMLDiagrams import _version
 
-__version__ = _version.__version__
+# __version__ = _version.__version__
 
 try:
     from . import visualizeSBML
@@ -19,3 +19,5 @@ except:
     from SBMLDiagrams import editSBML
     from SBMLDiagrams import exportSBML
     from SBMLDiagrams import styleSBML
+
+from SBMLDiagrams._version import __version__
