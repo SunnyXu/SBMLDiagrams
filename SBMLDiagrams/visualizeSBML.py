@@ -343,36 +343,31 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
-                    if temp_id == "_compartment_default_":
-                        dimension = imageSize
-                        position = [0, 0]
-                        color_style.setCompBorderColor((255, 255, 255, 255))
-                        color_style.setCompFillColor((255, 255, 255, 255))
-                        drawNetwork.addCompartment(canvas, position, dimension,
-                                                color_style.getCompBorderColor(),
-                                                   color_style.getCompFillColor(), comp_border_width)
-                    else:
-                        if len(comp_id_list) != 0:
-                        #if mplugin is not None:                    
-                            for j in range(numCompGlyphs):
-                                if comp_id_list[j] == temp_id:
-                                    dimension = comp_dimension_list[j]
-                                    position = comp_position_list[j]
-                            for j in range(len(comp_render)):
-                                if temp_id == comp_render[j][0]:
-                                    color_style.setCompFillColor(comp_render[j][1])
-                                    color_style.setCompBorderColor(comp_render[j][2])
-                                    comp_border_width = comp_render[j][3]
-                        else:# no layout info about compartment,
-                            # then the whole size of the canvas is the compartment size
-                            # modify the compartment size using the max_rec function above
+
+                    if len(comp_id_list) != 0:
+                    #if mplugin is not None:       
+                        if temp_id == "_compartment_default_":
                             dimension = imageSize
-                            position = [0,0]
-                            color_style.setCompBorderColor((255, 255, 255, 255))
-                            color_style.setCompFillColor((255, 255, 255, 255))
-                        drawNetwork.addCompartment(canvas, position, dimension,
-                                                color_style.getCompBorderColor(), color_style.getCompFillColor(),
-                                                   comp_border_width)
+                            position = [0, 0]             
+                        for j in range(numCompGlyphs):
+                            if comp_id_list[j] == temp_id:
+                                dimension = comp_dimension_list[j]
+                                position = comp_position_list[j]
+                        for j in range(len(comp_render)):
+                            if temp_id == comp_render[j][0]:
+                                color_style.setCompFillColor(comp_render[j][1])
+                                color_style.setCompBorderColor(comp_render[j][2])
+                                comp_border_width = comp_render[j][3]
+                    else:# no layout info about compartment,
+                        # then the whole size of the canvas is the compartment size
+                        dimension = imageSize
+                        position = [0,0]
+                        #allows users to set the color of the "_compartment_default" as the canvas
+                        #color_style.setCompBorderColor((255, 255, 255, 255))
+                        #color_style.setCompFillColor((255, 255, 255, 255))
+                    drawNetwork.addCompartment(canvas, position, dimension,
+                                            color_style.getCompBorderColor(), color_style.getCompFillColor(),
+                                                comp_border_width)
                 #add reactions before adding nodes to help with the line positions
                 numSpec_in_reaction = len(spec_specGlyph_id_list)
                 for i in range (numReactionGlyphs):
