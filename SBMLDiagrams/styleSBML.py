@@ -1,3 +1,7 @@
+"""
+@author: Jessie Jiang
+"""
+
 class Style:
     def __init__(self, styleName):
         if styleName == 'default':
