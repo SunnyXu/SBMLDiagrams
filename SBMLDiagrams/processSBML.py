@@ -9,7 +9,7 @@ Created on Mon Aug 23 13:25:34 2021
 
 import os
 import simplesbml
-from libsbml import *
+import libsbml
 import math
 import random as _random
 import pandas as pd
@@ -167,7 +167,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [39
     
     try: #invalid sbml
         ### from here for layout ###
-        document = readSBMLFromString(sbmlStr)
+        document = libsbml.readSBMLFromString(sbmlStr)
         model_layout = document.getModel()
         mplugin = model_layout.getPlugin("layout")
         if mplugin is not None:
@@ -1962,7 +1962,7 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     # filename = "mass_action_rxn.xml"
-    # filename = "test.xml" 
+    filename = "test.xml" 
     # filename = "no_rxn.xml"
     # filename = "test_4.xml"
     # filename = "feedback.xml"
@@ -1970,20 +1970,21 @@ if __name__ == '__main__':
     # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
-    filename = "5nodes.sbml"
+    # filename = "5nodes.sbml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('test.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    writer.save()
 
-    df = load(sbmlStr)
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('test.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # writer.save()
+
+    # df = load(sbmlStr)
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2042,16 +2043,16 @@ if __name__ == '__main__':
     # print("handle_position after:", df.getReactionHandlePositions("r_0"))
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    if len(sbmlStr_layout_render) == 0:
-        print("empty sbml")
-    else:
-        visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
+    # if len(sbmlStr_layout_render) == 0:
+    #     print("empty sbml")
+    # else:
+    #     visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
 
 
 

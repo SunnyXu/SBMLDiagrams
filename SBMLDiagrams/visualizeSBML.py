@@ -10,7 +10,7 @@ Created on Mon Aug 23 13:25:34 2021
 import os
 import skia
 import simplesbml
-from libsbml import *
+import libsbml
 import math
 import random as _random
 import string
@@ -76,7 +76,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
 
         try: #invalid sbml    
             ### from here for layout ###
-            document = readSBMLFromString(sbmlStr)
+            document = libsbml.readSBMLFromString(sbmlStr)
             model_layout = document.getModel()
             mplugin = model_layout.getPlugin("layout")
             if mplugin is not None:
@@ -470,7 +470,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
                         color_style.getReactionLineColor(), reaction_line_width,
                         reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
-                            
+          
                 id_list = []
                 # orphan nodes have been considered, so numSpec_in_reaction should equals to numSpecGlyphs
                 # if numSpecGlyphs > numSpec_in_reaction:
@@ -495,7 +495,6 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                                     if temp_id == text_render[k][0]:
                                         color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
-                                print("test")
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width, shapeIdx, complex_shape = complexShape)
@@ -697,8 +696,12 @@ if __name__ == '__main__':
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
-    #filename = "Jana_WolfGlycolysis.xml"
-    filename = "100nodes.sbml"
+    filename = "Jana_WolfGlycolysis.xml"
+    #filename = "BIOMD0000000006.xml"
+    #filename = "BorisEJB.xml"
+    
+    #filename = "100nodes.sbml"
+    #filename = "E_coli_Millard2016.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -707,7 +710,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        display(sbmlStr, fileFormat='PNG', reactionLineType='linear')
+        display(sbmlStr, fileFormat='PNG', reactionLineType='bezier', imageSize=[700,900])
 
 
 
