@@ -30,7 +30,7 @@ setup(
     description='Visualize, edit and write SBML files.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    author='Jin Xu',
+    author='Jin Xu, Jessie Jiang, Herbert M. Sauro',
     author_email='jxu2019@uw.edu',
     url='https://github.com/SunnyXu/SBMLDiagrams',
     license='MIT License',

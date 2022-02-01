@@ -9,13 +9,19 @@ Created on Mon Aug 23 13:25:34 2021
 
 from inspect import Parameter
 import os
-from libsbml import * # does not have to import in the main.py too
+import libsbml
 import re # to process kinetic_law string
 import pandas as pd
 import math
 
 
-def _DFToSBML(df):
+def _DFToSBML(df, compartmentDefaultSize = [3900,2400]):
+
+    # writer = pd.ExcelWriter('5nodes.xlsx')
+    # df[0].to_excel(writer, sheet_name='CompartmentData')
+    # df[1].to_excel(writer, sheet_name='NodeData')
+    # df[2].to_excel(writer, sheet_name='ReactionData')
+    # writer.save()
 
     """
     Write the information of a set of dataframe to an SBML string. 
@@ -68,9 +74,9 @@ def _DFToSBML(df):
         # 
         #    SBMLNamespaces sbmlns(3,1,"layout",1,"LAYOUT")
         # 
-        sbmlns = SBMLNamespaces(3, 1, "layout", 1)
+        sbmlns = libsbml.SBMLNamespaces(3, 1, "layout", 1)
         # create the document
-        document = SBMLDocument(sbmlns)
+        document = libsbml.SBMLDocument(sbmlns)
         # set the "required" attribute of layout package  to "true"
         document.setPkgRequired("layout", False)  
 
@@ -113,8 +119,8 @@ def _DFToSBML(df):
                     species.setInitialConcentration(float(df_NodeData.iloc[i]['concentration']))	
                     species.setHasOnlySubstanceUnits(False)
                     species.setBoundaryCondition(False)
-                    species.setConstant(False)             
-                    if df_NodeData.iloc[i]['floating_node'] == False:
+                    species.setConstant(False)            
+                    if df_NodeData.iloc[i]['floating_node'] == 'FALSE':
                         species.setBoundaryCondition(True)
                         species.setConstant(True)   
         else: #set default compartment
@@ -136,7 +142,7 @@ def _DFToSBML(df):
                     species.setHasOnlySubstanceUnits(False)
                     species.setBoundaryCondition(False)
                     species.setConstant(False)             
-                    if df_NodeData.iloc[i]['floating_node'] == False:
+                    if df_NodeData.iloc[i]['floating_node'] == 'FALSE':
                         species.setBoundaryCondition(True)
                         species.setConstant(True)
         # create reactions:
@@ -256,16 +262,16 @@ def _DFToSBML(df):
                 ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
                 reference.setId(ref_id)
 
-        sbmlStr = writeSBMLToString(document) #sbmlStr is w/o layout or render info
+        sbmlStr = libsbml.writeSBMLToString(document) #sbmlStr is w/o layout or render info
 
         # create the Layout
 
         #
         # set the LayoutPkgNamespaces for Level 3 Version1 Layout Version 1
         #
-        layoutns = LayoutPkgNamespaces(3, 1, 1)
+        layoutns = libsbml.LayoutPkgNamespaces(3, 1, 1)
 
-        renderns = RenderPkgNamespaces(3, 1, 1)
+        renderns = libsbml.RenderPkgNamespaces(3, 1, 1)
 
         #
         # Get a LayoutModelPlugin object plugged in the model object.
@@ -293,7 +299,7 @@ def _DFToSBML(df):
         #
         layout = mplugin.createLayout()
         layout.setId("Layout_1")
-        layout.setDimensions(Dimensions(layoutns, 800.0, 800.0))
+        layout.setDimensions(libsbml.Dimensions(layoutns, 800.0, 800.0))
         # random network (40+800x, 40+800y)
 
         #create the CompartmentGlyph and SpeciesGlyphs
@@ -316,7 +322,7 @@ def _DFToSBML(df):
                     pos_y  = float(position_list[1])
                     width  = float(size_list[0])
                     height = float(size_list[1])
-                    compartmentGlyph.setBoundingBox(BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+                    compartmentGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
             for i in range(numNodes): 
                 spec_id = df_NodeData.iloc[i]['id']  
                 spec_index = df_NodeData.iloc[i]['idx']
@@ -336,7 +342,7 @@ def _DFToSBML(df):
                 pos_y  = float(position_list[1])
                 width  = float(size_list[0])
                 height = float(size_list[1])
-                speciesGlyph.setBoundingBox(BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+                speciesGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
 
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
@@ -352,7 +358,7 @@ def _DFToSBML(df):
                 pos_y_text  = float(position_list[1])
                 width_text  = float(size_list[0])
                 height_text = float(size_list[1])
-                textGlyph.setBoundingBox(BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
+                textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
                 textGlyph.setOriginOfTextId(specG_id)
                 textGlyph.setGraphicalObjectId(specG_id)
         else:#there is no compartment  
@@ -364,9 +370,9 @@ def _DFToSBML(df):
             bb_id  = "bb_" + comp_id
             pos_x  = 0
             pos_y  = 0
-            width  = 1000
-            height = 1000
-            compartmentGlyph.setBoundingBox(BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+            width  = compartmentDefaultSize[0]
+            height = compartmentDefaultSize[1]
+            compartmentGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
         
             for i in range(numNodes):
                 spec_id = df_NodeData.iloc[i]['id']  
@@ -387,7 +393,7 @@ def _DFToSBML(df):
                 pos_y  = float(position_list[1])
                 width  = float(size_list[0])
                 height = float(size_list[1])
-                speciesGlyph.setBoundingBox(BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+                speciesGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
 
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
@@ -403,7 +409,7 @@ def _DFToSBML(df):
                 width_text  = float(size_list[0])
                 height_text = float(size_list[1])
                 bb_id  = "bb_spec_text_" + spec_id + '_idx_' + str(spec_index)
-                textGlyph.setBoundingBox(BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
+                textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
                 textGlyph.setOriginOfTextId(specG_id)
                 textGlyph.setGraphicalObjectId(specG_id)
 
@@ -518,8 +524,8 @@ def _DFToSBML(df):
 
             reactionCurve = reactionGlyph.getCurve()
             ls = reactionCurve.createLineSegment()
-            ls.setStart(Point(layoutns, center_value[0], center_value[1]))
-            ls.setEnd(Point(layoutns, center_value[0], center_value[1]))
+            ls.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
+            ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
 
             for j in range(rct_num):
                 ref_id = "SpecRef_" + reaction_id + "_rct" + str(j)
@@ -530,14 +536,14 @@ def _DFToSBML(df):
                 speciesReferenceGlyph.setId(specsRefG_id)
                 speciesReferenceGlyph.setSpeciesGlyphId(specG_id)
                 speciesReferenceGlyph.setSpeciesReferenceId(ref_id)
-                speciesReferenceGlyph.setRole(SPECIES_ROLE_SUBSTRATE)
+                speciesReferenceGlyph.setRole(libsbml.SPECIES_ROLE_SUBSTRATE)
                 speciesReferenceCurve = speciesReferenceGlyph.getCurve()
                 cb = speciesReferenceCurve.createCubicBezier()
-                cb.setStart(Point(layoutns, center_value[0], center_value[1]))
+                cb.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
                 handle1 = handles[0]
                 handle2 = handles[j+1]
-                cb.setBasePoint1(Point(layoutns, handle1[0], handle1[1]))
-                cb.setBasePoint2(Point(layoutns, handle2[0], handle2[1]))
+                cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle1[1]))
+                cb.setBasePoint2(libsbml.Point(layoutns, handle2[0], handle2[1]))
 
                 try:
                     src_position = list(df_NodeData.iloc[int(rct_list[j])]['position'][1:-1].split(","))
@@ -549,7 +555,7 @@ def _DFToSBML(df):
                 pos_y = float(src_position[1])
                 width = float(src_dimension[0])
                 height = float(src_dimension[1])
-                cb.setEnd(Point(layoutns, pos_x + 0.5*width, pos_y - 0.5*height))
+                cb.setEnd(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y - 0.5*height))
 
             for j in range(prd_num):
                 ref_id = "SpecRef_" + reaction_id + "_prd" + str(j)
@@ -559,15 +565,15 @@ def _DFToSBML(df):
                 speciesReferenceGlyph.setId(specsRefG_id)
                 speciesReferenceGlyph.setSpeciesGlyphId(specG_id)
                 speciesReferenceGlyph.setSpeciesReferenceId(ref_id)
-                speciesReferenceGlyph.setRole(SPECIES_ROLE_PRODUCT)
+                speciesReferenceGlyph.setRole(libsbml.SPECIES_ROLE_PRODUCT)
 
                 speciesReferenceCurve = speciesReferenceGlyph.getCurve()
                 cb = speciesReferenceCurve.createCubicBezier()
-                cb.setStart(Point(layoutns, center_value[0], center_value[1]))
+                cb.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
                 handle1 = handles[0]
                 handle2 = handles[rct_num+1+j]
-                cb.setBasePoint1(Point(layoutns, handle1[0], handle2[1]))
-                cb.setBasePoint2(Point(layoutns, handle2[0], handle2[1]))
+                cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle2[1]))
+                cb.setBasePoint2(libsbml.Point(layoutns, handle2[0], handle2[1]))
 
                 try:
                     dst_position = list(df_NodeData.iloc[int(prd_list[j])]['position'][1:-1].split(","))
@@ -580,7 +586,7 @@ def _DFToSBML(df):
                 pos_y = float(dst_position[1])
                 width = float(dst_dimension[0])
                 height = float(dst_dimension[1])
-                cb.setEnd(Point(layoutns, pos_x + 0.5*width, pos_y - 0.5*height))
+                cb.setEnd(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y - 0.5*height))
 
             for j in range(mod_num):
                 ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
@@ -590,12 +596,12 @@ def _DFToSBML(df):
                 speciesReferenceGlyph.setId(specsRefG_id)
                 speciesReferenceGlyph.setSpeciesGlyphId(specG_id)
                 speciesReferenceGlyph.setSpeciesReferenceId(ref_id)
-                speciesReferenceGlyph.setRole(SPECIES_ROLE_MODIFIER)
+                speciesReferenceGlyph.setRole(libsbml.SPECIES_ROLE_MODIFIER)
 
 
-        sbmlStr_layout = writeSBMLToString(document) #sbmlStr_layout is w layout info but w/o render info
+        sbmlStr_layout = libsbml.writeSBMLToString(document) #sbmlStr_layout is w layout info but w/o render info
 
-        doc = readSBMLFromString(sbmlStr_layout)
+        doc = libsbml.readSBMLFromString(sbmlStr_layout)
         model_layout = doc.getModel()
         mplugin = model_layout.getPlugin("layout")
 
@@ -604,7 +610,7 @@ def _DFToSBML(df):
 
         rPlugin = layout.getPlugin("render")
 
-        uri = RenderExtension.getXmlnsL2() if doc.getLevel() == 2 else RenderExtension.getXmlnsL3V1V1();
+        uri = libsbml.RenderExtension.getXmlnsL2() if doc.getLevel() == 2 else libsbml.RenderExtension.getXmlnsL3V1V1();
 
         #enable render package
         doc.enablePackage(uri, "render", True)
@@ -656,7 +662,8 @@ def _DFToSBML(df):
                     style.addType("COMPARTMENTGLYPH")
                     style.addId(comp_id)
                     rectangle = style.getGroup().createRectangle()
-                    rectangle.setCoordinatesAndSize(RelAbsVector(0,0),RelAbsVector(0,0),RelAbsVector(0,0),RelAbsVector(0,100),RelAbsVector(0,100))
+                    rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+                    libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
 
         else:
             comp_border_width = 2.
@@ -680,7 +687,8 @@ def _DFToSBML(df):
             style.addType("COMPARTMENTGLYPH")
             style.addId(comp_id)
             rectangle = style.getGroup().createRectangle()
-            rectangle.setCoordinatesAndSize(RelAbsVector(0,0),RelAbsVector(0,0),RelAbsVector(0,0),RelAbsVector(0,100),RelAbsVector(0,100))
+            rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+            libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
 
         for i in range(numNodes):
             spec_id = df_NodeData.iloc[i]['id']  
@@ -744,40 +752,41 @@ def _DFToSBML(df):
             #Pls note that shapeIdx is different from Coyote
             if spec_shapeIdx == 2: #ellipse
                 ellipse = style.getGroup().createEllipse()
-                ellipse.setCenter2D(RelAbsVector(0, 50), RelAbsVector(0, 50))
-                ellipse.setRadii(RelAbsVector(0, 100), RelAbsVector(0, 100))
+                ellipse.setCenter2D(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
+                ellipse.setRadii(libsbml.RelAbsVector(0, 100), libsbml.RelAbsVector(0, 100))
             
             elif spec_shapeIdx == 3: #hexagon(6)
                 polygon = style.getGroup().createPolygon()
                 renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(RelAbsVector(0,100), RelAbsVector(0,50))
+                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
                 renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(RelAbsVector(0,75), RelAbsVector(0,7))
+                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,75), libsbml.RelAbsVector(0,7))
                 renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(RelAbsVector(0,25), RelAbsVector(0,7))
+                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,7))
                 renderPoint4 = polygon.createPoint()
-                renderPoint4.setCoordinates(RelAbsVector(0,0), RelAbsVector(0,50))
+                renderPoint4.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
                 renderPoint5 = polygon.createPoint()
-                renderPoint5.setCoordinates(RelAbsVector(0,25), RelAbsVector(0,86))
+                renderPoint5.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,86))
                 renderPoint6 = polygon.createPoint()
-                renderPoint6.setCoordinates(RelAbsVector(0,75), RelAbsVector(0,86))
+                renderPoint6.setCoordinates(libsbml.RelAbsVector(0,75), libsbml.RelAbsVector(0,86))
             elif spec_shapeIdx == 4: #line(2)
                 polygon = style.getGroup().createPolygon()
                 renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(RelAbsVector(0,0), RelAbsVector(0,50))
+                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
                 renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(RelAbsVector(0,100), RelAbsVector(0,50))
+                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
             elif spec_shapeIdx == 5: #triangle(3)
                 polygon = style.getGroup().createPolygon()
                 renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(RelAbsVector(0,100), RelAbsVector(0,50))
+                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
                 renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(RelAbsVector(0,25), RelAbsVector(0,7))
+                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,7))
                 renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(RelAbsVector(0,25), RelAbsVector(0,86))
+                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,86))
             else: #rectangle shape_index = 1/others as default (rectangle)
                 rectangle = style.getGroup().createRectangle()
-                rectangle.setCoordinatesAndSize(RelAbsVector(0,0),RelAbsVector(0,0),RelAbsVector(0,0),RelAbsVector(0,100),RelAbsVector(0,100))
+                rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+                libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
             
             style = rInfo.createStyle("textStyle")
             style.getGroup().setStroke("text_line_color" + "_" + spec_id)
@@ -810,7 +819,7 @@ def _DFToSBML(df):
                 style.addType("REACTIONGLYPH SPECIESREFERENCEGLYPH")
                 style.addId(rxn_id)
         
-        sbmlStr_layout_render = writeSBMLToString(doc) #sbmlStr_layout_render includes both layout and render
+        sbmlStr_layout_render = libsbml.writeSBMLToString(doc) #sbmlStr_layout_render includes both layout and render
     
         return sbmlStr_layout_render
     else:

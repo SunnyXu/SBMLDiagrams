@@ -9,7 +9,7 @@ Created on Mon Aug 23 13:25:34 2021
 
 import os
 import simplesbml
-from libsbml import *
+import libsbml
 import math
 import random as _random
 import pandas as pd
@@ -110,7 +110,7 @@ def _rgb_to_color(rgb):
 
     return color
 
-def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'): 
+def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [3900, 2400]): 
     """
     Save the information of an SBML file to a set of dataframe.
 
@@ -165,11 +165,15 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
     text_line_color = [0, 0, 0, 255]
     text_line_width = 1.
     
+    mplugin = None
     try: #invalid sbml
         ### from here for layout ###
-        document = readSBMLFromString(sbmlStr)
+        document = libsbml.readSBMLFromString(sbmlStr)
         model_layout = document.getModel()
-        mplugin = model_layout.getPlugin("layout")
+        try:
+            mplugin = model_layout.getPlugin("layout")
+        except:
+            print("There is no layout.")
         if mplugin is not None:
             layout = mplugin.getLayout(0)    
             if layout is not None:
@@ -448,7 +452,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
                 if temp_id == "_compartment_default_":
-                    dimension = [1000, 1000]
+                    dimension = compartmentDefaultSize
                     position = [0, 0]
                     comp_border_color = [255, 255, 255, 255]
                     comp_fill_color = [255, 255, 255, 255]
@@ -495,8 +499,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                         # dimension = [800,800]
                         # position = [40,40]
                         # the whole size of the compartment: 4000*2500
-                        dimension = [1000,1000]
+                        dimension = compartmentDefaultSize
                         position = [0,0]
+                        #If there is no render info about the compartments given from sbml,
+                        #they will be set as white. 
                         comp_fill_color = [255, 255, 255, 255]
                         comp_border_color = [255, 255, 255, 255]
 
@@ -904,8 +910,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
                 temp_id = Comps_ids[i]
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
-                dimension = [1000,1000]
+                dimension = compartmentDefaultSize
                 position = [0,0]
+                comp_border_color = [255, 255, 255, 255]
+                comp_fill_color = [255, 255, 255, 255]
 
                 CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
                 CompartmentData_row_dct[NETIDX].append(netIdx)
@@ -1155,7 +1163,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier'):
 class load:
     def __init__(self, sbmlstr):
         self.sbmlstr = sbmlstr
-        #self.df = _SBMLToDF(self.sbmlstr, reactionLineType='bezier')
         self.df = _SBMLToDF(self.sbmlstr)
 
     def getCompartmentPosition(self, id):
@@ -1896,8 +1903,8 @@ class load:
             dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
             dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
             handles.append([dst_handle_x,dst_handle_y])
-        # print(src_position)
-        # print(dst_position)
+        # print('rct:', src_position, src_dimension)
+        # print('prd:', dst_position, dst_dimension)
         # print("center:", center_position)
         # print("handle:", handles)
         self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
@@ -1967,19 +1974,22 @@ if __name__ == '__main__':
     # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
+    # filename = "5nodes.sbml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('test.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    writer.save()
 
-    df = load(sbmlStr)
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('test.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # writer.save()
+
+    #df = load(sbmlStr)
+    #df = load("dfgdg")
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -1989,7 +1999,7 @@ if __name__ == '__main__':
 
     # print(df.isFloatingNode("x_1"))
     # print(df.getNodePosition("x_1"))
-    print(df.getNodeSize("x_1"))
+    # print(df.getNodeSize("x_1"))
     # print(df.getNodeShape("x_1"))
     # print(df.getNodeTextPosition("x_1"))
     # print(df.getNodeTextSize("x_1"))
@@ -2031,23 +2041,23 @@ if __name__ == '__main__':
     # df.setBezierReactionType("r_0", True)
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
     # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
-    print("center_position after:", df.getReactionCenterPosition("r_0"))
-    print("handle_position after:", df.getReactionHandlePositions("r_0"))
-    df.setReactionDefaultCenterAndHandlePositions("r_0")
-    print("center_position after:", df.getReactionCenterPosition("r_0"))
-    print("handle_position after:", df.getReactionHandlePositions("r_0"))
+    # print("center_position after:", df.getReactionCenterPosition("r_0"))
+    # print("handle_position after:", df.getReactionHandlePositions("r_0"))
+    # df.setReactionDefaultCenterAndHandlePositions("r_0")
+    # print("center_position after:", df.getReactionCenterPosition("r_0"))
+    # print("handle_position after:", df.getReactionHandlePositions("r_0"))
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    if len(sbmlStr_layout_render) == 0:
-        print("empty sbml")
-    else:
-        visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
+    # if len(sbmlStr_layout_render) == 0:
+    #     print("empty sbml")
+    # else:
+    #     visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
 
 
 

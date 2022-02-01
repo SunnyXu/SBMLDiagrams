@@ -10,6 +10,14 @@ We also plan to interface SBMLDiagrams to NetworkX to exploit the variety of lay
 
 ``pip install SBMLDiagrams``
 
+## A Figure Example
+
+Here is a figure example visualized by SBMLDiagrams:
+
+<img src="https://github.com/SunnyXu/SBMLDiagrams/blob/main/docs/Figures/Jana_WolfGlycolysis.png" width="350" height="450">
+
+Please see more figure examples in the documentation.
+
 ## Documentation
 Please see the documentation at https://sunnyxu.github.io/SBMLDiagrams/ for details.
 

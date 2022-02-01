@@ -33,15 +33,15 @@ To install SBMLDiagrams use
    
    pip install SBMLDiagrams
 
---------
-Examples
---------
+-------------
+Code Examples
+-------------
 
 1) Visualize an SBML file to a PNG.
 
 .. code-block:: python
 
-   from SBMLDiagrams.visualizeSBML import *
+   from SBMLDiagrams import visualizeSBML
    import os 
 
    dirname = "path//to"
@@ -54,14 +54,14 @@ Examples
    if len(sbmlStr) == 0:
       print("Empty SBML!")
    else:
-      display(sbmlStr,fileFormat = 'PNG')
+      visualizeSBML.display(sbmlStr,fileFormat = 'PNG')
 
 
 2) Import, edit and write to an SBML file.
 
 .. code-block:: python
 
-   from SBMLDiagrams.processSBML import *
+   from SBMLDiagrams import processSBML
    import os
 
    dirname = "path//to"
@@ -71,16 +71,21 @@ Examples
    sbmlStr = f.read()
    f.close()
 
-   df = load(sbmlStr)
+   df = processSBML.load(sbmlStr)
 
    print(df.getCompartmentPosition("compartment_id"))
    print(df.getNodeFillColor("node_id"))
    print(df.isBezierReactionType("reaction_id"))
 
-   df.setCompartmentFillColor("compartment_id", "white", opacity = 0.5)
+   # There are three ways to set colors and opacity is optional:
+   # 1) list-decimal_rgb 1*3 matrix, i.e. [255, 255, 255];
+   # 2) str-html_name, i.e. "white";
+   # 3) str-hex_string (6-digit), i.e. "#000000";
+   # Please see more details on the page of processSBML. 
    df.setCompartmentBorderColor("compartment_id", [255, 255, 255])
-   df.setNodeSize("node_id", [50.0, 30.0])
+   df.setCompartmentFillColor("compartment_id", "white", opacity = 0.5)
    df.setNodeTextFontColor("node_id", "#000000", opacity = 1.)
+   df.setNodeSize("node_id", [50.0, 30.0])
    df.setReactionLineThickness("reaction_id", 3.)
 
    sbmlStr_layout_render = df.export()
@@ -89,6 +94,30 @@ Examples
    f.write(sbmlStr_layout_render)
    f.close()
 
+---------------
+Figure Examples
+---------------
 
+1) An example without compartment. There are different shapes of nodes with different fill colors. 
+Texts can be placed outside the nodes with designed positions. There are also reactions with different 
+fill colors. x_1 is an example of alias node.
 
+.. image:: Figures/test_no_comp.png
+  :width: 400
 
+2) An example with compartments. The compartments are filled with different colors. There are 
+different shapes of nodes with different border colors. x_1 and x_5 are examples of alias nodes.
+
+.. image:: Figures/test_comp.png
+  :width: 400
+
+3) An example with only nodes (no reactions in the network). There are five types of node shapes
+with different fill colors and border colors.
+
+.. image:: Figures/node_grid.png
+  :width: 400
+
+4) An example with long text contents.
+
+.. image:: Figures/Jana_WolfGlycolysis.png
+  :width: 400
