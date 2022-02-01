@@ -4,9 +4,13 @@
 class Style:
     def __init__(self, styleName):
         if styleName == 'default':
+            # for compartment's color
+            #self.comp_fill_color = (158, 169, 255, 200)
+            #self.comp_border_color = (0, 29, 255, 255)
+            self.comp_fill_color = (255, 255, 255, 255)
+            self.comp_border_color = (255, 255, 255, 255)
+
             # for node's color
-            self.comp_fill_color = (158, 169, 255, 200)
-            self.comp_border_color = (0, 29, 255, 255)
             self.spec_fill_color = (255, 204, 153, 200)
             self.spec_border_color = (255, 108, 9, 255)
             self.reaction_line_color = (91, 176, 253, 255)
