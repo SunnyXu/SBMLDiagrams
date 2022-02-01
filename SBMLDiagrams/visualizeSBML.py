@@ -16,6 +16,7 @@ import random as _random
 import string
 from SBMLDiagrams import drawNetwork
 from SBMLDiagrams import styleSBML
+from SBMLDiagrams import processSBML
 from collections import defaultdict
 import numpy as np
 import cv2
@@ -77,7 +78,7 @@ def animate(simulationData, baseImageArray, posDict, color_style, numDigit = 5, 
         out.write(imgs[i])
     out.release()
 
-def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileName = 'output', \
+def plot(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default',\
     newStyleClass = None):
 
@@ -748,7 +749,116 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                 pos_dict, color_style = draw_on_canvas(canvas)
     return baseImageArray, pos_dict, color_style
 
+def getNetworkLeftUpCorner(sbmlStr):
+    """
+    Get the left up corner of the network(s) from the SBML string
 
+    Args:  
+        sbmlStr: str-the string of the input sbml file.
+
+    Returns:
+        position: list-1*2 matrix-leftup corner of the network(s) [position_x, position_y].
+        It is calculated by the minimum position of compartments and nodes, excluding the 
+        compartment with the id of _compartment_default_ .
+    
+    """    
+    model = simplesbml.loadSBMLStr(sbmlStr)
+    numFloatingNodes  = model.getNumFloatingSpecies()
+    FloatingNodes_ids = model.getListOfFloatingSpecies()
+    numBoundaryNodes  = model.getNumBoundarySpecies()
+    BoundaryNodes_ids = model.getListOfBoundarySpecies()
+    numComps  = model.getNumCompartments()
+    Comps_ids = model.getListOfCompartmentIds()
+
+    df = processSBML.load(sbmlStr)
+    try:
+        position = df.getNodePosition(FloatingNodes_ids[0])[0]
+    except:
+        position = df.getNodePosition(BoundaryNodes_ids[0])[0]
+    for i in range(numFloatingNodes):
+        node_temp_position = df.getNodePosition(FloatingNodes_ids[i])
+        for j in range(len(node_temp_position)):
+            if node_temp_position[j][0] < position[0]:
+                position[0] = node_temp_position[j][0]
+            if node_temp_position[j][1] < position[1]:
+                position[1] = node_temp_position[j][1]
+    for i in range(numBoundaryNodes):
+        node_temp_position = df.getNodePosition(BoundaryNodes_ids[i])
+        for j in range(len(node_temp_position)):
+            if node_temp_position[j][0] < position[0]:
+                position[0] = node_temp_position[j][0]
+            if node_temp_position[j][1] < position[1]:
+                position[1] = node_temp_position[j][1]
+    for i in range(numComps):
+        if Comps_ids[i] != "_compartment_default_":
+            comp_temp_position = df.getCompartmentPosition(Comps_ids[i])[0]
+            if comp_temp_position[0] < position[0]:
+                position[0] = comp_temp_position[0]
+            if comp_temp_position[1] < position[1]:
+                position[1] = comp_temp_position[1]
+
+    return position
+
+def getNetworkRightDownCorner(sbmlStr):
+    """
+    Get the right down corner of the network(s) from the SBML string
+
+    Args:  
+        sbmlStr: str-the string of the input sbml file.
+
+    Returns:
+        position: list-1*2 matrix-right down corner of the network(s) [position_x, position_y].
+        It is calculated by the minimum position of compartments and nodes, excluding the 
+        compartment with the id of _compartment_default_ .
+    
+    """    
+    model = simplesbml.loadSBMLStr(sbmlStr)
+    numFloatingNodes  = model.getNumFloatingSpecies()
+    FloatingNodes_ids = model.getListOfFloatingSpecies()
+    numBoundaryNodes  = model.getNumBoundarySpecies()
+    BoundaryNodes_ids = model.getListOfBoundarySpecies()
+    numComps  = model.getNumCompartments()
+    Comps_ids = model.getListOfCompartmentIds()
+
+    df = processSBML.load(sbmlStr)
+    try:
+        position = df.getNodePosition(FloatingNodes_ids[0])[0]
+        size = df.getNodePosition(FloatingNodes_ids[0])[0]
+        position = [position[0]+size[0], position[1]+size[1]]
+    except:
+        position = df.getNodePosition(BoundaryNodes_ids[0])[0]
+        size = df.getNodePosition(BoundaryNodes_ids[0])[0]
+        position = [position[0]+size[0], position[1]+size[1]]
+
+    for i in range(numFloatingNodes):
+        node_temp_position_list = df.getNodePosition(FloatingNodes_ids[i])
+        for j in range(len(node_temp_position_list)):
+            node_temp_size = df.getNodeSize(FloatingNodes_ids[i])
+            node_temp_position = [node_temp_position_list[j][0]+node_temp_size[j][0], 
+            node_temp_position_list[j][1]+node_temp_size[j][1]]
+            if node_temp_position[0] > position[0]:
+                position[0] = node_temp_position[0]
+            if node_temp_position[1] > position[1]:
+                position[1] = node_temp_position[1]
+    for i in range(numBoundaryNodes):
+        node_temp_position_list = df.getNodePosition(BoundaryNodes_ids[i])
+        for j in range(len(node_temp_position_list)):
+            node_temp_size = df.getNodeSize(BoundaryNodes_ids[i])
+            node_temp_position = [node_temp_position_list[j][0]+node_temp_size[j][0], 
+            node_temp_position_list[j][1]+node_temp_size[j][1]]
+            if node_temp_position[0] > position[0]:
+                position[0] = node_temp_position[0]
+            if node_temp_position[1] > position[1]:
+                position[1] = node_temp_position[1]
+    for i in range(numComps):
+        if Comps_ids[i] != "_compartment_default_":
+            comp_temp_position = df.getCompartmentPosition(Comps_ids[i])[0]
+            if comp_temp_position[0] > position[0]:
+                position[0] = comp_temp_position[0]
+            if comp_temp_position[1] > position[1]:
+                position[1] = comp_temp_position[1]
+
+    return position
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
@@ -777,7 +887,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        display(sbmlStr, fileFormat='PNG', reactionLineType='bezier', imageSize=[700,900])
+        plot(sbmlStr, fileFormat='PNG', reactionLineType='bezier')
 
 
 
