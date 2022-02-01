@@ -15,7 +15,7 @@ import pandas as pd
 import math
 
 
-def _DFToSBML(df, compartmentDefaultSize = [3900,2400]):
+def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
     # writer = pd.ExcelWriter('5nodes.xlsx')
     # df[0].to_excel(writer, sheet_name='CompartmentData')

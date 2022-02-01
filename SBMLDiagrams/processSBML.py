@@ -110,7 +110,7 @@ def _rgb_to_color(rgb):
 
     return color
 
-def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [3900, 2400]): 
+def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [1000, 1000]): 
     """
     Save the information of an SBML file to a set of dataframe.
 
@@ -1966,11 +1966,11 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     # filename = "mass_action_rxn.xml"
-    filename = "test.xml" 
+    # filename = "test.xml" 
     # filename = "no_rxn.xml"
     # filename = "test_4.xml"
     # filename = "feedback.xml"
-    # filename = "LinearChain.xml"
+    filename = "LinearChain.xml"
     # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
@@ -1988,7 +1988,7 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    #df = load(sbmlStr)
+    df = load(sbmlStr)
     #df = load("dfgdg")
 
     # print(df.getCompartmentPosition("_compartment_default_"))
@@ -2018,6 +2018,12 @@ if __name__ == '__main__':
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
     # df.setCompartmentFillColor('_compartment_default_', [255, 255, 255])
+    # df.setCompartmentFillColor('_compartment_default_', 'ForestGreen')
+    # df.setCompartmentFillColor('_compartment_default_', "#ff3456")
+    # df.setCompartmentFillColor('_compartment_default_', "coral")
+    # df.setCompartmentFillColor('c_0', 'coral')
+    # print(df.getCompartmentFillColor('c_0'))
+    print(df.getCompartmentFillColor('_compartment_default_'))
     # df.setCompartmentBorderColor('_compartment_default_', [255, 255, 255])
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
@@ -2037,6 +2043,7 @@ if __name__ == '__main__':
     # df.setNodeTextLineWidth("x_1", 1.)
 
     # df.setReactionFillColor("r_0", [91, 176, 253])
+    # df.setReactionFillColor("r_0", [0, 0, 0])
     # df.setReactionLineThickness("r_0", 3.)
     # df.setBezierReactionType("r_0", True)
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
@@ -2048,16 +2055,16 @@ if __name__ == '__main__':
     # print("handle_position after:", df.getReactionHandlePositions("r_0"))
 
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
-    # if len(sbmlStr_layout_render) == 0:
-    #     print("empty sbml")
-    # else:
-    #     visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
+    if len(sbmlStr_layout_render) == 0:
+        print("empty sbml")
+    else:
+        visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
 
 
 
