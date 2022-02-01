@@ -14,6 +14,7 @@ from IPython.display import display
 from numpy.core.fromnumeric import _transpose_dispatcher
 from numpy.core.numeric import cross # to display images
 import skia
+from SBMLDiagrams import styleSBML
 
 
 def _drawRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = False):
@@ -375,7 +376,22 @@ def _drawLine (canvas, x1, y1, x2, y2, fill, linewidth, dash = False):
             Color = fill
         )
     canvas.drawLine (x1, y1, x2, y2, paint)
-    
+
+def addProgressBar(canvas, position, dimension, fill_percent, process_broder_width, color_style):
+    [x, y] = position
+    [width, height] = dimension
+    [f_width, f_height] = dimension[0], dimension[1]*fill_percent
+    process_border_color = color_style.getProcessBorderColor()
+    full_fill_color = color_style.getFullFillColor()
+    process_fill_color = color_style.getProcessFillColor()
+    outline = skia.Color(process_border_color[0], process_border_color[1], process_border_color[2], process_border_color[3])
+    com_fill = skia.Color(full_fill_color[0], full_fill_color[1], full_fill_color[2], full_fill_color[3])
+    process_fill = skia.Color(process_fill_color[0], process_fill_color[1], process_fill_color[2], process_fill_color[3])
+    linewidth = process_broder_width
+    _drawRectangle(canvas, x, y, -width, -height, outline, com_fill, linewidth)
+    _drawRectangle(canvas, x, y, -f_width, -f_height, outline, process_fill, 0)
+
+
 def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_color, comp_border_width):
     """
     Add a compartment.
@@ -827,7 +843,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
             fontSize = fontSize - 1.
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 
-def draw(surface, fileName = '', file_format = 'PNG'):
+def draw(surface, folderName = '', fileName = '', file_format = 'PNG'):
     """
     Display the diagram and save it to the local.
 
@@ -837,12 +853,18 @@ def draw(surface, fileName = '', file_format = 'PNG'):
         fileName: str-the name for the generated file: either the input filename or a randomly generated filename if '' (default).
         
         fileFormat = 'PNG' (default) or 'JPEG'.
-    """ 
 
+        folderName = name for the folder to save the images
+
+    Returns:
+        the drew image array
+    """ 
+    if folderName:
+        if not os.path.exists(os.getcwd() + '/' + folderName):
+            os.makedirs(os.getcwd() + '/' + folderName)
     if fileName == '':
         random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-        #tmpfileName = os.path.join(tempfile.gettempdir(), random_string)    
-        tmpfileName = os.path.join(os.getcwd(), random_string)
+        tmpfileName = os.path.join(os.getcwd() + '/' + folderName, random_string)
         image = surface.makeImageSnapshot()
         if file_format == 'PNG':
             tmpfileName = tmpfileName + '.png'
@@ -872,7 +894,7 @@ def draw(surface, fileName = '', file_format = 'PNG'):
         #self.surface.write_to_png(tmpfileName)
 
     else:
-        fileName = os.path.join(os.getcwd(),fileName)
+        fileName = os.path.join(os.getcwd() + '/' + folderName,fileName)
         image = surface.makeImageSnapshot()
         if file_format == 'PNG':
             fileName = fileName + '.png'
@@ -898,5 +920,6 @@ def draw(surface, fileName = '', file_format = 'PNG'):
         #         imagepdf.save(fileNamepdf)
         #     finally:
         #         os.remove(fileName)
+    return image.toarray()
 
 
