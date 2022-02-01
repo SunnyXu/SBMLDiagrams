@@ -20,10 +20,9 @@ from collections import defaultdict
 import numpy as np
 import cv2
 
-def animate(simulationData, baseImageArray, posDict, numDigit = 5, folderName = 'animation', offset = 20,
-            textColor = None, textWidth = None, textDimension = None):
+def animate(simulationData, baseImageArray, posDict, color_style, numDigit = 5, folderName = 'animation', horizontal_offset = 15):
     """
-    Animation for tellurium simulation
+    Animation for the tellurium simulation
 
     Args:
         simulationData: numpy array for the simulation data
@@ -46,23 +45,31 @@ def animate(simulationData, baseImageArray, posDict, numDigit = 5, folderName = 
 
     Returns:
     """
+    bar_dimension = [10,80]
+    [node_width, node_height] = color_style.getNodeDimension()
+    mx = max(simulationData[0])
     for i in range(len(simulationData)):
         surface = skia.Surface(np.array(baseImageArray, copy=True))
         canvas = surface.getCanvas()
         for letter, pos in posDict.items():
-            new_pos = [pos[0] - offset, pos[1] - offset]
-            drawNetwork.addText(canvas, str(simulationData[letter][i])[:numDigit],
-                                new_pos, [40, 60], (0, 0, 0, 255), 1.)
+            new_pos = [pos[0] + node_width + horizontal_offset, pos[1]+node_height]
+            percent = simulationData[letter][i]/mx
+            drawNetwork.addProgressBar(canvas, new_pos, bar_dimension, percent, 0.5,
+                                       color_style)
+            # drawNetwork.addText(canvas, str(simulationData[letter][i])[:numDigit],
+            #                     new_pos, [40, 60], (0, 0, 0, 255), 1.)
         drawNetwork.draw(surface, folderName='animation', fileName='a' + str(i), file_format='PNG')
 
     imgs = []
+    size = None
     files = sorted(os.listdir(os.getcwd() + '/' + folderName))
     for filename in files:
-        imgName = os.path.join(os.getcwd() + '/' + folderName, filename)
-        img = cv2.imread(imgName)
-        height, width, layers = img.shape
-        size = (width, height)
-        imgs.append(img)
+        if filename[-4:] == ".png":
+            imgName = os.path.join(os.getcwd() + '/' + folderName, filename)
+            img = cv2.imread(imgName)
+            height, width, layers = img.shape
+            size = (width, height)
+            imgs.append(img)
 
     out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, "output.mp4"), cv2.VideoWriter_fourcc(*'MP4V'), 1, size)
 
@@ -531,6 +538,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                     temp_id = spec_specGlyph_id_list[i][0]
                     tempGlyph_id = spec_specGlyph_id_list[i][1]
                     dimension = spec_dimension_list[i]
+                    color_style.setDimension(dimension)
                     position = spec_position_list[i]
                     text_position = spec_text_position_list[i]
                     text_dimension = spec_text_dimension_list[i]
@@ -699,6 +707,7 @@ def display(sbmlStr, imageSize = [1000, 1000], fileFormat = 'PNG', output_fileNa
                         if spec_id_list[k] == temp_id:
                             position = spec_position_list[k]
                             dimension = spec_dimension_list[k]
+                    color_style.setNodeDimension(dimension)
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width,
                                         shapeIdx, complex_shape=complexShape)
