@@ -2064,7 +2064,7 @@ if __name__ == '__main__':
     if len(sbmlStr_layout_render) == 0:
         print("empty sbml")
     else:
-        visualizeSBML.display(sbmlStr_layout_render, fileFormat='PNG')
+        visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
 
 
 
