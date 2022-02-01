@@ -124,8 +124,8 @@
         <render:listOfRenderInformation xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1">
           <render:renderInformation render:id="info" render:name="Render Information" render:programName="RenderInformation" render:programVersion="1.0">
             <render:listOfColorDefinitions>
-              <render:colorDefinition render:id="comp_fill_color" render:value="#00ffff"/>
-              <render:colorDefinition render:id="comp_border_color" render:value="#00ffff"/>
+              <render:colorDefinition render:id="comp_fill_color" render:value="#ffffff"/>
+              <render:colorDefinition render:id="comp_border_color" render:value="#ffffff"/>
               <render:colorDefinition render:id="spec_fill_color_x_0" render:value="#ffcc99"/>
               <render:colorDefinition render:id="spec_border_color_x_0" render:value="#ff6c09"/>
               <render:colorDefinition render:id="text_line_color_x_0" render:value="#000000"/>
