@@ -8,3 +8,4 @@ tellurium
 skia-python
 setuptools>=42
 openpyxl
+opencv-python
