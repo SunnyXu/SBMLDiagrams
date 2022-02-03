@@ -11,6 +11,7 @@ import math
 import random, tempfile, string, os
 from PIL import Image               # to load images
 from IPython.display import display
+from matplotlib.pyplot import arrow
 from numpy.core.fromnumeric import _transpose_dispatcher
 from numpy.core.numeric import cross # to display images
 import skia
@@ -589,8 +590,8 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             d = (_det(*line1), _det(*line2))
             x = round(_det(d, xdiff) / div,2)
             y = round(_det(d, ydiff) / div,2)
-            if (x-line1[0][0])*(x-line1[1][0])<=0 and (x-line2[0][0])*(x-line2[1][0])<=0 \
-            and (y-line1[0][1])*(y-line1[1][1])<=0 and (y-line2[0][1])*(y-line2[1][1])<=0:
+            if round((x-line1[0][0])*(x-line1[1][0]),2)<=0 and round((x-line2[0][0])*(x-line2[1][0]),2)<=0 \
+            and round((y-line1[0][1])*(y-line1[1][1]),2)<=0 and round((y-line2[0][1])*(y-line2[1][1]),2)<=0:
                 return [x, y]
             else:
                 raise Exception('lines do not intersect2')
@@ -599,6 +600,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             return [x,y]
         except:
             pass
+
         try:
             [x,y] = _line_intersection([arcCenter, pt_center], [pt_up_left, pt_up_right])
             return [x,y]
@@ -697,7 +699,9 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 #to calculate the end point of the arrow called arrow_end_pt
                 arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
                 if arrow_end_pt == None:
+                    #print(center_position, c1, s1)
                     arrow_end_pt = _cross_point(center_position, c1, s1) 
+                    #print("arrow_end:", arrow_end_pt)
                     #rct_handle_position could be inside the node
                 if arrow_end_pt != None:
                     pts.append(arrow_end_pt)
