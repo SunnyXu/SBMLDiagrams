@@ -421,10 +421,14 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                             position = [0, 0]
                         for j in range(numCompGlyphs):
                             if comp_id_list[j] == temp_id:
-                                dimension = comp_dimension_list[j]
+                                #dimension = comp_dimension_list[j]
+                                dimension = [comp_dimension_list[j][0]*scale,
+                                comp_dimension_list[j][1]*scale]
                                 #position = comp_position_list[j]
-                                position = [comp_position_list[j][0] - leftUpCorner[0],
-                                comp_position_list[j][1] - leftUpCorner[1]]
+                                #position = [comp_position_list[j][0] - leftUpCorner[0],
+                                #comp_position_list[j][1] - leftUpCorner[1]]
+                                position = [(comp_position_list[j][0] - leftUpCorner[0])*scale,
+                                (comp_position_list[j][1] - leftUpCorner[1])*scale]
                         for j in range(len(comp_render)):
                             if temp_id == comp_render[j][0]:
                                 color_style.setCompFillColor(comp_render[j][1])
@@ -541,6 +545,10 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                         for j in range(len(handles)):
                             handles[j] = [(handles[j][0]-leftUpCorner[0])*scale, 
                             (handles[j][1]-leftUpCorner[1])*scale]
+                        #print("rct:", src_position)
+                        #print("prd:", dst_position)
+                        #print("center:", center_position)
+                        #print(src_dimension)
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
                         color_style.getReactionLineColor(), reaction_line_width,
@@ -839,24 +847,34 @@ def getNetworkLeftUpCorner(sbmlStr):
         position = df.getNodePosition(BoundaryNodes_ids[0])[0]
     for i in range(numFloatingNodes):
         node_temp_position = df.getNodePosition(FloatingNodes_ids[i])
+        text_temp_position = df.getNodeTextPosition(FloatingNodes_ids[i])
         for j in range(len(node_temp_position)):
             if node_temp_position[j][0] < position[0]:
                 position[0] = node_temp_position[j][0]
             if node_temp_position[j][1] < position[1]:
                 position[1] = node_temp_position[j][1]
+            if text_temp_position[j][0] < position[0]:
+                position[0] = text_temp_position[j][0]
+            if text_temp_position[j][1] < position[1]:
+                position[1] = text_temp_position[j][1]
     for i in range(numBoundaryNodes):
         node_temp_position = df.getNodePosition(BoundaryNodes_ids[i])
+        text_temp_position = df.getNodeTextPosition(BoundaryNodes_ids[i])
         for j in range(len(node_temp_position)):
             if node_temp_position[j][0] < position[0]:
                 position[0] = node_temp_position[j][0]
             if node_temp_position[j][1] < position[1]:
                 position[1] = node_temp_position[j][1]
+            if text_temp_position[j][0] < position[0]:
+                position[0] = text_temp_position[j][0]
+            if text_temp_position[j][1] < position[1]:
+                position[1] = text_temp_position[j][1]
     for i in range(numComps):
         if Comps_ids[i] != "_compartment_default_":
             comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])[0]
             comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])[0]
             if comp_temp_fill_color[0] != [255,255,255,255] or \
-            comp_temp_border_color[0] != [255,255,255,255]:
+                comp_temp_border_color[0] != [255,255,255,255]:
                 comp_temp_position = df.getCompartmentPosition(Comps_ids[i])[0]
                 if comp_temp_position[0] < position[0]:
                     position[0] = comp_temp_position[0]
@@ -898,24 +916,40 @@ def getNetworkRightDownCorner(sbmlStr):
 
     for i in range(numFloatingNodes):
         node_temp_position_list = df.getNodePosition(FloatingNodes_ids[i])
+        text_temp_position_list = df.getNodeTextPosition(FloatingNodes_ids[i])
         for j in range(len(node_temp_position_list)):
             node_temp_size = df.getNodeSize(FloatingNodes_ids[i])
+            text_temp_size = df.getNodeTextSize(FloatingNodes_ids[i])
             node_temp_position = [node_temp_position_list[j][0]+node_temp_size[j][0], 
             node_temp_position_list[j][1]+node_temp_size[j][1]]
+            text_temp_position = [text_temp_position_list[j][0]+text_temp_size[j][0], 
+            text_temp_position_list[j][1]+text_temp_size[j][1]]
             if node_temp_position[0] > position[0]:
                 position[0] = node_temp_position[0]
             if node_temp_position[1] > position[1]:
                 position[1] = node_temp_position[1]
+            if text_temp_position[0] > position[0]:
+                position[0] = text_temp_position[0]
+            if text_temp_position[1] > position[1]:
+                position[1] = text_temp_position[1]
     for i in range(numBoundaryNodes):
         node_temp_position_list = df.getNodePosition(BoundaryNodes_ids[i])
+        text_temp_position_list = df.getNodeTextPosition(BoundaryNodes_ids[i])
         for j in range(len(node_temp_position_list)):
             node_temp_size = df.getNodeSize(BoundaryNodes_ids[i])
+            text_temp_size = df.getNodeTextSize(BoundaryNodes_ids[i])
             node_temp_position = [node_temp_position_list[j][0]+node_temp_size[j][0], 
             node_temp_position_list[j][1]+node_temp_size[j][1]]
+            text_temp_position = [text_temp_position_list[j][0]+text_temp_size[j][0], 
+            text_temp_position_list[j][1]+text_temp_size[j][1]]
             if node_temp_position[0] > position[0]:
                 position[0] = node_temp_position[0]
             if node_temp_position[1] > position[1]:
                 position[1] = node_temp_position[1]
+            if text_temp_position[0] > position[0]:
+                position[0] = text_temp_position[0]
+            if text_temp_position[1] > position[1]:
+                position[1] = text_temp_position[1]
     for i in range(numComps):
         if Comps_ids[i] != "_compartment_default_":
             comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])[0]
@@ -954,7 +988,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
+    #filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -969,6 +1003,7 @@ if __name__ == '__main__':
 
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
+    filename = "test_arrows.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -980,8 +1015,9 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
+        scale = .7
         plot(sbmlStr, leftUpCorner = [leftUpCorner[0]-10, leftUpCorner[1]-10], \
-        imageSize = [(networkSize[0]*0.9+20), (networkSize[1]*0.9+20)], scale = .9)
+        imageSize = [(networkSize[0]*scale+20), (networkSize[1]*scale+20)], scale = scale)
 
 
 
