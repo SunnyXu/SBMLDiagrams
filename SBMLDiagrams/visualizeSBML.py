@@ -836,6 +836,8 @@ def getNetworkLeftUpCorner(sbmlStr):
     BoundaryNodes_ids = model.getListOfBoundarySpecies()
     numComps  = model.getNumCompartments()
     Comps_ids = model.getListOfCompartmentIds()
+    numRxns   = model.getNumReactions()
+    Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
     try:
@@ -877,6 +879,18 @@ def getNetworkLeftUpCorner(sbmlStr):
                     position[0] = comp_temp_position[0]
                 if comp_temp_position[1] < position[1]:
                     position[1] = comp_temp_position[1]
+    for i in range(numRxns):
+        center_position = df.getReactionCenterPosition(Rxns_ids[i])[0]
+        handle_positions = df.getReactionHandlePositions(Rxns_ids[i])[0]
+        if center_position[0] < position[0]:
+            position[0] = center_position[0]
+        if center_position[1] < position[1]:
+            position[1] = center_position[1]
+        for j in range(len(handle_positions)):
+            if handle_positions[j][0] < position[0]:
+                position[0] = handle_positions[j][0]
+            if handle_positions[j][1] < position[1]:
+                position[1] = handle_positions[j][1]
 
     return position
 
@@ -900,6 +914,8 @@ def getNetworkRightDownCorner(sbmlStr):
     BoundaryNodes_ids = model.getListOfBoundarySpecies()
     numComps  = model.getNumCompartments()
     Comps_ids = model.getListOfCompartmentIds()
+    numRxns   = model.getNumReactions()
+    Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
     try:
@@ -961,6 +977,18 @@ def getNetworkRightDownCorner(sbmlStr):
                     position[0] = comp_temp_position[0]
                 if comp_temp_position[1] > position[1]:
                     position[1] = comp_temp_position[1]
+    for i in range(numRxns):
+        center_position = df.getReactionCenterPosition(Rxns_ids[i])[0]
+        handle_positions = df.getReactionHandlePositions(Rxns_ids[i])[0]
+        if center_position[0] > position[0]:
+            position[0] = center_position[0]
+        if center_position[1] > position[1]:
+            position[1] = center_position[1]
+        for j in range(len(handle_positions)):
+            if handle_positions[j][0] > position[0]:
+                position[0] = handle_positions[j][0]
+            if handle_positions[j][1] > position[1]:
+                position[1] = handle_positions[j][1]
     return position
 
 def getNetworkSize(sbmlStr):
@@ -987,7 +1015,7 @@ if __name__ == '__main__':
 
     #filename = "test.xml"
     #filename = "feedback.xml"
-    filename = "LinearChain.xml"
+    #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"
@@ -1012,7 +1040,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        scale = .7
+        scale = 1.
         plot(sbmlStr, leftUpCorner = [leftUpCorner[0]-10, leftUpCorner[1]-10], \
         imageSize = [(networkSize[0]*scale+20), (networkSize[1]*scale+20)], scale = scale)
 
