@@ -416,8 +416,7 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                     if len(comp_id_list) != 0:
                     #if mplugin is not None:
                         if temp_id == "_compartment_default_":
-                            #dimension = imageSize
-                            dimension = [imageSize[0]*scale, imageSize[1]*scale]
+                            dimension = imageSize
                             position = [0, 0]
                         for j in range(numCompGlyphs):
                             if comp_id_list[j] == temp_id:
@@ -436,8 +435,7 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                                 comp_border_width = comp_render[j][3]
                     else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
-                        #dimension = imageSize
-                        dimension = [imageSize[0]*scale, imageSize[1]*scale]
+                        dimension = imageSize
                         position = [0,0]
                         #allows users to set the color of the "_compartment_default" as the canvas
                         #color_style.setCompBorderColor((255, 255, 255, 255))
@@ -683,8 +681,7 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
-                    #dimension = imageSize
-                    dimension = [imageSize[0]*scale,imageSize[1]*scale]
+                    dimension = imageSize
                     position = [0,0]
                     drawNetwork.addCompartment(canvas, position, dimension,
                                                 color_style.getCompBorderColor(), color_style.getCompFillColor(),
@@ -990,7 +987,7 @@ if __name__ == '__main__':
 
     #filename = "test.xml"
     #filename = "feedback.xml"
-    #filename = "LinearChain.xml"
+    filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"
@@ -1003,7 +1000,7 @@ if __name__ == '__main__':
 
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
-    filename = "test_arrows.xml"
+    #filename = "test_arrows.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
