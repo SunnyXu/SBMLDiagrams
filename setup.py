@@ -36,13 +36,13 @@ setup(
     license='MIT License',
     install_requires=[
         'coverage',
+        'pip>20',
         'numpy',
         'pandas',
-        'matplotlib'
         'python-libsbml',
-        'pip>20',
         'simplesbml',
         'skia-python',
+        'Ipython'
         'setuptools',
         'openpyxl',
         'opencv-python',

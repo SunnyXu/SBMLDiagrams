@@ -173,7 +173,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
         try:
             mplugin = model_layout.getPlugin("layout")
         except:
-            print("There is no layout.")
+            raise Exception("There is no layout.")
         if mplugin is not None:
             layout = mplugin.getLayout(0)    
             if layout is not None:
@@ -1970,7 +1970,7 @@ if __name__ == '__main__':
     # filename = "no_rxn.xml"
     # filename = "test_4.xml"
     # filename = "feedback.xml"
-    filename = "LinearChain.xml"
+    # filename = "LinearChain.xml"
     # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
@@ -1988,8 +1988,8 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    df = load(sbmlStr)
-    #df = load("dfgdg")
+    #df = load(sbmlStr)
+    df = load("dfgdg")
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2023,7 +2023,7 @@ if __name__ == '__main__':
     # df.setCompartmentFillColor('_compartment_default_', "coral")
     # df.setCompartmentFillColor('c_0', 'coral')
     # print(df.getCompartmentFillColor('c_0'))
-    print(df.getCompartmentFillColor('_compartment_default_'))
+    # print(df.getCompartmentFillColor('_compartment_default_'))
     # df.setCompartmentBorderColor('_compartment_default_', [255, 255, 255])
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
@@ -2055,16 +2055,16 @@ if __name__ == '__main__':
     # print("handle_position after:", df.getReactionHandlePositions("r_0"))
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    if len(sbmlStr_layout_render) == 0:
-        print("empty sbml")
-    else:
-        visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
+    # if len(sbmlStr_layout_render) == 0:
+    #     print("empty sbml")
+    # else:
+    #     visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
 
 
 

@@ -7,11 +7,11 @@ Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu
 """
 
-from inspect import Parameter
+#from inspect import Parameter
 import os
 import libsbml
 import re # to process kinetic_law string
-import pandas as pd
+#import pandas as pd
 import math
 
 

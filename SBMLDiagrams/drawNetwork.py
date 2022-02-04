@@ -8,12 +8,13 @@ Created on Fri Jul 16 09:57:30 2021
 """
 
 import math
-import random, tempfile, string, os
+#import tempfile
+import random, string, os
 from PIL import Image               # to load images
 from IPython.display import display
-from matplotlib.pyplot import arrow
-from numpy.core.fromnumeric import _transpose_dispatcher
-from numpy.core.numeric import cross # to display images
+#from matplotlib.pyplot import arrow
+#from numpy.core.fromnumeric import _transpose_dispatcher
+#from numpy.core.numeric import cross # to display images
 import skia
 from SBMLDiagrams import styleSBML
 

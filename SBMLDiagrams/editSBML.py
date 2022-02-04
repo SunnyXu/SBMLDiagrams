@@ -7,7 +7,7 @@ Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu
 """
 
-from numpy.core.fromnumeric import shape
+#from numpy.core.fromnumeric import shape
 import pandas as pd
 import os
 

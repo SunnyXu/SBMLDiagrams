@@ -2,7 +2,7 @@ import unittest
 import os
 from SBMLDiagrams import processSBML
 from SBMLDiagrams import editSBML
-from pandas.testing import assert_frame_equal
+#from pandas.testing import assert_frame_equal
 
 IGNORE_TEST = False
 

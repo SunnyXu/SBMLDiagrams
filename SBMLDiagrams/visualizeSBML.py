@@ -7,10 +7,10 @@ Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu and Jessie Jiang
 """
 
-from operator import le
+#from operator import le
 import os
-from turtle import left
-from matplotlib import image
+#from turtle import left
+#from matplotlib import image
 import skia
 import simplesbml
 import libsbml
