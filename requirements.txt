@@ -5,6 +5,8 @@ pandas
 python-libsbml
 simplesbml
 skia-python
+ipython
+PIL
 setuptools>=42
 openpyxl
 opencv-python

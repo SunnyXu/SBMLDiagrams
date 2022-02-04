@@ -42,7 +42,8 @@ setup(
         'python-libsbml',
         'simplesbml',
         'skia-python',
-        'Ipython'
+        'Ipython',
+        'PIL',
         'setuptools',
         'openpyxl',
         'opencv-python',
