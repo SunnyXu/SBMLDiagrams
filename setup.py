@@ -41,7 +41,6 @@ setup(
 	'python-libsbml',
 	'pip>20',
 	'simplesbml',
-	'tellurium',
 	'skia-python',
     'setuptools',
     'openpyxl',
