@@ -157,7 +157,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     #comp_fill_color = [158, 169, 255, 200]
     #comp_border_color = [0, 29, 255, 255]
     comp_fill_color = [255, 255, 255, 255]
-    comp_fill_color = [255, 255, 255, 255]
+    comp_border_color = [255, 255, 255, 255]
     comp_border_width = 2.0
     spec_fill_color = [255, 204, 153, 200]
     spec_border_color = [255, 108, 9, 255]
