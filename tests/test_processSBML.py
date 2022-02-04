@@ -64,6 +64,15 @@ class TestImportSBML(unittest.TestCase):
       _SBMLToDF(sbmlStr_mass_action_rxn)
     self.df = load(sbmlStr_test)
 
+  def loadInvalidStr(self):
+    # an exception raises if load an invalid string
+    if IGNORE_TEST:
+      return    
+    
+    with self.assertRaises(Exception):
+      load("aba")
+
+
   def testCompartment1(self):
     # Test all the column names
     if IGNORE_TEST:
