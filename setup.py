@@ -38,13 +38,14 @@ setup(
         'coverage',
         'numpy',
         'pandas',
-	'python-libsbml',
-	'pip>20',
-	'simplesbml',
-	'skia-python',
-    'setuptools',
-    'openpyxl',
-    'opencv-python',
+        'matplotlib'
+        'python-libsbml',
+        'pip>20',
+        'simplesbml',
+        'skia-python',
+        'setuptools',
+        'openpyxl',
+        'opencv-python',
     ],
 
     #scripts=[''],# The name of your scipt, and also the command you'll be using for calling it

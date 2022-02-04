@@ -1,6 +1,7 @@
 coverage
 numpy>=1.15.4
 pandas
+matplotlib
 python-libsbml
 pip>20
 simplesbml

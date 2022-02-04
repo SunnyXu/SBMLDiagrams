@@ -163,7 +163,10 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
             ### from here for layout ###
             document = libsbml.readSBMLFromString(sbmlStr)
             model_layout = document.getModel()
-            mplugin = model_layout.getPlugin("layout")
+            try:
+                mplugin = model_layout.getPlugin("layout")
+            except:
+                raise Exception("There is no layout.")
             if mplugin is not None:
                 layout = mplugin.getLayout(0)    
                 if layout is not None:
