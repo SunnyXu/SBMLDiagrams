@@ -81,8 +81,8 @@ def animate(simulationData, baseImageArray, posDict, color_style, numDigit = 5, 
         out.write(imgs[i])
     out.release()
 
-def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. ,fileFormat = 'PNG', output_fileName = 'output', \
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default',\
+def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', complexShape = '', \
+    reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
     newStyleClass = None):
 
     """
@@ -91,8 +91,9 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
-        imageSize: list-1*2 matrix-size of the rectangle [width, height],
-                   int-width, int-height.
+        setImageSize: list-1*2 matrix-size of the rectangle [width, height],int-width, int-height.
+
+        scale: float-makes the figure output size = scale * default output size.
 
         fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
@@ -106,13 +107,28 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
 
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
-        color_style: pre-existing color style for the graph
+        styleName: pre-existing color style for the graph
 
         newStyleClass: user-customized new color style
 
     Returns:
         The tuple of base image's array, position dictionary for the Floating Species, color style of the image
     """
+
+    df = processSBML.load(sbmlStr)
+    sbmlStr = df.export()
+    
+    leftUpCorner = getNetworkLeftUpCorner(sbmlStr)
+    networkSize = getNetworkSize(sbmlStr)
+
+    leftUpCorner = [leftUpCorner[0]-10, leftUpCorner[1]-10]
+
+    if setImageSize == '':
+        imageSize = [(networkSize[0]*scale+20*scale), (networkSize[1]*scale+20*scale)]
+    else:
+        imageSize = setImageSize
+        scale = min(setImageSize[0]/(networkSize[0]+20), setImageSize[1]/(networkSize[1]+20))
+
 
     def draw_on_canvas(canvas):
         def hex_to_rgb(value):
@@ -433,6 +449,7 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                                 color_style.setCompFillColor(comp_render[j][1])
                                 color_style.setCompBorderColor(comp_render[j][2])
                                 comp_border_width = comp_render[j][3]
+                    
                     else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
                         dimension = imageSize
@@ -442,7 +459,7 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                         #color_style.setCompFillColor((255, 255, 255, 255))
                     drawNetwork.addCompartment(canvas, position, dimension,
                                             color_style.getCompBorderColor(), color_style.getCompFillColor(),
-                                                comp_border_width)
+                                                comp_border_width*scale)
                 #add reactions before adding nodes to help with the line positions
                 numSpec_in_reaction = len(spec_specGlyph_id_list)
                 for i in range (numReactionGlyphs):
@@ -549,7 +566,7 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                         #print(src_dimension)
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                        color_style.getReactionLineColor(), reaction_line_width,
+                        color_style.getReactionLineColor(), reaction_line_width*scale,
                         reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
                     except:
                         center_x = 0.
@@ -574,7 +591,7 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                             handles.append([dst_handle_x,dst_handle_y])
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                        color_style.getReactionLineColor(), reaction_line_width,
+                        color_style.getReactionLineColor(), reaction_line_width*scale,
                         reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
 
                 id_list = []
@@ -616,9 +633,9 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width, shapeIdx, complex_shape = complexShape)
+                                                    spec_border_width*scale, shapeIdx, complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
-                                                    color_style.getTextLineColor(), text_line_width)
+                                                    color_style.getTextLineColor(), text_line_width*scale, scale)
                                 id_list.append(temp_id)                    
                             else:
                                 for k in range(len(spec_render)):
@@ -634,9 +651,9 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width, shapeIdx, complex_shape=complexShape)
+                                                    spec_border_width*scale, shapeIdx, complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
-                                                    color_style.getTextLineColor(), text_line_width)
+                                                    color_style.getTextLineColor(), text_line_width*scale, scale)
                                 id_list.append(temp_id)
                     for j in range(numBoundaryNodes):
                         if temp_id == BoundaryNodes_ids[j]:
@@ -653,9 +670,9 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                                         text_line_width = text_render[k][2]
                                 drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width, shapeIdx, complex_shape=complexShape)
+                                                    spec_border_width*scale, shapeIdx, complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
-                                                    color_style.getTextLineColor(), text_line_width)
+                                                    color_style.getTextLineColor(), text_line_width*scale, scale)
                                 id_list.append(temp_id)
                             else:
                                 for k in range(len(spec_render)):
@@ -667,12 +684,12 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         color_style.setTextLineColor(text_render[k][1])
-                                        text_line_width = text_render[k][2] 
+                                        text_line_width = text_render[k][2]
                                 drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width, shapeIdx, complex_shape=complexShape)
+                                                    spec_border_width*scale, shapeIdx, complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
-                                                    color_style.getTextLineColor(), text_line_width)
+                                                    color_style.getTextLineColor(), text_line_width*scale, scale)
                                 id_list.append(temp_id)
 
             else: # there is no layout information, assign position randomly and size as default
@@ -685,7 +702,7 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                     position = [0,0]
                     drawNetwork.addCompartment(canvas, position, dimension,
                                                 color_style.getCompBorderColor(), color_style.getCompFillColor(),
-                                               comp_border_width)
+                                               comp_border_width*scale)
                 spec_id_list = [] 
                 spec_dimension_list = []
                 spec_position_list = []
@@ -756,7 +773,7 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                         handles.append([dst_handle_x,dst_handle_y])
                     drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                     center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                    color_style.getReactionLineColor(), reaction_line_width,
+                    color_style.getReactionLineColor(), reaction_line_width*scale,
                     reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
             
                 for i in range (numFloatingNodes):
@@ -772,9 +789,10 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
                     color_style.setNodeDimension(dimension)
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
-                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width,
+                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
                                         shapeIdx, complex_shape=complexShape)
-                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), text_line_width)
+                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
+                    text_line_width*scale, scale)
                     floatingNodes_pos_dict['[' + temp_id + ']'] = position
                 for i in range (numBoundaryNodes):
                     temp_id = BoundaryNodes_ids[i]
@@ -788,9 +806,10 @@ def plot(sbmlStr, leftUpCorner = [0., 0.], imageSize = [1000, 1000], scale = 1. 
                             (spec_position_list[k][1]-leftUpCorner[1])*scale]
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
-                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width,
+                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
                                         shapeIdx, complex_shape=complexShape)
-                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), text_line_width)
+                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
+                    text_line_width*scale, scale)
 
         except Exception as e:
             print(e)
@@ -840,9 +859,9 @@ def getNetworkLeftUpCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
-    try:
+    if numFloatingNodes > 0 :
         position = df.getNodePosition(FloatingNodes_ids[0])[0]
-    except:
+    if numBoundaryNodes > 0:
         position = df.getNodePosition(BoundaryNodes_ids[0])[0]
     for i in range(numFloatingNodes):
         node_temp_position = df.getNodePosition(FloatingNodes_ids[i])
@@ -918,12 +937,12 @@ def getNetworkRightDownCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
-    try:
+    if numFloatingNodes > 0:
         position_list = df.getNodePosition(FloatingNodes_ids[0])
         size = df.getNodeSize(FloatingNodes_ids[0])[0]
         position = [position_list[0][0]+size[0], position_list[0][1]+size[1]]
-    except:
-        position = df.getNodePosition(BoundaryNodes_ids[0])
+    if numBoundaryNodes > 0:
+        position_list = df.getNodePosition(BoundaryNodes_ids[0])
         size = df.getNodeSize(BoundaryNodes_ids[0])[0]
         position = [position_list[0][0]+size[0], position_list[0][1]+size[1]]
 
@@ -1013,7 +1032,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml"
+    filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1034,15 +1053,10 @@ if __name__ == '__main__':
     sbmlStr = f.read()
     f.close()
 
-    leftUpCorner = getNetworkLeftUpCorner(sbmlStr)
-    networkSize = getNetworkSize(sbmlStr)
-
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        scale = 1.
-        plot(sbmlStr, leftUpCorner = [leftUpCorner[0]-10, leftUpCorner[1]-10], \
-        imageSize = [(networkSize[0]*scale+20), (networkSize[1]*scale+20)], scale = scale)
+        plot(sbmlStr)
 
 
 

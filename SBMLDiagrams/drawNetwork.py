@@ -805,7 +805,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
         2*modifier_linewidth, 2*modifier_linewidth,
                         modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
 
-def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, fontSize = 12):
+def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, scale, fontSize = 12):
 
     """
     Add the text.
@@ -824,12 +824,13 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
         text_line_width: float-text line width.
 
     """ 
-    
+    position = [position[0], (position[1]-dimension[1]*0.15)]
+    fontSize = scale*fontSize
     #self code start
     id = node_id 
     #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
-    stop_flag = 0
-    while stop_flag == 0:
+    stop_flag_1 = False
+    while stop_flag_1 == False:
         fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
         paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
         font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
@@ -841,7 +842,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
         if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
             position_x = position[0] + .5*(dimension[0] - twidth)
             position_y = position[1] + dimension[1] - .5*(dimension[1] - theight)
-            stop_flag = 1
+            stop_flag_1 = True
         else:
             # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
             fontSize = fontSize - 1.
