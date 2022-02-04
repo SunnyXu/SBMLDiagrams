@@ -7,7 +7,7 @@ Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu
 """
 
-import os
+import os, sys
 import simplesbml
 import libsbml
 import math
@@ -1144,6 +1144,8 @@ class load:
     def __init__(self, sbmlstr):
         self.sbmlstr = sbmlstr
         self.df = _SBMLToDF(self.sbmlstr)
+        if self.df == None:
+            sys.exit("There is no valid information to process.")
 
     def getCompartmentPosition(self, id):
         """
