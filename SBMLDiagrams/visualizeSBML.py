@@ -431,7 +431,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
-
                     if len(comp_id_list) != 0:
                     #if mplugin is not None:
                         if temp_id == "_compartment_default_":
@@ -459,7 +458,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         position = [0,0]
                         #allows users to set the color of the "_compartment_default" as the canvas
                         #color_style.setCompBorderColor((255, 255, 255, 255))
-                        #color_style.setCompFillColor((255, 255, 255, 255))
+                        #color_style.setCompFillColor((255, 255, 255, 255)
                     drawNetwork.addCompartment(canvas, position, dimension,
                                             color_style.getCompBorderColor(), color_style.getCompFillColor(),
                                                 comp_border_width*scale)
@@ -1037,10 +1036,10 @@ if __name__ == '__main__':
 
     #filename = "test.xml"
     #filename = "feedback.xml"
-    filename = "LinearChain.xml"
+    #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
-    #filename = "test_comp.xml"
+    filename = "test_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 

@@ -52,7 +52,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         res = []
         [res.append(x) for x in list_update if x not in res and not x.isdigit()]
         return res
-
+    
     df_CompartmentData = df[0]
     df_NodeData = df[1]
     df_ReactionData = df[2]

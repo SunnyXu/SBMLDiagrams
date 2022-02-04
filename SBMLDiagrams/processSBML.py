@@ -154,8 +154,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     spec_concentration_list = []
     
     #set the default values without render info:
-    comp_fill_color = [158, 169, 255, 200]
-    comp_border_color = [0, 29, 255, 255]
+    #comp_fill_color = [158, 169, 255, 200]
+    #comp_border_color = [0, 29, 255, 255]
+    comp_fill_color = [255, 255, 255, 255]
+    comp_fill_color = [255, 255, 255, 255]
     comp_border_width = 2.0
     spec_fill_color = [255, 204, 153, 200]
     spec_border_color = [255, 108, 9, 255]
@@ -464,6 +466,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             dimension = comp_dimension_list[j]
                             position = comp_position_list[j]
                     for j in range(len(comp_render)):
+                        #print(comp_render[j])
                         if temp_id == comp_render[j][0]:
                             comp_fill_color = comp_render[j][1]
                             comp_border_color = comp_render[j][2]
@@ -480,8 +483,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         position = [0,0]
                         #If there is no render info about the compartments given from sbml,
                         #they will be set as white. 
-                        comp_fill_color = [255, 255, 255, 255]
-                        comp_border_color = [255, 255, 255, 255]
+                        #comp_fill_color = [255, 255, 255, 255]
+                        #comp_border_color = [255, 255, 255, 255]
 
                 CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
                 CompartmentData_row_dct[NETIDX].append(netIdx)
@@ -1946,9 +1949,9 @@ if __name__ == '__main__':
     # filename = "test.xml" 
     # filename = "no_rxn.xml"
     # filename = "test_4.xml"
-    # filename = "feedback.xml"
+    filename = "feedback.xml"
     # filename = "LinearChain.xml"
-    filename = "test_comp.xml"
+    # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
     # filename = "5nodes.sbml"
