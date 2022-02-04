@@ -43,7 +43,7 @@ setup(
         'simplesbml',
         'skia-python',
         'Ipython',
-        'PIL',
+        'Pillow',
         'setuptools',
         'openpyxl',
         'opencv-python',

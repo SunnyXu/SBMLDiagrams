@@ -6,7 +6,7 @@ python-libsbml
 simplesbml
 skia-python
 ipython
-PIL
+Pillow
 setuptools>=42
 openpyxl
 opencv-python
