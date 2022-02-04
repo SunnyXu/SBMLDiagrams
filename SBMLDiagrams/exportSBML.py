@@ -13,7 +13,7 @@ import libsbml
 import re # to process kinetic_law string
 #import pandas as pd
 import math
-
+import sys
 
 def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
@@ -52,10 +52,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         res = []
         [res.append(x) for x in list_update if x not in res and not x.isdigit()]
         return res
-    
-    df_CompartmentData = df[0]
-    df_NodeData = df[1]
-    df_ReactionData = df[2]
+     
+    if df == None:
+        sys.exit("There is no valid information to process.")
+    else:
+        df_CompartmentData = df[0]
+        df_NodeData = df[1]
+        df_ReactionData = df[2]
 
     isReversible = True
     numNodes = len(df_NodeData)
