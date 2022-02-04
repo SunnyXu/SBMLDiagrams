@@ -4,7 +4,7 @@
 
 """
 Created on Mon Aug 23 13:25:34 2021
-@author: Jin Xu
+@author: Jin Xu and Jessie Jiang
 """
 
 from operator import le
@@ -1032,9 +1032,9 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
+    #filename = "test.xml"
     #filename = "feedback.xml"
-    #filename = "LinearChain.xml"
+    filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"

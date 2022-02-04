@@ -4,7 +4,6 @@ pandas
 python-libsbml
 pip>20
 simplesbml
-tellurium
 skia-python
 setuptools>=42
 openpyxl
