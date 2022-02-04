@@ -451,48 +451,25 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 temp_id = Comps_ids[i]
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
-                if temp_id == "_compartment_default_":
-                    dimension = compartmentDefaultSize
-                    position = [0, 0]
-                    comp_border_color = [255, 255, 255, 255]
-                    comp_fill_color = [255, 255, 255, 255]
-                    CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
-                    CompartmentData_row_dct[NETIDX].append(netIdx)
-                    CompartmentData_row_dct[IDX].append(i)
-                    CompartmentData_row_dct[ID].append(temp_id)
-                    #CompartmentData_row_dct[VOLUMNE].append(vol)
-                    CompartmentData_row_dct[POSITION].append(position)
-                    CompartmentData_row_dct[SIZE].append(dimension)
-                    CompartmentData_row_dct[BORDERCOLOR].append(comp_border_color)
-                    CompartmentData_row_dct[FILLCOLOR].append(comp_fill_color)
-                    CompartmentData_row_dct[BORDERWIDTH].append(comp_border_width)
+                if len(comp_id_list) != 0:
+                #if mplugin is not None:
+                    if temp_id == "_compartment_default_":
+                        dimension = compartmentDefaultSize
+                        position = [0, 0]
+                        #comp_border_color = [255, 255, 255, 255]
+                        #comp_fill_color = [255, 255, 255, 255]
                     
-                    # for j in range(len(COLUMN_NAME_df_CompartmentData)):
-                    #     try: 
-                    #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
-                    #     except:
-                    #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = ''
-                    #df_CompartmentData = df_CompartmentData.append(CompartmentData_row_dct, ignore_index=True)
-                    
-                    if len(df_CompartmentData) == 0:
-                        df_CompartmentData = pd.DataFrame(CompartmentData_row_dct)
-                    else:
-                        df_CompartmentData = pd.concat([df_CompartmentData,\
-                            pd.DataFrame(CompartmentData_row_dct)], ignore_index=True)
+                    for j in range(numCompGlyphs):
+                        if comp_id_list[j] == temp_id:
+                            dimension = comp_dimension_list[j]
+                            position = comp_position_list[j]
+                    for j in range(len(comp_render)):
+                        if temp_id == comp_render[j][0]:
+                            comp_fill_color = comp_render[j][1]
+                            comp_border_color = comp_render[j][2]
+                            comp_border_width = comp_render[j][3]
 
-                else:
-                    if len(comp_id_list) != 0:
-                    #if mplugin is not None:                    
-                        for j in range(numCompGlyphs):
-                            if comp_id_list[j] == temp_id:
-                                dimension = comp_dimension_list[j]
-                                position = comp_position_list[j]
-                        for j in range(len(comp_render)):
-                            if temp_id == comp_render[j][0]:
-                                comp_fill_color = comp_render[j][1]
-                                comp_border_color = comp_render[j][2]
-                                comp_border_width = comp_render[j][3]
-                    else:# no layout info about compartment,
+                else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
                         # modify the compartment size using the max_rec function above
                         # random assigned network:
@@ -506,27 +483,27 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         comp_fill_color = [255, 255, 255, 255]
                         comp_border_color = [255, 255, 255, 255]
 
-                    CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
-                    CompartmentData_row_dct[NETIDX].append(netIdx)
-                    CompartmentData_row_dct[IDX].append(i)
-                    CompartmentData_row_dct[ID].append(temp_id)
-                    #CompartmentData_row_dct[VOLUMNE].append(vol)
-                    CompartmentData_row_dct[POSITION].append(position)
-                    CompartmentData_row_dct[SIZE].append(dimension)
-                    CompartmentData_row_dct[BORDERCOLOR].append(comp_border_color)
-                    CompartmentData_row_dct[FILLCOLOR].append(comp_fill_color)
-                    CompartmentData_row_dct[BORDERWIDTH].append(comp_border_width)
-                    # for j in range(len(COLUMN_NAME_df_CompartmentData)):
-                    #     try: 
-                    #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
-                    #     except:
-                    #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = ''
-                    # df_CompartmentData = df_CompartmentData.append(CompartmentData_row_dct, ignore_index=True)
-                    if len(df_CompartmentData) == 0:
-                        df_CompartmentData = pd.DataFrame(CompartmentData_row_dct)
-                    else:
-                        df_CompartmentData = pd.concat([df_CompartmentData,\
-                            pd.DataFrame(CompartmentData_row_dct)], ignore_index=True)
+                CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
+                CompartmentData_row_dct[NETIDX].append(netIdx)
+                CompartmentData_row_dct[IDX].append(i)
+                CompartmentData_row_dct[ID].append(temp_id)
+                #CompartmentData_row_dct[VOLUMNE].append(vol)
+                CompartmentData_row_dct[POSITION].append(position)
+                CompartmentData_row_dct[SIZE].append(dimension)
+                CompartmentData_row_dct[BORDERCOLOR].append(comp_border_color)
+                CompartmentData_row_dct[FILLCOLOR].append(comp_fill_color)
+                CompartmentData_row_dct[BORDERWIDTH].append(comp_border_width)
+                # for j in range(len(COLUMN_NAME_df_CompartmentData)):
+                #     try: 
+                #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
+                #     except:
+                #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = ''
+                # df_CompartmentData = df_CompartmentData.append(CompartmentData_row_dct, ignore_index=True)
+                if len(df_CompartmentData) == 0:
+                    df_CompartmentData = pd.DataFrame(CompartmentData_row_dct)
+                else:
+                    df_CompartmentData = pd.concat([df_CompartmentData,\
+                        pd.DataFrame(CompartmentData_row_dct)], ignore_index=True)
 
             numSpec_in_reaction = len(spec_specGlyph_id_list)
 
@@ -1971,7 +1948,7 @@ if __name__ == '__main__':
     # filename = "test_4.xml"
     # filename = "feedback.xml"
     # filename = "LinearChain.xml"
-    # filename = "test_comp.xml"
+    filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
     # filename = "5nodes.sbml"
@@ -1988,8 +1965,8 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    #df = load(sbmlStr)
-    df = load("dfgdg")
+    df = load(sbmlStr)
+    #df = load("dfgdg")
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2020,7 +1997,7 @@ if __name__ == '__main__':
     # df.setCompartmentFillColor('_compartment_default_', [255, 255, 255])
     # df.setCompartmentFillColor('_compartment_default_', 'ForestGreen')
     # df.setCompartmentFillColor('_compartment_default_', "#ff3456")
-    # df.setCompartmentFillColor('_compartment_default_', "coral")
+    # df.setCompartmentFillColor('_compartment_default_', "ForestGreen")
     # df.setCompartmentFillColor('c_0', 'coral')
     # print(df.getCompartmentFillColor('c_0'))
     # print(df.getCompartmentFillColor('_compartment_default_'))
@@ -2055,16 +2032,16 @@ if __name__ == '__main__':
     # print("handle_position after:", df.getReactionHandlePositions("r_0"))
 
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
-    # if len(sbmlStr_layout_render) == 0:
-    #     print("empty sbml")
-    # else:
-    #     visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
+    if len(sbmlStr_layout_render) == 0:
+        print("empty sbml")
+    else:
+        visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
 
 
 
