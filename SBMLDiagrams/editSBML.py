@@ -199,14 +199,14 @@ def _setFloatingBoundaryNode(df, id, floating_node):
 def _setNodePosition(df, id, position):
 
     """
-    Set the node position.
+    Set the x,y coordinates of the node position.
 
     Args:  
         df: DataFrame-initial information.
 
         id: id-node id.
 
-        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+        position (list): [position_x, position_y], the coordinate represents the top-left hand corner of the node 
 
     Returns:
         df_temp: DataFrame-information after updates. 
