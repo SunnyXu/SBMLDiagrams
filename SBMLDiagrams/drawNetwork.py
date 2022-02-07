@@ -825,7 +825,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
         text_line_width: float-text line width.
 
     """ 
-    position = [position[0], (position[1]-dimension[1]*0.15)]
+    position = [position[0], (position[1]-dimension[1]*0.1)]
     fontSize = scale*fontSize
     #self code start
     id = node_id 
