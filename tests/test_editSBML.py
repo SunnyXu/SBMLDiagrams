@@ -103,12 +103,14 @@ class TestEditSBML(unittest.TestCase):
     opacity = 0.5
     line_thickness = 2.
     bezier = False
+    arrowHeadSize = [20, 20]
 
     df_update = editSBML._setReactionCenterPosition(self.df, "r_0", center_pos)
     df_update = editSBML._setReactionHandlePositions(df_update, "r_0", handles)
     df_update = editSBML._setReactionFillColor(df_update, "r_0", fill_color, opacity = opacity)
     df_update = editSBML._setReactionLineThickness(df_update, "r_0", line_thickness)
     df_update = editSBML._setBezierReactionType(df_update, "r_0", bezier)
+    df_update = editSBML._setReactionArrowHeadSize(df_update, arrowHeadSize)
 
     self.assertTrue(df_update[2].iloc[0]["center_pos"] == center_pos)
     self.assertTrue(df_update[2].iloc[0]["handles"] == handles)
@@ -116,7 +118,7 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[2].iloc[0]["fill_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[2].iloc[0]["line_thickness"] == line_thickness)
     self.assertTrue(df_update[2].iloc[0]["bezier"] == bezier)
-
+    self.assertTrue(df_update[2].iloc[0]["arrow_head_size"] == arrowHeadSize)
 
 if __name__ == '__main__':
   unittest.main()

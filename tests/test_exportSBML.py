@@ -668,7 +668,7 @@ class TestExportSBML(unittest.TestCase):
     self.assertTrue(test_mass_action_rxn)
 
   def testReaction4(self):
-    # Test column 'sources' 'targets' 'modifiers' 'fill color' 'center_position' 'handles' 
+    # Test column 'sources' 'targets' 'modifiers' 'fill color' 'center_position' 'handles' 'arrow_head_size'
     # of df_ReactionData are lists
     if IGNORE_TEST:
       return    
@@ -679,6 +679,7 @@ class TestExportSBML(unittest.TestCase):
       list_reaction += self.df_ReactionData.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction += self.df_ReactionData.iloc[:,i].tolist()
+    list_reaction += self.df_ReactionData.iloc[:,12].tolist()
     test = all(isinstance(item, list) for item in list_reaction)
     list_reaction_feedback = []
     for i in range(3,5):
@@ -687,6 +688,7 @@ class TestExportSBML(unittest.TestCase):
       list_reaction_feedback += self.df_ReactionData_feedback.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_feedback += self.df_ReactionData_feedback.iloc[:,i].tolist()
+    list_reaction_feedback += self.df_ReactionData_feedback.iloc[:,12].tolist()
     test_feedback = all(isinstance(item, list) for item in list_reaction_feedback)
     list_reaction_LinearChain = []
     for i in range(3,5):
@@ -695,6 +697,7 @@ class TestExportSBML(unittest.TestCase):
       list_reaction_LinearChain += self.df_ReactionData_LinearChain.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_LinearChain += self.df_ReactionData_LinearChain.iloc[:,i].tolist()
+    list_reaction_LinearChain += self.df_ReactionData_LinearChain.iloc[:,12].tolist()
     test_LinearChain = all(isinstance(item, list) for item in list_reaction_LinearChain)
     list_reaction_test_no_comp = []
     for i in range(3,5):
@@ -703,6 +706,7 @@ class TestExportSBML(unittest.TestCase):
       list_reaction_test_no_comp += self.df_ReactionData_test_no_comp.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_test_no_comp += self.df_ReactionData_test_no_comp.iloc[:,i].tolist()
+    list_reaction_test_no_comp += self.df_ReactionData_test_no_comp.iloc[:,12].tolist()
     test_no_comp = all(isinstance(item, list) for item in list_reaction_test_no_comp)
     list_reaction_test_comp = []
     for i in range(3,5):
@@ -711,6 +715,7 @@ class TestExportSBML(unittest.TestCase):
       list_reaction_test_comp += self.df_ReactionData_test_comp.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_test_comp += self.df_ReactionData_test_comp.iloc[:,i].tolist()
+    list_reaction_test_comp += self.df_ReactionData_test_comp.iloc[:,12].tolist()
     test_comp = all(isinstance(item, list) for item in list_reaction_test_comp)
     list_reaction_test_modifier = []
     for i in range(3,5):
@@ -719,6 +724,7 @@ class TestExportSBML(unittest.TestCase):
       list_reaction_test_modifier += self.df_ReactionData_test_modifier.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_test_modifier += self.df_ReactionData_test_modifier.iloc[:,i].tolist()
+    list_reaction_test_modifier += self.df_ReactionData_test_modifier.iloc[:,12].tolist()
     test_modifier = all(isinstance(item, list) for item in list_reaction_test_modifier)
     list_reaction_node_grid = []
     for i in range(3,5):
@@ -727,6 +733,7 @@ class TestExportSBML(unittest.TestCase):
       list_reaction_node_grid += self.df_ReactionData_node_grid.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_node_grid += self.df_ReactionData_node_grid.iloc[:,i].tolist()
+    list_reaction_node_grid += self.df_ReactionData_node_grid.iloc[:,12].tolist()
     test_node_grid = all(isinstance(item, list) for item in list_reaction_node_grid)
     list_reaction_mass_action_rxn = []
     for i in range(3,5):
@@ -735,6 +742,7 @@ class TestExportSBML(unittest.TestCase):
       list_reaction_mass_action_rxn += self.df_ReactionData_mass_action_rxn.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_mass_action_rxn += self.df_ReactionData_mass_action_rxn.iloc[:,i].tolist()
+    list_reaction_mass_action_rxn += self.df_ReactionData_mass_action_rxn.iloc[:,12].tolist()
     test_mass_action = all(isinstance(item, list) for item in list_reaction_mass_action_rxn)
     
     self.assertTrue(test)
