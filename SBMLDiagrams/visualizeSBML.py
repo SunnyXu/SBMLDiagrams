@@ -7,10 +7,7 @@ Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu and Jessie Jiang
 """
 
-#from operator import le
 import os
-#from turtle import left
-#from matplotlib import image
 import skia
 import simplesbml
 import libsbml
@@ -332,7 +329,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                             spec_text_position_list.append([text_pos_x, text_pos_y])
                             spec_text_dimension_list.append([text_dim_w, text_dim_h])
 
-
                     #print(reaction_mod_list)
                     #print(mod_specGlyph_list)
                     #print(spec_specGlyph_id_list)
@@ -348,25 +344,21 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                         for j in range(0, info.getNumLineEndings()):
                             lineEnding = info.getLineEnding(j)
-                            id = lineEnding.getId()
+                            #id = lineEnding.getId()
                             boundingbox = lineEnding.getBoundingBox()
                             width = boundingbox.getWidth()
                             height= boundingbox.getHeight()
                             pos_x = boundingbox.getX()
                             pos_y = boundingbox.getY()
                             arrowHeadSize = [width, height]
-                            #print("id:", id)
-                            #print("rotational:", lineEnding.getEnableRotationalMapping())
-                            #print("size:",[width, height])
-                            #print("position:", [pos_x, pos_y])
-                            group = lineEnding.getGroup()
-                            for element in group.getListOfElements():
-                                #name = element.getElementName()
-                                NumRenderPoints = element.getListOfElements().getNumRenderPoints()
-                                for k in range(NumRenderPoints):
-                                    x = element.getListOfElements().get(k).getX().getCoordinate()
-                                    y = element.getListOfElements().get(k).getY().getCoordinate()
-                                    #print(k, [x,y])
+                            # print(lineEnding.getEnableRotationalMapping())
+                            # group = lineEnding.getGroup()
+                            # for element in group.getListOfElements():
+                            #     #name = element.getElementName()
+                            #     NumRenderPoints = element.getListOfElements().getNumRenderPoints()
+                            #     for k in range(NumRenderPoints):
+                            #         x = element.getListOfElements().get(k).getX().getCoordinate()
+                            #         y = element.getListOfElements().get(k).getY().getCoordinate()
 
                         for  j in range ( 0, info.getNumColorDefinitions()):
                             color = info.getColorDefinition(j)
@@ -374,7 +366,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
 
                         for j in range (0, info.getNumStyles()):
                             style = info.getStyle(j)
-                            #group = color_style.getGroup()
                             group = style.getGroup()
                             typeList = style.createTypeString()
                             idList = style.createIdString()
@@ -464,12 +455,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                             position = [0, 0]
                         for j in range(numCompGlyphs):
                             if comp_id_list[j] == temp_id:
-                                #dimension = comp_dimension_list[j]
                                 dimension = [comp_dimension_list[j][0]*scale,
                                 comp_dimension_list[j][1]*scale]
-                                #position = comp_position_list[j]
-                                #position = [comp_position_list[j][0] - leftUpCorner[0],
-                                #comp_position_list[j][1] - leftUpCorner[1]]
                                 position = [(comp_position_list[j][0] - leftUpCorner[0])*scale,
                                 (comp_position_list[j][1] - leftUpCorner[1])*scale]
                         for j in range(len(comp_render)):
@@ -491,8 +478,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                 #add reactions before adding nodes to help with the line positions
                 numSpec_in_reaction = len(spec_specGlyph_id_list)
                 for i in range (numReactionGlyphs):
-                    #src = []
-                    #dst = []
                     src_position = []
                     src_dimension = [] 
                     dst_position = []
@@ -514,10 +499,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
                         for k in range(numSpec_in_reaction):
                             if temp_specGlyph_id == specGlyph_id_list[k]:
-                                #src_position.append(spec_position_list[k])
-                                #src_position.append([spec_position_list[k][0]-leftUpCorner[0],
-                                #spec_position_list[k][1]-leftUpCorner[1]])
-                                #src_dimension.append(spec_dimension_list[k])
                                 src_position.append([(spec_position_list[k][0]-leftUpCorner[0])*scale,
                                 (spec_position_list[k][1]-leftUpCorner[1])*scale])
                                 src_dimension.append([spec_dimension_list[k][0]*scale,
@@ -528,10 +509,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
                         for k in range(numSpec_in_reaction):
                             if temp_specGlyph_id == specGlyph_id_list[k]:
-                                #dst_position.append(spec_position_list[k])
-                                #dst_position.append([spec_position_list[k][0]-leftUpCorner[0],
-                                #spec_position_list[k][1]-leftUpCorner[1]])
-                                #dst_dimension.append(spec_dimension_list[k])
                                 dst_position.append([(spec_position_list[k][0]-leftUpCorner[0])*scale,
                                 (spec_position_list[k][1]-leftUpCorner[1])*scale])
                                 dst_dimension.append([spec_dimension_list[k][0]*scale,
@@ -543,10 +520,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                             temp_specGlyph_id = mod_specGlyph_list[i][j]
                             for k in range(numSpec_in_reaction):
                                 if temp_specGlyph_id == specGlyph_id_list[k]:
-                                    #mod_position.append(spec_position_list[k])
-                                    #mod_position.append([(spec_position_list[k][0]-leftUpCorner[0]),
-                                    #(spec_position_list[k][1]-leftUpCorner[1])])
-                                    #mod_dimension.append(spec_dimension_list[k])
                                     mod_position.append([(spec_position_list[k][0]-leftUpCorner[0])*scale,
                                     (spec_position_list[k][1]-leftUpCorner[1])*scale])
                                     mod_dimension.append([spec_dimension_list[k][0]*scale,
@@ -557,10 +530,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                                     temp_specGlyph_id = spec_specGlyph_id_list[k][1]
                             for k in range(numSpec_in_reaction):
                                 if temp_specGlyph_id == specGlyph_id_list[k]:
-                                    #mod_position.append(spec_position_list[k])
-                                    #mod_position.append([(spec_position_list[k][0]-leftUpCorner[0]),
-                                    #(spec_position_list[k][1]-leftUpCorner[1])])
-                                    #mod_dimension.append(spec_dimension_list[k])
                                     mod_position.append([(spec_position_list[k][0]-leftUpCorner[0])*scale,
                                     (spec_position_list[k][1]-leftUpCorner[1])*scale])
                                     mod_dimension.append([spec_dimension_list[k][0]*scale,
@@ -578,21 +547,11 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         handles = [center_position]
                         handles.extend(src_handle)
                         handles.extend(dst_handle)
-                        # print('rct:', src_position, src_dimension)
-                        # print('prd:', dst_position, dst_dimension)
-                        # print('center:', center_position)
-                        # print('handles:', handles)       
-                        #center_position = [center_position[0]-leftUpCorner[0], 
-                        #center_position[1]-leftUpCorner[1]]
                         center_position = [(center_position[0]-leftUpCorner[0])*scale, 
                         (center_position[1]-leftUpCorner[1])*scale]
                         for j in range(len(handles)):
                             handles[j] = [(handles[j][0]-leftUpCorner[0])*scale, 
                             (handles[j][1]-leftUpCorner[1])*scale]
-                        #print("rct:", src_position)
-                        #print("prd:", dst_position)
-                        #print("center:", center_position)
-                        #print(src_dimension)
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
                         color_style.getReactionLineColor(), reaction_line_width*scale,
@@ -632,18 +591,9 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                 for i in range (numSpec_in_reaction):
                     temp_id = spec_specGlyph_id_list[i][0]
                     tempGlyph_id = spec_specGlyph_id_list[i][1]
-                    #color_style.setDimension(dimension)
-                    #position = spec_position_list[i] 
-                    #position = [spec_position_list[i][0]-leftUpCorner[0], 
-                    #spec_position_list[i][1]-leftUpCorner[1]]
-                    #dimension = spec_dimension_list[i]
                     position = [(spec_position_list[i][0]-leftUpCorner[0])*scale, 
                     (spec_position_list[i][1]-leftUpCorner[1])*scale]
                     dimension = [spec_dimension_list[i][0]*scale,spec_dimension_list[i][1]*scale]
-                    #text_position = spec_text_position_list[i]
-                    #text_position = [spec_text_position_list[i][0]-leftUpCorner[0],
-                    #spec_text_position_list[i][1]-leftUpCorner[1]]
-                    #text_dimension = spec_text_dimension_list[i]
                     text_position = [(spec_text_position_list[i][0]-leftUpCorner[0])*scale,
                     (spec_text_position_list[i][1]-leftUpCorner[1])*scale]
                     text_dimension = [spec_text_dimension_list[i][0]*scale,
@@ -812,10 +762,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                     temp_id = FloatingNodes_ids[i]
                     for k in range(numNodes):
                         if spec_id_list[k] == temp_id:
-                            #position = spec_position_list[k]
-                            #position = [spec_position_list[k][0]-leftUpCorner[0],
-                            #spec_position_list[k][0]-leftUpCorner[1]]
-                            #dimension = spec_dimension_list[k]
                             position = [(spec_position_list[k][0]-leftUpCorner[0])*scale,
                             (spec_position_list[k][0]-leftUpCorner[1])*scale]
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
@@ -830,10 +776,6 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                     temp_id = BoundaryNodes_ids[i]
                     for k in range(numNodes):
                         if spec_id_list[k] == temp_id:
-                            #position = spec_position_list[k]
-                            #position = [spec_position_list[k][0]-leftUpCorner[0],
-                            #spec_position_list[k][1]-leftUpCorner[1]]
-                            #dimension = spec_dimension_list[k]
                             position = [(spec_position_list[k][0]-leftUpCorner[0])*scale,
                             (spec_position_list[k][1]-leftUpCorner[1])*scale]
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
@@ -1064,7 +1006,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml"
+    filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1074,14 +1016,11 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
-    #filename = "BIOMD0000000006.xml"
     #filename = "BorisEJB.xml"
-
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
-    filename = "test_arrows.xml"
+    #filename = "test_arrows.xml"
 
-    #filename = "simpleCOPASI_2RxnRender.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -1090,7 +1029,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        plot(sbmlStr, scale = 3.)
+        plot(sbmlStr)
         #plot("abc")
 
 

@@ -8,13 +8,9 @@ Created on Fri Jul 16 09:57:30 2021
 """
 
 import math
-#import tempfile
 import random, string, os
 from PIL import Image               # to load images
 from IPython.display import display
-#from matplotlib.pyplot import arrow
-#from numpy.core.fromnumeric import _transpose_dispatcher
-#from numpy.core.numeric import cross # to display images
 import skia
 from SBMLDiagrams import styleSBML
 
@@ -683,10 +679,10 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
     linewidth = reaction_line_width
     lineType = reaction_line_type
     lineColor = skia.Color(reaction_line_color[0], reaction_line_color[1], reaction_line_color[2], reaction_line_color[3])
-    #arrow_s1 = 5*reaction_line_width #height of the arrow
-    #arrow_s2 = 4*reaction_line_width #width of the arrow
-    arrow_s2 = reaction_arrow_head_size[0]
-    arrow_s1 = reaction_arrow_head_size[1] 
+    #arrow_s1 = 5*reaction_line_width 
+    #arrow_s2 = 4*reaction_line_width
+    arrow_s2 = reaction_arrow_head_size[0] #width of the arrow
+    arrow_s1 = reaction_arrow_head_size[1] #height of the arrow
     if lineType == 'bezier':
         center_handle_position = handles[0]
         center_handle_position_prd = [2*arcCenter[0]-center_handle_position[0],2*arcCenter[1]-center_handle_position[1]]
@@ -703,9 +699,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 #to calculate the end point of the arrow called arrow_end_pt
                 arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
                 if arrow_end_pt == None:
-                    #print(center_position, c1, s1)
                     arrow_end_pt = _cross_point(center_position, c1, s1) 
-                    #print("arrow_end:", arrow_end_pt)
                     #rct_handle_position could be inside the node
                 if arrow_end_pt != None:
                     pts.append(arrow_end_pt)
@@ -739,7 +733,6 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 pts_y_r = pts_y_m - (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/dis_rct_arc_center
                 pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/dis_rct_arc_center
                 points.append([pts_x_r,pts_y_r])
-                #print(points)
                 _drawArrow(canvas, points, lineColor)
                 if arrow_head_pt != None:
                     pts.append(arrow_head_pt)
@@ -828,10 +821,10 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
         text_line_width: float-text line width.
 
     """ 
-    position = [position[0], (position[1]-dimension[1]*0.1)]
-    fontSize = scale*fontSize
-    #self code start
+
     id = node_id 
+    fontSize = scale*fontSize
+    position = [position[0], (position[1]-dimension[1]*0.1)]
     #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
     stop_flag_1 = False
     while stop_flag_1 == False:

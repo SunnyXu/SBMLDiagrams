@@ -8,7 +8,6 @@ Created on Mon Aug 23 13:25:34 2021
 """
 
 import os, sys
-#from matplotlib.pyplot import arrow
 import simplesbml
 import libsbml
 import math
@@ -375,19 +374,19 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                     for j in range(0, info.getNumLineEndings()):
                         lineEnding = info.getLineEnding(j)
-                        id = lineEnding.getId()
+                        #id = lineEnding.getId()
                         boundingbox = lineEnding.getBoundingBox()
                         width = boundingbox.getWidth()
                         height= boundingbox.getHeight()
                         pos_x = boundingbox.getX()
                         pos_y = boundingbox.getY()
                         arrowHeadSize = [width, height]
-                        group = lineEnding.getGroup()
-                        for element in group.getListOfElements():
-                            NumRenderPoints = element.getListOfElements().getNumRenderPoints()
-                            for k in range(NumRenderPoints):
-                                x = element.getListOfElements().get(k).getX().getCoordinate()
-                                y = element.getListOfElements().get(k).getY().getCoordinate()
+                        # group = lineEnding.getGroup()
+                        # for element in group.getListOfElements():
+                        #     NumRenderPoints = element.getListOfElements().getNumRenderPoints()
+                        #     for k in range(NumRenderPoints):
+                        #         x = element.getListOfElements().get(k).getX().getCoordinate()
+                        #         y = element.getListOfElements().get(k).getY().getCoordinate()
 
                     for  j in range ( 0, info.getNumColorDefinitions()):
                         color = info.getColorDefinition(j)
@@ -397,7 +396,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         style = info.getStyle(j)
                         group = style.getGroup()
                         typeList = style.createTypeString()
-                        #print(typeList)
                         idList = style.createIdString()
                         if 'COMPARTMENTGLYPH' in typeList:
                             for k in range(len(color_list)):
@@ -446,7 +444,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     reaction_line_color = hex_to_rgb(color_list[k][1])
                             reaction_line_width = group.getStrokeWidth()
                             rxn_render.append([idList, reaction_line_color, reaction_line_width, arrowHeadSize])
-                            #print(rxn_render)
 
                         elif 'TEXTGLYPH' in typeList:
                             for k in range(len(color_list)):
@@ -492,7 +489,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             dimension = comp_dimension_list[j]
                             position = comp_position_list[j]
                     for j in range(len(comp_render)):
-                        #print(comp_render[j])
                         if temp_id == comp_render[j][0]:
                             comp_fill_color = comp_render[j][1]
                             comp_border_color = comp_render[j][2]
@@ -613,7 +609,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
                                     text_line_width = text_render[k][2]
-                            #id_list.append(temp_id)
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
 
                             NodeData_row_dct = {k:[] for k in COLUMN_NAME_df_NodeData}
@@ -703,7 +698,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
                                     text_line_width = text_render[k][2] 
-                            #id_list.append(temp_id)
+
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
 
                             NodeData_row_dct = {k:[] for k in COLUMN_NAME_df_NodeData}
@@ -826,12 +821,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         reaction_arrow_head_size = rxn_render[j][3]
                 try: 
                     center_position = reaction_center_list[i]
-                    #print(reaction_center_list)
                     center_handle = reaction_center_handle_list[i]
                     handles = [center_handle]
                     handles.extend(src_handle)
                     handles.extend(dst_handle)   
-                    #print(handles)
                     ReactionData_row_dct = {k:[] for k in COLUMN_NAME_df_ReactionData}
                     ReactionData_row_dct[NETIDX].append(netIdx)
                     ReactionData_row_dct[IDX].append(i)
@@ -881,7 +874,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
                         dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                         handles.append([dst_handle_x,dst_handle_y])
-                    #print(handles)
+
                     ReactionData_row_dct = {k:[] for k in COLUMN_NAME_df_ReactionData}
                     ReactionData_row_dct[NETIDX].append(netIdx)
                     ReactionData_row_dct[IDX].append(i)
@@ -1438,8 +1431,6 @@ class load:
         fill_color_list =[] 
         for i in range(len(idx_list)):
             rgb = self.df[1].iloc[idx_list[i]]["fill_color"]
-            #print(rgb)
-            #print(type(rgb))
             color = _rgb_to_color(rgb)
             fill_color_list.append(color)
 
@@ -1926,7 +1917,6 @@ class load:
         center_y = center_y/(rct_num + prd_num)
         center_position = [center_x, center_y]
         handles = [center_position]
-        #handles = []
         for j in range(rct_num):
             src_handle_x = .5*(center_position[0] + src_position[j][0] + .5*src_dimension[j][0])
             src_handle_y = .5*(center_position[1] + src_position[j][1] + .5*src_dimension[j][1])
@@ -2008,18 +1998,15 @@ class load:
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
-    filename = "node_grid.xml"
-    # filename = "mass_action_rxn.xml"
-    # filename = "test.xml" 
-    # filename = "no_rxn.xml"
-    # filename = "test_4.xml"
+
+    filename = "test.xml" 
     # filename = "feedback.xml"
     # filename = "LinearChain.xml"
     # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
-    # filename = "5nodes.sbml"
-    # filename = "output.xml"
+    # filename = "node_grid.xml"
+    # filename = "mass_action_rxn.xml"
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -2027,12 +2014,12 @@ if __name__ == '__main__':
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('node_grid.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('node_grid.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load("dfgdg")

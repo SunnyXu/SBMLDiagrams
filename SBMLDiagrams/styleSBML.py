@@ -5,8 +5,6 @@ class Style:
     def __init__(self, styleName):
         if styleName == 'default':
             # for compartment's color
-            #self.comp_fill_color = (158, 169, 255, 200)
-            #self.comp_border_color = (0, 29, 255, 255)
             self.comp_fill_color = (255, 255, 255, 255)
             self.comp_border_color = (255, 255, 255, 255)
 

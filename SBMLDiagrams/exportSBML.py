@@ -17,12 +17,6 @@ import sys
 
 def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
-    # writer = pd.ExcelWriter('5nodes.xlsx')
-    # df[0].to_excel(writer, sheet_name='CompartmentData')
-    # df[1].to_excel(writer, sheet_name='NodeData')
-    # df[2].to_excel(writer, sheet_name='ReactionData')
-    # writer.save()
-
     """
     Write the information of a set of dataframe to an SBML string. 
 
@@ -487,8 +481,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             center_x = center_x/(rct_num + prd_num) 
             center_y = center_y/(rct_num + prd_num)
             center_position = [center_x, center_y]
-            #calculate the handles by ourselves. 
-            #Is it possible to allow the users to enter the handles by themselves?
+ 
             handles = [center_position] #here should be center_handle_position but it is unknown
             for j in range(rct_num):
                 src_handle_x = .5*(center_position[0] + float(src_position[0]) + .5*float(src_dimension[0]))
@@ -860,23 +853,23 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    DIR = os.path.dirname(os.path.abspath(__file__))
-    TEST_FOLDER = os.path.join(DIR, "initiate_excel_files")
+#     DIR = os.path.dirname(os.path.abspath(__file__))
+#     TEST_FOLDER = os.path.join(DIR, "initiate_excel_files")
 
-    # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
-    # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
-    # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
+#     # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
+#     # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
+#     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
 
-    xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
-    df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
-    df_NodeData = pd.read_excel(xls, 'NodeData')
-    df_ReactionData = pd.read_excel(xls, 'ReactionData')
+#     xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
+#     df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
+#     df_NodeData = pd.read_excel(xls, 'NodeData')
+#     df_ReactionData = pd.read_excel(xls, 'ReactionData')
 
-    df = (df_CompartmentData, df_NodeData, df_ReactionData)
+#     df = (df_CompartmentData, df_NodeData, df_ReactionData)
 
-    sbmlStr_layout_render = _DFToSBML(df)
+#     sbmlStr_layout_render = _DFToSBML(df)
 
 #     f = open("output.xml", "w")
 #     f.write(sbmlStr_layout_render)
