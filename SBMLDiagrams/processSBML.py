@@ -8,7 +8,7 @@ Created on Mon Aug 23 13:25:34 2021
 """
 
 import os, sys
-from matplotlib.pyplot import arrow
+#from matplotlib.pyplot import arrow
 import simplesbml
 import libsbml
 import math
@@ -397,6 +397,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         style = info.getStyle(j)
                         group = style.getGroup()
                         typeList = style.createTypeString()
+                        #print(typeList)
                         idList = style.createIdString()
                         if 'COMPARTMENTGLYPH' in typeList:
                             for k in range(len(color_list)):
@@ -438,13 +439,15 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,shapeIdx])
 
                         elif 'REACTIONGLYPH' in typeList:
-                            #group.getEndHead(): does not work, so not for each reaction
+                            #print(group.isSetEndHead())
+                            #print(group.getEndHead()) #does not work, so not for each reaction
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
                                     reaction_line_color = hex_to_rgb(color_list[k][1])
                             reaction_line_width = group.getStrokeWidth()
                             rxn_render.append([idList, reaction_line_color, reaction_line_width, arrowHeadSize])
                             #print(rxn_render)
+
                         elif 'TEXTGLYPH' in typeList:
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
@@ -2006,7 +2009,7 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     # filename = "mass_action_rxn.xml"
-    filename = "test.xml" 
+    # filename = "test.xml" 
     # filename = "no_rxn.xml"
     # filename = "test_4.xml"
     # filename = "feedback.xml"
@@ -2015,7 +2018,7 @@ if __name__ == '__main__':
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
     # filename = "5nodes.sbml"
-    # filename = "output.xml"
+    filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2055,7 +2058,7 @@ if __name__ == '__main__':
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df.isBezierReactionType("r_0"))
-    print(df.getReactionArrowHeadSize("r_0"))
+    # print(df.getReactionArrowHeadSize("r_0"))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -2095,20 +2098,20 @@ if __name__ == '__main__':
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
     # print("center_position after:", df.getReactionCenterPosition("r_0"))
     # print("handle_position after:", df.getReactionHandlePositions("r_0"))
-    df.setReactionArrowHeadSize("r_0", [20., 20.])
-    print(df.getReactionArrowHeadSize("r_0"))
+    # df.setReactionArrowHeadSize("r_0", [20., 20.])
+    # print(df.getReactionArrowHeadSize("r_0"))
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    if len(sbmlStr_layout_render) == 0:
-        print("empty sbml")
-    else:
-        visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
+    # if len(sbmlStr_layout_render) == 0:
+    #     print("empty sbml")
+    # else:
+    #     visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
 
 
 
