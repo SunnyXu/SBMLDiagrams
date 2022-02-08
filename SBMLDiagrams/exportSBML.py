@@ -834,8 +834,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 bb_id = "bb_" + rxn_id
                 pos_x = 0
                 pos_y = 0
-                width = reaction_arrow_head_size[0]
-                height = reaction_arrow_head_size[1]
+                width = float(reaction_arrow_head_size[0])
+                height = float(reaction_arrow_head_size[1])
                 lineEnding.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
 
                 polygon = lineEnding.getGroup().createPolygon()
@@ -860,23 +860,23 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 
-#     DIR = os.path.dirname(os.path.abspath(__file__))
-#     TEST_FOLDER = os.path.join(DIR, "initiate_excel_files")
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "initiate_excel_files")
 
-#     # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
-#     # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
-#     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
+    # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
+    # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
+    # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
 
-#     xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
-#     df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
-#     df_NodeData = pd.read_excel(xls, 'NodeData')
-#     df_ReactionData = pd.read_excel(xls, 'ReactionData')
+    xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
+    df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
+    df_NodeData = pd.read_excel(xls, 'NodeData')
+    df_ReactionData = pd.read_excel(xls, 'ReactionData')
 
-#     df = (df_CompartmentData, df_NodeData, df_ReactionData)
+    df = (df_CompartmentData, df_NodeData, df_ReactionData)
 
-#     sbmlStr_layout_render = _DFToSBML(df)
+    sbmlStr_layout_render = _DFToSBML(df)
 
 #     f = open("output.xml", "w")
 #     f.write(sbmlStr_layout_render)

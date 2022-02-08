@@ -1625,22 +1625,23 @@ class load:
 
         return bezier_list
 
-    def getReactionArrowHeadSize(self, id):
+    def getReactionArrowHeadSize(self):
+    #def getReactionArrowHeadSize(self, id):
         """
         Get the arrow head size of reactions
 
         Args: 
-            id: str-the id of the reaction
 
         Returns:
             arrow_head_size_list: list of arrow_head_isze
 
             arrow_head_size: list-1*2 matrix-size of the rectangle [width, height].
         """
-        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        # idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         arrow_head_size_list =[] 
-        for i in range(len(idx_list)):
-            arrow_head_size_list.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"])
+        # for i in range(len(idx_list)):
+        #     arrow_head_size_list.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"])
+        arrow_head_size_list.append(self.df[2].iloc[0]["arrow_head_size"])
 
         return arrow_head_size_list
     
@@ -1981,16 +1982,16 @@ class load:
         self.df = editSBML._setBezierReactionType(self.df, id, bezier)
         return self.df
     
-    def setReactionArrowHeadSize(self, id, size):
+    #def setReactionArrowHeadSize(self, id, size):
+    def setReactionArrowHeadSize(self, size):
         """
         Set the reaction arrow head size.
 
         Args:  
-            id: str-reaction id.
 
             size: list-1*2 matrix-size of the rectangle [width, height].
         """
-        self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
+        self.df = editSBML._setReactionArrowHeadSize(self.df, size)
         return self.df
 
     def export(self):
@@ -2007,7 +2008,7 @@ class load:
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
-
+    filename = "node_grid.xml"
     # filename = "mass_action_rxn.xml"
     # filename = "test.xml" 
     # filename = "no_rxn.xml"
@@ -2018,19 +2019,20 @@ if __name__ == '__main__':
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
     # filename = "5nodes.sbml"
-    filename = "output.xml"
+    # filename = "output.xml"
+
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('test.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('node_grid.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    writer.save()
 
     df = load(sbmlStr)
     #df = load("dfgdg")
@@ -2058,7 +2060,7 @@ if __name__ == '__main__':
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df.isBezierReactionType("r_0"))
-    # print(df.getReactionArrowHeadSize("r_0"))
+    # print(df.getReactionArrowHeadSize())
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -2098,8 +2100,8 @@ if __name__ == '__main__':
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
     # print("center_position after:", df.getReactionCenterPosition("r_0"))
     # print("handle_position after:", df.getReactionHandlePositions("r_0"))
-    # df.setReactionArrowHeadSize("r_0", [20., 20.])
-    # print(df.getReactionArrowHeadSize("r_0"))
+    # df.setReactionArrowHeadSize([20., 20.])
+    # print(df.getReactionArrowHeadSize())
 
 
     # sbmlStr_layout_render = df.export()
