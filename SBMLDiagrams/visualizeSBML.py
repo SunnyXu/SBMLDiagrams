@@ -158,6 +158,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
         spec_border_width = 2.0
         reaction_line_width = 3.0
         text_line_width = 1.
+        reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5]
 
         try: #invalid sbml    
             ### from here for layout ###
@@ -344,6 +345,29 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         spec_render = []
                         rxn_render = []
                         text_render = []
+                        arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
+                        for j in range(0, info.getNumLineEndings()):
+                            lineEnding = info.getLineEnding(j)
+                            id = lineEnding.getId()
+                            boundingbox = lineEnding.getBoundingBox()
+                            width = boundingbox.getWidth()
+                            height= boundingbox.getHeight()
+                            pos_x = boundingbox.getX()
+                            pos_y = boundingbox.getY()
+                            arrowHeadSize = [width, height]
+                            #print("id:", id)
+                            #print("rotational:", lineEnding.getEnableRotationalMapping())
+                            #print("size:",[width, height])
+                            #print("position:", [pos_x, pos_y])
+                            group = lineEnding.getGroup()
+                            for element in group.getListOfElements():
+                                #name = element.getElementName()
+                                NumRenderPoints = element.getListOfElements().getNumRenderPoints()
+                                for k in range(NumRenderPoints):
+                                    x = element.getListOfElements().get(k).getX().getCoordinate()
+                                    y = element.getListOfElements().get(k).getY().getCoordinate()
+                                    #print(k, [x,y])
+
                         for  j in range ( 0, info.getNumColorDefinitions()):
                             color = info.getColorDefinition(j)
                             color_list.append([color.getId(),color.createValueString()])
@@ -396,11 +420,13 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                                                     color_style.getSpecBorderColor(),spec_border_width,shapeIdx])
 
                             elif 'REACTIONGLYPH' in typeList:
+                                #group.getEndHead(): does not work, so not for each reaction
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
                                         color_style.setReactionLineColor(hex_to_rgb(color_list[k][1]))
                                 reaction_line_width = group.getStrokeWidth()
-                                rxn_render.append([idList, color_style.getReactionLineColor(), reaction_line_width])
+                                rxn_render.append([idList, color_style.getReactionLineColor(), 
+                                reaction_line_width, arrowHeadSize])
                             elif 'TEXTGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
@@ -544,6 +570,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         if temp_id == rxn_render[j][0]:
                             color_style.setReactionLineColor(rxn_render[j][1])
                             reaction_line_width = rxn_render[j][2]
+                            reaction_arrow_head_size = rxn_render[j][3]
                     
                     try: 
                         center_position = reaction_center_list[i]
@@ -569,7 +596,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
                         color_style.getReactionLineColor(), reaction_line_width*scale,
-                        reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
+                        reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
+                        reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
                     except:
                         center_x = 0.
                         center_y = 0.
@@ -594,7 +622,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
                         color_style.getReactionLineColor(), reaction_line_width*scale,
-                        reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
+                        reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
+                        reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
 
                 id_list = []
                 # orphan nodes have been considered, so numSpec_in_reaction should equals to numSpecGlyphs
@@ -776,7 +805,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                     drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                     center_position, handles, src_dimension, dst_dimension, mod_dimension,
                     color_style.getReactionLineColor(), reaction_line_width*scale,
-                    reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles)
+                    reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
+                    reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
             
                 for i in range (numFloatingNodes):
                     temp_id = FloatingNodes_ids[i]
@@ -1039,7 +1069,7 @@ if __name__ == '__main__':
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
-    filename = "test_comp.xml"
+    #filename = "test_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
@@ -1049,7 +1079,9 @@ if __name__ == '__main__':
 
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
-    #filename = "test_arrows.xml"
+    filename = "test_arrows.xml"
+
+    #filename = "simpleCOPASI_2RxnRender.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -1058,7 +1090,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        plot(sbmlStr)
-
+        plot(sbmlStr, scale = 3.)
+        #plot("abc")
 
 

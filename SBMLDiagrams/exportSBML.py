@@ -11,7 +11,7 @@ Created on Mon Aug 23 13:25:34 2021
 import os
 import libsbml
 import re # to process kinetic_law string
-#import pandas as pd
+import pandas as pd
 import math
 import sys
 
@@ -577,6 +577,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 handle2 = handles[rct_num+1+j]
                 cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle2[1]))
                 cb.setBasePoint2(libsbml.Point(layoutns, handle2[0], handle2[1]))
+                
 
                 try:
                     dst_position = list(df_NodeData.iloc[int(prd_list[j])]['position'][1:-1].split(","))
@@ -811,6 +812,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 elif len(reaction_fill_color) == 3:
                     reaction_fill_color_str = '#%02x%02x%02x' % (int(reaction_fill_color[0]),int(reaction_fill_color[1]),int(reaction_fill_color[2]))           
                 reaction_line_thickness = float(df_ReactionData.iloc[i]['line_thickness'])
+                try:
+                    reaction_arrow_head_size = list(df_ReactionData.iloc[i]['arrow_head_size'][1:-1].split(","))
+                except:
+                    reaction_arrow_head_size = df_ReactionData.iloc[i]['arrow_head_size']
 
                 color = rInfo.createColorDefinition()
                 color.setId("reaction_fill_color" + "_" + rxn_id)
@@ -821,7 +826,32 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 style.getGroup().setStrokeWidth(reaction_line_thickness)
                 style.addType("REACTIONGLYPH SPECIESREFERENCEGLYPH")
                 style.addId(rxn_id)
+
+                #arrowHead
+                lineEnding = rInfo.createLineEnding()
+                lineEnding.setId("reaction_arrow_head" + "_" + rxn_id)
+                lineEnding.setEnableRotationalMapping(True)
+                bb_id = "bb_" + rxn_id
+                pos_x = 0
+                pos_y = 0
+                width = reaction_arrow_head_size[0]
+                height = reaction_arrow_head_size[1]
+                lineEnding.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+
+                polygon = lineEnding.getGroup().createPolygon()
+                renderPoint1 = polygon.createPoint()
+                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
+                renderPoint2 = polygon.createPoint()
+                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,0))
+                renderPoint3 = polygon.createPoint()
+                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
+                renderPoint4 = polygon.createPoint()
+                renderPoint4.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,100))
+
+                style.getGroup().setEndHead("reaction_arrow_head" + "_" + rxn_id)
+
         
+
         sbmlStr_layout_render = libsbml.writeSBMLToString(doc) #sbmlStr_layout_render includes both layout and render
     
         return sbmlStr_layout_render

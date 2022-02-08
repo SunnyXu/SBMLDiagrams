@@ -522,7 +522,8 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
   
 def addReaction(canvas, rct_position, prd_position, mod_position, center_position, handles,
                 rct_dimension, prd_dimension, mod_dimension, reaction_line_color, reaction_line_width, 
-                reaction_line_type = 'bezier', show_bezier_handles = False):
+                reaction_line_type = 'bezier', show_bezier_handles = False, 
+                reaction_arrow_head_size = [2., 2.]):
     
     """
     Add a reaction.
@@ -682,8 +683,10 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
     linewidth = reaction_line_width
     lineType = reaction_line_type
     lineColor = skia.Color(reaction_line_color[0], reaction_line_color[1], reaction_line_color[2], reaction_line_color[3])
-    arrow_s1 = 5*reaction_line_width #height of the arrow
-    arrow_s2 = 4*reaction_line_width #width of the arrow
+    #arrow_s1 = 5*reaction_line_width #height of the arrow
+    #arrow_s2 = 4*reaction_line_width #width of the arrow
+    arrow_s2 = reaction_arrow_head_size[0]
+    arrow_s1 = reaction_arrow_head_size[1] 
     if lineType == 'bezier':
         center_handle_position = handles[0]
         center_handle_position_prd = [2*arcCenter[0]-center_handle_position[0],2*arcCenter[1]-center_handle_position[1]]

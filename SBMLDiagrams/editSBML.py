@@ -569,3 +569,27 @@ def _setBezierReactionType(df, id, bezier):
 
     return df_temp
 
+def _setReactionArrowHeadSize(df, id, size):
+
+    """
+    Set the reaction arrow head size.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-reaction id.
+
+        size: list-1*2 matrix-size of the rectangle [width, height].
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_ReactionData_temp = df[2].copy()
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    for i in range(len(idx_list)):
+        df_ReactionData_temp.at[idx_list[i],"arrow_head_size"] = size
+    df_temp = (df[0], df[1], df_ReactionData_temp)
+
+    return df_temp
+

@@ -8,6 +8,7 @@ Created on Mon Aug 23 13:25:34 2021
 """
 
 import os, sys
+from matplotlib.pyplot import arrow
 import simplesbml
 import libsbml
 import math
@@ -46,13 +47,14 @@ LINETHICKNESS = 'line_thickness'
 CENTERPOS = 'center_pos'
 HANDLES = 'handles'
 BEZIER = 'bezier'
+ARROWHEADSIZE = 'arrow_head_size'
 COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
     POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH]
 COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
     CONCENTRATION, POSITION, SIZE, SHAPEIDX, TXTPOSITION, TXTSIZE,
     FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH]
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
-    FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER]
+    FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE]
 
 
 # DIR = os.path.dirname(os.path.abspath(__file__))
@@ -164,6 +166,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     spec_border_width = 2.0
     reaction_line_color = [91, 176, 253, 255]
     reaction_line_width = 3.0
+    reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5] 
     text_line_color = [0, 0, 0, 255]
     text_line_width = 1.
     
@@ -171,6 +174,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     try: #invalid sbml
         ### from here for layout ###
         document = libsbml.readSBMLFromString(sbmlStr)
+        #print(document.getNumErrors())
         model_layout = document.getModel()
         try:
             mplugin = model_layout.getPlugin("layout")
@@ -368,6 +372,23 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     spec_render = []
                     rxn_render = []
                     text_render = []
+                    arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
+                    for j in range(0, info.getNumLineEndings()):
+                        lineEnding = info.getLineEnding(j)
+                        id = lineEnding.getId()
+                        boundingbox = lineEnding.getBoundingBox()
+                        width = boundingbox.getWidth()
+                        height= boundingbox.getHeight()
+                        pos_x = boundingbox.getX()
+                        pos_y = boundingbox.getY()
+                        arrowHeadSize = [width, height]
+                        group = lineEnding.getGroup()
+                        for element in group.getListOfElements():
+                            NumRenderPoints = element.getListOfElements().getNumRenderPoints()
+                            for k in range(NumRenderPoints):
+                                x = element.getListOfElements().get(k).getX().getCoordinate()
+                                y = element.getListOfElements().get(k).getY().getCoordinate()
+
                     for  j in range ( 0, info.getNumColorDefinitions()):
                         color = info.getColorDefinition(j)
                         color_list.append([color.getId(),color.createValueString()])
@@ -417,11 +438,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,shapeIdx])
 
                         elif 'REACTIONGLYPH' in typeList:
+                            #group.getEndHead(): does not work, so not for each reaction
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
                                     reaction_line_color = hex_to_rgb(color_list[k][1])
                             reaction_line_width = group.getStrokeWidth()
-                            rxn_render.append([idList, reaction_line_color,reaction_line_width])
+                            rxn_render.append([idList, reaction_line_color, reaction_line_width, arrowHeadSize])
+                            #print(rxn_render)
                         elif 'TEXTGLYPH' in typeList:
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
@@ -797,6 +820,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     if temp_id == rxn_render[j][0]:
                         reaction_line_color = rxn_render[j][1]
                         reaction_line_width = rxn_render[j][2]
+                        reaction_arrow_head_size = rxn_render[j][3]
                 try: 
                     center_position = reaction_center_list[i]
                     #print(reaction_center_list)
@@ -821,6 +845,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         ReactionData_row_dct[BEZIER].append('TRUE')
                     else:
                         ReactionData_row_dct[BEZIER].append('FALSE')
+                    ReactionData_row_dct[ARROWHEADSIZE].append(reaction_arrow_head_size)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -870,6 +895,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         ReactionData_row_dct[BEZIER].append('TRUE')
                     else:
                         ReactionData_row_dct[BEZIER].append('FALSE')
+                    ReactionData_row_dct[ARROWHEADSIZE].append(reaction_arrow_head_size)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -1120,6 +1146,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[BEZIER].append('TRUE')
                 else:
                     ReactionData_row_dct[BEZIER].append('FALSE')
+                ReactionData_row_dct[ARROWHEADSIZE].append(reaction_arrow_head_size)
                 # for j in range(len(COLUMN_NAME_df_ReactionData)):
                 #     try: 
                 #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -1594,6 +1621,25 @@ class load:
             bezier_list.append(bool(self.df[2].iloc[idx_list[i]]["bezier"]))
 
         return bezier_list
+
+    def getReactionArrowHeadSize(self, id):
+        """
+        Get the arrow head size of reactions
+
+        Args: 
+            id: str-the id of the reaction
+
+        Returns:
+            arrow_head_size_list: list of arrow_head_isze
+
+            arrow_head_size: list-1*2 matrix-size of the rectangle [width, height].
+        """
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        arrow_head_size_list =[] 
+        for i in range(len(idx_list)):
+            arrow_head_size_list.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"])
+
+        return arrow_head_size_list
     
     def setCompartmentPosition(self, id, position):
         """
@@ -1931,6 +1977,18 @@ class load:
         """
         self.df = editSBML._setBezierReactionType(self.df, id, bezier)
         return self.df
+    
+    def setReactionArrowHeadSize(self, id, size):
+        """
+        Set the reaction arrow head size.
+
+        Args:  
+            id: str-reaction id.
+
+            size: list-1*2 matrix-size of the rectangle [width, height].
+        """
+        self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
+        return self.df
 
     def export(self):
         """
@@ -1948,15 +2006,16 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     # filename = "mass_action_rxn.xml"
-    # filename = "test.xml" 
+    filename = "test.xml" 
     # filename = "no_rxn.xml"
     # filename = "test_4.xml"
-    filename = "feedback.xml"
+    # filename = "feedback.xml"
     # filename = "LinearChain.xml"
     # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
     # filename = "5nodes.sbml"
+    # filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -1991,11 +2050,12 @@ if __name__ == '__main__':
     # print(df.getNodeTextFontColor("x_1"))
     # print(df.getNodeTextLineWidth("x_1"))
 
+    # print("center_position:", df.getReactionCenterPosition("r_0"))
+    # print("handle_position:", df.getReactionHandlePositions("r_0"))
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df.isBezierReactionType("r_0"))
-    # print("center_position:", df.getReactionCenterPosition("r_0"))
-    # print("handle_position:", df.getReactionHandlePositions("r_0"))
+    print(df.getReactionArrowHeadSize("r_0"))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -2035,6 +2095,8 @@ if __name__ == '__main__':
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
     # print("center_position after:", df.getReactionCenterPosition("r_0"))
     # print("handle_position after:", df.getReactionHandlePositions("r_0"))
+    df.setReactionArrowHeadSize("r_0", [20., 20.])
+    print(df.getReactionArrowHeadSize("r_0"))
 
 
     sbmlStr_layout_render = df.export()
