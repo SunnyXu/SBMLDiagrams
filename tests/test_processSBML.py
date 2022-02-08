@@ -968,6 +968,19 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.isBezierReactionType("r_0")[0] == bezier)
     self.assertTrue(self.df.getReactionArrowHeadSize()[0] == arrowHeadSize)
 
+  
+  def testSetReactionDefaultCenterAndHandlePositions(self):
+    # Test the function setReactionDefaultCenterAndHandlePositions
+
+    if IGNORE_TEST:
+      return
+    
+    self.df.setReactionDefaultCenterAndHandlePositions("r_0")
+
+    self.assertTrue(self.df.getReactionCenterPosition("r_0")[0] == [334.0, 231.0])
+    self.assertTrue(self.df.getReactionHandlePositions("r_0")[0] == 
+    [[334.0, 231.0], [386.0, 231.0], [282.0, 231.0]])
+
   def testExport(self):
     # Test the export function
 

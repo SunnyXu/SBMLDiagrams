@@ -17,10 +17,19 @@ class TestEditSBML(unittest.TestCase):
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     TEST_PATH_test = os.path.join(TEST_FOLDER, "test.xml")
     f_test = open(TEST_PATH_test, 'r')
-    sbmlStr_test = f_test.read()
+    self.sbmlStr_test = f_test.read()
     f_test.close()
+    self.df = processSBML._SBMLToDF(self.sbmlStr_test)
 
-    self.df = processSBML._SBMLToDF(sbmlStr_test)
+  def test(self):
+    # Test the functions related to network positions and size
+
+    if IGNORE_TEST:
+      return
+
+    self.assertTrue(visualizeSBML.getNetworkLeftUpCorner(self.sbmlStr_test) == [205.0, 216.0])
+    self.assertTrue(visualizeSBML.getNetworkRightDownCorner(self.sbmlStr_test) == [463.0, 246.0])
+    self.assertTrue(visualizeSBML.getNetworkSize(self.sbmlStr_test) == [258, 30])
 
   def plotInvalidStr(self):
     # system exit if plot an invalid string
