@@ -18,7 +18,7 @@ Introduction
 ------------
 
 SBMLDiagrams is a Python package to visualize the networks embedded in SBML Level 3 models. 
-If the SBML layout and render extension are used, the package will use this data to display the 
+If the SBML layout and render extension are used, the package will use this data to visualize the 
 network. SBMLDiagrams can export PNG, JPG, PDF files. SBMLDiagrams can be used to add SBML layout 
 and render to an existing SBML model which can subsequently be exported. If you use this python 
 package, please cite the Gihub website (https://github.com/SunnyXu/SBMLDiagrams).
@@ -54,7 +54,7 @@ Code Examples
    if len(sbmlStr) == 0:
       print("Empty SBML!")
    else:
-      visualizeSBML.display(sbmlStr,fileFormat = 'PNG')
+      visualizeSBML.plot(sbmlStr,fileFormat = 'PNG')
 
 
 2) Import, edit and write to an SBML file.
