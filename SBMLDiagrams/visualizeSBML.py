@@ -115,10 +115,10 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
     df = processSBML.load(sbmlStr)
     sbmlStr = df.export()
     
-    leftUpCorner = getNetworkLeftUpCorner(sbmlStr)
+    topLeftCorner = getNetworkTopLeftCorner(sbmlStr)
     networkSize = getNetworkSize(sbmlStr)
 
-    leftUpCorner = [leftUpCorner[0]-10, leftUpCorner[1]-10]
+    topLeftCorner = [topLeftCorner[0]-10, topLeftCorner[1]-10]
 
     if setImageSize == '':
         imageSize = [(networkSize[0]*scale+20*scale), (networkSize[1]*scale+20*scale)]
@@ -457,8 +457,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                             if comp_id_list[j] == temp_id:
                                 dimension = [comp_dimension_list[j][0]*scale,
                                 comp_dimension_list[j][1]*scale]
-                                position = [(comp_position_list[j][0] - leftUpCorner[0])*scale,
-                                (comp_position_list[j][1] - leftUpCorner[1])*scale]
+                                position = [(comp_position_list[j][0] - topLeftCorner[0])*scale,
+                                (comp_position_list[j][1] - topLeftCorner[1])*scale]
                         for j in range(len(comp_render)):
                             if temp_id == comp_render[j][0]:
                                 color_style.setCompFillColor(comp_render[j][1])
@@ -499,8 +499,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
                         for k in range(numSpec_in_reaction):
                             if temp_specGlyph_id == specGlyph_id_list[k]:
-                                src_position.append([(spec_position_list[k][0]-leftUpCorner[0])*scale,
-                                (spec_position_list[k][1]-leftUpCorner[1])*scale])
+                                src_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
+                                (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                 src_dimension.append([spec_dimension_list[k][0]*scale,
                                 spec_dimension_list[k][1]*scale])
                         src_handle.append(rct_specGlyph_handle_list[i][j][1])
@@ -509,8 +509,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
                         for k in range(numSpec_in_reaction):
                             if temp_specGlyph_id == specGlyph_id_list[k]:
-                                dst_position.append([(spec_position_list[k][0]-leftUpCorner[0])*scale,
-                                (spec_position_list[k][1]-leftUpCorner[1])*scale])
+                                dst_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
+                                (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                 dst_dimension.append([spec_dimension_list[k][0]*scale,
                                 spec_dimension_list[k][1]*scale])
                         dst_handle.append(prd_specGlyph_handle_list[i][j][1])
@@ -520,8 +520,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                             temp_specGlyph_id = mod_specGlyph_list[i][j]
                             for k in range(numSpec_in_reaction):
                                 if temp_specGlyph_id == specGlyph_id_list[k]:
-                                    mod_position.append([(spec_position_list[k][0]-leftUpCorner[0])*scale,
-                                    (spec_position_list[k][1]-leftUpCorner[1])*scale])
+                                    mod_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
+                                    (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                     mod_dimension.append([spec_dimension_list[k][0]*scale,
                                     spec_dimension_list[k][1]*scale])
                         else:
@@ -530,8 +530,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                                     temp_specGlyph_id = spec_specGlyph_id_list[k][1]
                             for k in range(numSpec_in_reaction):
                                 if temp_specGlyph_id == specGlyph_id_list[k]:
-                                    mod_position.append([(spec_position_list[k][0]-leftUpCorner[0])*scale,
-                                    (spec_position_list[k][1]-leftUpCorner[1])*scale])
+                                    mod_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
+                                    (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                     mod_dimension.append([spec_dimension_list[k][0]*scale,
                                     spec_dimension_list[k][1]*scale])
 
@@ -547,11 +547,11 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         handles = [center_position]
                         handles.extend(src_handle)
                         handles.extend(dst_handle)
-                        center_position = [(center_position[0]-leftUpCorner[0])*scale, 
-                        (center_position[1]-leftUpCorner[1])*scale]
+                        center_position = [(center_position[0]-topLeftCorner[0])*scale, 
+                        (center_position[1]-topLeftCorner[1])*scale]
                         for j in range(len(handles)):
-                            handles[j] = [(handles[j][0]-leftUpCorner[0])*scale, 
-                            (handles[j][1]-leftUpCorner[1])*scale]
+                            handles[j] = [(handles[j][0]-topLeftCorner[0])*scale, 
+                            (handles[j][1]-topLeftCorner[1])*scale]
                         drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
                         center_position, handles, src_dimension, dst_dimension, mod_dimension,
                         color_style.getReactionLineColor(), reaction_line_width*scale,
@@ -591,11 +591,11 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                 for i in range (numSpec_in_reaction):
                     temp_id = spec_specGlyph_id_list[i][0]
                     tempGlyph_id = spec_specGlyph_id_list[i][1]
-                    position = [(spec_position_list[i][0]-leftUpCorner[0])*scale, 
-                    (spec_position_list[i][1]-leftUpCorner[1])*scale]
+                    position = [(spec_position_list[i][0]-topLeftCorner[0])*scale, 
+                    (spec_position_list[i][1]-topLeftCorner[1])*scale]
                     dimension = [spec_dimension_list[i][0]*scale,spec_dimension_list[i][1]*scale]
-                    text_position = [(spec_text_position_list[i][0]-leftUpCorner[0])*scale,
-                    (spec_text_position_list[i][1]-leftUpCorner[1])*scale]
+                    text_position = [(spec_text_position_list[i][0]-topLeftCorner[0])*scale,
+                    (spec_text_position_list[i][1]-topLeftCorner[1])*scale]
                     text_dimension = [spec_text_dimension_list[i][0]*scale,
                     spec_text_dimension_list[i][1]*scale]
                     for j in range(numFloatingNodes):
@@ -762,8 +762,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                     temp_id = FloatingNodes_ids[i]
                     for k in range(numNodes):
                         if spec_id_list[k] == temp_id:
-                            position = [(spec_position_list[k][0]-leftUpCorner[0])*scale,
-                            (spec_position_list[k][0]-leftUpCorner[1])*scale]
+                            position = [(spec_position_list[k][0]-topLeftCorner[0])*scale,
+                            (spec_position_list[k][0]-topLeftCorner[1])*scale]
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
                     color_style.setNodeDimension(dimension)
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
@@ -776,8 +776,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                     temp_id = BoundaryNodes_ids[i]
                     for k in range(numNodes):
                         if spec_id_list[k] == temp_id:
-                            position = [(spec_position_list[k][0]-leftUpCorner[0])*scale,
-                            (spec_position_list[k][1]-leftUpCorner[1])*scale]
+                            position = [(spec_position_list[k][0]-topLeftCorner[0])*scale,
+                            (spec_position_list[k][1]-topLeftCorner[1])*scale]
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
@@ -809,15 +809,15 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                 pos_dict, color_style = draw_on_canvas(canvas)
     return baseImageArray, pos_dict, color_style
 
-def getNetworkLeftUpCorner(sbmlStr):
+def getNetworkTopLeftCorner(sbmlStr):
     """
-    Get the left up corner of the network(s) from the SBML string
+    Get the top left-hand corner of the network(s) from the SBML string
 
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
     Returns:
-        position: list-1*2 matrix-leftup corner of the network(s) [position_x, position_y].
+        position: list-[position_x, position_y], top left-hand corner of the network(s) .
         It is calculated by the minimum positions of compartments and nodes, excluding the 
         compartment with the id of _compartment_default_ .
     
@@ -887,15 +887,15 @@ def getNetworkLeftUpCorner(sbmlStr):
 
     return position
 
-def getNetworkRightDownCorner(sbmlStr):
+def getNetworkBottomRightCorner(sbmlStr):
     """
-    Get the right down corner of the network(s) from the SBML string
+    Get the bottom right-hand corner of the network(s) from the SBML string
 
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
     Returns:
-        position: list-1*2 matrix-right down corner of the network(s) [position_x, position_y].
+        position: list-[position_x, position_y],bottom right-hand corner of the network(s) .
         It is calculated by the maximum right down corner positions of compartments and nodes, 
         excluding the compartment with the id of _compartment_default_ .
     
@@ -995,9 +995,10 @@ def getNetworkSize(sbmlStr):
         list-1*2 matrix-size of the rectangle [width, height].
     
     """ 
-    position_leftUp = getNetworkLeftUpCorner(sbmlStr)
-    position_rightDown = getNetworkRightDownCorner(sbmlStr)
-    size = [int(position_rightDown[0]-position_leftUp[0]), int(position_rightDown[1]-position_leftUp[1])]
+    position_topLeft = getNetworkTopLeftCorner(sbmlStr)
+    position_bottomRight = getNetworkBottomRightCorner(sbmlStr)
+    size = [int(position_bottomRight[0]-position_topLeft[0]), 
+    int(position_bottomRight[1]-position_topLeft[1])]
 
     return size
 

@@ -27,8 +27,8 @@ class TestEditSBML(unittest.TestCase):
     if IGNORE_TEST:
       return
 
-    self.assertTrue(visualizeSBML.getNetworkLeftUpCorner(self.sbmlStr_test) == [205.0, 216.0])
-    self.assertTrue(visualizeSBML.getNetworkRightDownCorner(self.sbmlStr_test) == [463.0, 246.0])
+    self.assertTrue(visualizeSBML.getNetworkTopLeftCorner(self.sbmlStr_test) == [205.0, 216.0])
+    self.assertTrue(visualizeSBML.getNetworkBottomRightCorner(self.sbmlStr_test) == [463.0, 246.0])
     self.assertTrue(visualizeSBML.getNetworkSize(self.sbmlStr_test) == [258, 30])
 
   def plotInvalidStr(self):
