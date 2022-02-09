@@ -549,14 +549,14 @@ def _setReactionLineThickness(df, id, line_thickness):
 def _setBezierReactionType(df, id, bezier):
 
     """
-    Set the reaction line thickness.
+    Set the reaction type to bezier curve or not with a certain reaction id.
 
     Args:  
         df: DataFrame-initial information.
 
         id: str-reaction id.
-
-        bezier: bool-bezier reaction (True) or not (False)
+ 
+        bezier: bool-bezier reaction (True as default) or not (False as straightline).
 
     Returns:
         df_temp: DataFrame-information after updates. 

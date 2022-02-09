@@ -1974,12 +1974,12 @@ class load:
 
     def setBezierReactionType(self, id, bezier = True):
         """
-        Set the reaction type to bezier curve with a certain reaction id.
+        Set the reaction type to bezier curve or not with a certain reaction id.
 
         Args:  
             id: str-reaction id.
 
-            bezier: bool-bezier reaction (True as default) or not (False as straightline)
+            bezier: bool-bezier reaction (True as default) or not (False as straightline).
         """
         self.df = editSBML._setBezierReactionType(self.df, id, bezier)
         return self.df
