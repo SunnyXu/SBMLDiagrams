@@ -48,14 +48,14 @@ def _color_to_rgb(color, opacity):
 def _setCompartmentPosition(df, id, position):
 
     """
-    Set the compartment position
+    Set the x,y coordinates of the compartment position
 
     Args:  
         df: DataFrame-initial information.
 
         id: str-compartment id.
 
-        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+        position: [position_x, position_y], the coordinate represents the top-left hand corner of the compartment.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -204,9 +204,9 @@ def _setNodePosition(df, id, position):
     Args:  
         df: DataFrame-initial information.
 
-        id: id-node id.
+        id: str-node id.
 
-        position (list): [position_x, position_y], the coordinate represents the top-left hand corner of the node 
+        position: list-[position_x, position_y], the coordinate represents the top-left hand corner of the node. 
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -271,14 +271,14 @@ def _setNodeShapeIdx(df, id, shape_idx):
 def _setNodeTextPosition(df, id, txt_position):
 
     """
-    Set the node text position.
+    Set the x,y coordinates of the node text position.
 
     Args:  
         df: DataFrame-initial information.
 
         id: str-node id.
 
-        txt_position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+        txt_position: [position_x, position_y], the coordinate represents the top-left hand corner of the node text.
 
     Returns:
         df_temp: DataFrame-information after updates. 

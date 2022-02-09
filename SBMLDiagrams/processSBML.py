@@ -1638,12 +1638,13 @@ class load:
     
     def setCompartmentPosition(self, id, position):
         """
-        Set the compartment position
+        Set the x,y coordinates of the compartment position.
 
         Args:  
-            id: str-compartment id.
+            id: id-compartment id.
 
-            position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+            position: list-[position_x, position_y], the coordinate represents the top-left hand corner of the compartment.
+
         """
         self.df = editSBML._setCompartmentPosition(self.df, id, position)
         return self.df
@@ -1715,12 +1716,12 @@ class load:
 
     def setNodePosition(self, id, position):
         """
-        Set the node position.
+            Set the x,y coordinates of the node position.
 
         Args:  
             id: id-node id.
 
-            position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+            position: list-[position_x, position_y], the coordinate represents the top-left hand corner of the node.
         """
         self.df = editSBML._setNodePosition(self.df, id, position)
         return self.df
@@ -1751,12 +1752,13 @@ class load:
 
     def setNodeTextPosition(self, id, txt_position):
         """
-        Set the node text position.
+        Set the x,y coordinates of the node text position.
 
         Args:  
-            id: str-node id.
+            id: id-node id.
 
-            txt_position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand corner of the node text.
+
         """
         self.df = editSBML._setNodeTextPosition(self.df, id, txt_position)
         return self.df
