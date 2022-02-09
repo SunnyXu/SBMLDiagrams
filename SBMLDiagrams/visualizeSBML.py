@@ -9,6 +9,7 @@ Created on Mon Aug 23 13:25:34 2021
 
 import os
 import skia
+import re
 import simplesbml
 import libsbml
 import math
@@ -21,7 +22,7 @@ from collections import defaultdict
 import numpy as np
 import cv2
 
-def animate(simulationData, baseImageArray, posDict, color_style, numDigit = 5, folderName = 'animation', horizontal_offset = 15):
+def animate(simulationData, floatingSpecies, baseImageArray, posDict, color_style, numDigit = 5, folderName = 'animation', horizontal_offset = 15):
     """
     Animation for the tellurium simulation
 
@@ -29,6 +30,8 @@ def animate(simulationData, baseImageArray, posDict, color_style, numDigit = 5, 
         simulationData: numpy array for the simulation data
 
         baseImageArray: base image array used for generating the change
+
+        floatingSpecies: floating species name in the NamedArray of simulationData
 
         posDict: position dictionary for the Floating Species
 
@@ -46,24 +49,29 @@ def animate(simulationData, baseImageArray, posDict, color_style, numDigit = 5, 
 
     Returns:
     """
-    bar_dimension = [10,80]
-    [node_width, node_height] = color_style.getNodeDimension()
-    mx = max(simulationData[0])
+    bar_dimension = [10,50]
+    [node_height, node_width] = color_style.getNodeDimension()
+    mx = float("-inf")
+    for species in floatingSpecies:
+        species = '[' + species + ']'
+        mx = max(mx,max(simulationData[species]))
     for i in range(len(simulationData)):
         surface = skia.Surface(np.array(baseImageArray, copy=True))
         canvas = surface.getCanvas()
         for letter, pos in posDict.items():
-            new_pos = [pos[0] + node_width + horizontal_offset, pos[1]+node_height]
+            new_pos = [pos[0] + node_width + horizontal_offset, pos[1] + node_height]
+            txt_pos = [pos[0] + node_width//2 + horizontal_offset + 10, pos[1] + node_height//2]
             percent = simulationData[letter][i]/mx
-            drawNetwork.addProgressBar(canvas, new_pos, bar_dimension, percent, 0.5,
+            drawNetwork.addProgressBar(canvas, new_pos, bar_dimension, percent, 1,
                                        color_style)
-            # drawNetwork.addText(canvas, str(simulationData[letter][i])[:numDigit],
-            #                     new_pos, [40, 60], (0, 0, 0, 255), 1.)
-        drawNetwork.draw(surface, folderName='animation', fileName='a' + str(i), file_format='PNG')
+            drawNetwork.addText(canvas, str(simulationData[letter][i])[:numDigit],
+                                txt_pos, [40, 60], (0, 0, 0, 255), 1, 1)
+        drawNetwork.draw(surface, folderName='animation', fileName=str(i), file_format='PNG')
 
     imgs = []
     size = None
-    files = sorted(os.listdir(os.getcwd() + '/' + folderName))
+    files = os.listdir(os.getcwd() + '/' + folderName)
+    files.sort(key=lambda f: int(re.sub('\D', '', f)))
     for filename in files:
         if filename[-4:] == ".png":
             imgName = os.path.join(os.getcwd() + '/' + folderName, filename)
@@ -72,7 +80,7 @@ def animate(simulationData, baseImageArray, posDict, color_style, numDigit = 5, 
             size = (width, height)
             imgs.append(img)
 
-    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, "output.mp4"), cv2.VideoWriter_fourcc(*'MP4V'), 1, size)
+    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, "output.mp4"), cv2.VideoWriter_fourcc(*'MP4V'), 10, size)
 
     for i in range(len(imgs)):
         out.write(imgs[i])
