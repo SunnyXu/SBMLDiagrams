@@ -48,14 +48,15 @@ def _color_to_rgb(color, opacity):
 def _setCompartmentPosition(df, id, position):
 
     """
-    Set the x,y coordinates of the compartment position
+    Set the x,y coordinates of the compartment position.
 
     Args:  
         df: DataFrame-initial information.
 
         id: str-compartment id.
 
-        position: [position_x, position_y], the coordinate represents the top-left hand corner of the compartment.
+        position: [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the compartment.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -72,7 +73,7 @@ def _setCompartmentPosition(df, id, position):
 def _setCompartmentSize(df, id, size):
 
     """
-    Set the compartment size
+    Set the compartment size.
 
     Args:  
         df: DataFrame-initial information.
@@ -123,7 +124,7 @@ def _setCompartmentFillColor(df, id, fill_color, opacity):
 def _setCompartmentBorderColor(df, id, border_color, opacity):
 
     """
-    Set the compartment border color
+    Set the compartment border color.
 
     Args:  
         df: DataFrame-initial information.
@@ -151,7 +152,7 @@ def _setCompartmentBorderColor(df, id, border_color, opacity):
 def _setCompartmentBorderWidth(df, id, border_width):
 
     """
-    Set the compartment border width
+    Set the compartment border width.
 
     Args:  
         df: DataFrame-initial information.

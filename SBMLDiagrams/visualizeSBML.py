@@ -78,8 +78,8 @@ def animate(simulationData, baseImageArray, posDict, color_style, numDigit = 5, 
         out.write(imgs[i])
     out.release()
 
-def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', complexShape = '', \
-    reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
+def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
     newStyleClass = None):
 
     """
@@ -88,28 +88,31 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
-        setImageSize: list-1*2 matrix-size of the rectangle [width, height],int-width, int-height.
+        setImageSize: list-1*2 matrix-size of the rectangle [width, height].
 
         scale: float-makes the figure output size = scale * default output size.
 
         fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
-        output_fileName: str-filename: 'output' (default) or '' (result in a random file name) or 'fileName' (self-designed file name).
+        output_fileName: str-filename: 'output' (default) or '' (result in a random file name) 
+        or 'fileName' (self-designed file name).
         
-        complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' or 'tetramer'.
+        complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' 
+        or 'tetramer'.
 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
+        reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
         If there is no layout information from the SBML file, all reaction line will be drawn in
         straight lines even set as 'bezier'.
 
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
-        styleName: pre-existing color style for the graph
+        styleName: pre-existing color style for the graph.
 
-        newStyleClass: user-customized new color style
+        newStyleClass: user-customized new color style.
 
     Returns:
-        The tuple of base image's array, position dictionary for the Floating Species, color style of the image
+        The tuple of base image's array, position dictionary for the Floating Species, 
+        color style of the image.
     """
 
     df = processSBML.load(sbmlStr)
@@ -811,15 +814,15 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
 
 def getNetworkTopLeftCorner(sbmlStr):
     """
-    Get the top left-hand corner of the network(s) from the SBML string
+    Get the top left-hand corner of the network(s) from the SBML string.
 
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
     Returns:
-        position: list-[position_x, position_y], top left-hand corner of the network(s) .
-        It is calculated by the minimum positions of compartments and nodes, excluding the 
-        compartment with the id of _compartment_default_ .
+        position: list-[position_x, position_y], top left-hand corner of the network(s).
+        It is calculated by the minimum positions of compartments, nodes, centroid and handle 
+        positions of reactions, excluding the compartment with the id of _compartment_default_.
     
     """    
     model = simplesbml.loadSBMLStr(sbmlStr)
@@ -889,15 +892,15 @@ def getNetworkTopLeftCorner(sbmlStr):
 
 def getNetworkBottomRightCorner(sbmlStr):
     """
-    Get the bottom right-hand corner of the network(s) from the SBML string
+    Get the bottom right-hand corner of the network(s) from the SBML string.
 
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
     Returns:
-        position: list-[position_x, position_y],bottom right-hand corner of the network(s) .
+        position: list-[position_x, position_y],bottom right-hand corner of the network(s).
         It is calculated by the maximum right down corner positions of compartments and nodes, 
-        excluding the compartment with the id of _compartment_default_ .
+        excluding the compartment with the id of _compartment_default_.
     
     """    
     model = simplesbml.loadSBMLStr(sbmlStr)
@@ -986,7 +989,7 @@ def getNetworkBottomRightCorner(sbmlStr):
 
 def getNetworkSize(sbmlStr):
     """
-    Get the size of the network(s) from the SBML string
+    Get the size of the network(s) from the SBML string.
 
     Args:  
         sbmlStr: str-the string of the input sbml file.

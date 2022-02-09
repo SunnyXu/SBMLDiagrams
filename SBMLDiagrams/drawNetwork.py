@@ -22,14 +22,14 @@ def _drawRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash 
 
     Args:  
         canvas: skia.Canvas.
-        x: float-left up corner position_x
-        y: float-left up corner position_y
-        width: float-width of the rectangle
-        height: float-height of the rectangle
-        outline: skia.Color()-border color
-        fill: skia.Color()-fill color
-        linewidth: float-line width
-        dash: bool-dashline (True) or not (False as default)
+        x: float-top left-hand corner position_x.
+        y: float-top left-hand corner position_y.
+        width: float-width of the rectangle.
+        height: float-height of the rectangle.
+        outline: skia.Color()-border color.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
     """
     
     rect = skia.Rect(x, y, x+width, y+height)    
@@ -62,15 +62,15 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
     Draw a rounded rectangle on canvas.
 
     Args:  
-        canvas: skia.Canvas
-        x: float-left up corner position_x
-        y: float-left up corner position_y
-        width: float-width of the rectangle
-        height: float-height of the rectangle
-        outline: skia.Color()-border color
-        fill: skia.Color()-fill color
-        linewidth: float-line width
-        dash: bool-dashline (True) or not (False as default)
+        canvas: skia.Canvas.
+        x: float-top left-hand corner position_x.
+        y: float-top left-hand corner position_y.
+        width: float-width of the rectangle.
+        height: float-height of the rectangle.
+        outline: skia.Color()-border color.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
     """
 
     radius = 1.*linewidth
@@ -105,14 +105,14 @@ def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
 
     Args:  
         canvas: skia.Canvas
-        x1: float-left up corner position_x of the rectangle
-        y1: float-left up corner position_y of the rectangle
-        w: float-width of the rectangle
-        h: float-height of the rectangle
-        outline: skia.Color()-border color
-        fill: skia.Color()-fill color
-        linewidth: float-line width
-        dash: bool-dashline (True) or not (False as default)
+        x1: float-top left-hand corner position_x of the rectangle.
+        y1: float-top left-hand corner position_y of the rectangle.
+        w: float-width of the rectangle.
+        h: float-height of the rectangle.
+        outline: skia.Color()-border color.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
     """
 
     centerX = x1 + w/2
@@ -148,15 +148,15 @@ def _drawDimer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
     Draw a dimer (two circles) within a certain size of rectangle on canvas.
 
     Args:  
-        canvas: skia.Canvas
-        x1: float-left up corner position_x of the rectangle
-        y1: float-left up corner position_y of the rectangle
-        w: float-width of the rectangle
-        h: float-height of the rectangle
-        outline: skia.Color()-border color
-        fill: skia.Color()-fill color
-        linewidth: float-line width
-        dash: bool-dashline (True) or not (False as default)
+        canvas: skia.Canvas.
+        x1: float-top left-hand corner position_x of the rectangle.
+        y1: float-top left-hand corner position_y of the rectangle.
+        w: float-width of the rectangle.
+        h: float-height of the rectangle.
+        outline: skia.Color()-border color.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
     """
 
     radius = .25*min(w,h)
@@ -196,15 +196,15 @@ def _drawTrimer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
     Draw a trimer (three circles) within a certain size of rectangle on canvas.
 
     Args:  
-        canvas: skia.Canvas
-        x1: float-left up corner position_x of the rectangle
-        y1: float-left up corner position_y of the rectangle
-        w: float-width of the rectangle
-        h: float-height of the rectangle
-        outline: skia.Color()-border color
-        fill: skia.Color()-fill color
-        linewidth: float-line width
-        dash: bool-dashline (True) or not (False as default)
+        canvas: skia.Canvas.
+        x1: float-top left-hand corner position_x of the rectangle.
+        y1: float-top left-hand corner position_y of the rectangle.
+        w: float-width of the rectangle.
+        h: float-height of the rectangle.
+        outline: skia.Color()-border color.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
     """
 
     radius = .25*min(w,h)
@@ -248,15 +248,15 @@ def _drawTetramer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False)
     Draw a Tetramer (four circles) within a certain size of rectangle on canvas.
 
     Args:  
-        canvas: skia.Canvas
-        x1: float-left up corner position_x of the rectangle
-        y1: float-left up corner position_y of the rectangle
-        w: float-width of the rectangle
-        h: float-height of the rectangle
-        outline: skia.Color()-border color
-        fill: skia.Color()-fill color
-        linewidth: float-line width
-        dash: bool-dashline (True) or not (False as default)
+        canvas: skia.Canvas.
+        x1: float-top left-hand corner position_x of the rectangle.
+        y1: float-top left-hand corner position_y of the rectangle.
+        w: float-width of the rectangle.
+        h: float-height of the rectangle.
+        outline: skia.Color()-border color.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
     """
 
     radius = .25*min(w,h)
@@ -304,12 +304,12 @@ def _drawPolygon (canvas, pts, outline, fill, linewidth, dash = False):
     Draw a polygon.
 
     Args:  
-        canvas: skia.Canvas
-        pts: list of 1*2 matrix: positions of the vertices/corners of the polygon
-        outline: skia.Color()-border color
-        fill: skia.Color()-fill color
-        linewidth: float-line width
-        dash: bool-dashline (True) or not (False as default)
+        canvas: skia.Canvas.
+        pts: list of 1*2 matrix: positions of the vertices/corners of the polygon.
+        outline: skia.Color()-border color.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
     """
 
     paintFill = skia.Paint(
@@ -348,14 +348,14 @@ def _drawLine (canvas, x1, y1, x2, y2, fill, linewidth, dash = False):
     Draw a line.
 
     Args:  
-        canvas: skia.Canvas
-        x1: float-position_x of one end of the line
-        y1: float-position_y of one end of the line
-        x2: float-position_x of the other end of the line
-        y2: float-position_y of the other end of the line
-        fill: skia.Color()-fill color
-        linewidth: float-line width
-        dash: bool-dashline (True) or not (False as default)
+        canvas: skia.Canvas.
+        x1: float-position_x of one end of the line.
+        y1: float-position_y of one end of the line.
+        x2: float-position_x of the other end of the line.
+        y2: float-position_y of the other end of the line.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
     """    
 
     if dash:
@@ -397,7 +397,7 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
     Args:  
         canvas: skia.Canvas.
 
-        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+        position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
 
         dimension: list-1*2 matrix-size of the rectangle [width, height].
 
@@ -432,7 +432,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 
         alias_node: str-alias node ('alias') or not ('').
 
-        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+        position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
 
         dimension: list-1*2 matrix-size of the rectangle [width, height].
 
@@ -547,7 +547,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
 
         reaction_line_width: float-reaction line width.
 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
+        reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
 
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
@@ -555,12 +555,13 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
     
     def _cross_point(arcCenter, c2, s2):
         """
-        Get the cross point of a point and a rectangle with position(leftup corner) and size given.
+        Get the cross point of a point and a rectangle with position(top left-hand corner) and size 
+        given.
 
         Args:  
-            arcCenter:  1*2 matrix-position of the point
-            c2: 1*2 matrix-position of the rectangle (leftup corner)
-            s2: 1*2 matrix-size of the rectangle
+            arcCenter:  1*2 matrix-position of the point.
+            c2: 1*2 matrix-position of the rectangle (top left-hand corner).
+            s2: 1*2 matrix-size of the rectangle.
         """
         pt_center = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
         pt_up_left    = c2
@@ -571,10 +572,10 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             """
 
             Args:  
-                line1: list of 1*2 matrix-two points to represent line1
-                line2: list of 1*2 matrix-two points to represent line2
+                line1: list of 1*2 matrix-two points to represent line1.
+                line2: list of 1*2 matrix-two points to represent line2.
             Returns:
-                [x,y]: 1*2 matrix-the point position of the crossed two lines
+                [x,y]: 1*2 matrix-the point position of the crossed two lines.
             """
             xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
             ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
@@ -620,9 +621,9 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
         Draw an arrow.
 
         Args:  
-            canvas: skia.Canvas
-            pts: list of 1*2 matrix: points of the arrows
-            fill: skia.Color(): color of the arrow
+            canvas: skia.Canvas.
+            pts: list of 1*2 matrix: points of the arrows.
+            fill: skia.Color(): color of the arrow.
         """
         paintFill = skia.Paint(
            AntiAlias=True,
@@ -650,9 +651,9 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
         Draw a bezier curve.
 
         Args:  
-            pts: list of 1*2 matrix: positions of src, h1, h2 and dest ([src, h1, h2, dest])
-            fillcolor: skia.Color(): color of the bezier curve
-            linewidth: line width of the bezier curve
+            pts: list of 1*2 matrix: positions of src, h1, h2 and dest ([src, h1, h2, dest]).
+            fillcolor: skia.Color(): color of the bezier curve.
+            linewidth: line width of the bezier curve.
         """
 
         src = pts[0]; h1 = pts[1]; h2 = pts[2]; dest = pts[3]
@@ -741,7 +742,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
                 pts.append(prd_center_position)
                 _drawBezier(pts, lineColor, linewidth)
-    elif lineType == 'linear':
+    elif lineType == 'straight':
         for i in range (nReactants):
             c1 = rct_position[i] 
             s1 = rct_dimension[i]
@@ -812,7 +813,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
 
         node_id: str-the content of the text.
 
-        position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+        position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
 
         dimension: list-1*2 matrix-size of the rectangle [width, height].
 

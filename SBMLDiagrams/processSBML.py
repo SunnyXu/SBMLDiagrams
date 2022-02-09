@@ -66,13 +66,13 @@ df_color = pd.DataFrame(color_data)
 
 def _rgb_to_color(rgb):
     """
-    transfer a list of rgb to a color list with decimal_rgba, html_name and hex_string
+    transfer a list of rgb to a color list with decimal_rgba, html_name and hex_string.
 
     Args:  
         rgb: list-1*3 or 1*4 matrix for a decimal rgb or rgba.
 
     Returns:
-        color: list-[decimal_rgb, html_name, hex_string]
+        color: list-[decimal_rgb, html_name, hex_string].
     
     """
     color = []
@@ -121,7 +121,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
         reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
 
     Returns:
-        (df_CompartmentData, df_NodeData, df_ReactionData): tuple
+        (df_CompartmentData, df_NodeData, df_ReactionData): tuple.
 
         df_CompartmentData: DataFrame-Compartment information.
 
@@ -1172,15 +1172,15 @@ class load:
 
     def getCompartmentPosition(self, id):
         """
-        Get the position of a compartment with its certain compartment id
+        Get the position of a compartment with its certain compartment id.
 
         Args: 
-            id: str-the id of the compartment
+            id: str-the id of the compartment.
 
         Returns:
-            position_list: list of position
+            position_list: list of position.
 
-            position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+            position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
         """
 
         idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
@@ -1192,13 +1192,13 @@ class load:
 
     def getCompartmentSize(self, id):
         """
-        Get the size of a compartment with its certain compartment id
+        Get the size of a compartment with its certain compartment id.
 
         Args: 
-            id: str-the id of the compartment
+            id: str-the id of the compartment.
 
         Returns:
-            size_list: list of size
+            size_list: list of size.
 
             size: list-1*2 matrix-size of the rectangle [width, height].
         """
@@ -1212,15 +1212,16 @@ class load:
 
     def getCompartmentFillColor(self, id):
         """
-        Get the fill color of a compartment with its certain compartment id
+        Get the fill color of a compartment with its certain compartment id.
 
         Args: 
-            id: str-the id of the compartment
+            id: str-the id of the compartment.
 
         Returns:
-            fill_color_list: list of fill_color
+            fill_color_list: list of fill_color.
 
-            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
+            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)].
         """
         idx_list = self.df[0].index[self.df[0]["id"] == id].tolist() #row index
         fill_color_list =[] 
@@ -1233,15 +1234,16 @@ class load:
 
     def getCompartmentBorderColor(self, id):
         """
-        Get the border color of a compartment with its certain id
+        Get the border color of a compartment with its certain id.
 
         Args: 
-            id: str-the id of the compartment
+            id: str-the id of the compartment.
 
         Returns:
-            border_color_list: list of border_color
+            border_color_list: list of border_color.
 
-            border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
+            border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)].
 
         """
         idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
@@ -1255,13 +1257,13 @@ class load:
 
     def getCompartmentBorderWidth(self, id):
         """
-        Get the border width of a compartment with its certain compartment id
+        Get the border width of a compartment with its certain compartment id.
 
         Args: 
-            id: str-the id of the compartment
+            id: str-the id of the compartment.
 
         Returns:
-            border_width_list: list of border_width
+            border_width_list: list of border_width.
 
             border_width: float-compartment border line width.
         """
@@ -1276,13 +1278,13 @@ class load:
 
     def isFloatingNode(self, id):
         """
-        Judge whether a node is floating node with its certain node id
+        Judge whether a node is floating node with its certain node id.
 
         Args: 
-            id: str-the id of the Node
+            id: str-the id of the Node.
 
         Returns:
-            floating_node_list: list of floating_node
+            floating_node_list: list of floating_node.
 
             floating_node: str-floating node (True) or not (False).
         """
@@ -1296,15 +1298,15 @@ class load:
 
     def getNodePosition(self, id):
         """
-        Get the position of a node with its certain node id
+        Get the position of a node with its certain node id.
 
         Args: 
-            id: str-the id of the Node
+            id: str-the id of the Node.
 
         Returns:
-            position_list: list of position
+            position_list: list of position.
 
-            position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+            position: list-[position_x, position_y]-top left-hand corner of the rectangle.
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
@@ -1317,13 +1319,13 @@ class load:
 
     def getNodeSize(self, id):
         """
-        Get the size of a node with its certain node id
+        Get the size of a node with its certain node id.
 
         Args: 
-            id: str-the id of the node
+            id: str-the id of the node.
 
         Returns:
-            size_list: list of size
+            size_list: list of size.
 
             size: list-1*2 matrix-size of the rectangle [width, height].
         """
@@ -1336,19 +1338,19 @@ class load:
 
     def getNodeShape(self, id):
         """
-        Get the shape index and the shape of a node with its certain node id
+        Get the shape index and the shape of a node with its certain node id.
 
         Args: 
-            id: str-the id of the node
+            id: str-the id of the node.
 
         Returns:
-            shape_list: list of tuple (shape_idx, shape)
+            shape_list: list of tuple (shape_idx, shape).
 
-            (shape_idx, shape): tuple
+            (shape_idx, shape): tuple.
             
             shape_idx: int-1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
             
-            shape: str
+            shape: str.
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
@@ -1376,15 +1378,15 @@ class load:
 
     def getNodeTextPosition(self, id):
         """
-        Get the text position of a node with its certain node id
+        Get the text position of a node with its certain node id.
 
         Args: 
-            id: str-the id of node
+            id: str-the id of node.
 
         Returns:
-            txt_position_list: list of txt_position
+            txt_position_list: list of txt_position.
 
-            txt_position: list-1*2 matrix-leftup corner of the rectangle [position_x, position_y].
+            txt_position: list-[position_x, position_y]-top left-hand corner of the rectangle.
         """
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         txt_position_list =[] 
@@ -1396,13 +1398,13 @@ class load:
         
     def getNodeTextSize(self, id):
         """
-        Get the text size of a node with its certain node id
+        Get the text size of a node with its certain node id.
 
         Args: 
-            id: str-the id of the node
+            id: str-the id of the node.
 
         Returns:
-            txt_size_list: list of txt_size
+            txt_size_list: list of txt_size.
 
             txt_size: list-1*2 matrix-size of the rectangle [width, height].
         """
@@ -1416,15 +1418,16 @@ class load:
 
     def getNodeFillColor(self, id):
         """
-        Get the fill color of a node with its certain node id
+        Get the fill color of a node with its certain node id.
 
         Args: 
-            id: str-the id of the node
+            id: str-the id of the node.
 
         Returns:
-            fill_color_list: list of fill_color
+            fill_color_list: list of fill_color.
 
-            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
+            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)].
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
@@ -1439,16 +1442,16 @@ class load:
 
     def getNodeBorderColor(self, id):
         """
-        Get the border color of a node with its certain node id
+        Get the border color of a node with its certain node id.
 
         Args: 
-            id: str-the id of the node
-
+            id: str-the id of the node.
 
         Returns:
-            border_color_list: list of border_color
+            border_color_list: list of border_color.
 
-            border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
+            border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)].
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
@@ -1463,10 +1466,10 @@ class load:
 
     def getNodeBorderWidth(self, id):
         """
-        Get the border width of a node with its certain node id
+        Get the border width of a node with its certain node id.
 
         Args: 
-            id: str-the id of the node
+            id: str-the id of the node.
 
         Returns:
             border_width: float-node border line width.
@@ -1480,15 +1483,16 @@ class load:
 
     def getNodeTextFontColor(self, id):
         """
-        Get the text font color of a node with its certain node id
+        Get the text font color of a node with its certain node id.
 
         Args: 
-            id: str-the id of the node
+            id: str-the id of the node.
 
         Returns:
-            txt_font_color_list: list of txt_font_color
+            txt_font_color_list: list of txt_font_color.
 
-            txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
+            txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)].
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
@@ -1502,13 +1506,13 @@ class load:
 
     def getNodeTextLineWidth(self, id):
         """
-        Get the text line width of a node with its certain node id
+        Get the text line width of a node with its certain node id.
 
         Args: 
-            id: int-the id of the node
+            id: int-the id of the node.
 
         Returns:
-            txt_line_width_list: list of txt_line_width
+            txt_line_width_list: list of txt_line_width.
 
             txt_line_width: float-node text line width.
         """
@@ -1521,15 +1525,15 @@ class load:
 
     def getReactionCenterPosition(self, id):
         """
-        Get the center position of a reaction with its certain reaction id
+        Get the center position of a reaction with its certain reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
-            line_center_position_list: list of center_position
+            line_center_position_list: list of center_position.
 
-            center_position:  list-1*2 matrix: position of the center
+            center_position:  list-1*2 matrix: position of the center.
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         center_position_list =[] 
@@ -1540,15 +1544,16 @@ class load:
 
     def getReactionHandlePositions(self, id):
         """
-        Get the handle positions of a reaction with its certain reaction id
+        Get the handle positions of a reaction with its certain reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
-            line_handle_positions_list: list of handle_positions
+            line_handle_positions_list: list of handle_positions.
 
-            handle_positions: list-position of the handles: [center handle, reactant handles, product handles].
+            handle_positions: list-position of the handles: 
+            [center handle, reactant handles, product handles].
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         handle_positions_list =[] 
@@ -1559,15 +1564,16 @@ class load:
 
     def getReactionFillColor(self, id):
         """
-        Get the fill color of a reaction with its certain reaction id
+        Get the fill color of a reaction with its certain reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
-            fill_color_list: list of fill_color
+            fill_color_list: list of fill_color.
 
-            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), hex str (8 digits)]
+            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)].
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         fill_color_list =[] 
@@ -1580,13 +1586,13 @@ class load:
 
     def getReactionLineThickness(self, id):
         """
-        Get the line thickness of a reaction with its certain reaction id
+        Get the line thickness of a reaction with its certain reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
-            line_thickness_list: list of line_thickness
+            line_thickness_list: list of line_thickness.
 
             line_thickness: float-reaction border line width.
         """
@@ -1619,12 +1625,12 @@ class load:
     def getReactionArrowHeadSize(self):
     #def getReactionArrowHeadSize(self, id):
         """
-        Get the arrow head size of reactions
+        Get the arrow head size of reactions.
 
         Args: 
 
         Returns:
-            arrow_head_size_list: list of arrow_head_isze
+            arrow_head_size_list: list of arrow_head_size.
 
             arrow_head_size: list-1*2 matrix-size of the rectangle [width, height].
         """
@@ -1643,7 +1649,8 @@ class load:
         Args:  
             id: id-compartment id.
 
-            position: list-[position_x, position_y], the coordinate represents the top-left hand corner of the compartment.
+            position: list-[position_x, position_y], the coordinate represents the top-left hand corner 
+            of the compartment.
 
         """
         self.df = editSBML._setCompartmentPosition(self.df, id, position)
@@ -1651,7 +1658,7 @@ class load:
     
     def setCompartmentSize(self, id, size):
         """
-        Set the compartment size
+        Set the compartment size.
 
         Args:  
             id: str-compartment id.
@@ -1663,10 +1670,10 @@ class load:
 
     def setCompartmentFillColor(self, id, fill_color, opacity = 1.):
         """
-        Set the compartment fill color
+        Set the compartment fill color.
 
         Args:  
-            id: str-compartment iid.
+            id: str-compartment id.
 
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1677,7 +1684,7 @@ class load:
 
     def setCompartmentBorderColor(self, id, border_color, opacity = 1.):       
         """
-        Set the compartment border color
+        Set the compartment border color.
 
         Args:  
             id: str-compartment id.
@@ -1692,7 +1699,7 @@ class load:
 
     def setCompartmentBorderWidth(self, id, border_width):
         """
-        Set the compartment border width
+        Set the compartment border width.
 
         Args:  
             id: str-compartment id.
@@ -1721,7 +1728,8 @@ class load:
         Args:  
             id: id-node id.
 
-            position: list-[position_x, position_y], the coordinate represents the top-left hand corner of the node.
+            position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node.
         """
         self.df = editSBML._setNodePosition(self.df, id, position)
         return self.df
@@ -1757,7 +1765,8 @@ class load:
         Args:  
             id: id-node id.
 
-            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand corner of the node text.
+            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node text.
 
         """
         self.df = editSBML._setNodeTextPosition(self.df, id, txt_position)
@@ -1861,7 +1870,8 @@ class load:
         Args:  
             id: str-reaction id.
             
-            position: list-position of the handles: [center handle, reactant handles, product handles].
+            position: list-position of the handles: [center handle, reactant handles, 
+            product handles].
         """
         self.df = editSBML._setReactionHandlePositions(self.df, id, position)
         return self.df
@@ -1962,14 +1972,14 @@ class load:
         self.df = editSBML._setReactionLineThickness(self.df, id, line_thickness)
         return self.df
 
-    def setBezierReactionType(self, id, bezier):
+    def setBezierReactionType(self, id, bezier = True):
         """
-        Set the reaction line thickness.
+        Set the reaction type to bezier curve with a certain reaction id.
 
         Args:  
             id: str-reaction id.
 
-            bezier: bool-bezier reaction (True) or not (False)
+            bezier: bool-bezier reaction (True as default) or not (False as straightline)
         """
         self.df = editSBML._setBezierReactionType(self.df, id, bezier)
         return self.df

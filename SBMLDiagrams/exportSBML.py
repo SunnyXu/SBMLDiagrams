@@ -21,7 +21,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
     Write the information of a set of dataframe to an SBML string. 
 
     Args:  
-        (df_CompartmentData, df_NodeData, df_ReactionData): tuple
+        (df_CompartmentData, df_NodeData, df_ReactionData): tuple.
 
         df_CompartmentData: DataFrame-Compartment information.
 
