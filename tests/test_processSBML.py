@@ -900,6 +900,7 @@ class TestImportSBML(unittest.TestCase):
 
     floating_node = True
     position = [412., 216.]
+    position_txt_position = [413., 217.]
     size = [50., 29.]
     shapeIdx = 2
     txt_position = [412., 216.]
@@ -937,6 +938,10 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0][0:-1] == [0,0,0])
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0][3] == 255)
     self.assertTrue(self.df.getNodeTextLineWidth("x_1")[0] == txt_line_width)
+
+    self.df.setConsistentNodeAndNodeTextPosition("x_1", position_txt_position)
+    self.assertTrue(self.df.getNodePosition("x_1")[0] == position_txt_position)
+    self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == position_txt_position)
 
 
   def testSetReaction(self):

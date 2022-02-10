@@ -1735,6 +1735,20 @@ class load:
         self.df = editSBML._setNodePosition(self.df, id, position)
         return self.df
 
+    def setConsistentNodeAndNodeTextPosition(self, id, position):
+        """
+            Set the x,y coordinates of the node and node text position if there are consistent.
+
+        Args:  
+            id: id-node id.
+
+            position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node.
+        """
+        self.df = editSBML._setNodePosition(self.df, id, position)
+        self.df = editSBML._setNodeTextPosition(self.df, id, position)
+        return self.df
+
     def setNodeSize(self, id, size):
         """
         Set the node size.
@@ -2034,8 +2048,8 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    #df = load(sbmlStr)
-    df = load("dfgdg")
+    df = load(sbmlStr)
+    #df = load("dfgdg")
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2075,6 +2089,7 @@ if __name__ == '__main__':
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
     # df.setFloatingBoundaryNode("x_1", True)
+    # print(df.getNodePosition("x_1"))
     # df.setNodePosition("x_1", [100.0, 100.0])
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # print(df.getNodePosition("x_1"))
@@ -2104,11 +2119,11 @@ if __name__ == '__main__':
     # print(df.getReactionArrowHeadSize())
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
     # if len(sbmlStr_layout_render) == 0:
     #     print("empty sbml")
