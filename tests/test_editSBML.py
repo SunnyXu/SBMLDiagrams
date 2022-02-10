@@ -45,7 +45,17 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[0].iloc[0]["border_color"][0:-1] == border_color)
     self.assertTrue(df_update[0].iloc[0]["border_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[0].iloc[0]["border_width"] == border_width)
-
+       
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentPosition(df_update, "XX", position)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentSize(df_update, "XX", size)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentFillColor(df_update, "XX", fill_color)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentBorderColor(df_update, "XX", border_color)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentBorderWidth(df_update, "XX", border_width)
 
   def testSetNode(self):
     # set node one by one
@@ -91,6 +101,29 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[1].iloc[0]["txt_font_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[1].iloc[0]["txt_line_width"] == txt_line_width)
 
+    with self.assertRaises(Exception):
+      editSBML._setFloatingBoundaryNode(df_update, "XX", floating_node)
+    with self.assertRaises(Exception):  
+      editSBML._setNodePosition(df_update, "XX", position)
+    with self.assertRaises(Exception):
+      editSBML._setNodeSize(df_update, "XX", size)
+    with self.assertRaises(Exception):
+      editSBML._setNodeShapeIdx(df_update, "XX", shapeIdx)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPosition(df_update, "XX", txt_position)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextSize(df_update, "XX", txt_size)
+    with self.assertRaises(Exception):
+      editSBML._setNodeFillColor(df_update, "XX", fill_color, opacity = opacity)
+    with self.assertRaises(Exception):
+      editSBML._setNodeBorderColor(df_update, "XX", border_color, opacity = opacity)
+    with self.assertRaises(Exception):
+      editSBML._setNodeBorderWidth(df_update, "XX", border_width)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextFontColor(df_update, "XX", txt_font_color, opacity = opacity)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextLineWidth(df_update, "XX", txt_line_width)
+
   def testSetReaction(self):
     # set reaction one by one
     if IGNORE_TEST:
@@ -118,6 +151,13 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[2].iloc[0]["line_thickness"] == line_thickness)
     self.assertTrue(df_update[2].iloc[0]["bezier"] == bezier)
     self.assertTrue(df_update[2].iloc[0]["arrow_head_size"] == arrowHeadSize)
+
+    with self.assertRaises(Exception):
+      editSBML._setReactionCenterPosition(df_update, "XX", center_pos)
+      editSBML._setReactionHandlePositions(df_update, "XX", handles)
+      editSBML._setReactionFillColor(df_update, "XX", fill_color, opacity = opacity)
+      editSBML._setReactionLineThickness(df_update, "XX", line_thickness)
+      editSBML._setBezierReactionType(df_update, "XX", bezier)
 
 if __name__ == '__main__':
   unittest.main()

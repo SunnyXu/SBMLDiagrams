@@ -67,8 +67,8 @@ class TestImportSBML(unittest.TestCase):
   def loadInvalidStr(self):
     # an exception raises if load an invalid string
     if IGNORE_TEST:
-      return    
-    
+      return   
+       
     with self.assertRaises(Exception):
       load("aba")
 

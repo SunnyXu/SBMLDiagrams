@@ -64,6 +64,8 @@ def _setCompartmentPosition(df, id, position):
     """
     df_CompartmentData_temp = df[0].copy()
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"position"] = position
     df_temp = (df_CompartmentData_temp, df[1], df[2])
@@ -87,7 +89,9 @@ def _setCompartmentSize(df, id, size):
     
     """
     df_CompartmentData_temp = df[0].copy()   
-    idx_list = df[0].index[df[0]["id"] == id].tolist()  
+    idx_list = df[0].index[df[0]["id"] == id].tolist() 
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.") 
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"size"] = size
     df_temp = (df_CompartmentData_temp, df[1], df[2])
@@ -114,6 +118,8 @@ def _setCompartmentFillColor(df, id, fill_color, opacity):
     """
     df_CompartmentData_temp = df[0].copy()      
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"fill_color"] = fill_color
@@ -141,7 +147,9 @@ def _setCompartmentBorderColor(df, id, border_color, opacity):
     """
 
     df_CompartmentData_temp = df[0].copy()
-    idx_list = df[0].index[df[0]["id"] == id].tolist()  
+    idx_list = df[0].index[df[0]["id"] == id].tolist() 
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     border_color = _color_to_rgb(border_color, opacity)
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"border_color"] = border_color
@@ -166,7 +174,9 @@ def _setCompartmentBorderWidth(df, id, border_width):
     
     """
     df_CompartmentData_temp = df[0].copy()
-    idx_list = df[0].index[df[0]["id"] == id].tolist()   
+    idx_list = df[0].index[df[0]["id"] == id].tolist() 
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")  
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"border_width"] = border_width  
     df_temp = (df_CompartmentData_temp, df[1], df[2])
@@ -191,6 +201,8 @@ def _setFloatingBoundaryNode(df, id, floating_node):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"floating_node"] = floating_node
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -215,6 +227,8 @@ def _setNodePosition(df, id, position):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"position"] = position
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -239,6 +253,8 @@ def _setNodeSize(df, id, size):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"size"] = size
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -263,6 +279,8 @@ def _setNodeShapeIdx(df, id, shape_idx):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -287,6 +305,8 @@ def _setNodeTextPosition(df, id, txt_position):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -311,6 +331,8 @@ def _setNodeTextSize(df, id, txt_size):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -339,6 +361,8 @@ def _setNodeFillColor(df, id, fill_color, opacity):
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     fill_color = _color_to_rgb(fill_color, opacity)
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -366,6 +390,8 @@ def _setNodeBorderColor(df, id, border_color, opacity):
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     border_color = _color_to_rgb(border_color, opacity)
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"border_color"] = border_color
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -390,6 +416,8 @@ def _setNodeBorderWidth(df, id, border_width):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"border_width"] = border_width
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -416,6 +444,8 @@ def _setNodeTextFontColor(df, id, txt_font_color, opacity):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     txt_font_color = _color_to_rgb(txt_font_color, opacity)
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_font_color"] = txt_font_color
@@ -441,6 +471,8 @@ def _setNodeTextLineWidth(df, id, txt_line_width):
     """
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
     df_temp = (df[0], df_NodeData_temp, df[2])
@@ -465,6 +497,8 @@ def _setReactionCenterPosition(df, id, position):
     """
     df_ReactionData_temp = df[2].copy()
     idx_list = df[2].index[df[2]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"center_pos"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp)
@@ -489,6 +523,8 @@ def _setReactionHandlePositions(df, id, position):
     """
     df_ReactionData_temp = df[2].copy()
     idx_list = df[2].index[df[2]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"handles"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp)
@@ -515,6 +551,8 @@ def _setReactionFillColor(df, id, fill_color, opacity):
     """
     df_ReactionData_temp = df[2].copy()
     idx_list = df[2].index[df[2]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"fill_color"] = fill_color
@@ -540,6 +578,8 @@ def _setReactionLineThickness(df, id, line_thickness):
     """
     df_ReactionData_temp = df[2].copy()
     idx_list = df[2].index[df[2]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"line_thickness"] = line_thickness
     df_temp = (df[0], df[1], df_ReactionData_temp)
@@ -564,6 +604,8 @@ def _setBezierReactionType(df, id, bezier):
     """
     df_ReactionData_temp = df[2].copy()
     idx_list = df[2].index[df[2]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"bezier"] = bezier
     df_temp = (df[0], df[1], df_ReactionData_temp)
