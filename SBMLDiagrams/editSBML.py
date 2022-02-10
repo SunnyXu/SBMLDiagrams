@@ -612,11 +612,11 @@ def _setBezierReactionType(df, id, bezier):
 
     return df_temp
 
-#def _setReactionArrowHeadSize(df, id, size):
-def _setReactionArrowHeadSize(df, size):
+def _setReactionArrowHeadSize(df, id, size):
+#def _setReactionArrowHeadSize(df, size):
 
     """
-    Set the reaction arrow head size.
+    Set the reaction arrow head size with a certain reaction id.
 
     Args:  
         df: DataFrame-initial information.
@@ -627,15 +627,17 @@ def _setReactionArrowHeadSize(df, size):
         df_temp: DataFrame-information after updates. 
     
     """
-    # df_ReactionData_temp = df[2].copy()
-    # idx_list = df[2].index[df[2]["id"] == id].tolist()
-    # for i in range(len(idx_list)):
-    #     df_ReactionData_temp.at[idx_list[i],"arrow_head_size"] = size
-    # df_temp = (df[0], df[1], df_ReactionData_temp)
     df_ReactionData_temp = df[2].copy()
-    for i in range(len(df_ReactionData_temp)):
-        df_ReactionData_temp.at[i,"arrow_head_size"] = size
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_ReactionData_temp.at[idx_list[i],"arrow_head_size"] = size
     df_temp = (df[0], df[1], df_ReactionData_temp)
+    # df_ReactionData_temp = df[2].copy()
+    # for i in range(len(df_ReactionData_temp)):
+    #     df_ReactionData_temp.at[i,"arrow_head_size"] = size
+    # df_temp = (df[0], df[1], df_ReactionData_temp)
 
     return df_temp
 
