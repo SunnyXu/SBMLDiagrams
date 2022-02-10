@@ -171,6 +171,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
         try: #invalid sbml    
             ### from here for layout ###
             document = libsbml.readSBMLFromString(sbmlStr)
+            if document.getNumErrors() != 0:
+                raise Exception("There are errors in the sbml file.")
             model_layout = document.getModel()
             try:
                 mplugin = model_layout.getPlugin("layout")
@@ -1041,7 +1043,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        plot(sbmlStr)
-        #plot("abc")
+        #plot(sbmlStr)
+        plot("abc")
 
 

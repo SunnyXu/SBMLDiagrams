@@ -173,7 +173,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     try: #invalid sbml
         ### from here for layout ###
         document = libsbml.readSBMLFromString(sbmlStr)
-        #print(document.getNumErrors())
+        if document.getNumErrors() != 0:
+            raise Exception("There are errors in the sbml file.")
         model_layout = document.getModel()
         try:
             mplugin = model_layout.getPlugin("layout")
@@ -1168,7 +1169,7 @@ class load:
         self.sbmlstr = sbmlstr
         self.df = _SBMLToDF(self.sbmlstr)
         if self.df == None:
-            sys.exit("There is no valid information to process.")
+           sys.exit("There is no valid information to process.")
 
     def getCompartmentPosition(self, id):
         """
@@ -2033,8 +2034,8 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    df = load(sbmlStr)
-    #df = load("dfgdg")
+    #df = load(sbmlStr)
+    df = load("dfgdg")
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2103,11 +2104,11 @@ if __name__ == '__main__':
     # print(df.getReactionArrowHeadSize())
 
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
     # if len(sbmlStr_layout_render) == 0:
     #     print("empty sbml")
