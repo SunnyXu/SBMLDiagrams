@@ -373,15 +373,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     rxn_render = []
                     text_render = []
                     arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
+                    id_arrowHeadSize = []
                     for j in range(0, info.getNumLineEndings()):
                         lineEnding = info.getLineEnding(j)
-                        #id = lineEnding.getId()
+                        temp_id = lineEnding.getId()
                         boundingbox = lineEnding.getBoundingBox()
                         width = boundingbox.getWidth()
                         height= boundingbox.getHeight()
                         pos_x = boundingbox.getX()
                         pos_y = boundingbox.getY()
-                        arrowHeadSize = [width, height]
+                        temp_arrowHeadSize = [width, height]
+                        id_arrowHeadSize.append([temp_id,temp_arrowHeadSize])
                         # group = lineEnding.getGroup()
                         # for element in group.getListOfElements():
                         #     NumRenderPoints = element.getListOfElements().getNumRenderPoints()
@@ -438,14 +440,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,shapeIdx])
 
                         elif 'REACTIONGLYPH' in typeList:
-                            #print(group.isSetEndHead())
-                            #print(group.getEndHead()) #does not work, so not for each reaction
+                            if group.isSetEndHead():
+                                temp_id = group.getEndHead() 
+                            for k in range(len(id_arrowHeadSize)):
+                                if temp_id == id_arrowHeadSize[k][0]:
+                                    arrowHeadSize = id_arrowHeadSize[k][1]
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
                                     reaction_line_color = hex_to_rgb(color_list[k][1])
                             reaction_line_width = group.getStrokeWidth()
                             rxn_render.append([idList, reaction_line_color, reaction_line_width, arrowHeadSize])
-
                         elif 'TEXTGLYPH' in typeList:
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
@@ -1623,10 +1627,10 @@ class load:
 
         return bezier_list
 
-    def getReactionArrowHeadSize(self):
-    #def getReactionArrowHeadSize(self, id):
+    #def getReactionArrowHeadSize(self):
+    def getReactionArrowHeadSize(self, id):
         """
-        Get the arrow head size of reactions.
+        Get the arrow head size of reactions with its certain reaction id.
 
         Args: 
 
@@ -1635,11 +1639,11 @@ class load:
 
             arrow_head_size: list-1*2 matrix-size of the rectangle [width, height].
         """
-        # idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
-        arrow_head_size_list =[] 
-        # for i in range(len(idx_list)):
-        #     arrow_head_size_list.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"])
-        arrow_head_size_list.append(self.df[2].iloc[0]["arrow_head_size"])
+        arrow_head_size_list =[]
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        for i in range(len(idx_list)):
+            arrow_head_size_list.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"]) 
+        # arrow_head_size_list.append(self.df[2].iloc[0]["arrow_head_size"])
 
         return arrow_head_size_list
     
@@ -1999,16 +2003,16 @@ class load:
         self.df = editSBML._setBezierReactionType(self.df, id, bezier)
         return self.df
     
-    #def setReactionArrowHeadSize(self, id, size):
-    def setReactionArrowHeadSize(self, size):
+    def setReactionArrowHeadSize(self, id, size):
+    #def setReactionArrowHeadSize(self, size):
         """
-        Set the reaction arrow head size.
+        Set the reaction arrow head size with a certain reaction id.
 
         Args:  
 
             size: list-1*2 matrix-size of the rectangle [width, height].
         """
-        self.df = editSBML._setReactionArrowHeadSize(self.df, size)
+        self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
         return self.df
 
     def export(self):
@@ -2026,7 +2030,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    # filename = "test.xml" 
     # filename = "feedback.xml"
     # filename = "LinearChain.xml"
     # filename = "test_comp.xml"
@@ -2074,7 +2078,7 @@ if __name__ == '__main__':
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df.isBezierReactionType("r_0"))
-    # print(df.getReactionArrowHeadSize())
+    # print(df.getReactionArrowHeadSize("r_0"))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -2115,20 +2119,20 @@ if __name__ == '__main__':
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
     # print("center_position after:", df.getReactionCenterPosition("r_0"))
     # print("handle_position after:", df.getReactionHandlePositions("r_0"))
-    # df.setReactionArrowHeadSize([20., 20.])
-    # print(df.getReactionArrowHeadSize())
+    # df.setReactionArrowHeadSize("r_0", [50., 50.])
+    # print(df.getReactionArrowHeadSize("r_0"))
 
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
-    # if len(sbmlStr_layout_render) == 0:
-    #     print("empty sbml")
-    # else:
-    #     visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
+    if len(sbmlStr_layout_render) == 0:
+        print("empty sbml")
+    else:
+        visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
 
 
 

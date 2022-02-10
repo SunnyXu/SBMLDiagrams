@@ -864,7 +864,7 @@ class TestImportSBML(unittest.TestCase):
       [[91, 176, 253, 255], '', '#5BB0FDFF'])
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == 3.)
     self.assertTrue(self.df.isBezierReactionType("r_0")[0] == True)
-    self.assertTrue(self.df.getReactionArrowHeadSize()[0] == [12., 15.])
+    self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0] == [12., 15.])
 
   def testSetCompartment(self):
     # Test all the get functions about compartment
@@ -963,7 +963,7 @@ class TestImportSBML(unittest.TestCase):
     self.df.setReactionFillColor("r_0", fill_color, opacity = opacity)
     self.df.setReactionLineThickness("r_0", line_thickness)
     self.df.setBezierReactionType("r_0", bezier)
-    self.df.setReactionArrowHeadSize(arrowHeadSize)
+    self.df.setReactionArrowHeadSize("r_0", arrowHeadSize)
 
     self.assertTrue(self.df.getReactionCenterPosition("r_0")[0] == center_pos)
     self.assertTrue(self.df.getReactionHandlePositions("r_0")[0] == handles)
@@ -971,7 +971,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == line_thickness)
     self.assertTrue(self.df.isBezierReactionType("r_0")[0] == bezier)
-    self.assertTrue(self.df.getReactionArrowHeadSize()[0] == arrowHeadSize)
+    self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0] == arrowHeadSize)
 
   
   def testSetReactionDefaultCenterAndHandlePositions(self):

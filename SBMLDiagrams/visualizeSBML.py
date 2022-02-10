@@ -355,15 +355,18 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         rxn_render = []
                         text_render = []
                         arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
+                        id_arrowHeadSize = []
                         for j in range(0, info.getNumLineEndings()):
                             lineEnding = info.getLineEnding(j)
-                            #id = lineEnding.getId()
+                            temp_id = lineEnding.getId()
                             boundingbox = lineEnding.getBoundingBox()
                             width = boundingbox.getWidth()
                             height= boundingbox.getHeight()
                             pos_x = boundingbox.getX()
                             pos_y = boundingbox.getY()
                             arrowHeadSize = [width, height]
+                            temp_arrowHeadSize = [width, height]
+                            id_arrowHeadSize.append([temp_id,temp_arrowHeadSize])
                             # print(lineEnding.getEnableRotationalMapping())
                             # group = lineEnding.getGroup()
                             # for element in group.getListOfElements():
@@ -424,7 +427,11 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                                                     color_style.getSpecBorderColor(),spec_border_width,shapeIdx])
 
                             elif 'REACTIONGLYPH' in typeList:
-                                #group.getEndHead(): does not work, so not for each reaction
+                                if group.isSetEndHead():
+                                    temp_id = group.getEndHead() 
+                                for k in range(len(id_arrowHeadSize)):
+                                    if temp_id == id_arrowHeadSize[k][0]:
+                                        arrowHeadSize = id_arrowHeadSize[k][1]
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
                                         color_style.setReactionLineColor(hex_to_rgb(color_list[k][1]))
@@ -1020,7 +1027,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
+    #filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1035,6 +1042,7 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
 
+    filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -1043,7 +1051,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        #plot(sbmlStr)
-        plot("abc")
+        plot(sbmlStr)
+        #plot("abc")
 
 
