@@ -1743,7 +1743,7 @@ class load:
             id: id-node id.
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
-            corner of the node.
+            corner of the node and node text position.
         """
         self.df = editSBML._setNodePosition(self.df, id, position)
         self.df = editSBML._setNodeTextPosition(self.df, id, position)
