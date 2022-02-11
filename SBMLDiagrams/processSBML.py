@@ -1608,7 +1608,7 @@ class load:
 
         return line_thickness_list
 
-    def isBezierReactionType(self, id):
+    def _isBezierReactionType(self, id):
         """
         Judge whether it is a bezier reaction curve with its certain reaction id
 
@@ -1991,7 +1991,7 @@ class load:
         self.df = editSBML._setReactionLineThickness(self.df, id, line_thickness)
         return self.df
 
-    def setBezierReactionType(self, id, bezier = True):
+    def _setBezierReactionType(self, id, bezier = True):
         """
         Set the reaction type to bezier curve or not with a certain reaction id.
 
@@ -2173,7 +2173,7 @@ if __name__ == '__main__':
     # print("handle_position:", df.getReactionHandlePositions("r_0"))
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
-    # print(df.isBezierReactionType("r_0"))
+    # print(df._isBezierReactionType("r_0"))
     print(df.getReactionArrowHeadSize("r_0"))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
@@ -2207,7 +2207,7 @@ if __name__ == '__main__':
     # df.setReactionFillColor("r_0", [91, 176, 253])
     # df.setReactionFillColor("r_0", [0, 0, 0])
     # df.setReactionLineThickness("r_0", 3.)
-    # df.setBezierReactionType("r_0", True)
+    # df._setBezierReactionType("r_0", True)
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
     # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
     # print("center_position after:", df.getReactionCenterPosition("r_0"))
