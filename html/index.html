@@ -161,11 +161,11 @@
 </div>
 <div class="section" id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>SBMLDiagrams can visualize SBML to PNG/JPG/PDF files by visualizeSBML. It also supports users to
-import, edit or export an SBML file. This package supports SBML level 3, including layout and render.
-In detail, it does not only provide position, size and color information for different graphical
-objects but also supports different shapes of nodes or alias nodes. If you use any part of this
-python package, please cite the Gihub website (<a class="reference external" href="https://github.com/SunnyXu/SBMLDiagrams">https://github.com/SunnyXu/SBMLDiagrams</a>).</p>
+<p>SBMLDiagrams is a Python package to visualize the networks embedded in SBML Level 3 models.
+If the SBML layout and render extension are used, the package will use this data to visualize the
+network. SBMLDiagrams can export PNG, JPG, PDF files. SBMLDiagrams can be used to add SBML layout
+and render to an existing SBML model which can subsequently be exported. If you use this python
+package, please cite the Gihub website (<a class="reference external" href="https://github.com/SunnyXu/SBMLDiagrams">https://github.com/SunnyXu/SBMLDiagrams</a>).</p>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
@@ -192,7 +192,7 @@ python package, please cite the Gihub website (<a class="reference external" hre
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empty SBML!&quot;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-   <span class="n">visualizeSBML</span><span class="o">.</span><span class="n">display</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">,</span><span class="n">fileFormat</span> <span class="o">=</span> <span class="s1">&#39;PNG&#39;</span><span class="p">)</span>
+   <span class="n">visualizeSBML</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">,</span><span class="n">fileFormat</span> <span class="o">=</span> <span class="s1">&#39;PNG&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
