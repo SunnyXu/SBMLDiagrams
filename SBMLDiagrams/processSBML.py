@@ -1739,7 +1739,7 @@ class load:
         self.df = editSBML._setNodePosition(self.df, id, position)
         return self.df
 
-    def setConsistentNodeAndNodeTextPosition(self, id, position):
+    def setNodeAndTextPosition(self, id, position):
         """
             Set the x,y coordinates of the node and node text position if there are consistent.
 

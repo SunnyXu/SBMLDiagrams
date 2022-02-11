@@ -940,7 +940,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0][3] == 255)
     self.assertTrue(self.df.getNodeTextLineWidth("x_1")[0] == txt_line_width)
 
-    self.df.setConsistentNodeAndNodeTextPosition("x_1", position_txt_position)
+    self.df.setNodeAndTextPosition("x_1", position_txt_position)
     self.assertTrue(self.df.getNodePosition("x_1")[0] == position_txt_position)
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == position_txt_position)
 
