@@ -37,11 +37,11 @@ To install SBMLDiagrams use
 Code Examples
 -------------
 
-1) Visualize an SBML file to a PNG.
+1) Load and visualize an SBML file.
 
 .. code-block:: python
 
-   from SBMLDiagrams import visualizeSBML
+   import SBMLDiagrams
    import os 
 
    dirname = "path//to"
@@ -51,17 +51,15 @@ Code Examples
    sbmlStr = f.read()
    f.close()
 
-   if len(sbmlStr) == 0:
-      print("Empty SBML!")
-   else:
-      visualizeSBML.plot(sbmlStr,fileFormat = 'PNG')
+   df = SBMLDiagrams.load(sbmlStr)
+   df.plot()
 
 
-2) Import, edit and write to an SBML file.
+2) Load, read, edit and export to an SBML file.
 
 .. code-block:: python
 
-   from SBMLDiagrams import processSBML
+   import SBMLDiagrams
    import os
 
    dirname = "path//to"
@@ -71,7 +69,7 @@ Code Examples
    sbmlStr = f.read()
    f.close()
 
-   df = processSBML.load(sbmlStr)
+   df = SBMLDiagrams.load(sbmlStr)
 
    print(df.getCompartmentPosition("compartment_id"))
    print(df.getNodeFillColor("node_id"))
@@ -89,10 +87,10 @@ Code Examples
    df.setReactionLineThickness("reaction_id", 3.)
 
    sbmlStr_layout_render = df.export()
-
    f = open("output.xml", "w")
    f.write(sbmlStr_layout_render)
    f.close()
+
 
 ---------------
 Figure Examples

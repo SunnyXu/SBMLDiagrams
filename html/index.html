@@ -177,9 +177,9 @@ package, please cite the Gihub website (<a class="reference external" href="http
 <div class="section" id="code-examples">
 <h2>Code Examples<a class="headerlink" href="#code-examples" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li><p>Visualize an SBML file to a PNG.</p></li>
+<li><p>Load and visualize an SBML file.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">visualizeSBML</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">SBMLDiagrams</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
@@ -189,16 +189,14 @@ package, please cite the Gihub website (<a class="reference external" href="http
 <span class="n">sbmlStr</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-   <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Empty SBML!&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-   <span class="n">visualizeSBML</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">,</span><span class="n">fileFormat</span> <span class="o">=</span> <span class="s1">&#39;PNG&#39;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">SBMLDiagrams</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Import, edit and write to an SBML file.</p></li>
+<li><p>Load, read, edit and export to an SBML file.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SBMLDiagrams</span> <span class="kn">import</span> <span class="n">processSBML</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">SBMLDiagrams</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
@@ -208,7 +206,7 @@ package, please cite the Gihub website (<a class="reference external" href="http
 <span class="n">sbmlStr</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">processSBML</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">SBMLDiagrams</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">getCompartmentPosition</span><span class="p">(</span><span class="s2">&quot;compartment_id&quot;</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">getNodeFillColor</span><span class="p">(</span><span class="s2">&quot;node_id&quot;</span><span class="p">))</span>
@@ -226,7 +224,6 @@ package, please cite the Gihub website (<a class="reference external" href="http
 <span class="n">df</span><span class="o">.</span><span class="n">setReactionLineThickness</span><span class="p">(</span><span class="s2">&quot;reaction_id&quot;</span><span class="p">,</span> <span class="mf">3.</span><span class="p">)</span>
 
 <span class="n">sbmlStr_layout_render</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">export</span><span class="p">()</span>
-
 <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.xml&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
 <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">sbmlStr_layout_render</span><span class="p">)</span>
 <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>

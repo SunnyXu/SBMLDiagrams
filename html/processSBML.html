@@ -476,19 +476,6 @@ hex str (8 digits)].</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="SBMLDiagrams.processSBML.load.isBezierReactionType">
-<code class="sig-name descname">isBezierReactionType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.isBezierReactionType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Judge whether it is a bezier reaction curve with its certain reaction id</p>
-<dl>
-<dt>Args: </dt><dd><p>id: str-the id of the reaction</p>
-</dd>
-<dt>Returns:</dt><dd><p>bezier_list: list of bezier</p>
-<p>bezier: bool-bezier reaction (True) or not (False)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt id="SBMLDiagrams.processSBML.load.isFloatingNode">
 <code class="sig-name descname">isFloatingNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.isFloatingNode" title="Permalink to this definition">¶</a></dt>
 <dd><p>Judge whether a node is floating node with its certain node id.</p>
@@ -515,8 +502,8 @@ or ‘fileName’ (self-designed file name).</p>
 <p>complexShape: str-type of complex shapes: ‘’ (default) or ‘monomer’ or ‘dimer’ or ‘trimer’ 
 or ‘tetramer’.</p>
 <p>reactionLineType: str-type of the reaction line: ‘straight’ or ‘bezier’ (default).
-If there is no layout information from the SBML file, all reaction line will be drawn in
-straight lines even set as ‘bezier’.</p>
+If there is no layout information from the SBML file, all reaction lines will look like
+straight lines even set as ‘bezier’ because they are set as default center and handle positions.</p>
 <p>showBezierHandles: bool-show the Bezier handles (True) or not (False as default).</p>
 <p>styleName: pre-existing color style for the graph.</p>
 <p>newStyleClass: user-customized new color style.</p>
@@ -524,17 +511,6 @@ straight lines even set as ‘bezier’.</p>
 <dl class="simple">
 <dt>Returns:</dt><dd><p>The tuple of base image’s array, position dictionary for the Floating Species, 
 color style of the image.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="SBMLDiagrams.processSBML.load.setBezierReactionType">
-<code class="sig-name descname">setBezierReactionType</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">bezier</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setBezierReactionType" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the reaction type to bezier curve or not with a certain reaction id.</p>
-<dl>
-<dt>Args:  </dt><dd><p>id: str-reaction id.</p>
-<p>bezier: bool-bezier reaction (True as default) or not (False as straightline).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -598,8 +574,19 @@ of the compartment.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="SBMLDiagrams.processSBML.load.setConsistentNodeAndNodeTextPosition">
-<code class="sig-name descname">setConsistentNodeAndNodeTextPosition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">position</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setConsistentNodeAndNodeTextPosition" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.processSBML.load.setFloatingBoundaryNode">
+<code class="sig-name descname">setFloatingBoundaryNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">floating_node</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setFloatingBoundaryNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a node to be floating node (True) or boundary node (False).</p>
+<dl>
+<dt>Args:  </dt><dd><p>id: str-node id.</p>
+<p>floating_node: bool-floating node (True) or not (False).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="SBMLDiagrams.processSBML.load.setNodeAndTextPosition">
+<code class="sig-name descname">setNodeAndTextPosition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">position</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setNodeAndTextPosition" title="Permalink to this definition">¶</a></dt>
 <dd><blockquote>
 <div><p>Set the x,y coordinates of the node and node text position if there are consistent.</p>
 </div></blockquote>
@@ -607,17 +594,6 @@ of the compartment.</p>
 <dt>Args:  </dt><dd><p>id: id-node id.</p>
 <p>position: list-[position_x, position_y], the coordinate represents the top-left hand 
 corner of the node and node text position.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="SBMLDiagrams.processSBML.load.setFloatingBoundaryNode">
-<code class="sig-name descname">setFloatingBoundaryNode</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">floating_node</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setFloatingBoundaryNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a node to be floating node (True) or boundary node (False).</p>
-<dl>
-<dt>Args:  </dt><dd><p>id: str-node id.</p>
-<p>floating_node: bool-floating node (True) or not (False).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -763,7 +739,7 @@ corner of the node text.</p>
 <dl class="py method">
 <dt id="SBMLDiagrams.processSBML.load.setReactionDefaultCenterAndHandlePositions">
 <code class="sig-name descname">setReactionDefaultCenterAndHandlePositions</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setReactionDefaultCenterAndHandlePositions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set detault center and handle positions.</p>
+<dd><p>Set detault center and handle positions, which makes the reaction lines look like straight lines.</p>
 <dl class="simple">
 <dt>Args:  </dt><dd><p>id: str-reaction id.</p>
 </dd>
