@@ -109,8 +109,8 @@ def _plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fil
         or 'tetramer'.
 
         reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
-        If there is no layout information from the SBML file, all reaction line will be drawn in
-        straight lines even set as 'bezier'.
+        If there is no layout information from the SBML file, all reaction lines will look like
+        straight lines even set as 'bezier' because they are set as default center and handle positions.
 
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 

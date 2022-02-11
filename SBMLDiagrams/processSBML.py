@@ -1897,7 +1897,7 @@ class load:
 
     def setReactionDefaultCenterAndHandlePositions(self, id):
         """
-        Set detault center and handle positions.
+        Set detault center and handle positions, which makes the reaction lines look like straight lines.
 
         Args:  
             id: str-reaction id.
@@ -2049,8 +2049,8 @@ class load:
             or 'tetramer'.
 
             reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
-            If there is no layout information from the SBML file, all reaction line will be drawn in
-            straight lines even set as 'bezier'.
+            If there is no layout information from the SBML file, all reaction lines will look like
+            straight lines even set as 'bezier' because they are set as default center and handle positions.
 
             showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
@@ -2174,7 +2174,7 @@ if __name__ == '__main__':
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df._isBezierReactionType("r_0"))
-    print(df.getReactionArrowHeadSize("r_0"))
+    # print(df.getReactionArrowHeadSize("r_0"))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -2219,13 +2219,13 @@ if __name__ == '__main__':
     # print(df.getReactionArrowHeadSize("r_0"))
 
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
-    # df.plot()
+    df.plot()
     # print(df.getNetworkSize())
     # print(df.getNetworkBottomRightCorner())
     # print(df.getNetworkTopLeftCorner())
