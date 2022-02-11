@@ -2026,11 +2026,107 @@ class load:
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
 
+
+    def plot(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
+    newStyleClass = None):
+
+        """
+        Plot  to a PNG/JPG/PDF file.
+
+        Args:  
+
+            setImageSize: list-1*2 matrix-size of the rectangle [width, height].
+
+            scale: float-makes the figure output size = scale * default output size.
+
+            fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
+
+            output_fileName: str-filename: 'output' (default) or '' (result in a random file name) 
+            or 'fileName' (self-designed file name).
+            
+            complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' 
+            or 'tetramer'.
+
+            reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
+            If there is no layout information from the SBML file, all reaction line will be drawn in
+            straight lines even set as 'bezier'.
+
+            showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
+
+            styleName: pre-existing color style for the graph.
+
+            newStyleClass: user-customized new color style.
+
+        Returns:
+            The tuple of base image's array, position dictionary for the Floating Species, 
+            color style of the image.
+        """
+
+        sbmlStr = self.export()
+        baseImageArray, pos_dict, color_style  = \
+        visualizeSBML._plot(sbmlStr, setImageSize = setImageSize, scale = scale, fileFormat = fileFormat, 
+        output_fileName = output_fileName, complexShape = complexShape, reactionLineType = reactionLineType, 
+        showBezierHandles = showBezierHandles, styleName = styleName, newStyleClass = newStyleClass)
+
+        return baseImageArray, pos_dict, color_style
+
+    def getNetworkTopLeftCorner(self):
+        """
+        Get the top left-hand corner of the network(s) from the SBML string.
+
+        Args:  
+            sbmlStr: str-the string of the input sbml file.
+
+        Returns:
+            position: list-[position_x, position_y], top left-hand corner of the network(s).
+            It is calculated by the minimum positions of compartments, nodes, centroid and handle 
+            positions of reactions, excluding the compartment with the id of _compartment_default_.
+        
+        """ 
+        sbmlStr = self.export()
+        position  = visualizeSBML._getNetworkTopLeftCorner(sbmlStr)
+        return position
+
+    def getNetworkBottomRightCorner(self):
+        """
+        Get the bottom right-hand corner of the network(s) from the SBML string.
+
+        Args:  
+            sbmlStr: str-the string of the input sbml file.
+
+        Returns:
+            position: list-[position_x, position_y],bottom right-hand corner of the network(s).
+            It is calculated by the maximum right down corner positions of compartments and nodes, 
+            excluding the compartment with the id of _compartment_default_.
+        
+        """
+        sbmlStr = self.export()
+        position  = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)
+        return position
+    
+    def getNetworkSize(self):
+        """
+        Get the size of the network(s).
+
+        Args:  
+            sbmlStr: str-the string of the input sbml file.
+
+        Returns:
+            list-1*2 matrix-size of the rectangle [width, height].
+        
+        """ 
+        sbmlStr = self.export()
+        size  = visualizeSBML._getNetworkSize(sbmlStr)
+        return size
+
+    
+
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    # filename = "test.xml" 
+    filename = "test.xml" 
     # filename = "feedback.xml"
     # filename = "LinearChain.xml"
     # filename = "test_comp.xml"
@@ -2078,7 +2174,7 @@ if __name__ == '__main__':
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df.isBezierReactionType("r_0"))
-    # print(df.getReactionArrowHeadSize("r_0"))
+    print(df.getReactionArrowHeadSize("r_0"))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -2123,16 +2219,21 @@ if __name__ == '__main__':
     # print(df.getReactionArrowHeadSize("r_0"))
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    if len(sbmlStr_layout_render) == 0:
-        print("empty sbml")
-    else:
-        visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
+    # df.plot()
+    # print(df.getNetworkSize())
+    # print(df.getNetworkBottomRightCorner())
+    # print(df.getNetworkTopLeftCorner())
+
+    # if len(sbmlStr_layout_render) == 0:
+    #     print("empty sbml")
+    # else:
+    #     visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
 
 
 

@@ -86,12 +86,12 @@ def animate(simulationData, floatingSpecies, baseImageArray, posDict, color_styl
         out.write(imgs[i])
     out.release()
 
-def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
+def _plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
     newStyleClass = None):
 
     """
-    Visualization from an sbml string to a PNG/JPG/PDF file.
+    Plot from an sbml string to a PNG/JPG/PDF file.
 
     Args:  
         sbmlStr: str-the string of the input sbml file.
@@ -126,8 +126,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
     df = processSBML.load(sbmlStr)
     sbmlStr = df.export()
     
-    topLeftCorner = getNetworkTopLeftCorner(sbmlStr)
-    networkSize = getNetworkSize(sbmlStr)
+    topLeftCorner = _getNetworkTopLeftCorner(sbmlStr)
+    networkSize = _getNetworkSize(sbmlStr)
 
     topLeftCorner = [topLeftCorner[0]-10, topLeftCorner[1]-10]
 
@@ -829,7 +829,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                 pos_dict, color_style = draw_on_canvas(canvas)
     return baseImageArray, pos_dict, color_style
 
-def getNetworkTopLeftCorner(sbmlStr):
+def _getNetworkTopLeftCorner(sbmlStr):
     """
     Get the top left-hand corner of the network(s) from the SBML string.
 
@@ -907,7 +907,7 @@ def getNetworkTopLeftCorner(sbmlStr):
 
     return position
 
-def getNetworkBottomRightCorner(sbmlStr):
+def _getNetworkBottomRightCorner(sbmlStr):
     """
     Get the bottom right-hand corner of the network(s) from the SBML string.
 
@@ -1004,7 +1004,7 @@ def getNetworkBottomRightCorner(sbmlStr):
                 position[1] = handle_positions[j][1]
     return position
 
-def getNetworkSize(sbmlStr):
+def _getNetworkSize(sbmlStr):
     """
     Get the size of the network(s) from the SBML string.
 
@@ -1015,8 +1015,8 @@ def getNetworkSize(sbmlStr):
         list-1*2 matrix-size of the rectangle [width, height].
     
     """ 
-    position_topLeft = getNetworkTopLeftCorner(sbmlStr)
-    position_bottomRight = getNetworkBottomRightCorner(sbmlStr)
+    position_topLeft = _getNetworkTopLeftCorner(sbmlStr)
+    position_bottomRight = _getNetworkBottomRightCorner(sbmlStr)
     size = [int(position_bottomRight[0]-position_topLeft[0]), 
     int(position_bottomRight[1]-position_topLeft[1])]
 
@@ -1029,7 +1029,7 @@ if __name__ == '__main__':
 
     #filename = "test.xml"
     #filename = "feedback.xml"
-    #filename = "LinearChain.xml"
+    filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"
@@ -1042,11 +1042,13 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
 
-    filename = "output.xml"
+    #filename = "output.xml"
+
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
+
 
     if len(sbmlStr) == 0:
         print("empty sbml")

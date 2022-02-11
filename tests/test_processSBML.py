@@ -1,5 +1,6 @@
 import unittest
 import os
+import SBMLDiagrams
 from SBMLDiagrams.processSBML import *
 from SBMLDiagrams.processSBML import _SBMLToDF
 
@@ -62,7 +63,7 @@ class TestImportSBML(unittest.TestCase):
       _SBMLToDF(sbmlStr_node_grid)
     self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn = \
       _SBMLToDF(sbmlStr_mass_action_rxn)
-    self.df = load(sbmlStr_test)
+    self.df = SBMLDiagrams.load(sbmlStr_test)
 
   def loadInvalidStr(self):
     # an exception raises if load an invalid string
@@ -994,6 +995,16 @@ class TestImportSBML(unittest.TestCase):
 
     sbmlStr_layout_render = self.df.export()
     self.assertTrue(isinstance(sbmlStr_layout_render, str))
+
+  def testNetworkFuncs(self):
+    # Test the Network related function
+
+    if IGNORE_TEST:
+      return
+
+    self.assertTrue(self.df.getNetworkTopLeftCorner() == [205.0, 216.0])
+    self.assertTrue(self.df.getNetworkBottomRightCorner() == [463.0, 246.0])
+    self.assertTrue(self.df.getNetworkSize() == [258, 30])
 
 
 if __name__ == '__main__':
