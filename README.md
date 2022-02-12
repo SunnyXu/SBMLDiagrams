@@ -1,7 +1,7 @@
 # SBMLDiagrams
 [![Coverage](https://codecov.io/gh/sunnyXu/SBMLDiagrams/branch/main/graph/badge.svg)](https://codecov.io/gh/sunnyXu/SBMLDiagrams)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)[![PyPI version](https://badge.fury.io/py/SBMLDiagrams.svg)](https://badge.fury.io/py/SBMLDiagrams)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT) [![PyPI version](https://badge.fury.io/py/SBMLDiagrams.svg)](https://badge.fury.io/py/SBMLDiagrams)
 
 [![PyPI download month](https://img.shields.io/pypi/dm/ansicolortags.svg)](https://pypi.python.org/pypi/SBMLDiagrams/)
 
