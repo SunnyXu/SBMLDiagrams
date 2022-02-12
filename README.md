@@ -8,6 +8,8 @@ SBMLDiagrams is a Python package to visualize etworks embedded in SBML Level 3 m
 
 We also plan to interface SBMLDiagrams to NetworkX to exploit the variety of layout algorithms as well as SBbadger which is a tool for generating realistic but random biochemical networks. 
 
+Note that the API is currently undergoing rapid changes to make the package easier to use. We anticipate the release of version 1.0 at the end of Feburary 2022. 
+
 ## Installation
 
 ``pip install SBMLDiagrams``
