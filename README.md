@@ -1,6 +1,15 @@
 # SBMLDiagrams
 [![Coverage](https://codecov.io/gh/sunnyXu/SBMLDiagrams/branch/main/graph/badge.svg)](https://codecov.io/gh/sunnyXu/SBMLDiagrams)
 
+ <table style="width:100%">
+  <tr>
+    <td><img alt="Licence", src="https://img.shields.io/hexpm/l/tellurium"</td>
+    <td><img alt="PyPI - Downloads", src="https://img.shields.io/pypi/dm/tellurium"></td>
+    <td><img alt="Funding", src="https://img.shields.io/badge/Funding-NIH%20(GM123032)-blue"></td>
+    <td><a href="https://badge.fury.io/py/tellurium"><img src="https://badge.fury.io/py/tellurium.svg" alt="PyPI version" height="18"></a> </td>
+   </tr>
+</table> 
+
 ## Introduction
 SBMLDiagrams is a Python package to visualize the networks embedded in SBML Level 3 models. If the SBML layout and render extension are used, the package will use this data to display the network. SBMLDiagrams can export PNG, JPG, PDF files. SBMLDiagrams can be used to add SBML layout and render to an existing SBML model which can subsequently be exported. If you use this python package, please cite the Gihub website (https://github.com/SunnyXu/SBMLDiagrams).
 
