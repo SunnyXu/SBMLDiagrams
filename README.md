@@ -5,9 +5,10 @@
 
 [![PyPI version](https://badge.fury.io/py/SBMLDiagrams.svg)](https://badge.fury.io/py/SBMLDiagrams)
 
+[![PyPI download month](https://img.shields.io/pypi/dm/ansicolortags.svg)](https://pypi.python.org/pypi/SBMLDiagrams/)
+
  <table style="width:100%">
   <tr>
-    <td><img alt="PyPI - Downloads", src="https://img.shields.io/pypi/dm/SBMLDiagrams"></td>
     <td><img alt="Funding", src="https://img.shields.io/badge/Funding-NIH%20(EB028887)-blue"></td>
    </tr>
 </table> 
