@@ -1,6 +1,8 @@
 # SBMLDiagrams
 [![Coverage](https://codecov.io/gh/sunnyXu/SBMLDiagrams/branch/main/graph/badge.svg)](https://codecov.io/gh/sunnyXu/SBMLDiagrams)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
  <table style="width:100%">
   <tr>
     <td><img alt="Licence", src="https://img.shields.io/hexpm/l/tellurium"</td>
