@@ -1,14 +1,14 @@
 # SBMLDiagrams
 [![Coverage](https://codecov.io/gh/sunnyXu/SBMLDiagrams/branch/main/graph/badge.svg)](https://codecov.io/gh/sunnyXu/SBMLDiagrams)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
+[![PyPI version](https://badge.fury.io/py/SBMLDiagrams.svg)](https://badge.fury.io/py/SBMLDiagrams)
 
  <table style="width:100%">
   <tr>
-    <td><img alt="Licence", src="https://img.shields.io/hexpm/l/tellurium"</td>
     <td><img alt="PyPI - Downloads", src="https://img.shields.io/pypi/dm/SBMLDiagrams"></td>
     <td><img alt="Funding", src="https://img.shields.io/badge/Funding-NIH%20(EB028887)-blue"></td>
-    <td><a href="https://badge.fury.io/py/tellurium"><img src="https://badge.fury.io/py/tellurium.svg" alt="PyPI version" height="18"></a> </td>
    </tr>
 </table> 
 
