@@ -4,7 +4,7 @@
  <table style="width:100%">
   <tr>
     <td><img alt="Licence", src="https://img.shields.io/hexpm/l/tellurium"</td>
-    <td><img alt="PyPI - Downloads", src="https://img.shields.io/pypi/dm/tellurium"></td>
+    <td><img alt="PyPI - Downloads", src="https://img.shields.io/pypi/dm/SBMLDiagrams"></td>
     <td><img alt="Funding", src="https://img.shields.io/badge/Funding-NIH%20(GM123032)-blue"></td>
     <td><a href="https://badge.fury.io/py/tellurium"><img src="https://badge.fury.io/py/tellurium.svg" alt="PyPI version" height="18"></a> </td>
    </tr>
