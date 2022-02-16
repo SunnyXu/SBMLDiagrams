@@ -87,7 +87,7 @@ Code Examples
    df.setNodeTextPosition(("node_id", [30, 30])
 
    #set render
-   # There are three ways to set colors and opacity is optional:
+   # There are three ways to set colors and the opacity is optional:
    # 1) list-decimal rgb 1*3 matrix, i.e. [255, 255, 255];
    # 2) str-html name, i.e. "white";
    # 3) str-hex string (6-digit), i.e. "#000000";
