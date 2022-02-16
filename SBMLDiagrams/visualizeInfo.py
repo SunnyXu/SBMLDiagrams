@@ -7,3 +7,4 @@ class visualizeInfo:
         self.edges = edges
         self.arrow_info = arrow_info
         self.name_to_id = name_to_id
+
