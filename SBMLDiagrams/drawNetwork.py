@@ -846,6 +846,12 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
             fontSize = fontSize - 1.
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 
+def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, scale=1., fontSize = 12):
+    fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])
+    font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
+    paintText = skia.Paint(Color=fontColor, StrokeWidth=text_line_width)
+    canvas.drawSimpleText(text, position[0], position[1], font, paintText)
+
 def draw(surface, folderName = '', fileName = '', file_format = 'PNG'):
     """
     Display the diagram and save it to the local.

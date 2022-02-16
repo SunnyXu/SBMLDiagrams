@@ -18,11 +18,14 @@ import string
 from SBMLDiagrams import drawNetwork
 from SBMLDiagrams import styleSBML
 from SBMLDiagrams import processSBML
+from SBMLDiagrams import visualizeInfo
 from collections import defaultdict
 import numpy as np
 import cv2
 
-def animate(arrow_info, simulationData, floatingSpecies, reactionRates, baseImageArray, posDict, color_style, numDigit = 5, folderName = 'animation', horizontal_offset = 15):
+def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_second = 10, show_digit = True,
+            bar_dimension = [10,50], numDigit = 4, folderName = 'animation',
+            horizontal_offset = 15, text_color = (0, 0, 0, 100)):
     """
     Animation for the tellurium simulation
 
@@ -49,38 +52,50 @@ def animate(arrow_info, simulationData, floatingSpecies, reactionRates, baseImag
 
     Returns:
     """
-    bar_dimension = [10,50]
-    [node_height, node_width] = color_style.getNodeDimension()
     mx = float("-inf")
+    floatingSpecies = r.getFloatingSpeciesIds()
+    reactionIds = r.getReactionIds()
+    baseImageArray = v_info.baseImageArray
+    arrow_info = v_info.arrow_info
+    color_style = v_info.color_style
+    posDict = v_info.posDict
+    dimDict = v_info.dimDict
+
     for species in floatingSpecies:
         species = '[' + species + ']'
         mx = max(mx,max(simulationData[species]))
-    relative_rate = 1.
+
+    mx_reaction_rate = float('-inf')
+    for reaction in reactionIds:
+        mx_reaction_rate = max(mx,max(reactionRates[reaction]))
+
+    relative_rate = defaultdict(lambda:1)
     for i in range(len(simulationData)):
         surface = skia.Surface(np.array(baseImageArray, copy=True))
         canvas = surface.getCanvas()
-        for letter, pos in posDict.items():
-            new_pos = [pos[0] + node_width + horizontal_offset, pos[1] + node_height]
-            txt_pos = [pos[0] + node_width//2 + horizontal_offset + 10, pos[1] + node_height//2]
-            percent = simulationData[letter][i]/mx
-            drawNetwork.addProgressBar(canvas, new_pos, bar_dimension, percent, 1,
-                                       color_style)
-            drawNetwork.addText(canvas, str(simulationData[letter][i])[:numDigit],
-                                txt_pos, [40, 60], (0, 0, 0, 255), 1, 2)
-
         for j,info in enumerate(arrow_info):
-            rate = reactionRates[j]*0.1
-            relative_rate += rate
+            rate = reactionRates[reactionIds[j]][i]*(1/thick_rate/mx_reaction_rate)
+            relative_rate[j] += rate
             src_position, dst_position, mod_position,center_position, \
             handles, src_dimension, dst_dimension, mod_dimension,\
             reaction_line_color, reaction_line_width, reactionLineType,\
             showBezierHandles, head = info
-            print("src_position", src_position)
+
             drawNetwork.addReaction(canvas,src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                            (0, 0, 0, 255), reaction_line_width*relative_rate,
+                            (0,0,0,100), reaction_line_width*relative_rate[j],
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
-                            reaction_arrow_head_size = [head[0]*relative_rate, head[1]*relative_rate])
+                            reaction_arrow_head_size = head)
+
+        for letter, pos in posDict.items():
+            [node_width, node_height] = dimDict[letter]
+            new_pos = [pos[0] + node_width + horizontal_offset, pos[1]+node_height]
+            txt_pos = [pos[0] + node_width, pos[1]+node_height+horizontal_offset]
+            percent = simulationData[letter][i]/mx
+            drawNetwork.addProgressBar(canvas, new_pos, bar_dimension, percent, 1,
+                                       color_style)
+            if show_digit:
+                drawNetwork.addSimpleText(canvas, str(simulationData[letter][i])[:numDigit+1],txt_pos, text_color)
 
         drawNetwork.draw(surface, folderName='animation', fileName=str(i), file_format='PNG')
 
@@ -96,13 +111,14 @@ def animate(arrow_info, simulationData, floatingSpecies, reactionRates, baseImag
             size = (width, height)
             imgs.append(img)
 
-    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, "output.mp4"), cv2.VideoWriter_fourcc(*'MP4V'), 10, size)
+    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, "output.mp4"),
+                          cv2.VideoWriter_fourcc(*'MP4V'), frame_per_second, size)
 
     for i in range(len(imgs)):
         out.write(imgs[i])
     out.release()
 
-def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
+def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
     newStyleClass = None):
 
@@ -153,6 +169,10 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
         imageSize = setImageSize
         scale = min(setImageSize[0]/(networkSize[0]+20), setImageSize[1]/(networkSize[1]+20))
 
+    color_style = newStyleClass
+    if not newStyleClass:
+        color_style = styleSBML.Style(styleName)
+    color_style.setImageSize(imageSize)
 
     def draw_on_canvas(canvas):
         arrow_info = []
@@ -173,12 +193,10 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
         spec_text_position_list = []
         spec_text_dimension_list = []
         floatingNodes_pos_dict = defaultdict(list)
+        floatingNodes_dim_dict = defaultdict(list)
         shapeIdx = 1
 
         #set the default values without render info:
-        color_style = newStyleClass
-        if not newStyleClass:
-            color_style = styleSBML.Style(styleName)
         comp_border_width = 2.0
         spec_border_width = 2.0
         reaction_line_width = 3.0
@@ -186,6 +204,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
         reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5]
         edges = []
         id_to_name = defaultdict(lambda:"")
+        name_to_id = defaultdict(lambda:"")
 
         try: #invalid sbml
             ### from here for layout ###
@@ -304,6 +323,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                                 specGlyph_id_list.append(specGlyph_id)
                                 spec_specGlyph_id_list.append([spec_id,specGlyph_id])
                                 id_to_name[specGlyph_id] = spec_id
+                                name_to_id[spec_id] = specGlyph_id
                                 spec_dimension_list.append([width,height])
                                 spec_position_list.append([pos_x,pos_y])
                                 spec_text_position_list.append([text_pos_x, text_pos_y])
@@ -335,6 +355,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                             spec_id_list.append(spec_id)
                             spec_specGlyph_id_list.append([spec_id,specGlyph_id])
                             id_to_name[specGlyph_id] = spec_id
+                            name_to_id[spec_id] = specGlyph_id
                             boundingbox = specGlyph.getBoundingBox()
                             height = boundingbox.getHeight()
                             width = boundingbox.getWidth()
@@ -484,11 +505,13 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                     #if mplugin is not None:
                         if temp_id == "_compartment_default_":
                             dimension = imageSize
+                            color_style.setImageSize(dimension)
                             position = [0, 0]
                         for j in range(numCompGlyphs):
                             if comp_id_list[j] == temp_id:
                                 dimension = [comp_dimension_list[j][0]*scale,
                                 comp_dimension_list[j][1]*scale]
+                                color_style.setImageSize(dimension)
                                 position = [(comp_position_list[j][0] - topLeftCorner[0])*scale,
                                 (comp_position_list[j][1] - topLeftCorner[1])*scale]
                         for j in range(len(comp_render)):
@@ -500,6 +523,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                     else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
                         dimension = imageSize
+                        color_style.setImageSize(dimension)
                         position = [0,0]
                         #allows users to set the color of the "_compartment_default" as the canvas
                         #color_style.setCompBorderColor((255, 255, 255, 255))
@@ -588,11 +612,12 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         for j in range(len(handles)):
                             handles[j] = [(handles[j][0]-topLeftCorner[0])*scale,
                             (handles[j][1]-topLeftCorner[1])*scale]
-                        drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
-                            center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                            color_style.getReactionLineColor(), reaction_line_width*scale,
-                            reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
-                            reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
+                        if drawArrow:
+                            drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
+                                center_position, handles, src_dimension, dst_dimension, mod_dimension,
+                                color_style.getReactionLineColor(), reaction_line_width*scale,
+                                reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
+                                reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -620,11 +645,12 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                             dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
                             dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                             handles.append([dst_handle_x,dst_handle_y])
-                        drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
-                            center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                            color_style.getReactionLineColor(), reaction_line_width*scale,
-                            reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
-                            reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
+                        if drawArrow:
+                            drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
+                                center_position, handles, src_dimension, dst_dimension, mod_dimension,
+                                color_style.getReactionLineColor(), reaction_line_width*scale,
+                                reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
+                                reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -642,6 +668,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                     position = [(spec_position_list[i][0]-topLeftCorner[0])*scale,
                     (spec_position_list[i][1]-topLeftCorner[1])*scale]
                     dimension = [spec_dimension_list[i][0]*scale,spec_dimension_list[i][1]*scale]
+                    color_style.setNodeDimension(dimension)
                     text_position = [(spec_text_position_list[i][0]-topLeftCorner[0])*scale,
                     (spec_text_position_list[i][1]-topLeftCorner[1])*scale]
                     text_dimension = [spec_text_dimension_list[i][0]*scale,
@@ -660,6 +687,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                                         color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
+                                floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape = complexShape)
@@ -678,6 +706,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                                         color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
+                                floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape=complexShape)
@@ -738,6 +767,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                 for i in range (numFloatingNodes):
                     temp_id = FloatingNodes_ids[i]
                     dimension = [60,40]
+                    color_style.setNodeDimension(dimension)
                     position = [40 + math.trunc (_random.random()*800), 40 + math.trunc (_random.random()*800)]
                     spec_id_list.append(temp_id)
                     spec_dimension_list.append(dimension)
@@ -808,11 +838,12 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                         dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
                         dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                         handles.append([dst_handle_x,dst_handle_y])
-                    drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
-                        center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                        color_style.getReactionLineColor(), reaction_line_width*scale,
-                        reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
-                        reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
+                    if drawArrow:
+                        drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
+                            center_position, handles, src_dimension, dst_dimension, mod_dimension,
+                            color_style.getReactionLineColor(), reaction_line_width*scale,
+                            reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
+                            reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
                     arrow_info.append(
                         [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                          dst_dimension, mod_dimension,
@@ -834,6 +865,7 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
                     text_line_width*scale, scale)
                     floatingNodes_pos_dict['[' + temp_id + ']'] = position
+                    floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
                 for i in range (numBoundaryNodes):
                     temp_id = BoundaryNodes_ids[i]
                     for k in range(numNodes):
@@ -849,13 +881,13 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
 
         except Exception as e:
             print(e)
-        return floatingNodes_pos_dict, color_style, edges, arrow_info
+        return floatingNodes_pos_dict, floatingNodes_dim_dict, color_style, edges, arrow_info, name_to_id
 
     baseImageArray = []
     if fileFormat == "PNG" or fileFormat == "JPEG":
         surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
         canvas = surface.getCanvas()
-        pos_dict, color_style, edges, arrow_info = draw_on_canvas(canvas)
+        pos_dict, dim_dict, color_style, edges, arrow_info, name_to_id = draw_on_canvas(canvas)
         baseImageArray = drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat)
     else: #fileFormat == "PDF"
         if output_fileName == '':
@@ -868,8 +900,8 @@ def plot(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', output_file
         stream = skia.FILEWStream(fileNamepdf)
         with skia.PDF.MakeDocument(stream) as document:
             with document.page(int(imageSize[0]), int(imageSize[1])) as canvas:
-                pos_dict, color_style, edges, arrow_info = draw_on_canvas(canvas)
-    return baseImageArray, pos_dict, color_style, edges, arrow_info
+                pos_dict, dim_dict, color_style, edges, arrow_info, name_to_id = draw_on_canvas(canvas)
+    return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, color_style, edges, arrow_info, name_to_id)
 
 def getNetworkTopLeftCorner(sbmlStr):
     """
