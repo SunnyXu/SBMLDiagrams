@@ -69,13 +69,11 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
     for reaction in reactionIds:
         mx_reaction_rate = max(mx,max(reactionRates[reaction]))
 
-    relative_rate = defaultdict(lambda:1)
     for i in range(len(simulationData)):
         surface = skia.Surface(np.array(baseImageArray, copy=True))
         canvas = surface.getCanvas()
         for j,info in enumerate(arrow_info):
-            rate = reactionRates[reactionIds[j]][i]*(1/thick_rate/mx_reaction_rate)
-            relative_rate[j] += rate
+            rate = reactionRates[reactionIds[j]][i]*(1/mx_reaction_rate/thick_rate)
             src_position, dst_position, mod_position,center_position, \
             handles, src_dimension, dst_dimension, mod_dimension,\
             reaction_line_color, reaction_line_width, reactionLineType,\
@@ -83,7 +81,7 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
 
             drawNetwork.addReaction(canvas,src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                            (0,0,0,100), reaction_line_width*relative_rate[j],
+                            (0,0,0,100), reaction_line_width*rate,
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                             reaction_arrow_head_size = head)
 
