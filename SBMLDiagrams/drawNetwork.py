@@ -741,9 +741,11 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/dis_rct_arc_center
                 points.append([pts_x_r,pts_y_r])
                 _drawArrow(canvas, points, lineColor)
-                if arrow_head_pt != None:
-                    #pts.append(arrow_head_pt)
+                if line_head_pt != None:
                     pts.append(line_head_pt)
+                    _drawBezier(pts, lineColor, linewidth)
+                else:
+                    pts.append(arrow_head_pt)
                     _drawBezier(pts, lineColor, linewidth)
             except:
                 prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
@@ -792,10 +794,12 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 _drawArrow(canvas, points, lineColor)
             except:
                 pass
-            # _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_head_pt[0], arrow_head_pt[1], 
-            # lineColor, linewidth)
-            _drawLine(canvas, arcCenter[0], arcCenter[1], line_head_pt[0], line_head_pt[1], 
-            lineColor, linewidth)
+            if line_head_pt != None:
+                _drawLine(canvas, arcCenter[0], arcCenter[1], line_head_pt[0], line_head_pt[1], 
+                lineColor, linewidth)
+            else: 
+                _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_head_pt[0], arrow_head_pt[1], 
+                lineColor, linewidth)
     #draw modifiers:
     modifier_lineColor = skia.Color(128, 0, 128)
     modifier_linewidth = 2
