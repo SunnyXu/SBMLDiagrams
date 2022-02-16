@@ -12,6 +12,7 @@ Welcome to SBMLDiagrams's documentation!
 
    visualizeSBML
    processSBML
+   colors
 
 ------------
 Introduction
@@ -71,19 +72,28 @@ Code Examples
 
    df = SBMLDiagrams.load(sbmlStr)
 
+   #get layout
    print(df.getCompartmentPosition("compartment_id"))
-   print(df.getNodeFillColor("node_id"))
-   print(df.isBezierReactionType("reaction_id"))
+   print(df.getNodeSize("node_id"))
+   print(df.getReactionCenterPosition("reaction_id"))
 
+   #get render
+   print(df.getCompartmentFillColor("compartment_id"))
+   print(df.getNodeShape("node_id"))
+   print(df.getReactionFillColor("reaction_id"))
+
+   #set layout
+   df.setCompartmentSize(("compartment_id", [100, 100])
+   df.setNodeTextPosition(("node_id", [30, 30])
+
+   #set render
    # There are three ways to set colors and opacity is optional:
-   # 1) list-decimal_rgb 1*3 matrix, i.e. [255, 255, 255];
-   # 2) str-html_name, i.e. "white";
-   # 3) str-hex_string (6-digit), i.e. "#000000";
-   # Please see more details on the page of processSBML. 
+   # 1) list-decimal rgb 1*3 matrix, i.e. [255, 255, 255];
+   # 2) str-html name, i.e. "white";
+   # 3) str-hex string (6-digit), i.e. "#000000";
    df.setCompartmentBorderColor("compartment_id", [255, 255, 255])
-   df.setCompartmentFillColor("compartment_id", "white", opacity = 0.5)
+   df.setNodeFillColor("node_id", "red", opacity = 0.5)
    df.setNodeTextFontColor("node_id", "#000000", opacity = 1.)
-   df.setNodeSize("node_id", [50.0, 30.0])
    df.setReactionLineThickness("reaction_id", 3.)
 
    sbmlStr_layout_render = df.export()
