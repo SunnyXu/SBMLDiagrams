@@ -719,9 +719,15 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             try:
                 #to calculate the head point of the arrow called arrow_head_pt
                 arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
+                line_head_pt = _cross_point(prd_handle_position, 
+                [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
+                [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
                 if arrow_head_pt == None: #prd_handle_position could be inside the node
                     prd_handle_position = center_position
                     arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
+                    line_head_pt = _cross_point(prd_handle_position, 
+                    [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
+                    [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
                 #draw the arrow:
                 points = [arrow_head_pt]
                 dis_rct_arc_center = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)      
@@ -735,7 +741,10 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/dis_rct_arc_center
                 points.append([pts_x_r,pts_y_r])
                 _drawArrow(canvas, points, lineColor)
-                if arrow_head_pt != None:
+                if line_head_pt != None:
+                    pts.append(line_head_pt)
+                    _drawBezier(pts, lineColor, linewidth)
+                else:
                     pts.append(arrow_head_pt)
                     _drawBezier(pts, lineColor, linewidth)
             except:
@@ -761,9 +770,15 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
             try:
                 #to calculate the head point of the arrow called arrow_head_pt
                 arrow_head_pt = _cross_point(arcCenter, c2, s2) 
+                line_head_pt = _cross_point(arcCenter, 
+                [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
+                [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
                 if arrow_head_pt == None:
                     #arcCenter is inside the node
                     arrow_head_pt = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
+                    line_head_pt = _cross_point(arcCenter, 
+                    [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
+                    [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
                 #draw the arrow:
                 points = [arrow_head_pt]
                 dis_rct_arc_center = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)      
@@ -779,7 +794,12 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                 _drawArrow(canvas, points, lineColor)
             except:
                 pass
-            _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_head_pt[0], arrow_head_pt[1], lineColor, linewidth)
+            if line_head_pt != None:
+                _drawLine(canvas, arcCenter[0], arcCenter[1], line_head_pt[0], line_head_pt[1], 
+                lineColor, linewidth)
+            else: 
+                _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_head_pt[0], arrow_head_pt[1], 
+                lineColor, linewidth)
     #draw modifiers:
     modifier_lineColor = skia.Color(128, 0, 128)
     modifier_linewidth = 2

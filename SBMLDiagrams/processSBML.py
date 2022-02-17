@@ -61,7 +61,7 @@ COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIF
 # df_color = pd.read_excel(color_xls, sheet_name = 'colors')
 color_data = {"decimal_rgb": ['[240,248,255]', '[250,235,215]', '[0,255,255]', '[127,255,212]', '[240,255,255]', '[245,245,220]', '[255,228,196]', '[0,0,0]', '[255,235,205]', '[0,0,255]', '[138,43,226]', '[165,42,42]', '[222,184,135]', '[95,158,160]', '[127,255,0]', '[210,105,30]', '[255,127,80]', '[100,149,237]', '[255,248,220]', '[220,20,60]', '[0,255,255]', '[0,0,139]', '[0,139,139]', '[184,134,11]', '[169,169,169]', '[0,100,0]', '[189,183,107]', '[139,0,139]', '[85,107,47]', '[255,140,0]', '[153,50,204]', '[139,0,0]', '[233,150,122]', '[143,188,143]', '[72,61,139]', '[47,79,79]', '[0,206,209]', '[148,0,211]', '[255,20,147]', '[0,191,255]', '[105,105,105]', '[30,144,255]', '[178,34,34]', '[255,250,240]', '[34,139,34]', '[255,0,255]', '[220,220,220]', '[248,248,255]', '[255,215,0]', '[218,165,32]', '[128,128,128]', '[0,128,0]', '[173,255,47]', '[240,255,240]', '[255,105,180]', '[205,92,92]', '[75,0,130]', '[255,255,240]', '[240,230,140]', '[230,230,250]', '[255,240,245]', '[124,252,0]', '[255,250,205]', '[173,216,230]', '[240,128,128]', '[224,255,255]', '[250,250,210]', '[144,238,144]', '[211,211,211]', '[255,182,193]', '[255,160,122]', '[32,178,170]', '[135,206,250]', '[119,136,153]', '[176,196,222]', '[255,255,224]', '[0,255,0]', '[50,205,50]', '[250,240,230]', '[255,0,255]', '[128,0,0]', '[102,205,170]', '[0,0,205]', '[186,85,211]', '[147,112,219]', '[60,179,113]', '[123,104,238]', '[0,250,154]', '[72,209,204]', '[199,21,133]', '[25,25,112]', '[245,255,250]', '[255,228,225]', '[255,228,181]', '[255,222,173]', '[0,0,128]', '[253,245,230]', '[128,128,0]', '[107,142,35]', '[255,165,0]', '[255,69,0]', '[218,112,214]', '[238,232,170]', '[152,251,152]', '[175,238,238]', '[219,112,147]', '[255,239,213]', '[255,218,185]', '[205,133,63]', '[255,192,203]', '[221,160,221]', '[176,224,230]', '[128,0,128]', '[255,0,0]', '[188,143,143]', '[65,105,225]', '[139,69,19]', '[250,128,114]', '[244,164,96]', '[46,139,87]', '[255,245,238]', '[160,82,45]', '[192,192,192]', '[135,206,235]', '[106,90,205]', '[112,128,144]', '[255,250,250]', '[0,255,127]', '[70,130,180]', '[210,180,140]', '[0,128,128]', '[216,191,216]', '[255,99,71]', '[64,224,208]', '[238,130,238]', '[245,222,179]', '[255,255,255]', '[245,245,245]', '[255,255,0]', '[154,205,50]'],\
     "html_name":['AliceBlue', 'AntiqueWhite', 'Aqua', 'Aquamarine', 'Azure', 'Beige', 'Bisque', 'Black', 'BlanchedAlmond', 'Blue', 'BlueViolet', 'Brown', 'BurlyWood', 'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue', 'Cornsilk', 'Crimson', 'Cyan', 'DarkBlue', 'DarkCyan', 'DarkGoldenrod', 'DarkGray', 'DarkGreen', 'DarkKhaki', 'DarkMagenta', 'DarkOliveGreen', 'DarkOrange', 'DarkOrchid', 'DarkRed', 'DarkSalmon', 'DarkSeaGreen', 'DarkSlateBlue', 'DarkSlateGray', 'DarkTurquoise', 'DarkViolet', 'DeepPink', 'DeepSkyBlue', 'DimGray', 'DodgerBlue', 'FireBrick', 'FloralWhite', 'ForestGreen', 'Fuchsia', 'Gainsboro', 'GhostWhite', 'Gold', 'Goldenrod', 'Gray', 'Green', 'GreenYellow', 'Honeydew', 'HotPink', 'IndianRed', 'Indigo', 'Ivory', 'Khaki', 'Lavender', 'LavenderBlush', 'LawnGreen', 'LemonChiffon', 'LightBlue', 'LightCoral', 'LightCyan', 'LightGoldenrodYellow', 'LightGreen', 'LightGrey', 'LightPink', 'LightSalmon', 'LightSeaGreen', 'LightSkyBlue', 'LightSlateGray', 'LightSteelBlue', 'LightYellow', 'Lime', 'LimeGreen', 'Linen', 'Magenta', 'Maroon', 'MediumAquamarine', 'MediumBlue', 'MediumOrchid', 'MediumPurple', 'MediumSeaGreen', 'MediumSlateBlue', 'MediumSpringGreen', 'MediumTurquoise', 'MediumVioletRed', 'MidnightBlue', 'MintCream', 'MistyRose', 'Moccasin', 'NavajoWhite', 'Navy', 'OldLace', 'Olive', 'OliveDrab', 'Orange', 'OrangeRed', 'Orchid', 'PaleGoldenrod', 'PaleGreen', 'PaleTurquoise', 'PaleVioletRed', 'PapayaWhip', 'PeachPuff', 'Peru', 'Pink', 'Plum', 'PowderBlue', 'Purple', 'Red', 'RosyBrown', 'RoyalBlue', 'SaddleBrown', 'Salmon', 'SandyBrown', 'SeaGreen', 'Seashell', 'Sienna', 'Silver', 'SkyBlue', 'SlateBlue', 'SlateGray', 'Snow', 'SpringGreen', 'SteelBlue', 'Tan', 'Teal', 'Thistle', 'Tomato', 'Turquoise', 'Violet', 'Wheat', 'White', 'WhiteSmoke', 'Yellow', 'YellowGreen'],\
-    "hex_string":['#F0F8FF', '#FAEBD7', '#00FFFF', '#7FFFD4', '#F0FFFF', '#F5F5DC', '#FFE4C4', '#000000', 'FFEBCD', '#0000FF', '#8A2BE2', '#A52A2A', '#DEB887', '#5F9EA0', '#7FFF00', '#D2691E', '#FF7F50', '#6495ED', '#FFF8DC', '#DC143C', '#00FFFF', '#00008B', '#008B8B', '#B8860B', '#A9A9A9', '#006400', '#BDB76B', '#8B008B', '#556B2F', '#FF8C00', '#9932CC', '#8B0000', '#E9967A', '#8FBC8F', '#483D8B', '#2F4F4F', '#00CED1', '#9400D3', '#FF1493', '#00BFFF', '#696969', '#1E90FF', '#B22222', '#FFFAF0', '#228B22', '#FF00FF', 'DCDCDC', '#F8F8FF', '#FFD700', '#DAA520', '#808080', '#008000', '#ADFF2F', '#F0FFF0', '#FF69B4', '#CD5C5C', '#4B0082', '#FFFFF0', '#F0E68C', '#E6E6FA', '#FFF0F5', '#7CFC00', '#FFFACD', '#ADD8E6', '#F08080', '#E0FFFF', '#FAFAD2', '#90EE90', '#D3D3D3', '#FFB6C1', '#FFA07A', '#20B2AA', '#87CEFA', '#778899', '#B0C4DE', '#FFFFE0', '#00FF00', '#32CD32', '#FAF0E6', '#FF00FF', '#800000', '#66CDAA', '#0000CD', '#BA55D3', '#9370DB', '#3CB371', '#7B68EE', '#00FA9A', '#48D1CC', '#C71585', '#191970', '#F5FFFA', '#FFE4E1', '#FFE4B5', '#FFDEAD', '#000080', '#FDF5E6', '#808000', '#6B8E23', '#FFA500', '#FF4500', '#DA70D6', '#EEE8AA', '#98FB98', '#AFEEEE', '#DB7093', '#FFEFD5', '#FFDAB9', '#CD853F', '#FFC0CB', '#DDA0DD', '#B0E0E6', '#800080', '#FF0000', '#BC8F8F', '#4169E1', '#8B4513', '#FA8072', '#F4A460', '#2E8B57', '#FFF5EE', '#A0522D', '#C0C0C0', '#87CEEB', '#6A5ACD', '#708090', '#FFFAFA', '#00FF7F', '#4682B4', '#D2B48C', '#008080', '#D8BFD8', '#FF6347', '#40E0D0', '#EE82EE', '#F5DEB3', '#FFFFFF', '#F5F5F5', '#FFFF00', '#9ACD32']}
+    "hex_string":['#F0F8FF', '#FAEBD7', '#00FFFF', '#7FFFD4', '#F0FFFF', '#F5F5DC', '#FFE4C4', '#000000', '#FFEBCD', '#0000FF', '#8A2BE2', '#A52A2A', '#DEB887', '#5F9EA0', '#7FFF00', '#D2691E', '#FF7F50', '#6495ED', '#FFF8DC', '#DC143C', '#00FFFF', '#00008B', '#008B8B', '#B8860B', '#A9A9A9', '#006400', '#BDB76B', '#8B008B', '#556B2F', '#FF8C00', '#9932CC', '#8B0000', '#E9967A', '#8FBC8F', '#483D8B', '#2F4F4F', '#00CED1', '#9400D3', '#FF1493', '#00BFFF', '#696969', '#1E90FF', '#B22222', '#FFFAF0', '#228B22', '#FF00FF', '#DCDCDC', '#F8F8FF', '#FFD700', '#DAA520', '#808080', '#008000', '#ADFF2F', '#F0FFF0', '#FF69B4', '#CD5C5C', '#4B0082', '#FFFFF0', '#F0E68C', '#E6E6FA', '#FFF0F5', '#7CFC00', '#FFFACD', '#ADD8E6', '#F08080', '#E0FFFF', '#FAFAD2', '#90EE90', '#D3D3D3', '#FFB6C1', '#FFA07A', '#20B2AA', '#87CEFA', '#778899', '#B0C4DE', '#FFFFE0', '#00FF00', '#32CD32', '#FAF0E6', '#FF00FF', '#800000', '#66CDAA', '#0000CD', '#BA55D3', '#9370DB', '#3CB371', '#7B68EE', '#00FA9A', '#48D1CC', '#C71585', '#191970', '#F5FFFA', '#FFE4E1', '#FFE4B5', '#FFDEAD', '#000080', '#FDF5E6', '#808000', '#6B8E23', '#FFA500', '#FF4500', '#DA70D6', '#EEE8AA', '#98FB98', '#AFEEEE', '#DB7093', '#FFEFD5', '#FFDAB9', '#CD853F', '#FFC0CB', '#DDA0DD', '#B0E0E6', '#800080', '#FF0000', '#BC8F8F', '#4169E1', '#8B4513', '#FA8072', '#F4A460', '#2E8B57', '#FFF5EE', '#A0522D', '#C0C0C0', '#87CEEB', '#6A5ACD', '#708090', '#FFFAFA', '#00FF7F', '#4682B4', '#D2B48C', '#008080', '#D8BFD8', '#FF6347', '#40E0D0', '#EE82EE', '#F5DEB3', '#FFFFFF', '#F5F5F5', '#FFFF00', '#9ACD32']}
 df_color = pd.DataFrame(color_data)
 
 def _rgb_to_color(rgb):
@@ -173,7 +173,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     try: #invalid sbml
         ### from here for layout ###
         document = libsbml.readSBMLFromString(sbmlStr)
-        #print(document.getNumErrors())
+        if document.getNumErrors() != 0:
+            raise Exception("There are errors in the sbml file.")
         model_layout = document.getModel()
         try:
             mplugin = model_layout.getPlugin("layout")
@@ -372,15 +373,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     rxn_render = []
                     text_render = []
                     arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
+                    id_arrowHeadSize = []
                     for j in range(0, info.getNumLineEndings()):
                         lineEnding = info.getLineEnding(j)
-                        #id = lineEnding.getId()
+                        temp_id = lineEnding.getId()
                         boundingbox = lineEnding.getBoundingBox()
                         width = boundingbox.getWidth()
                         height= boundingbox.getHeight()
                         pos_x = boundingbox.getX()
                         pos_y = boundingbox.getY()
-                        arrowHeadSize = [width, height]
+                        temp_arrowHeadSize = [width, height]
+                        id_arrowHeadSize.append([temp_id,temp_arrowHeadSize])
                         # group = lineEnding.getGroup()
                         # for element in group.getListOfElements():
                         #     NumRenderPoints = element.getListOfElements().getNumRenderPoints()
@@ -437,14 +440,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,shapeIdx])
 
                         elif 'REACTIONGLYPH' in typeList:
-                            #print(group.isSetEndHead())
-                            #print(group.getEndHead()) #does not work, so not for each reaction
+                            if group.isSetEndHead():
+                                temp_id = group.getEndHead() 
+                            for k in range(len(id_arrowHeadSize)):
+                                if temp_id == id_arrowHeadSize[k][0]:
+                                    arrowHeadSize = id_arrowHeadSize[k][1]
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
                                     reaction_line_color = hex_to_rgb(color_list[k][1])
                             reaction_line_width = group.getStrokeWidth()
                             rxn_render.append([idList, reaction_line_color, reaction_line_width, arrowHeadSize])
-
                         elif 'TEXTGLYPH' in typeList:
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
@@ -1168,7 +1173,7 @@ class load:
         self.sbmlstr = sbmlstr
         self.df = _SBMLToDF(self.sbmlstr)
         if self.df == None:
-            sys.exit("There is no valid information to process.")
+           sys.exit("There is no valid information to process.")
 
     def getCompartmentPosition(self, id):
         """
@@ -1603,7 +1608,7 @@ class load:
 
         return line_thickness_list
 
-    def isBezierReactionType(self, id):
+    def _isBezierReactionType(self, id):
         """
         Judge whether it is a bezier reaction curve with its certain reaction id
 
@@ -1622,10 +1627,10 @@ class load:
 
         return bezier_list
 
-    def getReactionArrowHeadSize(self):
-    #def getReactionArrowHeadSize(self, id):
+    #def getReactionArrowHeadSize(self):
+    def getReactionArrowHeadSize(self, id):
         """
-        Get the arrow head size of reactions.
+        Get the arrow head size of reactions with its certain reaction id.
 
         Args: 
 
@@ -1634,11 +1639,11 @@ class load:
 
             arrow_head_size: list-1*2 matrix-size of the rectangle [width, height].
         """
-        # idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
-        arrow_head_size_list =[] 
-        # for i in range(len(idx_list)):
-        #     arrow_head_size_list.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"])
-        arrow_head_size_list.append(self.df[2].iloc[0]["arrow_head_size"])
+        arrow_head_size_list =[]
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        for i in range(len(idx_list)):
+            arrow_head_size_list.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"]) 
+        # arrow_head_size_list.append(self.df[2].iloc[0]["arrow_head_size"])
 
         return arrow_head_size_list
     
@@ -1732,6 +1737,20 @@ class load:
             corner of the node.
         """
         self.df = editSBML._setNodePosition(self.df, id, position)
+        return self.df
+
+    def setNodeAndTextPosition(self, id, position):
+        """
+            Set the x,y coordinates of the node and node text position if there are consistent.
+
+        Args:  
+            id: id-node id.
+
+            position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node and node text position.
+        """
+        self.df = editSBML._setNodePosition(self.df, id, position)
+        self.df = editSBML._setNodeTextPosition(self.df, id, position)
         return self.df
 
     def setNodeSize(self, id, size):
@@ -1878,7 +1897,7 @@ class load:
 
     def setReactionDefaultCenterAndHandlePositions(self, id):
         """
-        Set detault center and handle positions.
+        Set detault center and handle positions, which makes the reaction lines look like straight lines.
 
         Args:  
             id: str-reaction id.
@@ -1972,7 +1991,7 @@ class load:
         self.df = editSBML._setReactionLineThickness(self.df, id, line_thickness)
         return self.df
 
-    def setBezierReactionType(self, id, bezier = True):
+    def _setBezierReactionType(self, id, bezier = True):
         """
         Set the reaction type to bezier curve or not with a certain reaction id.
 
@@ -1984,16 +2003,16 @@ class load:
         self.df = editSBML._setBezierReactionType(self.df, id, bezier)
         return self.df
     
-    #def setReactionArrowHeadSize(self, id, size):
-    def setReactionArrowHeadSize(self, size):
+    def setReactionArrowHeadSize(self, id, size):
+    #def setReactionArrowHeadSize(self, size):
         """
-        Set the reaction arrow head size.
+        Set the reaction arrow head size with a certain reaction id.
 
         Args:  
 
             size: list-1*2 matrix-size of the rectangle [width, height].
         """
-        self.df = editSBML._setReactionArrowHeadSize(self.df, size)
+        self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
         return self.df
 
     def export(self):
@@ -2006,6 +2025,102 @@ class load:
         """
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
+
+
+    def plot(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
+    newStyleClass = None):
+
+        """
+        Plot  to a PNG/JPG/PDF file.
+
+        Args:  
+
+            setImageSize: list-1*2 matrix-size of the rectangle [width, height].
+
+            scale: float-makes the figure output size = scale * default output size.
+
+            fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
+
+            output_fileName: str-filename: 'output' (default) or '' (result in a random file name) 
+            or 'fileName' (self-designed file name).
+            
+            complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' 
+            or 'tetramer'.
+
+            reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
+            If there is no layout information from the SBML file, all reaction lines will look like
+            straight lines even set as 'bezier' because they are set as default center and handle positions.
+
+            showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
+
+            styleName: pre-existing color style for the graph.
+
+            newStyleClass: user-customized new color style.
+
+        Returns:
+            The tuple of base image's array, position dictionary for the Floating Species, 
+            color style of the image.
+        """
+
+        sbmlStr = self.export()
+        baseImageArray, pos_dict, color_style  = \
+        visualizeSBML._plot(sbmlStr, setImageSize = setImageSize, scale = scale, fileFormat = fileFormat, 
+        output_fileName = output_fileName, complexShape = complexShape, reactionLineType = reactionLineType, 
+        showBezierHandles = showBezierHandles, styleName = styleName, newStyleClass = newStyleClass)
+
+        return baseImageArray, pos_dict, color_style
+
+    def getNetworkTopLeftCorner(self):
+        """
+        Get the top left-hand corner of the network(s) from the SBML string.
+
+        Args:  
+            sbmlStr: str-the string of the input sbml file.
+
+        Returns:
+            position: list-[position_x, position_y], top left-hand corner of the network(s).
+            It is calculated by the minimum positions of compartments, nodes, centroid and handle 
+            positions of reactions, excluding the compartment with the id of _compartment_default_.
+        
+        """ 
+        sbmlStr = self.export()
+        position  = visualizeSBML._getNetworkTopLeftCorner(sbmlStr)
+        return position
+
+    def getNetworkBottomRightCorner(self):
+        """
+        Get the bottom right-hand corner of the network(s) from the SBML string.
+
+        Args:  
+            sbmlStr: str-the string of the input sbml file.
+
+        Returns:
+            position: list-[position_x, position_y],bottom right-hand corner of the network(s).
+            It is calculated by the maximum right down corner positions of compartments and nodes, 
+            excluding the compartment with the id of _compartment_default_.
+        
+        """
+        sbmlStr = self.export()
+        position  = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)
+        return position
+    
+    def getNetworkSize(self):
+        """
+        Get the size of the network(s).
+
+        Args:  
+            sbmlStr: str-the string of the input sbml file.
+
+        Returns:
+            list-1*2 matrix-size of the rectangle [width, height].
+        
+        """ 
+        sbmlStr = self.export()
+        size  = visualizeSBML._getNetworkSize(sbmlStr)
+        return size
+
+    
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
@@ -2058,8 +2173,8 @@ if __name__ == '__main__':
     # print("handle_position:", df.getReactionHandlePositions("r_0"))
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
-    # print(df.isBezierReactionType("r_0"))
-    # print(df.getReactionArrowHeadSize())
+    # print(df._isBezierReactionType("r_0"))
+    # print(df.getReactionArrowHeadSize("r_0"))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -2074,6 +2189,7 @@ if __name__ == '__main__':
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
     # df.setFloatingBoundaryNode("x_1", True)
+    # print(df.getNodePosition("x_1"))
     # df.setNodePosition("x_1", [100.0, 100.0])
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # print(df.getNodePosition("x_1"))
@@ -2091,7 +2207,7 @@ if __name__ == '__main__':
     # df.setReactionFillColor("r_0", [91, 176, 253])
     # df.setReactionFillColor("r_0", [0, 0, 0])
     # df.setReactionLineThickness("r_0", 3.)
-    # df.setBezierReactionType("r_0", True)
+    # df._setBezierReactionType("r_0", True)
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
     # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
     # print("center_position after:", df.getReactionCenterPosition("r_0"))
@@ -2099,15 +2215,20 @@ if __name__ == '__main__':
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
     # print("center_position after:", df.getReactionCenterPosition("r_0"))
     # print("handle_position after:", df.getReactionHandlePositions("r_0"))
-    # df.setReactionArrowHeadSize([20., 20.])
-    # print(df.getReactionArrowHeadSize())
+    # df.setReactionArrowHeadSize("r_0", [50., 50.])
+    # print(df.getReactionArrowHeadSize("r_0"))
 
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
+
+    df.plot()
+    # print(df.getNetworkSize())
+    # print(df.getNetworkBottomRightCorner())
+    # print(df.getNetworkTopLeftCorner())
 
     # if len(sbmlStr_layout_render) == 0:
     #     print("empty sbml")

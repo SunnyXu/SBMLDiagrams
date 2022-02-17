@@ -6,10 +6,11 @@
 Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu and Jessie Jiang
 """
-import heapq
+
 import os
 import re
 import skia
+import re
 import simplesbml
 import libsbml
 import math
@@ -158,12 +159,12 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
         out.write(imgs[i])
     out.release()
 
-def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
+def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
     newStyleClass = None):
 
     """
-    Visualization from an sbml string to a PNG/JPG/PDF file.
+    Plot from an sbml string to a PNG/JPG/PDF file.
 
     Args:  
         sbmlStr: str-the string of the input sbml file.
@@ -181,8 +182,8 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
         or 'tetramer'.
 
         reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
-        If there is no layout information from the SBML file, all reaction line will be drawn in
-        straight lines even set as 'bezier'.
+        If there is no layout information from the SBML file, all reaction lines will look like
+        straight lines even set as 'bezier' because they are set as default center and handle positions.
 
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
@@ -198,8 +199,8 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
     df = processSBML.load(sbmlStr)
     sbmlStr = df.export()
     
-    topLeftCorner = getNetworkTopLeftCorner(sbmlStr)
-    networkSize = getNetworkSize(sbmlStr)
+    topLeftCorner = _getNetworkTopLeftCorner(sbmlStr)
+    networkSize = _getNetworkSize(sbmlStr)
 
     topLeftCorner = [topLeftCorner[0]-10, topLeftCorner[1]-10]
 
@@ -251,17 +252,19 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
         try: #invalid sbml
             ### from here for layout ###
             document = libsbml.readSBMLFromString(sbmlStr)
+            if document.getNumErrors() != 0:
+                raise Exception("There are errors in the sbml file.")
             model_layout = document.getModel()
             try:
                 mplugin = model_layout.getPlugin("layout")
             except:
                 raise Exception("There is no layout.")
             if mplugin is not None:
-                layout = mplugin.getLayout(0)
+                layout = mplugin.getLayout(0)    
                 if layout is not None:
                     numCompGlyphs = layout.getNumCompartmentGlyphs()
                     numSpecGlyphs = layout.getNumSpeciesGlyphs()
-                    numReactionGlyphs = layout.getNumReactionGlyphs()
+                    numReactionGlyphs = layout.getNumReactionGlyphs() 
                     for i in range(numCompGlyphs):
                         compGlyph = layout.getCompartmentGlyph(i)
                         temp_id = compGlyph.getCompartmentId()
@@ -273,7 +276,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                         pos_y = boundingbox.getY()
                         comp_dimension_list.append([width,height])
                         comp_position_list.append([pos_x,pos_y])
-
+                        
                     reaction_id_list = []
                     reaction_center_list = []
                     kinetics_list = []
@@ -284,7 +287,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                     prd_specGlyph_handle_list = []
                     reaction_mod_list = []
                     mod_specGlyph_list = []
-
+                    
                     for i in range(numReactionGlyphs):
                         reactionGlyph = layout.getReactionGlyph(i)
                         curve = reactionGlyph.getCurve()
@@ -297,34 +300,34 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                         reaction = model_layout.getReaction(reaction_id)
                         kinetics = reaction.getKineticLaw().getFormula()
                         kinetics_list.append(kinetics)
-
+                        
                         temp_mod_list = []
                         for j in range(len(reaction.getListOfModifiers())):
                             modSpecRef = reaction.getModifier(j)
                             temp_mod_list.append(modSpecRef.getSpecies())
-                        reaction_mod_list.append(temp_mod_list)
-
+                        reaction_mod_list.append(temp_mod_list)       
+                        
                         numSpecRefGlyphs = reactionGlyph.getNumSpeciesReferenceGlyphs()
 
                         #rct_specGlyph_temp_list = []
                         #prd_specGlyph_temp_list = []
                         rct_specGlyph_handles_temp_list = []
-                        prd_specGlyph_handles_temp_list = []
+                        prd_specGlyph_handles_temp_list = [] 
                         mod_specGlyph_temp_list = []
 
                         for j in range(numSpecRefGlyphs):
                             specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
                             #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
-
-                            curve = specRefGlyph.getCurve()
+                                                
+                            curve = specRefGlyph.getCurve()                             
                             for segment in curve.getListOfCurveSegments():
                                     # print(segment.getStart().getXOffset())
                                     # print(segment.getStart().getYOffset())
                                     # print(segment.getEnd().getXOffset())
                                     # print(segment.getEnd().getYOffset())
                                     try:
-                                        center_handle = [segment.getBasePoint1().getXOffset(),
-                                                    segment.getBasePoint1().getYOffset()]
+                                        center_handle = [segment.getBasePoint1().getXOffset(), 
+                                                    segment.getBasePoint1().getYOffset()]                                
                                         spec_handle = [segment.getBasePoint2().getXOffset(),
                                                 segment.getBasePoint2().getYOffset()]
                                     except:
@@ -334,7 +337,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                             role = specRefGlyph.getRoleString()
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
                             specGlyph = layout.getSpeciesGlyph(specGlyph_id)
-
+                            
                             for k in range(numSpecGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
                                 temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
@@ -347,16 +350,16 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                             height = spec_boundingbox.getHeight()
                             pos_x = spec_boundingbox.getX()
                             pos_y = spec_boundingbox.getY()
-
+                            
                             try:
                                 text_boundingbox = textGlyph.getBoundingBox()
                                 text_pos_x = text_boundingbox.getX()
-                                text_pos_y = text_boundingbox.getY()
+                                text_pos_y = text_boundingbox.getY()   
                                 text_dim_w = text_boundingbox.getWidth()
                                 text_dim_h = text_boundingbox.getHeight()
                             except:
                                 text_pos_x = pos_x
-                                text_pos_y = pos_y
+                                text_pos_y = pos_y   
                                 text_dim_w = width
                                 text_dim_h = height
 
@@ -379,12 +382,12 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                                 prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
                             elif role == "modifier": #it is a modifier
                                 mod_specGlyph_temp_list.append(specGlyph_id)
-
+                            
                         #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                         #prd_specGlyph_list.append(prd_specGlyph_temp_list)
                         reaction_center_handle_list.append(center_handle)
                         rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
-                        prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list)
+                        prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
                         mod_specGlyph_list.append(mod_specGlyph_temp_list)
 
                     #orphan nodes
@@ -413,12 +416,12 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                             try:
                                 text_boundingbox = textGlyph.getBoundingBox()
                                 text_pos_x = text_boundingbox.getX()
-                                text_pos_y = text_boundingbox.getY()
+                                text_pos_y = text_boundingbox.getY()   
                                 text_dim_w = text_boundingbox.getWidth()
                                 text_dim_h = text_boundingbox.getHeight()
                             except:
                                 text_pos_x = pos_x
-                                text_pos_y = pos_y
+                                text_pos_y = pos_y   
                                 text_dim_w = width
                                 text_dim_h = height
                             spec_text_position_list.append([text_pos_x, text_pos_y])
@@ -437,15 +440,18 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                         rxn_render = []
                         text_render = []
                         arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
+                        id_arrowHeadSize = []
                         for j in range(0, info.getNumLineEndings()):
                             lineEnding = info.getLineEnding(j)
-                            #id = lineEnding.getId()
+                            temp_id = lineEnding.getId()
                             boundingbox = lineEnding.getBoundingBox()
                             width = boundingbox.getWidth()
                             height= boundingbox.getHeight()
                             pos_x = boundingbox.getX()
                             pos_y = boundingbox.getY()
                             arrowHeadSize = [width, height]
+                            temp_arrowHeadSize = [width, height]
+                            id_arrowHeadSize.append([temp_id,temp_arrowHeadSize])
                             # print(lineEnding.getEnableRotationalMapping())
                             # group = lineEnding.getGroup()
                             # for element in group.getListOfElements():
@@ -506,12 +512,16 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                                                     color_style.getSpecBorderColor(),spec_border_width,shapeIdx])
 
                             elif 'REACTIONGLYPH' in typeList:
-                                #group.getEndHead(): does not work, so not for each reaction
+                                if group.isSetEndHead():
+                                    temp_id = group.getEndHead()
+                                for k in range(len(id_arrowHeadSize)):
+                                    if temp_id == id_arrowHeadSize[k][0]:
+                                        arrowHeadSize = id_arrowHeadSize[k][1]
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
                                         color_style.setReactionLineColor(hex_to_rgb(color_list[k][1]))
                                 reaction_line_width = group.getStrokeWidth()
-                                rxn_render.append([idList, color_style.getReactionLineColor(),
+                                rxn_render.append([idList, color_style.getReactionLineColor(), 
                                 reaction_line_width, arrowHeadSize])
                             elif 'TEXTGLYPH' in typeList:
                                 for k in range(len(color_list)):
@@ -524,7 +534,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                                 #print(group)
                                 text_render.append([idList,color_style.getTextLineColor(),text_line_width])
 
-        #try:
+        #try: 
             model = simplesbml.loadSBMLStr(sbmlStr)
             numFloatingNodes  = model.getNumFloatingSpecies()
             FloatingNodes_ids = model.getListOfFloatingSpecies()
@@ -561,7 +571,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                                 color_style.setCompFillColor(comp_render[j][1])
                                 color_style.setCompBorderColor(comp_render[j][2])
                                 comp_border_width = comp_render[j][3]
-
+                    
                     else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
                         dimension = imageSize
@@ -577,7 +587,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                 numSpec_in_reaction = len(spec_specGlyph_id_list)
                 for i in range (numReactionGlyphs):
                     src_position = []
-                    src_dimension = []
+                    src_dimension = [] 
                     dst_position = []
                     dst_dimension = []
                     mod_position = []
@@ -642,17 +652,17 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                             color_style.setReactionLineColor(rxn_render[j][1])
                             reaction_line_width = rxn_render[j][2]
                             reaction_arrow_head_size = rxn_render[j][3]
-
-                    try:
+                    
+                    try: 
                         center_position = reaction_center_list[i]
                         center_handle = reaction_center_handle_list[i]
                         handles = [center_position]
                         handles.extend(src_handle)
                         handles.extend(dst_handle)
-                        center_position = [(center_position[0]-topLeftCorner[0])*scale,
+                        center_position = [(center_position[0]-topLeftCorner[0])*scale, 
                         (center_position[1]-topLeftCorner[1])*scale]
                         for j in range(len(handles)):
-                            handles[j] = [(handles[j][0]-topLeftCorner[0])*scale,
+                            handles[j] = [(handles[j][0]-topLeftCorner[0])*scale, 
                             (handles[j][1]-topLeftCorner[1])*scale]
                         if drawArrow:
                             drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
@@ -675,7 +685,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                         for j in range(prd_num):
                             center_x += dst_position[j][0]+.5*dst_dimension[j][0]
                             center_y += dst_position[j][1]+.5*dst_dimension[j][1]
-                        center_x = center_x/(rct_num + prd_num)
+                        center_x = center_x/(rct_num + prd_num) 
                         center_y = center_y/(rct_num + prd_num)
                         center_position = [center_x, center_y]
                         handles = [center_position]
@@ -707,7 +717,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                 for i in range (numSpec_in_reaction):
                     temp_id = spec_specGlyph_id_list[i][0]
                     tempGlyph_id = spec_specGlyph_id_list[i][1]
-                    position = [(spec_position_list[i][0]-topLeftCorner[0])*scale,
+                    position = [(spec_position_list[i][0]-topLeftCorner[0])*scale, 
                     (spec_position_list[i][1]-topLeftCorner[1])*scale]
                     dimension = [spec_dimension_list[i][0]*scale,spec_dimension_list[i][1]*scale]
                     color_style.setNodeDimension(dimension)
@@ -737,7 +747,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                                                     spec_border_width*scale, shapeIdx, complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, scale)
-                                id_list.append(temp_id)
+                                id_list.append(temp_id)                    
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
@@ -802,7 +812,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
 
             else: # there is no layout information, assign position randomly and size as default
                 comp_id_list = Comps_ids
-                nodeIdx_temp = 0 #to track the node index
+                nodeIdx_temp = 0 #to track the node index    
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
@@ -811,7 +821,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                     drawNetwork.addCompartment(canvas, position, dimension,
                                                 color_style.getCompBorderColor(), color_style.getCompFillColor(),
                                                comp_border_width*scale)
-                spec_id_list = []
+                spec_id_list = [] 
                 spec_dimension_list = []
                 spec_position_list = []
                 for i in range (numFloatingNodes):
@@ -846,7 +856,6 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                         rct_id = model.getReactant(temp_id,j)
                         for k in range(numNodes):
                             if spec_id_list[k] == rct_id:
-
                                 src_position.append(spec_position_list[k])
                                 src_dimension.append(spec_dimension_list[k])
                         edges.append([rct_id])
@@ -876,7 +885,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                     for j in range(prd_num):
                         center_x += dst_position[j][0]+.5*dst_dimension[j][0]
                         center_y += dst_position[j][1]+.5*dst_dimension[j][1]
-                    center_x = center_x/(rct_num + prd_num)
+                    center_x = center_x/(rct_num + prd_num) 
                     center_y = center_y/(rct_num + prd_num)
                     center_position = [center_x, center_y]
                     handles = [center_position]
@@ -912,7 +921,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
                                         shapeIdx, complex_shape=complexShape)
-                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
+                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
                     text_line_width*scale, scale)
                     floatingNodes_pos_dict['[' + temp_id + ']'] = position
                     floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
@@ -957,7 +966,7 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                 pos_dict, dim_dict,  all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id = draw_on_canvas(canvas)
     return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
 
-def getNetworkTopLeftCorner(sbmlStr):
+def _getNetworkTopLeftCorner(sbmlStr):
     """
     Get the top left-hand corner of the network(s) from the SBML string.
 
@@ -1035,7 +1044,7 @@ def getNetworkTopLeftCorner(sbmlStr):
 
     return position
 
-def getNetworkBottomRightCorner(sbmlStr):
+def _getNetworkBottomRightCorner(sbmlStr):
     """
     Get the bottom right-hand corner of the network(s) from the SBML string.
 
@@ -1132,7 +1141,7 @@ def getNetworkBottomRightCorner(sbmlStr):
                 position[1] = handle_positions[j][1]
     return position
 
-def getNetworkSize(sbmlStr):
+def _getNetworkSize(sbmlStr):
     """
     Get the size of the network(s) from the SBML string.
 
@@ -1143,8 +1152,8 @@ def getNetworkSize(sbmlStr):
         list-1*2 matrix-size of the rectangle [width, height].
     
     """ 
-    position_topLeft = getNetworkTopLeftCorner(sbmlStr)
-    position_bottomRight = getNetworkBottomRightCorner(sbmlStr)
+    position_topLeft = _getNetworkTopLeftCorner(sbmlStr)
+    position_bottomRight = _getNetworkBottomRightCorner(sbmlStr)
     size = [int(position_bottomRight[0]-position_topLeft[0]), 
     int(position_bottomRight[1]-position_topLeft[1])]
 
@@ -1155,25 +1164,28 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
+    #filename = "test.xml"
     #filename = "feedback.xml"
-    #filename = "LinearChain.xml"
+    filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
-    filename = "Jana_WolfGlycolysis.xml"
+    #filename = "Jana_WolfGlycolysis.xml"
     #filename = "BorisEJB.xml"
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
 
+    #filename = "output.xml"
+
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
+
 
     if len(sbmlStr) == 0:
         print("empty sbml")

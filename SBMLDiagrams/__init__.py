@@ -21,3 +21,6 @@ except:
     from SBMLDiagrams import styleSBML
 
 from SBMLDiagrams._version import __version__
+
+from SBMLDiagrams.processSBML import *
+from SBMLDiagrams.visualizeSBML import *

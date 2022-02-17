@@ -1,5 +1,6 @@
 import unittest
 import os
+import SBMLDiagrams
 from SBMLDiagrams.processSBML import *
 from SBMLDiagrams.processSBML import _SBMLToDF
 
@@ -62,13 +63,13 @@ class TestImportSBML(unittest.TestCase):
       _SBMLToDF(sbmlStr_node_grid)
     self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn = \
       _SBMLToDF(sbmlStr_mass_action_rxn)
-    self.df = load(sbmlStr_test)
+    self.df = SBMLDiagrams.load(sbmlStr_test)
 
   def loadInvalidStr(self):
     # an exception raises if load an invalid string
     if IGNORE_TEST:
-      return    
-    
+      return   
+       
     with self.assertRaises(Exception):
       load("aba")
 
@@ -863,8 +864,8 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionFillColor("r_0")[0] == \
       [[91, 176, 253, 255], '', '#5BB0FDFF'])
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == 3.)
-    self.assertTrue(self.df.isBezierReactionType("r_0")[0] == True)
-    self.assertTrue(self.df.getReactionArrowHeadSize()[0] == [12., 15.])
+    self.assertTrue(self.df._isBezierReactionType("r_0")[0] == True)
+    self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0] == [12., 15.])
 
   def testSetCompartment(self):
     # Test all the get functions about compartment
@@ -900,6 +901,7 @@ class TestImportSBML(unittest.TestCase):
 
     floating_node = True
     position = [412., 216.]
+    position_txt_position = [413., 217.]
     size = [50., 29.]
     shapeIdx = 2
     txt_position = [412., 216.]
@@ -938,6 +940,10 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0][3] == 255)
     self.assertTrue(self.df.getNodeTextLineWidth("x_1")[0] == txt_line_width)
 
+    self.df.setNodeAndTextPosition("x_1", position_txt_position)
+    self.assertTrue(self.df.getNodePosition("x_1")[0] == position_txt_position)
+    self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == position_txt_position)
+
 
   def testSetReaction(self):
     # Test all the get functions about reaction
@@ -957,16 +963,16 @@ class TestImportSBML(unittest.TestCase):
     self.df.setReactionHandlePositions("r_0", handles)
     self.df.setReactionFillColor("r_0", fill_color, opacity = opacity)
     self.df.setReactionLineThickness("r_0", line_thickness)
-    self.df.setBezierReactionType("r_0", bezier)
-    self.df.setReactionArrowHeadSize(arrowHeadSize)
+    self.df._setBezierReactionType("r_0", bezier)
+    self.df.setReactionArrowHeadSize("r_0", arrowHeadSize)
 
     self.assertTrue(self.df.getReactionCenterPosition("r_0")[0] == center_pos)
     self.assertTrue(self.df.getReactionHandlePositions("r_0")[0] == handles)
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][0][0:-1] == [255, 165, 0])
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == line_thickness)
-    self.assertTrue(self.df.isBezierReactionType("r_0")[0] == bezier)
-    self.assertTrue(self.df.getReactionArrowHeadSize()[0] == arrowHeadSize)
+    self.assertTrue(self.df._isBezierReactionType("r_0")[0] == bezier)
+    self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0] == arrowHeadSize)
 
   
   def testSetReactionDefaultCenterAndHandlePositions(self):
@@ -989,6 +995,16 @@ class TestImportSBML(unittest.TestCase):
 
     sbmlStr_layout_render = self.df.export()
     self.assertTrue(isinstance(sbmlStr_layout_render, str))
+
+  def testNetworkFuncs(self):
+    # Test the Network related function
+
+    if IGNORE_TEST:
+      return
+
+    self.assertTrue(self.df.getNetworkTopLeftCorner() == [205.0, 216.0])
+    self.assertTrue(self.df.getNetworkBottomRightCorner() == [463.0, 246.0])
+    self.assertTrue(self.df.getNetworkSize() == [258, 30])
 
 
 if __name__ == '__main__':

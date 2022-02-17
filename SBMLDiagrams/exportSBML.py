@@ -344,6 +344,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
                 textGlyph.setId(textG_id)
+                #textGlyph.setText(spec_id)
                 bb_id  = "bb_spec_text_" + spec_id + '_idx_' + str(spec_index)
                 try:
                     position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
@@ -395,6 +396,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
                 textGlyph.setId(textG_id)
+                #textGlyph.setText(spec_id)
                 try:
                     position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
                     size_list = list(df_NodeData.iloc[i]['txt_size'][1:-1].split(","))
