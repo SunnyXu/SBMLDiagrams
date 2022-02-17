@@ -24,8 +24,8 @@ import numpy as np
 import cv2
 
 def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_second = 10, show_digit = True,
-            bar_dimension = [10,50], numDigit = 4, folderName = 'animation',
-            horizontal_offset = 15, vertical_offset = 5, text_color = (0, 0, 0, 200)):
+            bar_dimension = [10,50], numDigit = 4, folderName = 'animation', outputName="output",
+            horizontal_offset = 15, vertical_offset = 5, text_color = (0, 0, 0, 200), text_pos = "down"):
     """
     Animation for the tellurium simulation
 
@@ -71,8 +71,7 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
 
     def addNode(pos_list):
         n = len(pos_list)
-        i = 0
-        while i < n:
+        for i in range(n):
             cur_name = pos_list[i][0]
             cur_pos = pos_list[i][1]
             if cur_pos[0] + bar_dimension[0] + horizontal_offset > img_width // 2:
@@ -80,20 +79,19 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
             if i > 0:
                 old_name = pos_list[i - 1][0]
                 old_pos = pos_list[i - 1][1]
-                if abs(cur_pos[0] - old_pos[0]) < bar_dimension[0] \
-                        and abs(cur_pos[1] - old_pos[1]) < bar_dimension[1]:
+                if abs(cur_pos[0] - old_pos[0]) < bar_dimension[0] + allDimDict[old_name][0] \
+                        and abs(cur_pos[1] - old_pos[1]) < bar_dimension[1] - allDimDict[old_name][1]:
                     if cur_pos[1] - bar_dimension[1] - vertical_offset - allDimDict[cur_name][1] > 0:
                         upNode.add(cur_name)
                     else:
                         downNode.add(cur_name)
                     leftNode.add(old_name)
-            i += 1
 
     pos_list = list(allPosDict.items())
     pos_list.sort(key=lambda x:x[1][0])
     addNode(pos_list)
-    # pos_list.sort(key=lambda x: x[1][1])
-    # addNode(pos_list)
+    pos_list.sort(key=lambda x: x[1][1])
+    addNode(pos_list)
 
     for species in floatingSpecies:
         species = '[' + species + ']'
@@ -123,12 +121,12 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
             [node_width, node_height] = dimDict[letter]
             if letter in upNode:
                 cur_pos = [pos[0]+node_width//2, pos[1] - node_height//2]
-                txt_pos = [pos[0]+node_width//2, pos[1] - node_height//2 + vertical_offset]
+                txt_pos = [pos[0]+node_width//2-vertical_offset, pos[1] - node_height//2 + vertical_offset]
             elif letter in downNode:
                 cur_pos = [pos[0]+node_width//2, pos[1] + bar_dimension[1]*2]
                 txt_pos = [pos[0]+node_width//2, pos[1] + vertical_offset + bar_dimension[1]*2]
             elif letter in leftNode:
-                cur_pos = [pos[0] - horizontal_offset + 5, pos[1]+node_height]
+                cur_pos = [pos[0], pos[1]+node_height]
                 txt_pos = [pos[0] - horizontal_offset, pos[1]+node_height+vertical_offset]
             else:
                 cur_pos = [pos[0] + node_width + horizontal_offset, pos[1]+node_height]
@@ -153,7 +151,7 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
             size = (width, height)
             imgs.append(img)
 
-    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, "output.mp4"),
+    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, outputName + ".mp4"),
                           cv2.VideoWriter_fourcc(*'MP4V'), frame_per_second, size)
 
     for i in range(len(imgs)):

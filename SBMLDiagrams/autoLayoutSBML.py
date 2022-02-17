@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from SBMLDiagrams import styleSBML, drawNetwork, processSBML, visualizeSBML
 from collections import defaultdict
 
-def autolayout(sbmlStr, v_info, layout="spectral", styleName = 'default',
+def autolayout(sbmlStr, v_info, drawArrow = True, layout="spectral", styleName = 'default',
                newStyleClass = None, output_filename="autolayout"):
     df = processSBML.load(sbmlStr)
 
@@ -44,6 +44,6 @@ def autolayout(sbmlStr, v_info, layout="spectral", styleName = 'default',
             p *= 500
         df.setNodePosition(name_to_id[n], p)
     new_sbmlStr = df.export()
-    v_info = visualizeSBML.plot(new_sbmlStr, output_fileName=output_filename)
+    v_info = visualizeSBML.plot(new_sbmlStr, drawArrow=drawArrow, output_fileName=output_filename)
     return v_info
 
