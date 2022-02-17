@@ -159,7 +159,7 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
         out.write(imgs[i])
     out.release()
 
-def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
+def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
     newStyleClass = None):
 
