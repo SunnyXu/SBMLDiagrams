@@ -42,7 +42,7 @@ def autolayout(sbmlStr, v_info, drawArrow = True, layout="spectral", styleName =
     for n,p in pos.items():
         if layout == "random":
             p *= 500
-        df.setNodePosition(name_to_id[n], p)
+        df.setNodePosition(n, p)
     new_sbmlStr = df.export()
     v_info = visualizeSBML.plot(new_sbmlStr, drawArrow=drawArrow, output_fileName=output_filename)
     return v_info
