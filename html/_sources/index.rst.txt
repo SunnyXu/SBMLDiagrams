@@ -10,8 +10,8 @@ Welcome to SBMLDiagrams's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   visualizeSBML
    processSBML
+   visualizeSBML
    colors
 
 ------------
