@@ -44,6 +44,6 @@ def autolayout(sbmlStr, v_info, drawArrow = True, layout="spectral", styleName =
             p *= 500
         df.setNodePosition(n, p)
     new_sbmlStr = df.export()
-    v_info = visualizeSBML.plot(new_sbmlStr, drawArrow=drawArrow, output_fileName=output_filename)
+    v_info = visualizeSBML._plot(new_sbmlStr, drawArrow=drawArrow, output_fileName=output_filename)
     return v_info
 

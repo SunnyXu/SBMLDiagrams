@@ -12,6 +12,8 @@ try:
     from . import editSBML
     from . import exportSBML
     from . import styleSBML
+    from . import autoLayoutSBML
+    from. import visualizeInfo
 except:
     from SBMLDiagrams import visualizeSBML
     from SBMLDiagrams import drawNetwork
@@ -19,6 +21,8 @@ except:
     from SBMLDiagrams import editSBML
     from SBMLDiagrams import exportSBML
     from SBMLDiagrams import styleSBML
+    from SBMLDiagrams import autoLayoutSBML
+    from SBMLDiagrams import visualizeInfo
 
 from SBMLDiagrams._version import __version__
 
