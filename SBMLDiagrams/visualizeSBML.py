@@ -6,7 +6,7 @@
 Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu and Jessie Jiang
 """
-
+import heapq
 import os
 import re
 import skia
@@ -25,7 +25,7 @@ import cv2
 
 def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_second = 10, show_digit = True,
             bar_dimension = [10,50], numDigit = 4, folderName = 'animation',
-            horizontal_offset = 15, text_color = (0, 0, 0, 100)):
+            horizontal_offset = 15, vertical_offset = 5, text_color = (0, 0, 0, 200)):
     """
     Animation for the tellurium simulation
 
@@ -52,6 +52,8 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
 
     Returns:
     """
+
+
     mx = float("-inf")
     floatingSpecies = r.getFloatingSpeciesIds()
     reactionIds = r.getReactionIds()
@@ -60,6 +62,38 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
     color_style = v_info.color_style
     posDict = v_info.posDict
     dimDict = v_info.dimDict
+    allPosDict = v_info.allPosDict
+    allDimDict = v_info.allDimDict
+    img_width, img_height = color_style.getImageSize()
+    upNode = set()
+    downNode = set()
+    leftNode = set()
+
+    def addNode(pos_list):
+        n = len(pos_list)
+        i = 0
+        while i < n:
+            cur_name = pos_list[i][0]
+            cur_pos = pos_list[i][1]
+            if cur_pos[0] + bar_dimension[0] + horizontal_offset > img_width // 2:
+                leftNode.add(cur_name)
+            if i > 0:
+                old_name = pos_list[i - 1][0]
+                old_pos = pos_list[i - 1][1]
+                if abs(cur_pos[0] - old_pos[0]) < bar_dimension[0] \
+                        and abs(cur_pos[1] - old_pos[1]) < bar_dimension[1]:
+                    if cur_pos[1] - bar_dimension[1] - vertical_offset - allDimDict[cur_name][1] > 0:
+                        upNode.add(cur_name)
+                    else:
+                        downNode.add(cur_name)
+                    leftNode.add(old_name)
+            i += 1
+
+    pos_list = list(allPosDict.items())
+    pos_list.sort(key=lambda x:x[1][0])
+    addNode(pos_list)
+    # pos_list.sort(key=lambda x: x[1][1])
+    # addNode(pos_list)
 
     for species in floatingSpecies:
         species = '[' + species + ']'
@@ -87,10 +121,20 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
 
         for letter, pos in posDict.items():
             [node_width, node_height] = dimDict[letter]
-            new_pos = [pos[0] + node_width + horizontal_offset, pos[1]+node_height]
-            txt_pos = [pos[0] + node_width, pos[1]+node_height+horizontal_offset]
+            if letter in upNode:
+                cur_pos = [pos[0]+node_width//2, pos[1] - node_height//2]
+                txt_pos = [pos[0]+node_width//2, pos[1] - node_height//2 + vertical_offset]
+            elif letter in downNode:
+                cur_pos = [pos[0]+node_width//2, pos[1] + bar_dimension[1]*2]
+                txt_pos = [pos[0]+node_width//2, pos[1] + vertical_offset + bar_dimension[1]*2]
+            elif letter in leftNode:
+                cur_pos = [pos[0] - horizontal_offset + 5, pos[1]+node_height]
+                txt_pos = [pos[0] - horizontal_offset, pos[1]+node_height+vertical_offset]
+            else:
+                cur_pos = [pos[0] + node_width + horizontal_offset, pos[1]+node_height]
+                txt_pos = [pos[0] + node_width, pos[1]+node_height+vertical_offset]
             percent = simulationData[letter][i]/mx
-            drawNetwork.addProgressBar(canvas, new_pos, bar_dimension, percent, 1,
+            drawNetwork.addProgressBar(canvas, cur_pos, bar_dimension, percent, 1,
                                        color_style)
             if show_digit:
                 drawNetwork.addSimpleText(canvas, str(simulationData[letter][i])[:numDigit+1],txt_pos, text_color)
@@ -190,6 +234,8 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
         spec_position_list = []
         spec_text_position_list = []
         spec_text_dimension_list = []
+        allNodes_pos_dict = defaultdict(list)
+        allNodes_dim_dict = defaultdict(list)
         floatingNodes_pos_dict = defaultdict(list)
         floatingNodes_dim_dict = defaultdict(list)
         shapeIdx = 1
@@ -686,6 +732,8 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                                         text_line_width = text_render[k][2]
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
+                                allNodes_pos_dict['[' + temp_id + ']'] = position
+                                allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape = complexShape)
@@ -705,6 +753,8 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                                         text_line_width = text_render[k][2]
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
+                                allNodes_pos_dict['[' + temp_id + ']'] = position
+                                allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape=complexShape)
@@ -727,6 +777,8 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                                 drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape=complexShape)
+                                allNodes_pos_dict['[' + temp_id + ']'] = position
+                                allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, scale)
                                 id_list.append(temp_id)
@@ -744,6 +796,8 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                                 drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape=complexShape)
+                                allNodes_pos_dict['[' + temp_id + ']'] = position
+                                allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, scale)
                                 id_list.append(temp_id)
@@ -864,6 +918,8 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                     text_line_width*scale, scale)
                     floatingNodes_pos_dict['[' + temp_id + ']'] = position
                     floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
+                    allNodes_pos_dict['[' + temp_id + ']'] = position
+                    allNodes_dim_dict['[' + temp_id + ']'] = dimension
                 for i in range (numBoundaryNodes):
                     temp_id = BoundaryNodes_ids[i]
                     for k in range(numNodes):
@@ -874,18 +930,20 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
                                         shapeIdx, complex_shape=complexShape)
+                    allNodes_pos_dict['[' + temp_id + ']'] = position
+                    allNodes_dim_dict['[' + temp_id + ']'] = dimension
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
                     text_line_width*scale, scale)
 
         except Exception as e:
             print(e)
-        return floatingNodes_pos_dict, floatingNodes_dim_dict, color_style, edges, arrow_info, name_to_id
+        return floatingNodes_pos_dict, floatingNodes_dim_dict, allNodes_pos_dict, allNodes_dim_dict, color_style, edges, arrow_info, name_to_id
 
     baseImageArray = []
     if fileFormat == "PNG" or fileFormat == "JPEG":
         surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
         canvas = surface.getCanvas()
-        pos_dict, dim_dict, color_style, edges, arrow_info, name_to_id = draw_on_canvas(canvas)
+        pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id = draw_on_canvas(canvas)
         baseImageArray = drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat)
     else: #fileFormat == "PDF"
         if output_fileName == '':
@@ -898,8 +956,8 @@ def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 
         stream = skia.FILEWStream(fileNamepdf)
         with skia.PDF.MakeDocument(stream) as document:
             with document.page(int(imageSize[0]), int(imageSize[1])) as canvas:
-                pos_dict, dim_dict, color_style, edges, arrow_info, name_to_id = draw_on_canvas(canvas)
-    return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, color_style, edges, arrow_info, name_to_id)
+                pos_dict, dim_dict,  all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id = draw_on_canvas(canvas)
+    return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
 
 def getNetworkTopLeftCorner(sbmlStr):
     """

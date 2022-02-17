@@ -19,8 +19,8 @@ class Style:
             self.image_size = [1000,1000]
 
             # for progress bar's color
-            self.process_fill_color = (255, 108, 9, 100)
-            self.full_fill_color = (91, 176, 253, 100)
+            self.process_fill_color = (255, 108, 9, 200)
+            self.full_fill_color = (91, 176, 253, 200)
             self.process_border_color = (255, 204, 153, 200)
 
         elif styleName == "simplicity":
@@ -28,7 +28,7 @@ class Style:
             self.comp_border_color = (0, 0, 0, 255)
             self.spec_fill_color = (0, 0, 0, 0)
             self.spec_border_color = (0, 0, 0, 255)
-            self.reaction_line_color = (0, 0, 0, 255)
+            self.reaction_line_color = (0, 0, 0, 200)
             self.text_line_color = (0, 0, 0, 255)
 
     def getImageSize(self):
