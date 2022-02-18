@@ -16,6 +16,7 @@ import pandas as pd
 from SBMLDiagrams import exportSBML
 from SBMLDiagrams import editSBML
 from SBMLDiagrams import visualizeSBML
+from SBMLDiagrams import visualizeInfo
 
 #create datafames for NodeData, ReactionData, CompartmentData:
 # Column names
@@ -2029,7 +2030,7 @@ class load:
 
     def plot(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
-    newStyleClass = None):
+    newStyleClass = None, drawArrow = True):
 
         """
         Plot  to a PNG/JPG/PDF file.
@@ -2064,12 +2065,12 @@ class load:
         """
 
         sbmlStr = self.export()
-        baseImageArray, pos_dict, color_style  = \
-        visualizeSBML._plot(sbmlStr, setImageSize = setImageSize, scale = scale, fileFormat = fileFormat, 
+        v_info =\
+        visualizeSBML._plot(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale, fileFormat = fileFormat, 
         output_fileName = output_fileName, complexShape = complexShape, reactionLineType = reactionLineType, 
         showBezierHandles = showBezierHandles, styleName = styleName, newStyleClass = newStyleClass)
 
-        return baseImageArray, pos_dict, color_style
+        return v_info
 
     def getNetworkTopLeftCorner(self):
         """
@@ -2126,15 +2127,16 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     # filename = "feedback.xml"
-    # filename = "LinearChain.xml"
+    filename = "LinearChain.xml"
     # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
     # filename = "node_grid.xml"
     # filename = "mass_action_rxn.xml"
 
+    #filename = "Jana_WolfGlycolysis.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2225,7 +2227,9 @@ if __name__ == '__main__':
     f.write(sbmlStr_layout_render)
     f.close()
 
+    #df.plot(reactionLineType='bezier', scale = 2.)
     df.plot()
+
     # print(df.getNetworkSize())
     # print(df.getNetworkBottomRightCorner())
     # print(df.getNetworkTopLeftCorner())
@@ -2234,6 +2238,7 @@ if __name__ == '__main__':
     #     print("empty sbml")
     # else:
     #     visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
+
 
 
 

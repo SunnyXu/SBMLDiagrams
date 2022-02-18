@@ -10,7 +10,6 @@ Created on Mon Aug 23 13:25:34 2021
 import os
 import re
 import skia
-import re
 import simplesbml
 import libsbml
 import math
@@ -159,7 +158,7 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
         out.write(imgs[i])
     out.release()
 
-def plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
+def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
     newStyleClass = None):
 
@@ -1190,7 +1189,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        plot(sbmlStr)
+        _plot(sbmlStr)
         #plot("abc")
 
 

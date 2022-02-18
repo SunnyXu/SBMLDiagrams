@@ -10,3 +10,5 @@ Pillow
 setuptools>=42
 openpyxl
 opencv-python
+networkx
+matplotlib
