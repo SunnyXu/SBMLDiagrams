@@ -35,6 +35,7 @@ def autolayout(sbmlStr, v_info, drawArrow = True, layout="spectral", styleName =
         for dest in dests:
             graph.add_edge(src, dest)
             g[src].append(dest)
+
     pos = defaultdict(list)
     if layout == "spectral":
         pos = nx.spectral_layout(graph, scale=scale, center=center)
