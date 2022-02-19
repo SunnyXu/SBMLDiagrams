@@ -98,14 +98,16 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
         mx = max(mx,max(simulationData[species]))
 
     mx_reaction_rate = float('-inf')
+    min_reaction_rate = float('inf')
     for reaction in reactionIds:
-        mx_reaction_rate = max(mx,max(reactionRates[reaction]))
+        mx_reaction_rate = max(mx_reaction_rate,max(reactionRates[reaction]))
+        min_reaction_rate = min(min_reaction_rate, min(reactionRates[reaction]))
 
     for i in range(len(simulationData)):
         surface = skia.Surface(np.array(baseImageArray, copy=True))
         canvas = surface.getCanvas()
         for j,info in enumerate(arrow_info):
-            rate = reactionRates[reactionIds[j]][i]*(1/mx_reaction_rate/thick_rate)
+            rate = reactionRates[reactionIds[j]][i]*(1/mx_reaction_rate*min_reaction_rate)
             src_position, dst_position, mod_position,center_position, \
             handles, src_dimension, dst_dimension, mod_dimension,\
             reaction_line_color, reaction_line_width, reactionLineType,\
