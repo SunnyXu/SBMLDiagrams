@@ -872,7 +872,7 @@ def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, sc
     paintText = skia.Paint(Color=fontColor, StrokeWidth=text_line_width)
     canvas.drawSimpleText(text, position[0], position[1], font, paintText)
 
-def draw(surface, folderName = '', fileName = '', file_format = 'PNG'):
+def draw(surface, folderName = '', fileName = '', file_format = 'PNG', showImage = True):
     """
     Display the diagram and save it to the local.
 
@@ -898,14 +898,16 @@ def draw(surface, folderName = '', fileName = '', file_format = 'PNG'):
         if file_format == 'PNG':
             tmpfileName = tmpfileName + '.png'
             image.save(tmpfileName, skia.kPNG)
-            pil_im = Image.open(tmpfileName)
-            display(pil_im)
+            if showImage:
+                pil_im = Image.open(tmpfileName)
+                display(pil_im)
             #pil_im.show()
         elif file_format == 'JPEG':
             tmpfileName = tmpfileName + '.jpg'
             image.save(tmpfileName, skia.kJPEG)
-            pil_im = Image.open(tmpfileName)
-            display(pil_im)
+            if showImage:
+                pil_im = Image.open(tmpfileName)
+                display(pil_im)
             #pil_im.show()
         # elif file_format == 'PDF':
         #     tmpfileNamepdf = tmpfileName + '.pdf'
@@ -928,14 +930,16 @@ def draw(surface, folderName = '', fileName = '', file_format = 'PNG'):
         if file_format == 'PNG':
             fileName = fileName + '.png'
             image.save(fileName, skia.kPNG)
-            pil_im = Image.open(fileName)
-            display(pil_im)
+            if showImage:
+                pil_im = Image.open(fileName)
+                display(pil_im)
             #pil_im.show() 
         elif file_format == 'JPEG':
             fileName = fileName + '.jpg'
             image.save(fileName, skia.kJPEG) 
-            pil_im = Image.open(fileName)
-            display(pil_im)
+            if showImage:
+                pil_im = Image.open(fileName)
+                display(pil_im)
             #pil_im.show()   
         # elif file_format == 'PDF':
         #     fileNamepdf = fileName + '.pdf'

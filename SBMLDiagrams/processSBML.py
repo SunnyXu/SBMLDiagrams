@@ -16,6 +16,10 @@ import pandas as pd
 from SBMLDiagrams import exportSBML
 from SBMLDiagrams import editSBML
 from SBMLDiagrams import visualizeSBML
+from SBMLDiagrams import styleSBML
+import simplesbml
+import networkx as nx
+from collections import defaultdict
 from SBMLDiagrams import visualizeInfo
 
 #create datafames for NodeData, ReactionData, CompartmentData:
@@ -1173,6 +1177,9 @@ class load:
     def __init__(self, sbmlstr):
         self.sbmlstr = sbmlstr
         self.df = _SBMLToDF(self.sbmlstr)
+        self.styleName = "default"
+        self.color_style = styleSBML.Style(self.styleName)
+
         if self.df == None:
            sys.exit("There is no valid information to process.")
 
@@ -1980,6 +1987,7 @@ class load:
         self.df = editSBML._setReactionFillColor(self.df, id, fill_color, opacity)
         return self.df
 
+
     def setReactionLineThickness(self, id, line_thickness):
         """
         Set the reaction line thickness.
@@ -2027,10 +2035,57 @@ class load:
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
 
+    def setColorStyle(self, styleName, newStyleClass = None):
+        self.styleName = styleName
+        self.color_style = newStyleClass
+
+    def getColorStyle(self):
+        return self.color_style if self.color_style else self.styleName
+
+    def autolayout(self, layout="spectral"):
+        sbmlStr = self.export()
+        v_info = visualizeSBML._plot(sbmlStr, setImageSize=[1000,100])
+        edges = v_info.edges
+        model = simplesbml.loadSBMLStr(sbmlStr)
+
+        graph = nx.Graph()
+        g = defaultdict(list)
+        nodes = model.getListOfAllSpecies()
+        reaction_ids = model.getListOfReactionIds()
+
+        width, height = self.color_style.getImageSize()
+        scale = max(width, height) // 2
+        center = [width // 2, height // 2]
+
+        for node in nodes:
+            graph.add_node(node)
+        for edge in edges:
+            src = edge[0]
+            dests = edge[1:]
+            for dest in dests:
+                graph.add_edge(src, dest)
+                g[src].append(dest)
+
+        pos = defaultdict(list)
+        if layout == "spectral":
+            pos = nx.spectral_layout(graph, scale=scale, center=center)
+        elif layout == "spring":
+            pos = nx.spring_layout(graph, scale=scale, center=center)
+        elif layout == "random":
+            pos = nx.random_layout(graph, center=center)
+        elif layout == "circular":
+            pos = nx.circular_layout(graph, scale=scale, center=center)
+
+        for n, p in pos.items():
+            if layout == "random":
+                p *= scale
+            self.setNodeAndTextPosition(n, p)
+
+        for id in reaction_ids:
+            self.setReactionDefaultCenterAndHandlePositions(id)
 
     def plot(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
-    newStyleClass = None, drawArrow = True):
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False):
 
         """
         Plot  to a PNG/JPG/PDF file.
@@ -2055,10 +2110,6 @@ class load:
 
             showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
-            styleName: pre-existing color style for the graph.
-
-            newStyleClass: user-customized new color style.
-
         Returns:
             The tuple of base image's array, position dictionary for the Floating Species, 
             color style of the image.
@@ -2068,7 +2119,7 @@ class load:
         v_info =\
         visualizeSBML._plot(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale, fileFormat = fileFormat, 
         output_fileName = output_fileName, complexShape = complexShape, reactionLineType = reactionLineType, 
-        showBezierHandles = showBezierHandles, styleName = styleName, newStyleClass = newStyleClass)
+        showBezierHandles = showBezierHandles, styleName = self.styleName, newStyleClass = self.color_style)
 
         return v_info
 

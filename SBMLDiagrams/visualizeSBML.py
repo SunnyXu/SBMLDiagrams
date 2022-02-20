@@ -23,36 +23,14 @@ from collections import defaultdict
 import numpy as np
 import cv2
 
-def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_second = 10, show_digit = True,
-            bar_dimension = [10,50], numDigit = 4, folderName = 'animation', outputName="output",
-            horizontal_offset = 15, vertical_offset = 5, text_color = (0, 0, 0, 200), text_pos = "down"):
-    """
-    Animation for the tellurium simulation
+def animate(start, end, points , r, thick_changing_rate, frame_per_second = 10, show_digit = True,
+            bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",
+            horizontal_offset = 15, vertical_offset = 5, text_color = (0, 0, 0, 200), savePngs = False, showImage = False):
 
-    Args:
-        simulationData: numpy array for the simulation data
-
-        baseImageArray: base image array used for generating the change
-
-        floatingSpecies: floating species name in the NamedArray of simulationData
-
-        posDict: position dictionary for the Floating Species
-
-        numDigit: number of digits saved for display
-
-        folderName: generated images folder place
-
-        offset: text offset from the center of the compartment
-
-        textColor: text color
-
-        textWidth: text width
-
-        textDimension: text dimension size
-
-    Returns:
-    """
-
+    sbmlStr = r.getSBML()
+    v_info = _plot(sbmlStr, drawArrow = False)
+    simulationData = r.simulate(start, end, points)
+    reactionRates = r.simulate(start, end, points, selections=r.getReactionIds())
 
     mx = float("-inf")
     floatingSpecies = r.getFloatingSpeciesIds()
@@ -107,7 +85,7 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
         surface = skia.Surface(np.array(baseImageArray, copy=True))
         canvas = surface.getCanvas()
         for j,info in enumerate(arrow_info):
-            rate = reactionRates[reactionIds[j]][i]*(1/mx_reaction_rate*min_reaction_rate)
+            rate = reactionRates[reactionIds[j]][i]*(1/mx_reaction_rate*min_reaction_rate*thick_changing_rate)
             src_position, dst_position, mod_position,center_position, \
             handles, src_dimension, dst_dimension, mod_dimension,\
             reaction_line_color, reaction_line_width, reactionLineType,\
@@ -139,7 +117,7 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
             if show_digit:
                 drawNetwork.addSimpleText(canvas, str(simulationData[letter][i])[:numDigit+1],txt_pos, text_color)
 
-        drawNetwork.draw(surface, folderName='animation', fileName=str(i), file_format='PNG')
+        drawNetwork.draw(surface, folderName='animation', fileName=str(i), file_format='PNG', showImage = showImage)
 
     imgs = []
     size = None
@@ -153,7 +131,10 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
             size = (width, height)
             imgs.append(img)
 
-    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + folderName, outputName + ".mp4"),
+    if not savePngs:
+        os.rmdir(os.path.join(os.getcwd())  + '/' + folderName)
+
+    out = cv2.VideoWriter(os.path.join(os.getcwd() + '/' + outputName + ".mp4"),
                           cv2.VideoWriter_fourcc(*'MP4V'), frame_per_second, size)
 
     for i in range(len(imgs)):
@@ -162,7 +143,7 @@ def animate(v_info, simulationData, r, reactionRates, thick_rate, frame_per_seco
 
 def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, styleName = 'default', \
-    newStyleClass = None):
+    newStyleClass = None, showImage = True):
 
     """
     Plot from an sbml string to a PNG/JPG/PDF file.
@@ -952,7 +933,7 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
         canvas = surface.getCanvas()
         pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id = draw_on_canvas(canvas)
-        baseImageArray = drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat)
+        baseImageArray = drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat, showImage=showImage)
     else: #fileFormat == "PDF"
         if output_fileName == '':
             random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
