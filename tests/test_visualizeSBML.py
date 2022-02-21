@@ -42,7 +42,7 @@ class TestEditSBML(unittest.TestCase):
     if IGNORE_TEST:
       return    
     with self.assertRaises(SystemExit):
-         visualizeSBML.plot("adb")
+         visualizeSBML.draw("adb")
 
 if __name__ == '__main__':
   unittest.main()

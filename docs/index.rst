@@ -53,7 +53,7 @@ Code Examples
    f.close()
 
    df = SBMLDiagrams.load(sbmlStr)
-   df.plot()
+   df.draw()
 
 
 2) Load, read, edit and export to an SBML file.

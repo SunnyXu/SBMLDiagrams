@@ -885,7 +885,7 @@ def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, sc
     paintText = skia.Paint(Color=fontColor, StrokeWidth=text_line_width)
     canvas.drawSimpleText(text, position[0], position[1], font, paintText)
 
-def draw(surface, folderName = '', fileName = '', file_format = 'PNG', showImage = True):
+def showPlot(surface, folderName = '', fileName = '', file_format = 'PNG', showImage = True):
     """
     Display the diagram and save it to the local.
 
