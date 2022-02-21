@@ -1177,8 +1177,7 @@ class load:
     def __init__(self, sbmlstr):
         self.sbmlstr = sbmlstr
         self.df = _SBMLToDF(self.sbmlstr)
-        self.styleName = "default"
-        self.color_style = styleSBML.Style(self.styleName)
+        self.color_style = styleSBML.Style("default")
 
         if self.df == None:
            sys.exit("There is no valid information to process.")
@@ -2036,15 +2035,34 @@ class load:
         return sbml
 
     def setColorStyle(self, styleName, newStyleClass = None):
-        self.styleName = styleName
-        self.color_style = newStyleClass
+        """
+
+        Args:
+            styleName: the style name
+            newStyleClass: the user customized style class
+
+        Returns:
+
+        """
+        if newStyleClass:
+            self.color_style = newStyleClass
+        else:
+            self.color_style = styleSBML.Style(styleName)
 
     def getColorStyle(self):
         return self.color_style if self.color_style else self.styleName
 
     def autolayout(self, layout="spectral"):
+        """
+
+        Args:
+            layout: the layout name from the networkx
+
+        Returns:
+
+        """
         sbmlStr = self.export()
-        v_info = visualizeSBML._plot(sbmlStr, setImageSize=[1000,100])
+        v_info = visualizeSBML._plot(sbmlStr,showImage=False,newStyleClass=self.color_style)
         edges = v_info.edges
         model = simplesbml.loadSBMLStr(sbmlStr)
 
@@ -2119,7 +2137,7 @@ class load:
         v_info =\
         visualizeSBML._plot(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale, fileFormat = fileFormat, 
         output_fileName = output_fileName, complexShape = complexShape, reactionLineType = reactionLineType, 
-        showBezierHandles = showBezierHandles, styleName = self.styleName, newStyleClass = self.color_style)
+        showBezierHandles = showBezierHandles, newStyleClass = self.color_style)
 
         return v_info
 

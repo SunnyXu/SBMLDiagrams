@@ -21,7 +21,6 @@ except:
     from SBMLDiagrams import editSBML
     from SBMLDiagrams import exportSBML
     from SBMLDiagrams import styleSBML
-    from SBMLDiagrams import autoLayoutSBML
     from SBMLDiagrams import visualizeInfo
 
 from SBMLDiagrams._version import __version__
