@@ -498,10 +498,10 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             if 'COMPARTMENTGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
-                                        if not color_style:
+                                        if not color_style.getCompFillColor():
                                             color_style.setCompFillColor(hex_to_rgb(color_list[k][1]))
                                     if color_list[k][0] == group.getStroke():
-                                        if not color_style:
+                                        if not color_style.getCompBorderColor():
                                             color_style.setCompBorderColor(hex_to_rgb(color_list[k][1]))
                                 comp_border_width = group.getStrokeWidth()
                                 comp_render.append([idList, color_style.getCompFillColor(),
@@ -509,10 +509,10 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             elif 'SPECIESGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
-                                        if not color_style:
+                                        if not color_style.getSpecFillColor():
                                             color_style.setSpecFillColor(hex_to_rgb(color_list[k][1]))
                                     if color_list[k][0] == group.getStroke():
-                                        if not color_style:
+                                        if not color_style.getSpecBorderColor():
                                             color_style.setSpecBorderColor(hex_to_rgb(color_list[k][1]))
                                 spec_border_width = group.getStrokeWidth()
                                 name_list = []
@@ -548,7 +548,7 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         arrowHeadSize = id_arrowHeadSize[k][1]
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
-                                        if not color_style:
+                                        if not color_style.getReactionLineColor():
                                             color_style.setReactionLineColor(hex_to_rgb(color_list[k][1]))
                                 reaction_line_width = group.getStrokeWidth()
                                 rxn_render.append([idList, color_style.getReactionLineColor(), 
@@ -556,7 +556,7 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             elif 'TEXTGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
-                                        if not color_style:
+                                        if not color_style.getTextLineColor():
                                             color_style.setTextLineColor(hex_to_rgb(color_list[k][1]))
                                 text_line_width = group.getStrokeWidth()
                                 #print(text_line_width)
@@ -599,10 +599,10 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 (comp_position_list[j][1] - topLeftCorner[1])*scale]
                         for j in range(len(comp_render)):
                             if temp_id == comp_render[j][0]:
-                                if color_style:
-                                    continue
-                                color_style.setCompFillColor(comp_render[j][1])
-                                color_style.setCompBorderColor(comp_render[j][2])
+                                if not color_style.getCompFillColor():
+                                    color_style.setCompFillColor(comp_render[j][1])
+                                if not color_style.getCompBorderColor():
+                                    color_style.setCompBorderColor(comp_render[j][2])
                                 comp_border_width = comp_render[j][3]
                     
                     else:# no layout info about compartment,
@@ -682,9 +682,8 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
                     for j in range(len(rxn_render)):
                         if temp_id == rxn_render[j][0]:
-                            if color_style:
-                                continue
-                            color_style.setReactionLineColor(rxn_render[j][1])
+                            if color_style.getReactionLineColor():
+                                color_style.setReactionLineColor(rxn_render[j][1])
                             reaction_line_width = rxn_render[j][2]
                             reaction_arrow_head_size = rxn_render[j][3]
                     
@@ -765,14 +764,15 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             if temp_id not in id_list:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style:
+                                        if not color_style.getSpecFillColor():
                                             color_style.setSpecFillColor(spec_render[k][1])
+                                        if not color_style.getSpecBorderColor():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
-                                        if not color_style:
+                                        if not color_style.getTextLineColor():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
@@ -788,14 +788,15 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style:
+                                        if not color_style.getSpecFillColor():
                                             color_style.setSpecFillColor(spec_render[k][1])
+                                        if not color_style.getSpecBorderColor():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
-                                        if not color_style:
+                                        if not color_style.getTextLineColor():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
@@ -813,14 +814,15 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             if temp_id not in id_list:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style:
+                                        if not color_style.getSpecFillColor():
                                             color_style.setSpecFillColor(spec_render[k][1])
+                                        if not color_style.getSpecBorderColor():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
-                                        if not color_style:
+                                        if not color_style.getTextLineColor():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                 drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
@@ -834,14 +836,15 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style:
+                                        if not color_style.getSpecFillColor():
                                             color_style.setSpecFillColor(spec_render[k][1])
+                                        if not color_style.getSpecBorderColor():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
-                                        if not color_style:
+                                        if not color_style.getTextLineColor():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                 drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
