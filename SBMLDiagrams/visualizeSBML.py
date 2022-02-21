@@ -212,13 +212,14 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
-        styleName: pre-existing color style for the graph.
+        newStyleClass: color style class.
 
-        newStyleClass: user-customized new color style.
+        showImage: whether to display the image inside console
+
+        save: whether to save the png
 
     Returns:
-        The tuple of base image's array, position dictionary for the Floating Species, 
-        color style of the image.
+        The visualization info object containing the drawing information of the plot
     """
 
     df = processSBML.load(sbmlStr)
