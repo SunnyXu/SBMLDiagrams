@@ -53,7 +53,9 @@ Code Examples
    f.close()
 
    df = SBMLDiagrams.load(sbmlStr)
-   df.draw()
+   df.autolayout(layout="spectral")
+   df.draw() 
+   animate(0, 30, 50, r, 0.5, sbmlStr=sbmlStr, outputName="ouput")
 
 
 2) Load, read, edit and export to an SBML file.
