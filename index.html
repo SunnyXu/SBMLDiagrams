@@ -182,17 +182,18 @@ package, please cite the Gihub website (<a class="reference external" href="http
 <li><p>Load and visualize an SBML file.</p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">SBMLDiagrams</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tellurium</span> <span class="k">as</span> <span class="nn">te</span>
 
-<span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;test.xml&quot;</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">te</span><span class="o">.</span><span class="n">loada</span> <span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">A -&gt; B; v; B -&gt; C; v; C -&gt; D; v;</span>
+<span class="s1">v = 0</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
 
-<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-<span class="n">sbmlStr</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-
+<span class="n">sbmlStr</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">getSBML</span><span class="p">()</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">SBMLDiagrams</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">autolayout</span><span class="p">(</span><span class="n">layout</span><span class="o">=</span><span class="s2">&quot;spectral&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">animate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">sbmlStr</span><span class="o">=</span><span class="n">sbmlStr</span><span class="p">,</span> <span class="n">outputName</span><span class="o">=</span><span class="s2">&quot;ouput&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">

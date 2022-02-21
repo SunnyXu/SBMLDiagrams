@@ -158,19 +158,25 @@
 &#64;author: Jin Xu and Jessie Jiang</p>
 <dl class="py function">
 <dt id="SBMLDiagrams.visualizeSBML.animate">
-<code class="sig-prename descclassname">SBMLDiagrams.visualizeSBML.</code><code class="sig-name descname">animate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">v_info</span></em>, <em class="sig-param"><span class="n">simulationData</span></em>, <em class="sig-param"><span class="n">r</span></em>, <em class="sig-param"><span class="n">reactionRates</span></em>, <em class="sig-param"><span class="n">thick_rate</span></em>, <em class="sig-param"><span class="n">frame_per_second</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">show_digit</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">bar_dimension</span><span class="o">=</span><span class="default_value">[10, 50]</span></em>, <em class="sig-param"><span class="n">numDigit</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">folderName</span><span class="o">=</span><span class="default_value">'animation'</span></em>, <em class="sig-param"><span class="n">outputName</span><span class="o">=</span><span class="default_value">'output'</span></em>, <em class="sig-param"><span class="n">horizontal_offset</span><span class="o">=</span><span class="default_value">15</span></em>, <em class="sig-param"><span class="n">vertical_offset</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">text_color</span><span class="o">=</span><span class="default_value">0, 0, 0, 200</span></em>, <em class="sig-param"><span class="n">text_pos</span><span class="o">=</span><span class="default_value">'down'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.visualizeSBML.animate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Animation for the tellurium simulation</p>
-<dl>
-<dt>Args:</dt><dd><p>simulationData: numpy array for the simulation data</p>
-<p>baseImageArray: base image array used for generating the change</p>
-<p>floatingSpecies: floating species name in the NamedArray of simulationData</p>
-<p>posDict: position dictionary for the Floating Species</p>
-<p>numDigit: number of digits saved for display</p>
-<p>folderName: generated images folder place</p>
-<p>offset: text offset from the center of the compartment</p>
-<p>textColor: text color</p>
-<p>textWidth: text width</p>
-<p>textDimension: text dimension size</p>
+<code class="sig-prename descclassname">SBMLDiagrams.visualizeSBML.</code><code class="sig-name descname">animate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">end</span></em>, <em class="sig-param"><span class="n">points</span></em>, <em class="sig-param"><span class="n">r</span></em>, <em class="sig-param"><span class="n">thick_changing_rate</span></em>, <em class="sig-param"><span class="n">sbmlStr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">frame_per_second</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">show_digit</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">bar_dimension</span><span class="o">=</span><span class="default_value">10, 50</span></em>, <em class="sig-param"><span class="n">numDigit</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">folderName</span><span class="o">=</span><span class="default_value">'animation'</span></em>, <em class="sig-param"><span class="n">outputName</span><span class="o">=</span><span class="default_value">'output'</span></em>, <em class="sig-param"><span class="n">horizontal_offset</span><span class="o">=</span><span class="default_value">15</span></em>, <em class="sig-param"><span class="n">vertical_offset</span><span class="o">=</span><span class="default_value">5</span></em>, <em class="sig-param"><span class="n">text_color</span><span class="o">=</span><span class="default_value">0, 0, 0, 200</span></em>, <em class="sig-param"><span class="n">savePngs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showImage</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.visualizeSBML.animate" title="Permalink to this definition">¶</a></dt>
+<dd><dl>
+<dt>Args:</dt><dd><p>start: start point for the simulation</p>
+<p>end: end point for the simulation</p>
+<p>points: total points for the simulation</p>
+<p>r: tellurium loada object</p>
+<p>thick_changing_rate: thickness for the arrow, smaller means thinner</p>
+<p>sbmlStr: sbml layout information if any</p>
+<p>frame_per_second: number of frames per second of the ouput video</p>
+<p>show_digit: if show digits</p>
+<p>bar_dimension: width and height of the bar</p>
+<p>numDigit: number of digits displayed</p>
+<p>folderName: output folder name</p>
+<p>outputName: ouput video name</p>
+<p>horizontal_offset:  horizontal_offset of the bar from the node</p>
+<p>vertical_offset: vertical offset of text from the node</p>
+<p>text_color: color for the text</p>
+<p>savePngs: if save all the pngs used for video generation</p>
+<p>showImage: if display all the generated pngs in console</p>
 </dd>
 </dl>
 <p>Returns:</p>

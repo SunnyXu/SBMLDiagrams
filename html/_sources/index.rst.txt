@@ -43,17 +43,18 @@ Code Examples
 .. code-block:: python
 
    import SBMLDiagrams
-   import os 
+   import tellurium as te
 
-   dirname = "path//to"
-   filename = "test.xml"
+   r = te.loada ('''
+   A -> B; v; B -> C; v; C -> D; v;
+   v = 0
+   ''')
 
-   f = open(os.path.join(dirname, filename), 'r')
-   sbmlStr = f.read()
-   f.close()
-
+   sbmlStr = r.getSBML()
    df = SBMLDiagrams.load(sbmlStr)
-   df.plot()
+   df.autolayout(layout="spectral")
+   df.draw() 
+   animate(0, 30, 50, r, 0.5, sbmlStr=sbmlStr, outputName="ouput")
 
 
 2) Load, read, edit and export to an SBML file.
