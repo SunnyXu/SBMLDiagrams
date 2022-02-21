@@ -43,15 +43,14 @@ Code Examples
 .. code-block:: python
 
    import SBMLDiagrams
-   import os 
+   import tellurium as te
 
-   dirname = "path//to"
-   filename = "test.xml"
+   r = te.loada ('''
+   A -> B; v; B -> C; v; C -> D; v;
+   v = 0
+   ''')
 
-   f = open(os.path.join(dirname, filename), 'r')
-   sbmlStr = f.read()
-   f.close()
-
+   sbmlStr = r.getSBML()
    df = SBMLDiagrams.load(sbmlStr)
    df.autolayout(layout="spectral")
    df.draw() 
