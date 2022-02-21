@@ -70,7 +70,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
     """
     if not sbmlStr:
         sbmlStr = r.getSBML()
-    v_info = _plot(sbmlStr, drawArrow = False)
+    v_info = _plot(sbmlStr, save = False, drawArrow = False)
     simulationData = r.simulate(start, end, points)
     reactionRates = r.simulate(start, end, points, selections=r.getReactionIds())
 
@@ -186,7 +186,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
     Video(outputName + ".mp4")
 
 def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, newStyleClass = None, showImage = True):
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, newStyleClass = None, showImage = True, save = True):
 
     """
     Plot from an sbml string to a PNG/JPG/PDF file.
@@ -997,7 +997,7 @@ def _plot(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
         canvas = surface.getCanvas()
         pos_dict, dim_dict, all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
-        baseImageArray = drawNetwork.draw(surface, fileName = output_fileName, file_format = fileFormat, showImage=showImage)
+        baseImageArray = drawNetwork.draw(surface, save=save, fileName = output_fileName, file_format = fileFormat, showImage=showImage)
     else: #fileFormat == "PDF"
         if output_fileName == '':
             random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
