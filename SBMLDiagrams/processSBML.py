@@ -2054,7 +2054,7 @@ class load:
 
     def autolayout(self, layout="spectral"):
         """
-
+        auto-layout the node positions using networkx lib
         Args:
             layout: the layout name from the networkx
 

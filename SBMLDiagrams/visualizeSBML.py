@@ -28,7 +28,46 @@ from IPython.display import Video
 def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
             bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",
             horizontal_offset = 15, vertical_offset = 5, text_color = (0, 0, 0, 200), savePngs = False, showImage = False):
+    """
 
+    Args:
+        start: start point for the simulation
+
+        end: end point for the simulation
+
+        points: total points for the simulation
+
+        r: tellurium loada object
+
+        thick_changing_rate: thickness for the arrow, smaller means thinner
+
+        sbmlStr: sbml layout information if any
+
+        frame_per_second: number of frames per second of the ouput video
+
+        show_digit: if show digits
+
+        bar_dimension: width and height of the bar
+
+        numDigit: number of digits displayed
+
+        folderName: output folder name
+
+        outputName: ouput video name
+
+        horizontal_offset:  horizontal_offset of the bar from the node
+
+        vertical_offset: vertical offset of text from the node
+
+        text_color: color for the text
+
+        savePngs: if save all the pngs used for video generation
+
+        showImage: if display all the generated pngs in console
+
+    Returns:
+
+    """
     if not sbmlStr:
         sbmlStr = r.getSBML()
     v_info = _plot(sbmlStr, drawArrow = False)
