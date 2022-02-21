@@ -2062,7 +2062,7 @@ class load:
 
         """
         sbmlStr = self.export()
-        v_info = visualizeSBML._plot(sbmlStr,showImage=False,newStyleClass=self.color_style)
+        v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyleClass=self.color_style)
         edges = v_info.edges
         model = simplesbml.loadSBMLStr(sbmlStr)
 
@@ -2102,7 +2102,7 @@ class load:
         for id in reaction_ids:
             self.setReactionDefaultCenterAndHandlePositions(id)
 
-    def plot(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
+    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False):
 
         """
@@ -2135,7 +2135,7 @@ class load:
 
         sbmlStr = self.export()
         v_info =\
-        visualizeSBML._plot(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale, fileFormat = fileFormat, 
+        visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale, fileFormat = fileFormat, 
         output_fileName = output_fileName, complexShape = complexShape, reactionLineType = reactionLineType, 
         showBezierHandles = showBezierHandles, newStyleClass = self.color_style)
 
@@ -2196,16 +2196,17 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     # filename = "feedback.xml"
-    filename = "LinearChain.xml"
+    # filename = "LinearChain.xml"
     # filename = "test_comp.xml"
     # filename = "test_no_comp.xml"
     # filename = "test_modifier.xml"
     # filename = "node_grid.xml"
     # filename = "mass_action_rxn.xml"
 
-    #filename = "Jana_WolfGlycolysis.xml"
+    # filename = "Jana_WolfGlycolysis.xml"
+
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2221,6 +2222,7 @@ if __name__ == '__main__':
 
     df = load(sbmlStr)
     #df = load("dfgdg")
+    #la = load(sbmlStr)
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2260,8 +2262,8 @@ if __name__ == '__main__':
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
     # df.setFloatingBoundaryNode("x_1", True)
-    # print(df.getNodePosition("x_1"))
-    # df.setNodePosition("x_1", [100.0, 100.0])
+    #print(df.getNodePosition("x_1"))
+    #df.setNodePosition("x_1", [100.0, 100.0])
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # print(df.getNodePosition("x_1"))
     # print(df.getNodePosition("x_0"))
@@ -2290,14 +2292,15 @@ if __name__ == '__main__':
     # print(df.getReactionArrowHeadSize("r_0"))
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    #df.plot(reactionLineType='bezier', scale = 2.)
-    df.plot()
+    #df.draw(reactionLineType='bezier', scale = 2.)
+    df.draw()
+       
 
     # print(df.getNetworkSize())
     # print(df.getNetworkBottomRightCorner())
@@ -2306,7 +2309,7 @@ if __name__ == '__main__':
     # if len(sbmlStr_layout_render) == 0:
     #     print("empty sbml")
     # else:
-    #     visualizeSBML.plot(sbmlStr_layout_render, fileFormat='PNG')
+    #     visualizeSBML._draw(sbmlStr_layout_render, fileFormat='PNG')
 
 
 

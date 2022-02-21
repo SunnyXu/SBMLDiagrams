@@ -1,4 +1,4 @@
-from SBMLDiagrams.visualizeSBML import _plot
+from SBMLDiagrams.visualizeSBML import _draw
 from SBMLDiagrams.visualizeSBML import *
 import tellurium as te
 r = te.loada('''

@@ -730,16 +730,29 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                     [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
                 #draw the arrow:
                 points = [arrow_head_pt]
-                dis_rct_arc_center = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)      
-                pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-prd_handle_position[1])*arrow_s1/dis_rct_arc_center
-                pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-prd_handle_position[0])*arrow_s1/dis_rct_arc_center
-                pts_y_l = pts_y_m + (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/dis_rct_arc_center
-                pts_x_l = pts_x_m - (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/dis_rct_arc_center
-                points.append([pts_x_l,pts_y_l])
-                points.append([pts_x_m, pts_y_m])
-                pts_y_r = pts_y_m - (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/dis_rct_arc_center
-                pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/dis_rct_arc_center
-                points.append([pts_x_r,pts_y_r])
+                distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
+                if distance != 0:
+                    pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-prd_handle_position[1])*arrow_s1/distance
+                    pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-prd_handle_position[0])*arrow_s1/distance
+                    pts_y_l = pts_y_m + (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/distance
+                    pts_x_l = pts_x_m - (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/distance
+                    points.append([pts_x_l,pts_y_l])
+                    points.append([pts_x_m, pts_y_m])
+                    pts_y_r = pts_y_m - (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/distance
+                    pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/distance
+                    points.append([pts_x_r,pts_y_r])
+                else:
+                    distance = math.sqrt((arrow_head_pt[0]-center_position[0])**2 + (arrow_head_pt[1]-center_position[1])**2)
+                    pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-center_position[1])*arrow_s1/distance
+                    pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-center_position[0])*arrow_s1/distance
+                    pts_y_l = pts_y_m + (arrow_head_pt[0]-center_position[0])*.5*arrow_s2/distance
+                    pts_x_l = pts_x_m - (arrow_head_pt[1]-center_position[1])*.5*arrow_s2/distance
+                    points.append([pts_x_l,pts_y_l])
+                    points.append([pts_x_m, pts_y_m])
+                    pts_y_r = pts_y_m - (arrow_head_pt[0]-center_position[0])*.5*arrow_s2/distance
+                    pts_x_r = pts_x_m + (arrow_head_pt[1]-center_position[1])*.5*arrow_s2/distance
+                    points.append([pts_x_r,pts_y_r])
+
                 _drawArrow(canvas, points, lineColor)
                 if line_head_pt != None:
                     pts.append(line_head_pt)
@@ -781,15 +794,15 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                     [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
                 #draw the arrow:
                 points = [arrow_head_pt]
-                dis_rct_arc_center = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)      
-                pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-arcCenter[1])*arrow_s1/dis_rct_arc_center
-                pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/dis_rct_arc_center
-                pts_y_l = pts_y_m + (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/dis_rct_arc_center
-                pts_x_l = pts_x_m - (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/dis_rct_arc_center
+                distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
+                pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-arcCenter[1])*arrow_s1/distance
+                pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/distance
+                pts_y_l = pts_y_m + (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                pts_x_l = pts_x_m - (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
                 points.append([pts_x_l,pts_y_l])
                 points.append([pts_x_m, pts_y_m])
-                pts_y_r = pts_y_m - (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/dis_rct_arc_center
-                pts_x_r = pts_x_m + (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/dis_rct_arc_center
+                pts_y_r = pts_y_m - (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                pts_x_r = pts_x_m + (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
                 points.append([pts_x_r,pts_y_r])
                 _drawArrow(canvas, points, lineColor)
             except:
@@ -872,7 +885,7 @@ def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, sc
     paintText = skia.Paint(Color=fontColor, StrokeWidth=text_line_width)
     canvas.drawSimpleText(text, position[0], position[1], font, paintText)
 
-def draw(surface, save = True, folderName = '', fileName = '', file_format = 'PNG', showImage = True):
+def showPlot(surface, save = True, folderName = '', fileName = '', file_format = 'PNG', showImage = True):
     """
     Display the diagram and save it to the local.
 
