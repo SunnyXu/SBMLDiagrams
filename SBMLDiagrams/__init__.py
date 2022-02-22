@@ -12,7 +12,6 @@ try:
     from . import editSBML
     from . import exportSBML
     from . import styleSBML
-    from . import autoLayoutSBML
     from. import visualizeInfo
 except:
     from SBMLDiagrams import visualizeSBML
