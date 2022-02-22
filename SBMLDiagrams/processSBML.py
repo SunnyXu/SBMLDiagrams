@@ -2102,13 +2102,14 @@ class load:
         for id in reaction_ids:
             self.setReactionDefaultCenterAndHandlePositions(id)
 
-    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False):
+    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output',\
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, newStyleClass = None):
 
         """
-        Plot  to a PNG/JPG/PDF file.
+        Draw to a PNG/JPG/PDF file.
 
         Args:  
+            sbmlStr: str-the string of the input sbml file.
 
             setImageSize: list-1*2 matrix-size of the rectangle [width, height].
 
@@ -2128,16 +2129,17 @@ class load:
 
             showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
+            newStyleClass: color style class.
+
         Returns:
-            The tuple of base image's array, position dictionary for the Floating Species, 
-            color style of the image.
-        """
+            The visualization info object containing the drawing information of the plot
+    """
 
         sbmlStr = self.export()
-        v_info =\
-        visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale, fileFormat = fileFormat, 
-        output_fileName = output_fileName, complexShape = complexShape, reactionLineType = reactionLineType, 
-        showBezierHandles = showBezierHandles, newStyleClass = self.color_style)
+        v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale,\
+        fileFormat = fileFormat, output_fileName = output_fileName, complexShape = complexShape, \
+        reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, newStyleClass = newStyleClass, \
+        showImage = True, save = True)
 
         return v_info
 
@@ -2196,14 +2198,14 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
-    # filename = "feedback.xml"
-    # filename = "LinearChain.xml"
-    # filename = "test_comp.xml"
-    # filename = "test_no_comp.xml"
-    # filename = "test_modifier.xml"
-    # filename = "node_grid.xml"
-    # filename = "mass_action_rxn.xml"
+    #filename = "test.xml" 
+    #filename = "feedback.xml"
+    #filename = "LinearChain.xml"
+    #filename = "test_comp.xml"
+    #filename = "test_no_comp.xml"
+    #filename = "test_modifier.xml"
+    #filename = "node_grid.xml"
+    filename = "mass_action_rxn.xml"
 
     # filename = "Jana_WolfGlycolysis.xml"
 
@@ -2270,7 +2272,9 @@ if __name__ == '__main__':
     # df.setNodeSize("x_1", [50.0, 30.0])
     # df.setNodeShapeIdx("x_1", 1)
     # df.setNodeTextPosition("x_1", [413., 216.])
-    # df.setNodeTextSize("x_1", [50, 31])
+    #print(df.getNodeTextSize("x_1"))
+    #df.setNodeTextSize("x_1", [100, 100])
+    #print(df.getNodeTextSize("x_1"))
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # df.setNodeBorderWidth("x_1", 2.)
@@ -2292,11 +2296,11 @@ if __name__ == '__main__':
     # print(df.getReactionArrowHeadSize("r_0"))
 
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
     #df.draw(reactionLineType='bezier', scale = 2.)
     df.draw()
