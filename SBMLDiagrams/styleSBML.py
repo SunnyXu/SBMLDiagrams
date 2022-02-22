@@ -2,7 +2,9 @@
 @author: Jessie Jiang
 """
 class Style:
-    def __init__(self, styleName):
+    def __init__(self, styleName=None):
+        self.styleName = styleName
+
         if styleName == 'default':
             # for compartment's color
             self.comp_fill_color = (255, 255, 255, 255)
@@ -37,6 +39,12 @@ class Style:
 
             self.image_size = [1000, 1000]
             self.node_dimension = [40, 60]
+
+    def getStyleName(self):
+        return self.styleName
+
+    def setStyleName(self, styleName):
+        self.styleName = styleName
 
     def getImageSize(self):
         return self.image_size

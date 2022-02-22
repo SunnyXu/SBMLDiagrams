@@ -1177,7 +1177,7 @@ class load:
     def __init__(self, sbmlstr):
         self.sbmlstr = sbmlstr
         self.df = _SBMLToDF(self.sbmlstr)
-        self.color_style = styleSBML.Style("default")
+        self.color_style = styleSBML.Style()
 
         if self.df == None:
            sys.exit("There is no valid information to process.")
@@ -2050,7 +2050,11 @@ class load:
             self.color_style = styleSBML.Style(styleName)
 
     def getColorStyle(self):
-        return self.color_style if self.color_style else self.styleName
+        """
+        Returns: self.color_style
+
+        """
+        return self.color_style
 
     def autolayout(self, layout="spectral"):
         """
@@ -2103,7 +2107,7 @@ class load:
             self.setReactionDefaultCenterAndHandlePositions(id)
 
     def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output',\
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, newStyleClass = None):
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False):
 
         """
         Draw to a PNG/JPG/PDF file.
@@ -2129,8 +2133,6 @@ class load:
 
             showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
-            newStyleClass: color style class.
-
         Returns:
             The visualization info object containing the drawing information of the plot
     """
@@ -2138,7 +2140,7 @@ class load:
         sbmlStr = self.export()
         v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale,\
         fileFormat = fileFormat, output_fileName = output_fileName, complexShape = complexShape, \
-        reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, newStyleClass = newStyleClass, \
+        reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, newStyleClass = self.color_style, \
         showImage = True, save = True)
 
         return v_info
