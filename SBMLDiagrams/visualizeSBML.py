@@ -70,7 +70,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
     """
     if not sbmlStr:
         sbmlStr = r.getSBML()
-    v_info = _draw(sbmlStr, drawArrow = False)
+    v_info = _draw(sbmlStr,save = False, drawArrow = False)
     simulationData = r.simulate(start, end, points)
     reactionRates = r.simulate(start, end, points, selections=r.getReactionIds())
 
@@ -186,7 +186,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
     Video(outputName + ".mp4")
 
 def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, newStyleClass = None, showImage = True):
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, newStyleClass = None, showImage = True, save = True):
 
     """
     Plot from an sbml string to a PNG/JPG/PDF file.
@@ -212,13 +212,14 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
-        styleName: pre-existing color style for the graph.
+        newStyleClass: color style class.
 
-        newStyleClass: user-customized new color style.
+        showImage: whether to display the image inside console
+
+        save: whether to save the png
 
     Returns:
-        The tuple of base image's array, position dictionary for the Floating Species, 
-        color style of the image.
+        The visualization info object containing the drawing information of the plot
     """
 
     df = processSBML.load(sbmlStr)
@@ -997,7 +998,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
         canvas = surface.getCanvas()
         pos_dict, dim_dict, all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
-        baseImageArray = drawNetwork.showPlot(surface, fileName = output_fileName, file_format = fileFormat, showImage=showImage)
+        baseImageArray = drawNetwork.showPlot(surface,save=save,fileName = output_fileName, file_format = fileFormat, showImage=showImage)
     else: #fileFormat == "PDF"
         if output_fileName == '':
             random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
@@ -1212,7 +1213,7 @@ if __name__ == '__main__':
 
     #filename = "test.xml"
     #filename = "feedback.xml"
-    #filename = "LinearChain.xml"
+    filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"

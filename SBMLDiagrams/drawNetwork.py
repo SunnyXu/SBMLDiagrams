@@ -730,7 +730,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                     [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
                 #draw the arrow:
                 points = [arrow_head_pt]
-                distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)      
+                distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
                 if distance != 0:
                     pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-prd_handle_position[1])*arrow_s1/distance
                     pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-prd_handle_position[0])*arrow_s1/distance
@@ -742,7 +742,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                     pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/distance
                     points.append([pts_x_r,pts_y_r])
                 else:
-                    distance = math.sqrt((arrow_head_pt[0]-center_position[0])**2 + (arrow_head_pt[1]-center_position[1])**2)     
+                    distance = math.sqrt((arrow_head_pt[0]-center_position[0])**2 + (arrow_head_pt[1]-center_position[1])**2)
                     pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-center_position[1])*arrow_s1/distance
                     pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-center_position[0])*arrow_s1/distance
                     pts_y_l = pts_y_m + (arrow_head_pt[0]-center_position[0])*.5*arrow_s2/distance
@@ -794,7 +794,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                     [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
                 #draw the arrow:
                 points = [arrow_head_pt]
-                distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)      
+                distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
                 pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-arcCenter[1])*arrow_s1/distance
                 pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/distance
                 pts_y_l = pts_y_m + (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
@@ -885,7 +885,7 @@ def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, sc
     paintText = skia.Paint(Color=fontColor, StrokeWidth=text_line_width)
     canvas.drawSimpleText(text, position[0], position[1], font, paintText)
 
-def showPlot(surface, folderName = '', fileName = '', file_format = 'PNG', showImage = True):
+def showPlot(surface, save = True, folderName = '', fileName = '', file_format = 'PNG', showImage = True):
     """
     Display the diagram and save it to the local.
 
@@ -908,19 +908,20 @@ def showPlot(surface, folderName = '', fileName = '', file_format = 'PNG', showI
         random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
         tmpfileName = os.path.join(os.getcwd() + '/' + folderName, random_string)
         image = surface.makeImageSnapshot()
-        if file_format == 'PNG':
-            tmpfileName = tmpfileName + '.png'
-            image.save(tmpfileName, skia.kPNG)
-            if showImage:
-                pil_im = Image.open(tmpfileName)
-                display(pil_im)
-            #pil_im.show()
-        elif file_format == 'JPEG':
-            tmpfileName = tmpfileName + '.jpg'
-            image.save(tmpfileName, skia.kJPEG)
-            if showImage:
-                pil_im = Image.open(tmpfileName)
-                display(pil_im)
+        if save:
+            if file_format == 'PNG':
+                tmpfileName = tmpfileName + '.png'
+                image.save(tmpfileName, skia.kPNG)
+                if showImage:
+                    pil_im = Image.open(tmpfileName)
+                    display(pil_im)
+                #pil_im.show()
+            elif file_format == 'JPEG':
+                tmpfileName = tmpfileName + '.jpg'
+                image.save(tmpfileName, skia.kJPEG)
+                if showImage:
+                    pil_im = Image.open(tmpfileName)
+                    display(pil_im)
             #pil_im.show()
         # elif file_format == 'PDF':
         #     tmpfileNamepdf = tmpfileName + '.pdf'
@@ -940,19 +941,20 @@ def showPlot(surface, folderName = '', fileName = '', file_format = 'PNG', showI
     else:
         fileName = os.path.join(os.getcwd() + '/' + folderName,fileName)
         image = surface.makeImageSnapshot()
-        if file_format == 'PNG':
-            fileName = fileName + '.png'
-            image.save(fileName, skia.kPNG)
-            if showImage:
-                pil_im = Image.open(fileName)
-                display(pil_im)
-            #pil_im.show() 
-        elif file_format == 'JPEG':
-            fileName = fileName + '.jpg'
-            image.save(fileName, skia.kJPEG) 
-            if showImage:
-                pil_im = Image.open(fileName)
-                display(pil_im)
+        if save:
+            if file_format == 'PNG':
+                fileName = fileName + '.png'
+                image.save(fileName, skia.kPNG)
+                if showImage:
+                    pil_im = Image.open(fileName)
+                    display(pil_im)
+                #pil_im.show()
+            elif file_format == 'JPEG':
+                fileName = fileName + '.jpg'
+                image.save(fileName, skia.kJPEG)
+                if showImage:
+                    pil_im = Image.open(fileName)
+                    display(pil_im)
             #pil_im.show()   
         # elif file_format == 'PDF':
         #     fileNamepdf = fileName + '.pdf'
