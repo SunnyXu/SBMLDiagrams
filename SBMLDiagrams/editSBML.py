@@ -479,6 +479,33 @@ def _setNodeTextLineWidth(df, id, txt_line_width):
 
     return df_temp
 
+
+def _setNodeTextFontSize(df, id, txt_font_size):
+
+    """
+    Set the node text font size.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+        txt_font_size: float.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_NodeData_temp.at[idx_list[i],"txt_font_size"] = txt_font_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
 def _setReactionCenterPosition(df, id, position):
 
     """

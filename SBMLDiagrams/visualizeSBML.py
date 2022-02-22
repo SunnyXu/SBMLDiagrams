@@ -185,8 +185,9 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
 
     Video(outputName + ".mp4")
 
-def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output', \
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, newStyleClass = None, showImage = True, save = True):
+def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
+    output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', \
+    showBezierHandles = False, newStyleClass = styleSBML.Style(), showImage = True, save = True):
 
     """
     Plot from an sbml string to a PNG/JPG/PDF file.
@@ -268,6 +269,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         spec_border_width = 2.0
         reaction_line_width = 3.0
         text_line_width = 1.
+        text_font_size = 12.
         reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5]
         edges = []
         id_to_name = defaultdict(lambda:"")
@@ -558,11 +560,9 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(hex_to_rgb(color_list[k][1]))
                                 text_line_width = group.getStrokeWidth()
-                                #print(text_line_width)
-                                #text_font_size = group.getFontSize()  #cannot give the fontsize
-                                #text_font_size = group.getFontSize()
-                                #print(group)
-                                text_render.append([idList,color_style.getTextLineColor(),text_line_width])
+                                text_font_size = float(group.getFontSize().getCoordinate())
+                                text_render.append([idList,color_style.getTextLineColor(),
+								text_line_width, text_font_size])
 
         #try: 
             model = simplesbml.loadSBMLStr(sbmlStr)
@@ -774,6 +774,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
+                                        text_font_size = text_render[k][3]
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 allNodes_pos_dict['[' + temp_id + ']'] = position
@@ -782,7 +783,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
-                                                    color_style.getTextLineColor(), text_line_width*scale, scale)
+                                                    color_style.getTextLineColor(), text_line_width*scale, 
+													scale, fontSize = text_font_size*scale)
                                 id_list.append(temp_id)                    
                             else:
                                 for k in range(len(spec_render)):
@@ -798,6 +800,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
+                                        text_font_size = text_render[k][3]
                                 floatingNodes_pos_dict['[' + temp_id + ']'] = position
                                 floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 allNodes_pos_dict['[' + temp_id + ']'] = position
@@ -806,7 +809,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
-                                                    color_style.getTextLineColor(), text_line_width*scale, scale)
+                                                    color_style.getTextLineColor(), text_line_width*scale,
+													scale, fontSize = text_font_size*scale)
                                 id_list.append(temp_id)
                     for j in range(numBoundaryNodes):
                         if temp_id == BoundaryNodes_ids[j]:
@@ -824,13 +828,15 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
+                                        text_font_size = text_render[k][3]
                                 drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape=complexShape)
                                 allNodes_pos_dict['[' + temp_id + ']'] = position
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
-                                                    color_style.getTextLineColor(), text_line_width*scale, scale)
+                                                    color_style.getTextLineColor(), text_line_width*scale, 
+													scale,fontSize = text_font_size*scale)
                                 id_list.append(temp_id)
                             else:
                                 for k in range(len(spec_render)):
@@ -846,13 +852,15 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
+                                        text_font_size = text_render[k][3]
                                 drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, complex_shape=complexShape)
                                 allNodes_pos_dict['[' + temp_id + ']'] = position
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
-                                                    color_style.getTextLineColor(), text_line_width*scale, scale)
+                                                    color_style.getTextLineColor(), text_line_width*scale, 
+													scale, fontSize = text_font_size*scale)
                                 id_list.append(temp_id)
 
             else: # there is no layout information, assign position randomly and size as default
@@ -967,7 +975,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
                                         shapeIdx, complex_shape=complexShape)
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
-                    text_line_width*scale, scale)
+                    text_line_width*scale, scale, fontSize = text_font_size*scale)
                     floatingNodes_pos_dict['[' + temp_id + ']'] = position
                     floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
                     allNodes_pos_dict['[' + temp_id + ']'] = position
@@ -985,7 +993,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     allNodes_pos_dict['[' + temp_id + ']'] = position
                     allNodes_dim_dict['[' + temp_id + ']'] = dimension
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
-                    text_line_width*scale, scale)
+                    text_line_width*scale, scale, fontSize = text_font_size*scale)
 
         except Exception as e:
             print(e)
@@ -1211,7 +1219,7 @@ if __name__ == '__main__':
 
     #filename = "test.xml"
     #filename = "feedback.xml"
-    filename = "LinearChain.xml"
+    #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"
@@ -1224,7 +1232,7 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
 
-    #filename = "output.xml"
+    filename = "output.xml"
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')

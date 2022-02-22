@@ -711,7 +711,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
                 spec_border_width = float(df_NodeData.iloc[i]['border_width'])
 
-                #text_font_size = int(df_NodeData.iloc[i]['txt_font_size'])
+                text_font_size = float(df_NodeData.iloc[i]['txt_font_size'])
+
                 try:
                     font_color = list(df_NodeData.iloc[i]['txt_font_color'][1:-1].split(","))
                 except:
@@ -725,9 +726,9 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 spec_fill_color_str = '#ffffffff'
                 spec_border_color_str = '#ffffffff'
                 spec_border_width = 2.
-                #text_font_size = 11
                 text_line_color_str = '#000000ff'
                 text_line_width = 1.
+                text_font_size = 12
 
 
             color = rInfo.createColorDefinition()
@@ -790,7 +791,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             style = rInfo.createStyle("textStyle")
             style.getGroup().setStroke("text_line_color" + "_" + spec_id)
             style.getGroup().setStrokeWidth(text_line_width)
-            #style.getGroup().setFontSize(RelAbsVector(text_font_size,0))
+            style.getGroup().setFontSize(libsbml.RelAbsVector(text_font_size,0))
             style.addType("TEXTGLYPH")
             style.addId(spec_id)
 

@@ -40,9 +40,9 @@ CONCENTRATION = 'concentration'
 SHAPEIDX = 'shape_idx'
 TXTPOSITION = 'txt_position'
 TXTSIZE = 'txt_size'
-#TXTFONTSIZE = 'txt_font_size'
 TXTFONTCOLOR = 'txt_font_color'
 TXTLINEWIDTH = 'txt_line_width'
+TXTFONTSIZE = 'txt_font_size'
 SOURCES = 'sources'
 TARGETS = 'targets'
 RATELAW = 'rate_law'
@@ -55,8 +55,8 @@ ARROWHEADSIZE = 'arrow_head_size'
 COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
     POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH]
 COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
-    CONCENTRATION, POSITION, SIZE, SHAPEIDX, TXTPOSITION, TXTSIZE,
-    FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH]
+    CONCENTRATION, POSITION, SIZE, SHAPEIDX, TXTPOSITION, TXTSIZE, \
+    FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE]
 
@@ -173,6 +173,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5] 
     text_line_color = [0, 0, 0, 255]
     text_line_width = 1.
+    text_font_size = 12.
     
     mplugin = None
     try: #invalid sbml
@@ -460,8 +461,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if color_list[k][0] == group.getStroke():
                                     text_line_color = hex_to_rgb(color_list[k][1])
                             text_line_width = group.getStrokeWidth()
-                            #text_font_size = group.getFontSize() #can not give an int
-                            text_render.append([idList,text_line_color,text_line_width])
+                            text_font_size = float(group.getFontSize().getCoordinate())
+                            text_render.append([idList,text_line_color,text_line_width,
+							text_font_size])
+        #print(text_render)
 
         model = simplesbml.loadSBMLStr(sbmlStr)
         numFloatingNodes  = model.getNumFloatingSpecies()
@@ -573,6 +576,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
                                     text_line_width = text_render[k][2]
+                                    text_font_size = text_render[k][3]
                             id_list.append(temp_id)
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
                             
@@ -592,9 +596,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[FILLCOLOR].append(spec_fill_color)
                             NodeData_row_dct[BORDERCOLOR].append(spec_border_color)
                             NodeData_row_dct[BORDERWIDTH].append(spec_border_width)
-                            #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                            NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -619,6 +623,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
                                     text_line_width = text_render[k][2]
+                                    text_font_size = text_render[k][3]
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
 
                             NodeData_row_dct = {k:[] for k in COLUMN_NAME_df_NodeData}
@@ -637,9 +642,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[FILLCOLOR].append(spec_fill_color)
                             NodeData_row_dct[BORDERCOLOR].append(spec_border_color)
                             NodeData_row_dct[BORDERWIDTH].append(spec_border_width)
-                            #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                            NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -663,7 +668,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             for k in range(len(text_render)):
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
-                                    text_line_width = text_render[k][2]        
+                                    text_line_width = text_render[k][2]  
+                                    text_font_size = text_render[k][3]      
                             id_list.append(temp_id)
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
 
@@ -683,9 +689,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[FILLCOLOR].append(spec_fill_color)
                             NodeData_row_dct[BORDERCOLOR].append(spec_border_color)
                             NodeData_row_dct[BORDERWIDTH].append(spec_border_width)
-                            #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                            NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -708,6 +714,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
                                     text_line_width = text_render[k][2] 
+                                    text_font_size = text_render[k][3]
 
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
 
@@ -727,9 +734,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[FILLCOLOR].append(spec_fill_color)
                             NodeData_row_dct[BORDERCOLOR].append(spec_border_color)
                             NodeData_row_dct[BORDERWIDTH].append(spec_border_width)
-                            #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                            NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1007,9 +1014,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 NodeData_row_dct[FILLCOLOR].append(spec_fill_color)
                 NodeData_row_dct[BORDERCOLOR].append(spec_border_color)
                 NodeData_row_dct[BORDERWIDTH].append(spec_border_width)
-                #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                 NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                 NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                 # for j in range(len(COLUMN_NAME_df_NodeData)):
                 #     try: 
                 #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1050,9 +1057,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 NodeData_row_dct[FILLCOLOR].append(spec_fill_color)
                 NodeData_row_dct[BORDERCOLOR].append(spec_border_color)
                 NodeData_row_dct[BORDERWIDTH].append(spec_border_width)
-                #NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                 NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                 NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                 # for j in range(len(COLUMN_NAME_df_NodeData)):
                 #     try: 
                 #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1535,6 +1542,25 @@ class load:
 
         return txt_line_width_list
 
+    def getNodeTextFontSize(self, id):
+        """
+        Get the text size of a node with its certain node id.
+
+        Args: 
+            id: str-the id of the node.
+
+        Returns:
+            txt_font_size_list: list of txt_size.
+
+            txt_font_size: float.
+        """
+        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
+        txt_font_size_list =[] 
+        for i in range(len(idx_list)):
+            txt_font_size_list.append(int(self.df[1].iloc[idx_list[i]]["txt_font_size"]))
+
+        return txt_font_size_list
+
     def getReactionCenterPosition(self, id):
         """
         Get the center position of a reaction with its certain reaction id.
@@ -1876,6 +1902,18 @@ class load:
         self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width)
         return self.df
 
+    def setNodeTextFontSize(self, id, txt_font_size):
+        """
+        Set the node text size.
+
+        Args:  
+            id: str-node id.
+
+            txt_font_size: float.
+        """
+        self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size)
+        return self.df
+
     def setReactionCenterPosition(self, id, position):
         """
         Set the reaction center position.
@@ -2140,8 +2178,8 @@ class load:
         sbmlStr = self.export()
         v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale,\
         fileFormat = fileFormat, output_fileName = output_fileName, complexShape = complexShape, \
-        reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, newStyleClass = self.color_style, \
-        showImage = True, save = True)
+        reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, \
+        newStyleClass = self.color_style, showImage = True, save = True)
 
         return v_info
 
@@ -2207,9 +2245,11 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
-    filename = "mass_action_rxn.xml"
+    #filename = "mass_action_rxn.xml"
 
-    # filename = "Jana_WolfGlycolysis.xml"
+    #filename = "Jana_WolfGlycolysis.xml"
+
+    filename = "output.xml"
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -2245,6 +2285,7 @@ if __name__ == '__main__':
     # print(df.getNodeBorderWidth("x_1"))
     # print(df.getNodeTextFontColor("x_1"))
     # print(df.getNodeTextLineWidth("x_1"))
+    # print(df.getNodeTextFontSize("x_1"))
 
     # print("center_position:", df.getReactionCenterPosition("r_0"))
     # print("handle_position:", df.getReactionHandlePositions("r_0"))
@@ -2266,22 +2307,24 @@ if __name__ == '__main__':
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
     # df.setFloatingBoundaryNode("x_1", True)
-    #print(df.getNodePosition("x_1"))
-    #df.setNodePosition("x_1", [100.0, 100.0])
+    # print(df.getNodePosition("x_1"))
+    # df.setNodePosition("x_1", [100.0, 100.0])
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # print(df.getNodePosition("x_1"))
     # print(df.getNodePosition("x_0"))
     # df.setNodeSize("x_1", [50.0, 30.0])
     # df.setNodeShapeIdx("x_1", 1)
     # df.setNodeTextPosition("x_1", [413., 216.])
-    #print(df.getNodeTextSize("x_1"))
-    #df.setNodeTextSize("x_1", [100, 100])
-    #print(df.getNodeTextSize("x_1"))
+    # print(df.getNodeTextSize("x_1"))
+    # df.setNodeTextSize("x_1", [100, 100])
+    # print(df.getNodeTextSize("x_1"))
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # df.setNodeBorderWidth("x_1", 2.)
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
     # df.setNodeTextLineWidth("x_1", 1.)
+    # df.setNodeTextFontSize("x_1", 15)
+    # print(df.getNodeTextFontSize("x_1"))
 
     # df.setReactionFillColor("r_0", [91, 176, 253])
     # df.setReactionFillColor("r_0", [0, 0, 0])
@@ -2304,7 +2347,7 @@ if __name__ == '__main__':
     f.write(sbmlStr_layout_render)
     f.close()
 
-    #df.draw(reactionLineType='bezier', scale = 2.)
+    # #df.draw(reactionLineType='bezier', scale = 2.)
     df.draw()
        
 

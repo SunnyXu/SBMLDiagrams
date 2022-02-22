@@ -836,7 +836,8 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
         2*modifier_linewidth, 2*modifier_linewidth,
                         modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
 
-def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, scale, fontSize = 12):
+def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, scale, 
+fontSize = 12):
 
     """
     Add the text.
