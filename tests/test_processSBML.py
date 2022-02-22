@@ -502,7 +502,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(test_mass_action_rxn)
 
   def testNode6(self):
-    # Test column 'concentration', 'border width' and 'txt_line_width' of df_NodeData 
+    # Test column 'concentration', 'border width', 'txt_line_width', "txt_font_size" of df_NodeData 
     # are floating numbers
     if IGNORE_TEST:
       return    
@@ -510,41 +510,49 @@ class TestImportSBML(unittest.TestCase):
     list_node += self.df_NodeData[COLUMN_NAME_df_NodeData[6]].tolist()
     list_node += self.df_NodeData[COLUMN_NAME_df_NodeData[14]].tolist()
     list_node += self.df_NodeData[COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node += self.df_NodeData[COLUMN_NAME_df_NodeData[17]].tolist()
     test = all(isinstance(item, float) for item in list_node)
     list_node_feedback = []
     list_node_feedback += self.df_NodeData_feedback[COLUMN_NAME_df_NodeData[6]].tolist()
     list_node_feedback += self.df_NodeData_feedback[COLUMN_NAME_df_NodeData[14]].tolist()
     list_node_feedback += self.df_NodeData_feedback[COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_feedback += self.df_NodeData_feedback[COLUMN_NAME_df_NodeData[17]].tolist()
     test_feedback = all(isinstance(item, float) for item in list_node_feedback)
     list_node_LinearChain = []
     list_node_LinearChain += self.df_NodeData_LinearChain[COLUMN_NAME_df_NodeData[6]].tolist()
     list_node_LinearChain += self.df_NodeData_LinearChain[COLUMN_NAME_df_NodeData[14]].tolist()
     list_node_LinearChain += self.df_NodeData_LinearChain[COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_LinearChain += self.df_NodeData_LinearChain[COLUMN_NAME_df_NodeData[17]].tolist()
     test_LinearChain = all(isinstance(item, float) for item in list_node_LinearChain)
     list_node_test_no_comp = []
     list_node_test_no_comp += self.df_NodeData_test_no_comp[COLUMN_NAME_df_NodeData[6]].tolist()
     list_node_test_no_comp += self.df_NodeData_test_no_comp[COLUMN_NAME_df_NodeData[14]].tolist()
     list_node_test_no_comp += self.df_NodeData_test_no_comp[COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_test_no_comp += self.df_NodeData_test_no_comp[COLUMN_NAME_df_NodeData[17]].tolist()
     test_no_comp = all(isinstance(item, float) for item in list_node_test_no_comp)
     list_node_test_comp = []
     list_node_test_comp += self.df_NodeData_test_comp[COLUMN_NAME_df_NodeData[6]].tolist()
     list_node_test_comp += self.df_NodeData_test_comp[COLUMN_NAME_df_NodeData[14]].tolist()
     list_node_test_comp += self.df_NodeData_test_comp[COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_test_comp += self.df_NodeData_test_comp[COLUMN_NAME_df_NodeData[17]].tolist()
     test_comp = all(isinstance(item, float) for item in list_node_test_comp)
     list_node_test_modifier = []
     list_node_test_modifier += self.df_NodeData_test_modifier[COLUMN_NAME_df_NodeData[6]].tolist()
     list_node_test_modifier += self.df_NodeData_test_modifier[COLUMN_NAME_df_NodeData[14]].tolist()
     list_node_test_modifier += self.df_NodeData_test_modifier[COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_test_modifier += self.df_NodeData_test_modifier[COLUMN_NAME_df_NodeData[17]].tolist()
     test_modifier = all(isinstance(item, float) for item in list_node_test_modifier)
     list_node_node_grid = []
     list_node_node_grid += self.df_NodeData_node_grid[COLUMN_NAME_df_NodeData[6]].tolist()
     list_node_node_grid += self.df_NodeData_node_grid[COLUMN_NAME_df_NodeData[14]].tolist()
     list_node_node_grid += self.df_NodeData_node_grid[COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_node_grid += self.df_NodeData_node_grid[COLUMN_NAME_df_NodeData[17]].tolist()
     test_node_grid = all(isinstance(item, float) for item in list_node_node_grid)
     list_node_mass_action_rxn = []
     list_node_mass_action_rxn += self.df_NodeData_mass_action_rxn[COLUMN_NAME_df_NodeData[6]].tolist()
     list_node_mass_action_rxn += self.df_NodeData_mass_action_rxn[COLUMN_NAME_df_NodeData[14]].tolist()
     list_node_mass_action_rxn += self.df_NodeData_mass_action_rxn[COLUMN_NAME_df_NodeData[16]].tolist()
+    list_node_mass_action_rxn += self.df_NodeData_mass_action_rxn[COLUMN_NAME_df_NodeData[17]].tolist()
     test_mass_action_rxn = all(isinstance(item, float) for item in list_node_mass_action_rxn)
 
     self.assertTrue(test)
@@ -911,6 +919,7 @@ class TestImportSBML(unittest.TestCase):
     border_width = 3.
     txt_font_color = "#000000"
     txt_line_width = 1.
+    txt_font_size = 12.
     opacity = 1.
     
     self.df.setFloatingBoundaryNode("x_1", floating_node)
@@ -924,6 +933,7 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodeBorderWidth("x_1", border_width)
     self.df.setNodeTextFontColor("x_1", txt_font_color)
     self.df.setNodeTextLineWidth("x_1", txt_line_width)
+    self.df.setNodeTextFontSize("x_1", txt_font_size)
 
     self.assertTrue(self.df.isFloatingNode("x_1")[0] == floating_node)
     self.assertTrue(self.df.getNodePosition("x_1")[0] == position)
@@ -939,6 +949,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0][0:-1] == [0,0,0])
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0][3] == 255)
     self.assertTrue(self.df.getNodeTextLineWidth("x_1")[0] == txt_line_width)
+    self.assertTrue(self.df.getNodeTextFontSize("x_1")[0] == txt_font_size)
 
     self.df.setNodeAndTextPosition("x_1", position_txt_position)
     self.assertTrue(self.df.getNodePosition("x_1")[0] == position_txt_position)

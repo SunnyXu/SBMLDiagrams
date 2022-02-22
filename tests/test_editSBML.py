@@ -72,6 +72,7 @@ class TestEditSBML(unittest.TestCase):
     border_width = 3.
     txt_font_color = [0, 0, 0]
     txt_line_width = 1.
+    txt_font_size = 12.
     opacity = 1.
 
     df_update = editSBML._setFloatingBoundaryNode(self.df, "x_1", floating_node)
@@ -85,6 +86,7 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setNodeBorderWidth(df_update, "x_1", border_width)
     df_update = editSBML._setNodeTextFontColor(df_update, "x_1", txt_font_color, opacity = opacity)
     df_update = editSBML._setNodeTextLineWidth(df_update, "x_1", txt_line_width)
+    df_update = editSBML._setNodeTextFontSize(df_update, "x_1", txt_font_size)
     
     self.assertTrue(df_update[1].iloc[0]["floating_node"] == floating_node)
     self.assertTrue(df_update[1].iloc[0]["position"] == position)
@@ -100,6 +102,7 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[1].iloc[0]["txt_font_color"][0:-1] == txt_font_color)
     self.assertTrue(df_update[1].iloc[0]["txt_font_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[1].iloc[0]["txt_line_width"] == txt_line_width)
+    self.assertTrue(df_update[1].iloc[0]["txt_font_size"] == txt_font_size)
 
     with self.assertRaises(Exception):
       editSBML._setFloatingBoundaryNode(df_update, "XX", floating_node)
@@ -123,6 +126,8 @@ class TestEditSBML(unittest.TestCase):
       editSBML._setNodeTextFontColor(df_update, "XX", txt_font_color, opacity = opacity)
     with self.assertRaises(Exception):
       editSBML._setNodeTextLineWidth(df_update, "XX", txt_line_width)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextFontSize(df_update, "XX", txt_font_size)
 
   def testSetReaction(self):
     # set reaction one by one
