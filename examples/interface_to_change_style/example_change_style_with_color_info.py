@@ -8,13 +8,13 @@ sbmlStr = f.read()
 f.close()
 df = SBMLDiagrams.load(sbmlStr)
 
-df.draw(output_fileName="sbml-color")
+df.draw(output_fileName="with-color/sbml-color")
 
 df.setColorStyle("default")
-df.draw(output_fileName="default-color")
+df.draw(output_fileName="with-color/default-color")
 
 df.setColorStyle("simplicity")
-df.draw(output_fileName="simplicity-color")
+df.draw(output_fileName="with-color/simplicity-color")
 
 df.setColorStyle(None)
-df.draw(output_fileName="back-sbml-color")
+df.draw(output_fileName="with-color/back-sbml-color")

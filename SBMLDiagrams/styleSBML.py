@@ -4,6 +4,19 @@
 class Style:
     def __init__(self, styleName=None):
         self.styleName = styleName
+        self.comp_fill_color = None
+        self.comp_border_color = None
+        self.spec_fill_color = None
+        self.spec_border_color = None
+        self.reaction_line_color = None
+        self.text_line_color = None
+
+        self.process_fill_color = None
+        self.full_fill_color = None
+        self.process_border_color = None
+
+        self.image_size = None
+        self.node_dimension = None
 
         if styleName == 'default':
             # for compartment's color
@@ -59,31 +72,31 @@ class Style:
         self.node_dimension = dimension
 
     def getProcessFillColor(self):
-        return self.process_fill_color
+        return self.process_fill_color if self.process_fill_color else (255, 108, 9, 200)
 
     def getProcessBorderColor(self):
-        return self.process_border_color
+        return self.process_border_color if self.process_border_color else (255, 204, 153, 200)
 
     def getFullFillColor(self):
-        return self.full_fill_color
+        return self.full_fill_color if self.full_fill_color else (91, 176, 253, 200)
 
     def getCompFillColor(self):
-        return self.comp_fill_color
+        return self.comp_fill_color if self.comp_fill_color else (255, 255, 255, 255)
         
     def getCompBorderColor(self):
-        return self.comp_border_color
+        return self.comp_border_color if self.comp_border_color else (255, 255, 255, 255)
         
     def getSpecFillColor(self):
-        return self.spec_fill_color
+        return self.spec_fill_color if self.spec_fill_color else (255, 204, 153, 200)
         
     def getSpecBorderColor(self):
-        return self.spec_border_color
+        return self.spec_border_color if self.spec_border_color else (255, 108, 9, 255)
         
     def getReactionLineColor(self):
-        return self.reaction_line_color
+        return self.reaction_line_color if self.reaction_line_color else (91, 176, 253, 255)
         
     def getTextLineColor(self):
-        return self.text_line_color
+        return self.text_line_color if self.text_line_color else (0, 0, 0, 255)
 
     def setCompFillColor(self, color):
         self.comp_fill_color = color
