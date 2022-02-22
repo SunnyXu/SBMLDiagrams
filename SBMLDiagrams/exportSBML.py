@@ -728,7 +728,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 spec_border_width = 2.
                 text_line_color_str = '#000000ff'
                 text_line_width = 1.
-                text_font_size = 12
+                text_font_size = 12.
 
 
             color = rInfo.createColorDefinition()

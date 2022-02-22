@@ -516,9 +516,9 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
             _drawTetramer (canvas, x, y, width, height, 
                         outline, fill, linewidth)
   
-def addReaction(canvas, rct_position, prd_position, mod_position, center_position, handles,
+def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center_position, handles,
                 rct_dimension, prd_dimension, mod_dimension, reaction_line_color, reaction_line_width, 
-                reaction_line_type = 'bezier', show_bezier_handles = False, 
+                reaction_line_type = 'bezier', show_bezier_handles = False, show_reaction_ids = False,
                 reaction_arrow_head_size = [2., 2.]):
     
     """
@@ -550,6 +550,8 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
         reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
 
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
+
+        show_reaction_ids: bool-show the reaction ids (True) or not (False as default).
 
     """
     
@@ -684,6 +686,9 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
     #arrow_s2 = 4*reaction_line_width
     arrow_s2 = reaction_arrow_head_size[0] #width of the arrow
     arrow_s1 = reaction_arrow_head_size[1] #height of the arrow
+    if show_reaction_ids:
+        addSimpleText(canvas, rxn_id, center_position, reaction_line_color, 
+        text_line_width = 1, scale = 1., fontSize = 12.)
     if lineType == 'bezier':
         center_handle_position = handles[0]
         center_handle_position_prd = [2*arcCenter[0]-center_handle_position[0],2*arcCenter[1]-center_handle_position[1]]
@@ -837,7 +842,7 @@ def addReaction(canvas, rct_position, prd_position, mod_position, center_positio
                         modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
 
 def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, scale, 
-fontSize = 12):
+fontSize = 12.):
 
     """
     Add the text.
@@ -882,6 +887,7 @@ fontSize = 12):
 
 def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, scale=1., fontSize = 12):
     fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])
+    fontSize = fontSize*scale
     font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
     paintText = skia.Paint(Color=fontColor, StrokeWidth=text_line_width)
     canvas.drawSimpleText(text, position[0], position[1], font, paintText)

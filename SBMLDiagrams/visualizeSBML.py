@@ -187,7 +187,8 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
 
 def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
     output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', \
-    showBezierHandles = False, newStyleClass = styleSBML.Style(), showImage = True, save = True):
+    showBezierHandles = False, showReactionIds = False, newStyleClass = styleSBML.Style(),\
+    showImage = True, save = True):
 
     """
     Plot from an sbml string to a PNG/JPG/PDF file.
@@ -212,6 +213,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         straight lines even set as 'bezier' because they are set as default center and handle positions.
 
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
+
+        showReactionIds: bool-show the reaction ids (True) or not (False as default).
 
         newStyleClass: color style class.
 
@@ -698,10 +701,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             handles[j] = [(handles[j][0]-topLeftCorner[0])*scale, 
                             (handles[j][1]-topLeftCorner[1])*scale]
                         if drawArrow:
-                            drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
+                            drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
                                 center_position, handles, src_dimension, dst_dimension, mod_dimension,
                                 color_style.getReactionLineColor(), reaction_line_width*scale,
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
+                                show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
@@ -731,10 +735,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                             handles.append([dst_handle_x,dst_handle_y])
                         if drawArrow:
-                            drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
+                            drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
                                 center_position, handles, src_dimension, dst_dimension, mod_dimension,
                                 color_style.getReactionLineColor(), reaction_line_width*scale,
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
+                                show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
@@ -951,10 +956,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                         dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
                         handles.append([dst_handle_x,dst_handle_y])
                     if drawArrow:
-                        drawNetwork.addReaction(canvas, src_position, dst_position, mod_position,
+                        drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
                             color_style.getReactionLineColor(), reaction_line_width*scale,
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
+                            show_reaction_ids = showReactionIds,
                             reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
                     arrow_info.append(
                         [src_position, dst_position, mod_position, center_position, handles, src_dimension,
@@ -1217,7 +1223,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml"
+    filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1232,7 +1238,7 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
 
-    filename = "output.xml"
+    #filename = "output.xml"
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -1243,7 +1249,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        _draw(sbmlStr)
+        _draw(sbmlStr, showReactionIds=True)
         #_draw("abc")
 
 

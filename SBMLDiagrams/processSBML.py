@@ -1557,7 +1557,7 @@ class load:
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         txt_font_size_list =[] 
         for i in range(len(idx_list)):
-            txt_font_size_list.append(int(self.df[1].iloc[idx_list[i]]["txt_font_size"]))
+            txt_font_size_list.append(float(self.df[1].iloc[idx_list[i]]["txt_font_size"]))
 
         return txt_font_size_list
 
@@ -2145,7 +2145,7 @@ class load:
             self.setReactionDefaultCenterAndHandlePositions(id)
 
     def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output',\
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False):
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, showReactionIds = False):
 
         """
         Draw to a PNG/JPG/PDF file.
@@ -2171,6 +2171,8 @@ class load:
 
             showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
+            showReactionIds: bool-show the reaction ids (True) or not (False as default).
+
         Returns:
             The visualization info object containing the drawing information of the plot
     """
@@ -2178,7 +2180,7 @@ class load:
         sbmlStr = self.export()
         v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale,\
         fileFormat = fileFormat, output_fileName = output_fileName, complexShape = complexShape, \
-        reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, \
+        reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, showReactionIds = showReactionIds,\
         newStyleClass = self.color_style, showImage = True, save = True)
 
         return v_info
@@ -2238,7 +2240,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2249,7 +2251,7 @@ if __name__ == '__main__':
 
     #filename = "Jana_WolfGlycolysis.xml"
 
-    filename = "output.xml"
+    #filename = "output.xml"
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -2258,7 +2260,7 @@ if __name__ == '__main__':
 
 
     # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('node_grid.xlsx')
+    # writer = pd.ExcelWriter('mass_action_rxn.xlsx')
     # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
     # df_excel[1].to_excel(writer, sheet_name='NodeData')
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
@@ -2341,14 +2343,14 @@ if __name__ == '__main__':
     # print(df.getReactionArrowHeadSize("r_0"))
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    # #df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw()
+    # # #df.draw(reactionLineType='bezier', scale = 2.)
+    df.draw(showReactionIds = True)
        
 
     # print(df.getNetworkSize())
