@@ -59,7 +59,8 @@ COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
     FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE]
-
+#This is not supported by SBML
+COLUMN_NAME_df_text = [ID, TXTPOSITION, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 
 # DIR = os.path.dirname(os.path.abspath(__file__))
 # color_xls = pd.ExcelFile(os.path.join(DIR, 'colors.xlsx'))
@@ -1185,6 +1186,7 @@ class load:
         self.sbmlstr = sbmlstr
         self.df = _SBMLToDF(self.sbmlstr)
         self.color_style = styleSBML.Style()
+        self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
 
         if self.df == None:
            sys.exit("There is no valid information to process.")
@@ -1909,7 +1911,7 @@ class load:
         Args:  
             id: str-node id.
 
-            txt_font_size: float.
+            txt_font_size: float-node text font size.
         """
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size)
         return self.df
@@ -2061,6 +2063,45 @@ class load:
         self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
         return self.df
 
+    def setArbitraryText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
+        txt_line_width = 1., txt_font_size = 12.):
+        """
+        Set arbitray text onto canvas.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node text.
+
+            txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+            txt_line_width: float-node text line width.
+
+            txt_font_size: float-node text font size.
+            
+        """
+        self.df_text = editSBML._setArbitraryText(self.df_text, txt_str=txt_str, txt_position=txt_position, 
+        txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
+        txt_font_size=txt_font_size) 
+        
+        return self.df_text
+
+    def removeArbitraryText(self, txt_str):
+        """
+        Set arbitray text onto canvas.
+
+        Args:  
+            txt_str: str-the text content.
+            
+        """
+        self.df_text = editSBML._removeArbitraryText(self.df_text, txt_str=txt_str) 
+        
+        return self.df_text
+
+
     def export(self):
         """
         Write to an SBML string. 
@@ -2145,7 +2186,8 @@ class load:
             self.setReactionDefaultCenterAndHandlePositions(id)
 
     def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output',\
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, showReactionIds = False):
+    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, 
+    showReactionIds = False):
 
         """
         Draw to a PNG/JPG/PDF file.
@@ -2178,10 +2220,13 @@ class load:
     """
 
         sbmlStr = self.export()
-        v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, scale = scale,\
+        v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, 
+        scale = scale,\
         fileFormat = fileFormat, output_fileName = output_fileName, complexShape = complexShape, \
-        reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, showReactionIds = showReactionIds,\
-        newStyleClass = self.color_style, showImage = True, save = True)
+        reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
+        showReactionIds = showReactionIds,\
+        newStyleClass = self.color_style, showImage = True, save = True,\
+        df_text = self.df_text)
 
         return v_info
 
@@ -2278,6 +2323,7 @@ if __name__ == '__main__':
 
     # print(df.isFloatingNode("x_1"))
     # print(df.getNodePosition("x_1"))
+    # print(df.getNodePosition("x_0"))
     # print(df.getNodeSize("x_1"))
     # print(df.getNodeShape("x_1"))
     # print(df.getNodeTextPosition("x_1"))
@@ -2342,6 +2388,11 @@ if __name__ == '__main__':
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # print(df.getReactionArrowHeadSize("r_0"))
 
+    # df.setArbitraryText("test", [413,216])
+    # df.setArbitraryText("test1", [205,216], txt_font_color="red", 
+    # opacity= 0.5, txt_line_width=2, txt_font_size=13)
+    # df.removeArbitraryText("test")
+
 
     # sbmlStr_layout_render = df.export()
 
@@ -2350,7 +2401,7 @@ if __name__ == '__main__':
     # f.close()
 
     # # #df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(showReactionIds = True)
+    df.draw()
        
 
     # print(df.getNetworkSize())

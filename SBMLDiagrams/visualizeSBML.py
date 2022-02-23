@@ -9,6 +9,7 @@ Created on Mon Aug 23 13:25:34 2021
 
 import os
 import re
+from pandas import DataFrame
 import skia
 import simplesbml
 import libsbml
@@ -188,7 +189,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
 def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
     output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, newStyleClass = styleSBML.Style(),\
-    showImage = True, save = True):
+    showImage = True, save = True, df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text)):
 
     """
     Plot from an sbml string to a PNG/JPG/PDF file.
@@ -706,7 +707,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 color_style.getReactionLineColor(), reaction_line_width*scale,
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
-                                reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
+                                reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
+                                scale = scale)
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -740,7 +742,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 color_style.getReactionLineColor(), reaction_line_width*scale,
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
-                                reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
+                                reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
+                                scale = scale)
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -789,7 +792,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                     spec_border_width*scale, shapeIdx, complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													scale, fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale)
                                 id_list.append(temp_id)                    
                             else:
                                 for k in range(len(spec_render)):
@@ -815,7 +818,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                     spec_border_width*scale, shapeIdx, complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
-													scale, fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale)
                                 id_list.append(temp_id)
                     for j in range(numBoundaryNodes):
                         if temp_id == BoundaryNodes_ids[j]:
@@ -841,7 +844,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													scale,fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale)
                                 id_list.append(temp_id)
                             else:
                                 for k in range(len(spec_render)):
@@ -865,7 +868,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													scale, fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale)
                                 id_list.append(temp_id)
 
             else: # there is no layout information, assign position randomly and size as default
@@ -961,7 +964,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             color_style.getReactionLineColor(), reaction_line_width*scale,
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                             show_reaction_ids = showReactionIds,
-                            reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale])
+                            reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
+                            scale = scale)
                     arrow_info.append(
                         [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                          dst_dimension, mod_dimension,
@@ -981,7 +985,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
                                         shapeIdx, complex_shape=complexShape)
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
-                    text_line_width*scale, scale, fontSize = text_font_size*scale)
+                    text_line_width*scale, fontSize = text_font_size*scale)
                     floatingNodes_pos_dict['[' + temp_id + ']'] = position
                     floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
                     allNodes_pos_dict['[' + temp_id + ']'] = position
@@ -999,11 +1003,27 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     allNodes_pos_dict['[' + temp_id + ']'] = position
                     allNodes_dim_dict['[' + temp_id + ']'] = dimension
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
-                    text_line_width*scale, scale, fontSize = text_font_size*scale)
+                    text_line_width*scale, fontSize = text_font_size*scale)
 
         except Exception as e:
             print(e)
+
+        #add arbitrary text
+        if len(df_text) != 0:
+            for i in range(len(df_text)):
+                txt_content = df_text.iloc[i][processSBML.ID] 
+                txt_position = df_text.iloc[i][processSBML.TXTPOSITION]
+                txt_position = [(txt_position[0]-topLeftCorner[0])*scale,
+                (txt_position[1]-topLeftCorner[1])*scale]
+                txt_font_color = df_text.iloc[i][processSBML.TXTFONTCOLOR]
+                txt_line_width = df_text.iloc[i][processSBML.TXTLINEWIDTH]
+                txt_line_width = txt_line_width*scale
+                txt_font_size = df_text.iloc[i][processSBML.TXTFONTSIZE]
+                drawNetwork.addSimpleText(canvas, txt_content, txt_position, txt_font_color,
+                txt_line_width, txt_font_size) 
+        
         return floatingNodes_pos_dict, floatingNodes_dim_dict, allNodes_pos_dict, allNodes_dim_dict, edges, arrow_info, name_to_id
+    
 
     baseImageArray = []
     if fileFormat == "PNG" or fileFormat == "JPEG":
@@ -1249,7 +1269,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        _draw(sbmlStr, showReactionIds=True)
+        _draw(sbmlStr, showReactionIds=True, scale = 2)
         #_draw("abc")
 
 

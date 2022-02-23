@@ -519,7 +519,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center_position, handles,
                 rct_dimension, prd_dimension, mod_dimension, reaction_line_color, reaction_line_width, 
                 reaction_line_type = 'bezier', show_bezier_handles = False, show_reaction_ids = False,
-                reaction_arrow_head_size = [2., 2.]):
+                reaction_arrow_head_size = [2., 2.], scale = 1.):
     
     """
     Add a reaction.
@@ -688,7 +688,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
     arrow_s1 = reaction_arrow_head_size[1] #height of the arrow
     if show_reaction_ids:
         addSimpleText(canvas, rxn_id, center_position, reaction_line_color, 
-        text_line_width = 1, scale = 1., fontSize = 12.)
+        text_line_width = 1, fontSize = 12.*scale)
     if lineType == 'bezier':
         center_handle_position = handles[0]
         center_handle_position_prd = [2*arcCenter[0]-center_handle_position[0],2*arcCenter[1]-center_handle_position[1]]
@@ -841,8 +841,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         2*modifier_linewidth, 2*modifier_linewidth,
                         modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
 
-def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, scale, 
-fontSize = 12.):
+def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, fontSize = 12.):
 
     """
     Add the text.
@@ -863,7 +862,6 @@ fontSize = 12.):
     """ 
 
     id = node_id 
-    fontSize = scale*fontSize
     position = [position[0], (position[1]-dimension[1]*0.1)]
     #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
     stop_flag_1 = False
@@ -885,9 +883,8 @@ fontSize = 12.):
             fontSize = fontSize - 1.
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 
-def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, scale=1., fontSize = 12):
+def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, fontSize = 12):
     fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])
-    fontSize = fontSize*scale
     font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
     paintText = skia.Paint(Color=fontColor, StrokeWidth=text_line_width)
     canvas.drawSimpleText(text, position[0], position[1], font, paintText)
