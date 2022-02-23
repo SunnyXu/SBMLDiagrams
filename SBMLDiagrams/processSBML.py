@@ -2063,10 +2063,10 @@ class load:
         self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
         return self.df
 
-    def setArbitraryText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
+    def addArbitraryText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
         txt_line_width = 1., txt_font_size = 12.):
         """
-        Set arbitray text onto canvas.
+        Add arbitray text onto canvas.
 
         Args:  
             txt_str: str-the text content.
@@ -2083,7 +2083,7 @@ class load:
             txt_font_size: float-node text font size.
             
         """
-        self.df_text = editSBML._setArbitraryText(self.df_text, txt_str=txt_str, txt_position=txt_position, 
+        self.df_text = editSBML._addArbitraryText(self.df_text, txt_str=txt_str, txt_position=txt_position, 
         txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
         txt_font_size=txt_font_size) 
         
@@ -2388,8 +2388,8 @@ if __name__ == '__main__':
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # print(df.getReactionArrowHeadSize("r_0"))
 
-    # df.setArbitraryText("test", [413,216])
-    # df.setArbitraryText("test1", [205,216], txt_font_color="red", 
+    # df.addArbitraryText("test", [413,216])
+    # df.addArbitraryText("test1", [205,216], txt_font_color="red", 
     # opacity= 0.5, txt_line_width=2, txt_font_size=13)
     # df.removeArbitraryText("test")
 

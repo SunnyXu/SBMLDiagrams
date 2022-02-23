@@ -1017,6 +1017,24 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNetworkBottomRightCorner() == [463.0, 246.0])
     self.assertTrue(self.df.getNetworkSize() == [258, 30])
 
+  def testArbitraryText(self):
+    # set reaction one by one
+    if IGNORE_TEST:
+      return
+
+    txt_content = "test1"
+    txt_position = [205,216]
+    txt_font_color="black" 
+    opacity= 1
+    txt_line_width=2.
+    txt_font_size=13.
+
+    self.df.addArbitraryText(txt_content, txt_position, txt_font_color, 
+    opacity, txt_line_width, txt_font_size)
+    self.df.removeArbitraryText(txt_content)
+
+    with self.assertRaises(Exception):
+      self.df.removeArbitraryText("text")
 
 if __name__ == '__main__':
   unittest.main()
