@@ -526,10 +526,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(hex_to_rgb(color_list[k][1]))
                                 spec_border_width = group.getStrokeWidth()
-                                name_list = []
+                                #name_list = []
+                                name = ''
                                 for element in group.getListOfElements():
                                     name = element.getElementName()
-                                    name_list.append(name)
+                                    #name_list.append(name)
                                     try:
                                         NumRenderpoints = element.getListOfElements().getNumRenderPoints()
                                     except:
@@ -1257,7 +1258,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
+    #filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1272,7 +1273,7 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
 
-    #filename = "output.xml"
+    filename = "output.xml"
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -1284,6 +1285,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr, showReversible=True)
+        _draw(sbmlStr)
 
 

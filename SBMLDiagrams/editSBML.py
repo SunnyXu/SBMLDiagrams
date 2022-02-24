@@ -272,7 +272,7 @@ def _setNodeShapeIdx(df, id, shape_idx):
 
         id: int-node id.
 
-        shape_idx: int-1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+        shape_idx: int-0:text only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
 
     Returns:
         df_temp: DataFrame-information after updates. 

@@ -428,10 +428,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if color_list[k][0] == group.getStroke():
                                     spec_border_color = hex_to_rgb(color_list[k][1])
                             spec_border_width = group.getStrokeWidth()
-                            name_list = []
+                            #name_list = []
+                            name = ''
                             for element in group.getListOfElements():
                                 name = element.getElementName()
-                                name_list.append(name)
+                                #name_list.append(name)
                                 try:
                                     NumRenderpoints = element.getListOfElements().getNumRenderPoints()
                                 except:
@@ -1388,7 +1389,7 @@ class load:
 
             (shape_idx, shape): tuple.
             
-            shape_idx: int-1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+            shape_idx: int-0:text only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
             
             shape: str.
         """
@@ -1848,7 +1849,7 @@ class load:
         Args:  
             id: str-node id.
 
-            shape_idx: int-1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+            shape_idx: int-0:text only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
         """
         self.df = editSBML._setNodeShapeIdx(self.df, id, shape_idx)
         return self.df
@@ -2343,7 +2344,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2354,7 +2355,6 @@ if __name__ == '__main__':
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
-    filename = "Sauro1-J1.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2368,9 +2368,9 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    #df = load(sbmlStr)
+    df = load(sbmlStr)
     #df = load("dfgdg")
-    la = load(sbmlStr)
+    #la = load(sbmlStr)
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2413,24 +2413,18 @@ if __name__ == '__main__':
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
     # df.setFloatingBoundaryNode("x_1", True)
-    # print(df.getNodePosition("x_1"))
     # df.setNodePosition("x_1", [100.0, 100.0])
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
-    # print(df.getNodePosition("x_1"))
-    # print(df.getNodePosition("x_0"))
     # df.setNodeSize("x_1", [50.0, 30.0])
-    # df.setNodeShapeIdx("x_1", 1)
+    # df.setNodeShapeIdx("x_1", 0)
     # df.setNodeTextPosition("x_1", [413., 216.])
-    # print(df.getNodeTextSize("x_1"))
     # df.setNodeTextSize("x_1", [100, 100])
-    # print(df.getNodeTextSize("x_1"))
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # df.setNodeBorderWidth("x_1", 2.)
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
     # df.setNodeTextLineWidth("x_1", 1.)
     # df.setNodeTextFontSize("x_1", 15)
-    # print(df.getNodeTextFontSize("x_1"))
 
     # df.setReactionFillColor("r_0", [91, 176, 253])
     # df.setReactionFillColor("r_0", [0, 0, 0])
@@ -2438,16 +2432,9 @@ if __name__ == '__main__':
     # df._setBezierReactionType("r_0", True)
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
     # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
-    # print("center_position after:", df.getReactionCenterPosition("r_0"))
-    # print("handle_position after:", df.getReactionHandlePositions("r_0"))
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
-    # print("center_position after:", df.getReactionCenterPosition("r_0"))
-    # print("handle_position after:", df.getReactionHandlePositions("r_0"))
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
-    # print(df.getReactionArrowHeadSize("r_0"))
-    #print(df.getReactionDash("r_0"))
     # df.setReactionDash("r_0", [6,6])
-    # print(df.getReactionDash("r_0"))
 
     # df.addArbitraryText("test", [413,216])
     # df.addArbitraryText("test1", [205,216], txt_font_color="red", 
@@ -2461,8 +2448,8 @@ if __name__ == '__main__':
     # f.write(sbmlStr_layout_render)
     # f.close()
 
-    # # # # #df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw()
+    # df.draw(reactionLineType='bezier', scale = 2.)
+    df.draw()
        
 
     # print(df.getNetworkSize())
@@ -2475,13 +2462,13 @@ if __name__ == '__main__':
     #     visualizeSBML._draw(sbmlStr_layout_render, fileFormat='PNG')
 
 
-    la.setNodeAndTextPosition('S1', [200, 200])
-    la.setNodeAndTextPosition('S2', [300, 260])
-    la.setNodeAndTextPosition('S3', [400, 200])
-    #la.setNodeAndTextPosition('S4', [500, 200])
-    #la.setNodeAndTextPosition('S5', [600, 200])
-    la.setReactionDefaultCenterAndHandlePositions('J1')
-    #la.setReactionDefaultCenterAndHandlePositions('J2')
-    #la.setReactionDefaultCenterAndHandlePositions('J3')
-    la.draw(reactionLineType='bezier', showReversible=False)
+    # la.setNodeAndTextPosition('S1', [200, 200])
+    # la.setNodeAndTextPosition('S2', [300, 260])
+    # la.setNodeAndTextPosition('S3', [400, 200])
+    # #la.setNodeAndTextPosition('S4', [500, 200])
+    # #la.setNodeAndTextPosition('S5', [600, 200])
+    # la.setReactionDefaultCenterAndHandlePositions('J1')
+    # #la.setReactionDefaultCenterAndHandlePositions('J2')
+    # #la.setReactionDefaultCenterAndHandlePositions('J3')
+    # la.draw(reactionLineType='bezier', showReversible=False)
 

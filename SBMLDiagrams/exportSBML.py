@@ -15,6 +15,8 @@ import pandas as pd
 import math
 import sys
 
+import scipy as sp
+
 def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
     """
@@ -752,7 +754,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             style.addType("SPECIESGLYPH")
             style.addId(spec_id)
             #Pls note that shapeIdx is different from Coyote
-            if spec_shapeIdx == 2: #ellipse
+            if spec_shapeIdx == 0: #text_only
+                pass
+
+            elif spec_shapeIdx == 2: #ellipse
                 ellipse = style.getGroup().createEllipse()
                 ellipse.setCenter2D(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
                 ellipse.setRadii(libsbml.RelAbsVector(0, 100), libsbml.RelAbsVector(0, 100))
