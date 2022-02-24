@@ -519,7 +519,8 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center_position, handles,
                 rct_dimension, prd_dimension, mod_dimension, reaction_line_color, reaction_line_width, 
                 reaction_line_type = 'bezier', show_bezier_handles = False, show_reaction_ids = False,
-                reaction_arrow_head_size = [2., 2.], scale = 1., reaction_dash = []):
+                reaction_arrow_head_size = [2., 2.], scale = 1., reaction_dash = [], reverse = False,
+                showReversible = False):
     
     """
     Add a reaction.
@@ -713,9 +714,46 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
             try:
                 #to calculate the end point of the arrow called arrow_end_pt
                 arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
-                if arrow_end_pt == None:
-                    arrow_end_pt = _cross_point(center_position, c1, s1) 
-                    #rct_handle_position could be inside the node
+                line_end_pt = _cross_point(rct_handle_position, 
+                [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
+                [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
+                if arrow_end_pt == None: #rct_handle_position could be inside the node
+                    rct_handle_position = center_position
+                    arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
+                    line_end_pt = _cross_point(rct_handle_position, 
+                    [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
+                    [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
+                if reverse and showReversible:
+                    #draw the arrow:
+                    points = [arrow_end_pt]
+                    distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
+                    if distance != 0:
+                        pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-rct_handle_position[1])*arrow_s1/distance
+                        pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-rct_handle_position[0])*arrow_s1/distance
+                        pts_y_l = pts_y_m + (arrow_end_pt[0]-rct_handle_position[0])*.5*arrow_s2/distance
+                        pts_x_l = pts_x_m - (arrow_end_pt[1]-rct_handle_position[1])*.5*arrow_s2/distance
+                        points.append([pts_x_l,pts_y_l])
+                        points.append([pts_x_m, pts_y_m])
+                        pts_y_r = pts_y_m - (arrow_end_pt[0]-rct_handle_position[0])*.5*arrow_s2/distance
+                        pts_x_r = pts_x_m + (arrow_end_pt[1]-rct_handle_position[1])*.5*arrow_s2/distance
+                        points.append([pts_x_r,pts_y_r])
+                    else:
+                        distance = math.sqrt((arrow_end_pt[0]-center_position[0])**2 + (arrow_end_pt[1]-center_position[1])**2)
+                        pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-center_position[1])*arrow_s1/distance
+                        pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-center_position[0])*arrow_s1/distance
+                        pts_y_l = pts_y_m + (arrow_end_pt[0]-center_position[0])*.5*arrow_s2/distance
+                        pts_x_l = pts_x_m - (arrow_end_pt[1]-center_position[1])*.5*arrow_s2/distance
+                        points.append([pts_x_l,pts_y_l])
+                        points.append([pts_x_m, pts_y_m])
+                        pts_y_r = pts_y_m - (arrow_end_pt[0]-center_position[0])*.5*arrow_s2/distance
+                        pts_x_r = pts_x_m + (arrow_end_pt[1]-center_position[1])*.5*arrow_s2/distance
+                        points.append([pts_x_r,pts_y_r])
+
+                    _drawArrow(canvas, points, lineColor)
+
+                if reverse and line_end_pt != None:
+                    pts.append(line_end_pt)
+                    _drawBezier(pts, lineColor, linewidth)
                 if arrow_end_pt != None:
                     pts.append(arrow_end_pt)
                     _drawBezier(pts, lineColor, linewidth)
@@ -766,8 +804,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     pts_y_r = pts_y_m - (arrow_head_pt[0]-center_position[0])*.5*arrow_s2/distance
                     pts_x_r = pts_x_m + (arrow_head_pt[1]-center_position[1])*.5*arrow_s2/distance
                     points.append([pts_x_r,pts_y_r])
-
                 _drawArrow(canvas, points, lineColor)
+
                 if line_head_pt != None:
                     pts.append(line_head_pt)
                     _drawBezier(pts, lineColor, linewidth)
@@ -783,14 +821,39 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
             c1 = rct_position[i] 
             s1 = rct_dimension[i]
             try:
-                #to calculate the end point of the arrow called arrow_end_pt
+                #to calculate the head point of the arrow called arrow_end_pt
                 arrow_end_pt = _cross_point(arcCenter, c1, s1) 
+                line_end_pt = _cross_point(arcCenter, 
+                [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
+                [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
                 if arrow_end_pt == None:
                     #arcCenter is inside the node
-                    arrow_end_pt = [c1[0]+.5*s1[0],c1[1]+.5*s1[1]]
+                    arrow_end_pt = [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
+                    line_end_pt = _cross_point(arcCenter, 
+                    [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
+                    [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
+                if reverse and showReversible:    
+                    #draw the arrow:
+                    points = [arrow_end_pt]
+                    distance = math.sqrt((arrow_end_pt[0]-arcCenter[0])**2 + (arrow_end_pt[1]-arcCenter[1])**2)
+                    pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-arcCenter[1])*arrow_s1/distance
+                    pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-arcCenter[0])*arrow_s1/distance
+                    pts_y_l = pts_y_m + (arrow_end_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                    pts_x_l = pts_x_m - (arrow_end_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                    points.append([pts_x_l,pts_y_l])
+                    points.append([pts_x_m, pts_y_m])
+                    pts_y_r = pts_y_m - (arrow_end_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                    pts_x_r = pts_x_m + (arrow_end_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                    points.append([pts_x_r,pts_y_r])
+                    _drawArrow(canvas, points, lineColor)
             except:
                 pass
-            _drawLine(canvas, arrow_end_pt[0], arrow_end_pt[1], arcCenter[0], arcCenter[1], lineColor, linewidth)
+            if reverse and line_end_pt != None:
+                _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
+                lineColor, linewidth)
+            else: 
+                _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_end_pt[0], arrow_end_pt[1], 
+                lineColor, linewidth)
         for i in range (nProducts):
             c2 = prd_position[i] 
             s2 = prd_dimension[i]

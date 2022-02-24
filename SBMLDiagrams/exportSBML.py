@@ -54,7 +54,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         df_NodeData = df[1]
         df_ReactionData = df[2]
 
-    isReversible = True
+    #isReversible = False
     numNodes = len(df_NodeData)
     numReactions = len(df_ReactionData)
 
@@ -145,6 +145,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         # create reactions:
         for i in range(numReactions):
             reaction_id = df_ReactionData.iloc[i]['id']
+            rxn_rev = bool(df_ReactionData.iloc[i]['rxn_reversible'])
+            isReversible = rxn_rev
             rct = [] # id list of the rcts
             prd = []
             mod = []

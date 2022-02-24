@@ -189,7 +189,8 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
 def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
     output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, newStyleClass = styleSBML.Style(),\
-    showImage = True, save = True, df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text)):
+    showImage = True, save = True, df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), 
+    showReversible = False):
 
     """
     Plot from an sbml string to a PNG/JPG/PDF file.
@@ -309,6 +310,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                         comp_position_list.append([pos_x,pos_y])
                         
                     reaction_id_list = []
+                    reaction_rev_list = []
                     reaction_center_list = []
                     kinetics_list = []
                     #rct_specGlyph_list = []
@@ -327,7 +329,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             center_y = segment.getStart().getYOffset()
                             reaction_center_list.append([center_x, center_y])
                         reaction_id = reactionGlyph.getReactionId()
+                        reaction = model_layout.getReaction(reaction_id)
+                        rev = reaction.getReversible()
                         reaction_id_list.append(reaction_id)
+                        reaction_rev_list.append(rev)
                         reaction = model_layout.getReaction(reaction_id)
                         kinetics = reaction.getKineticLaw().getFormula()
                         kinetics_list.append(kinetics)
@@ -636,6 +641,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     src_handle = []
                     dst_handle = []
                     temp_id = reaction_id_list[i]
+                    rxn_rev = reaction_rev_list[i]
                     kinetics = kinetics_list[i]
                     #rct_num = len(rct_specGlyph_list[i])
                     #prd_num = len(prd_specGlyph_list[i])
@@ -714,7 +720,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                                scale = scale, reaction_dash = reaction_dash)
+                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -749,7 +755,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                                scale = scale, reaction_dash = reaction_dash)
+                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -914,6 +920,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     dst_dimension = []
                     mod_dimension = []
                     temp_id = Rxns_ids[i]
+                    reaction = model_layout.getReaction(temp_id)
+                    rxn_rev = reaction.getReversible()
                     kinetics = model.getRateLaw(i)
                     rct_num = model.getNumReactants(i)
                     prd_num = model.getNumProducts(i)
@@ -971,7 +979,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                             show_reaction_ids = showReactionIds,
                             reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                            scale = scale, reaction_dash = reaction_dash)
+                            scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
                     arrow_info.append(
                         [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                          dst_dimension, mod_dimension,
@@ -1275,7 +1283,7 @@ if __name__ == '__main__':
     if len(sbmlStr) == 0:
         print("empty sbml")
     else:
-        _draw(sbmlStr, showReactionIds=True, scale = 2)
-        #_draw("abc")
+        #_draw(sbmlStr, showReactionIds=True)
+        _draw(sbmlStr, showReversible=True)
 
 

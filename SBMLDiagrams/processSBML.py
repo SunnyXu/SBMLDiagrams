@@ -53,13 +53,14 @@ HANDLES = 'handles'
 BEZIER = 'bezier'
 ARROWHEADSIZE = 'arrow_head_size'
 RXNDASH = "rxn_dash"
+RXNREV = "rxn_reversible"
 COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
     POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH]
 COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
     CONCENTRATION, POSITION, SIZE, SHAPEIDX, TXTPOSITION, TXTSIZE, \
     FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
-    FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH]
+    FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV]
 #This is not supported by SBML
 COLUMN_NAME_df_text = [ID, TXTPOSITION, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 
@@ -209,6 +210,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     
 
                 reaction_id_list = []
+                reaction_rev_list = []
                 reaction_center_list = []
                 kinetics_list = []
                 #rct_specGlyph_list = []
@@ -233,6 +235,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     reaction_id = reactionGlyph.getReactionId()
                     reaction_id_list.append(reaction_id)
                     reaction = model_layout.getReaction(reaction_id)
+                    rev = reaction.getReversible()
+                    reaction_rev_list.append(rev)
                     kinetics = reaction.getKineticLaw().getFormula()
                     kinetics_list.append(kinetics)
                     
@@ -757,7 +761,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 df_NodeData = pd.concat([df_NodeData,\
                                     pd.DataFrame(NodeData_row_dct)], ignore_index=True)
     
-
             for i in range (numReactionGlyphs):
                 src_idx_list = []
                 src_position = []
@@ -771,6 +774,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 src_handle = []
                 dst_handle = []
                 temp_id = reaction_id_list[i]
+                rxn_rev = reaction_rev_list[i]
                 kinetics = kinetics_list[i]
                 rct_num = len(rct_specGlyph_handle_list[i])
                 prd_num = len(prd_specGlyph_handle_list[i])
@@ -869,6 +873,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         ReactionData_row_dct[BEZIER].append('FALSE')
                     ReactionData_row_dct[ARROWHEADSIZE].append(reaction_arrow_head_size)
                     ReactionData_row_dct[RXNDASH].append(reaction_dash)
+                    ReactionData_row_dct[RXNREV].append(rxn_rev)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -920,6 +925,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         ReactionData_row_dct[BEZIER].append('FALSE')
                     ReactionData_row_dct[ARROWHEADSIZE].append(reaction_arrow_head_size)
                     ReactionData_row_dct[RXNDASH].append(reaction_dash)
+                    ReactionData_row_dct[RXNREV].append(rxn_rev)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -933,7 +939,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             pd.DataFrame(ReactionData_row_dct)], ignore_index=True)
 
         else: # there is no layout information, assign position randomly and size as default
-    
             comp_id_list = Comps_ids
             nodeIdx_temp = 0 #to track the node index    
             for i in range(numComps):
@@ -1094,6 +1099,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 dst_dimension = []
                 mod_dimension = []
                 temp_id = Rxns_ids[i]
+                reaction = model_layout.getReaction(temp_id)
+                rxn_rev = reaction.getReversible()
                 kinetics = model.getRateLaw(i)
                 rct_num = model.getNumReactants(i)
                 prd_num = model.getNumProducts(i)
@@ -1172,6 +1179,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[BEZIER].append('FALSE')
                 ReactionData_row_dct[ARROWHEADSIZE].append(reaction_arrow_head_size)
                 ReactionData_row_dct[RXNDASH].append(reaction_dash)
+                ReactionData_row_dct[RXNREV].append(rxn_rev)
                 # for j in range(len(COLUMN_NAME_df_ReactionData)):
                 #     try: 
                 #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -2235,7 +2243,7 @@ class load:
 
     def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output',\
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, 
-    showReactionIds = False):
+    showReactionIds = False, showReversible = False):
 
         """
         Draw to a PNG/JPG/PDF file.
@@ -2263,6 +2271,8 @@ class load:
 
             showReactionIds: bool-show the reaction ids (True) or not (False as default).
 
+            showReversible: bool-show the reaction reversible (True) or not (False as default).
+
         Returns:
             The visualization info object containing the drawing information of the plot
     """
@@ -2272,7 +2282,7 @@ class load:
         scale = scale,\
         fileFormat = fileFormat, output_fileName = output_fileName, complexShape = complexShape, \
         reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
-        showReactionIds = showReactionIds,\
+        showReactionIds = showReactionIds, showReversible = showReversible,\
         newStyleClass = self.color_style, showImage = True, save = True,\
         df_text = self.df_text)
 
@@ -2333,7 +2343,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2343,9 +2353,8 @@ if __name__ == '__main__':
     #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
-
-    # filename = "output.xml"
-
+    #filename = "output.xml"
+    filename = "Sauro1-J1.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2359,9 +2368,9 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    df = load(sbmlStr)
+    #df = load(sbmlStr)
     #df = load("dfgdg")
-    #la = load(sbmlStr)
+    la = load(sbmlStr)
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2437,8 +2446,8 @@ if __name__ == '__main__':
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # print(df.getReactionArrowHeadSize("r_0"))
     #print(df.getReactionDash("r_0"))
-    df.setReactionDash("r_0", [6,6])
-    print(df.getReactionDash("r_0"))
+    # df.setReactionDash("r_0", [6,6])
+    # print(df.getReactionDash("r_0"))
 
     # df.addArbitraryText("test", [413,216])
     # df.addArbitraryText("test1", [205,216], txt_font_color="red", 
@@ -2446,13 +2455,13 @@ if __name__ == '__main__':
     # df.removeArbitraryText("test")
 
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    # # # #df.draw(reactionLineType='bezier', scale = 2.)
+    # # # # #df.draw(reactionLineType='bezier', scale = 2.)
     # df.draw()
        
 
@@ -2466,5 +2475,13 @@ if __name__ == '__main__':
     #     visualizeSBML._draw(sbmlStr_layout_render, fileFormat='PNG')
 
 
-
+    la.setNodeAndTextPosition('S1', [200, 200])
+    la.setNodeAndTextPosition('S2', [300, 260])
+    la.setNodeAndTextPosition('S3', [400, 200])
+    #la.setNodeAndTextPosition('S4', [500, 200])
+    #la.setNodeAndTextPosition('S5', [600, 200])
+    la.setReactionDefaultCenterAndHandlePositions('J1')
+    #la.setReactionDefaultCenterAndHandlePositions('J2')
+    #la.setReactionDefaultCenterAndHandlePositions('J3')
+    la.draw(reactionLineType='bezier', showReversible=False)
 
