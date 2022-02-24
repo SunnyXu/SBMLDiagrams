@@ -15,8 +15,6 @@ import pandas as pd
 import math
 import sys
 
-import scipy as sp
-
 def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
     """
