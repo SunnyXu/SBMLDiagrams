@@ -653,6 +653,7 @@ class TestImportSBML(unittest.TestCase):
 
   def testReaction4(self):
     # Test column 'sources' 'targets' 'modifiers' 'fill color' 'center_position' 'handles' 
+    # 'arrow_head_size' 'rxn_dash'
     # of df_ReactionData are lists
     if IGNORE_TEST:
       return    
@@ -663,6 +664,8 @@ class TestImportSBML(unittest.TestCase):
       list_reaction += self.df_ReactionData.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction += self.df_ReactionData.iloc[:,i].tolist()
+    for i in range(12,14):
+      list_reaction += self.df_ReactionData.iloc[:,i].tolist()
     test = all(isinstance(item, list) for item in list_reaction)
     list_reaction_feedback = []
     for i in range(3,5):
@@ -670,6 +673,8 @@ class TestImportSBML(unittest.TestCase):
     for i in range(6,8):
       list_reaction_feedback += self.df_ReactionData_feedback.iloc[:,i].tolist()
     for i in range(9,11):
+      list_reaction_feedback += self.df_ReactionData_feedback.iloc[:,i].tolist()
+    for i in range(12,14):
       list_reaction_feedback += self.df_ReactionData_feedback.iloc[:,i].tolist()
     test_feedback = all(isinstance(item, list) for item in list_reaction_feedback)
     list_reaction_LinearChain = []
@@ -679,6 +684,8 @@ class TestImportSBML(unittest.TestCase):
       list_reaction_LinearChain += self.df_ReactionData_LinearChain.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_LinearChain += self.df_ReactionData_LinearChain.iloc[:,i].tolist()
+    for i in range(12,14):
+      list_reaction_LinearChain += self.df_ReactionData_LinearChain.iloc[:,i].tolist()
     test_LinearChain = all(isinstance(item, list) for item in list_reaction_LinearChain)
     list_reaction_test_no_comp = []
     for i in range(3,5):
@@ -686,6 +693,8 @@ class TestImportSBML(unittest.TestCase):
     for i in range(6,8):
       list_reaction_test_no_comp += self.df_ReactionData_test_no_comp.iloc[:,i].tolist()
     for i in range(9,11):
+      list_reaction_test_no_comp += self.df_ReactionData_test_no_comp.iloc[:,i].tolist()
+    for i in range(12,14):
       list_reaction_test_no_comp += self.df_ReactionData_test_no_comp.iloc[:,i].tolist()
     test_no_comp = all(isinstance(item, list) for item in list_reaction_test_no_comp)
     list_reaction_test_comp = []
@@ -695,6 +704,8 @@ class TestImportSBML(unittest.TestCase):
       list_reaction_test_comp += self.df_ReactionData_test_comp.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_test_comp += self.df_ReactionData_test_comp.iloc[:,i].tolist()
+    for i in range(12,14):
+      list_reaction_test_comp += self.df_ReactionData_test_comp.iloc[:,i].tolist()
     test_comp = all(isinstance(item, list) for item in list_reaction_test_comp)
     list_reaction_test_modifier = []
     for i in range(3,5):
@@ -702,6 +713,8 @@ class TestImportSBML(unittest.TestCase):
     for i in range(6,8):
       list_reaction_test_modifier += self.df_ReactionData_test_modifier.iloc[:,i].tolist()
     for i in range(9,11):
+      list_reaction_test_modifier += self.df_ReactionData_test_modifier.iloc[:,i].tolist()
+    for i in range(12,14):
       list_reaction_test_modifier += self.df_ReactionData_test_modifier.iloc[:,i].tolist()
     test_modifier = all(isinstance(item, list) for item in list_reaction_test_modifier)
     list_reaction_node_grid = []
@@ -711,6 +724,8 @@ class TestImportSBML(unittest.TestCase):
       list_reaction_node_grid += self.df_ReactionData_node_grid.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_node_grid += self.df_ReactionData_node_grid.iloc[:,i].tolist()
+    for i in range(12,14):
+      list_reaction_node_grid += self.df_ReactionData_node_grid.iloc[:,i].tolist()
     test_node_grid = all(isinstance(item, list) for item in list_reaction_node_grid)
     list_reaction_mass_action_rxn = []
     for i in range(3,5):
@@ -719,7 +734,9 @@ class TestImportSBML(unittest.TestCase):
       list_reaction_mass_action_rxn += self.df_ReactionData_mass_action_rxn.iloc[:,i].tolist()
     for i in range(9,11):
       list_reaction_mass_action_rxn += self.df_ReactionData_mass_action_rxn.iloc[:,i].tolist()
-    test_mass_action_rxn = all(isinstance(item, list) for item in list_reaction_mass_action_rxn)
+    for i in range(12,14):
+      list_reaction_mass_action_rxn += self.df_ReactionData_mass_action_rxn.iloc[:,i].tolist()
+    test_mass_action = all(isinstance(item, list) for item in list_reaction_mass_action_rxn)
     
     self.assertTrue(test)
     self.assertTrue(test_feedback)
@@ -728,7 +745,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(test_comp)
     self.assertTrue(test_modifier)
     self.assertTrue(test_node_grid)
-    self.assertTrue(test_mass_action_rxn)
+    self.assertTrue(test_mass_action)
 
   def testReaction5(self):
     # Test column 'id' 'rate_law' and 'bezier'of df_ReactionData are strings
@@ -874,6 +891,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == 3.)
     self.assertTrue(self.df._isBezierReactionType("r_0")[0] == True)
     self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0] == [12., 15.])
+    self.assertTrue(self.df.getReactionDash("r_0")[0] == [])
 
   def testSetCompartment(self):
     # Test all the get functions about compartment
@@ -969,6 +987,7 @@ class TestImportSBML(unittest.TestCase):
     line_thickness = 2.
     bezier = False
     arrowHeadSize = [20., 20.]
+    rxn_dash = [5, 10]
 
     self.df.setReactionCenterPosition("r_0", center_pos)
     self.df.setReactionHandlePositions("r_0", handles)
@@ -976,6 +995,7 @@ class TestImportSBML(unittest.TestCase):
     self.df.setReactionLineThickness("r_0", line_thickness)
     self.df._setBezierReactionType("r_0", bezier)
     self.df.setReactionArrowHeadSize("r_0", arrowHeadSize)
+    self.df.setReactionDash("r_0", rxn_dash)
 
     self.assertTrue(self.df.getReactionCenterPosition("r_0")[0] == center_pos)
     self.assertTrue(self.df.getReactionHandlePositions("r_0")[0] == handles)
@@ -984,7 +1004,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == line_thickness)
     self.assertTrue(self.df._isBezierReactionType("r_0")[0] == bezier)
     self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0] == arrowHeadSize)
-
+    self.assertTrue(self.df.getReactionDash("r_0")[0] == rxn_dash)
   
   def testSetReactionDefaultCenterAndHandlePositions(self):
     # Test the function setReactionDefaultCenterAndHandlePositions
