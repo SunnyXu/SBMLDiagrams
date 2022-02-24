@@ -555,6 +555,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             elif 'REACTIONGLYPH' in typeList:
                                 if group.isSetEndHead():
                                     temp_id = group.getEndHead()
+                                reaction_dash = []
                                 if group.isSetDashArray():
                                     reaction_num_dash = group.getNumDashes()
                                     for num in range(reaction_num_dash):
@@ -578,7 +579,6 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 text_font_size = float(group.getFontSize().getCoordinate())
                                 text_render.append([idList,color_style.getTextLineColor(),
 								text_line_width, text_font_size])
-
         #try: 
             model = simplesbml.loadSBMLStr(sbmlStr)
             numFloatingNodes  = model.getNumFloatingSpecies()

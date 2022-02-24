@@ -456,6 +456,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         elif 'REACTIONGLYPH' in typeList:
                             if group.isSetEndHead():
                                 temp_id = group.getEndHead() 
+                            reaction_dash = []
                             if group.isSetDashArray():
                                 reaction_num_dash = group.getNumDashes()
                                 for num in range(reaction_num_dash):
@@ -2355,6 +2356,7 @@ if __name__ == '__main__':
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
+    #filename = "Sauro1.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2368,7 +2370,7 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    df = load(sbmlStr)
+    #df = load(sbmlStr)
     #df = load("dfgdg")
     #la = load(sbmlStr)
 
@@ -2449,7 +2451,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw()
+    #df.draw()
        
 
     # print(df.getNetworkSize())
@@ -2463,12 +2465,23 @@ if __name__ == '__main__':
 
 
     # la.setNodeAndTextPosition('S1', [200, 200])
-    # la.setNodeAndTextPosition('S2', [300, 260])
+    # la.setNodeAndTextPosition('S2', [300, 300])
     # la.setNodeAndTextPosition('S3', [400, 200])
-    # #la.setNodeAndTextPosition('S4', [500, 200])
-    # #la.setNodeAndTextPosition('S5', [600, 200])
+    # la.setNodeAndTextPosition('S4', [500, 200])
+    # la.setNodeAndTextPosition('S5', [600, 200])
+    # la.setNodeTextPosition('S1', [200, 180])
+    # la.setNodeShapeIdx('S1', 2)
+    # la.setNodeSize('S1', [10, 10])
+    # la.setNodeShapeIdx('S2', 0)
+    # la.setNodeTextFontSize('S2', 20)
     # la.setReactionDefaultCenterAndHandlePositions('J1')
-    # #la.setReactionDefaultCenterAndHandlePositions('J2')
-    # #la.setReactionDefaultCenterAndHandlePositions('J3')
-    # la.draw(reactionLineType='bezier', showReversible=False)
+    # la.setReactionDefaultCenterAndHandlePositions('J2')
+    # la.setReactionDefaultCenterAndHandlePositions('J3')
+    # la.setReactionDash("J1", [5,5])
 
+    # la.draw(showReversible=True)
+
+    # sbmlStr_layout_render = la.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
