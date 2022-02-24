@@ -669,6 +669,35 @@ def _setReactionArrowHeadSize(df, id, size):
 
     return df_temp
 
+def _setReactionDash(df, id, dash):
+
+    """
+    Set the reaction dash information with a certain reaction id.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-reaction id.
+ 
+        dash: list - [] means solid; 
+            [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+            [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+            drawing a c-point line followed by a d-point gap.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_ReactionData_temp = df[2].copy()
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_ReactionData_temp.at[idx_list[i],"rxn_dash"] = dash
+    df_temp = (df[0], df[1], df_ReactionData_temp)
+
+    return df_temp
+
 def _addArbitraryText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
     txt_line_width = 1., txt_font_size = 12.):
     """

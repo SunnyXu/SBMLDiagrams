@@ -813,6 +813,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 except:
                     reaction_arrow_head_size = df_ReactionData.iloc[i]['arrow_head_size']
 
+                try:
+                    reaction_dash = list(df_ReactionData.iloc[i]['rxn_dash'][1:-1].split(","))
+                except:
+                    reaction_dash = list(df_ReactionData.iloc[i]['rxn_dash'])
+
                 color = rInfo.createColorDefinition()
                 color.setId("reaction_fill_color" + "_" + rxn_id)
                 color.setColorValue(reaction_fill_color_str)
@@ -820,6 +825,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 style = rInfo.createStyle("reactionStyle" + "_" + rxn_id)
                 style.getGroup().setStroke("reaction_fill_color" + "_" + rxn_id)
                 style.getGroup().setStrokeWidth(reaction_line_thickness)
+                if len(reaction_dash) != 0:
+                    for pt in range(len(reaction_dash)):
+                        try:
+                            style.getGroup().addDash(int(reaction_dash[pt]))
+                        except:
+                            pass
                 style.addType("REACTIONGLYPH SPECIESREFERENCEGLYPH")
                 style.addId(rxn_id)
 
@@ -856,25 +867,25 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 
-#     DIR = os.path.dirname(os.path.abspath(__file__))
-#     TEST_FOLDER = os.path.join(DIR, "initiate_excel_files")
+    DIR = os.path.dirname(os.path.abspath(__file__))
+    TEST_FOLDER = os.path.join(DIR, "initiate_excel_files")
 
 #     # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, 'CompartmentData.csv')) 
 #     # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
 #     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
 
-#     xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
-#     df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
-#     df_NodeData = pd.read_excel(xls, 'NodeData')
-#     df_ReactionData = pd.read_excel(xls, 'ReactionData')
+    xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
+    df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
+    df_NodeData = pd.read_excel(xls, 'NodeData')
+    df_ReactionData = pd.read_excel(xls, 'ReactionData')
 
-#     df = (df_CompartmentData, df_NodeData, df_ReactionData)
+    df = (df_CompartmentData, df_NodeData, df_ReactionData)
 
-#     sbmlStr_layout_render = _DFToSBML(df)
+    sbmlStr_layout_render = _DFToSBML(df)
 
-#     f = open("output.xml", "w")
-#     f.write(sbmlStr_layout_render)
-#     f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
         

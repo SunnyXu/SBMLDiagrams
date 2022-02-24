@@ -272,9 +272,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         comp_border_width = 2.0
         spec_border_width = 2.0
         reaction_line_width = 3.0
-        text_line_width = 1.
-        text_font_size = 12.
         reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5]
+        reaction_dash = []
+        text_line_width = 1.
+        text_font_size = 12.    
         edges = []
         id_to_name = defaultdict(lambda:"")
         name_to_id = defaultdict(lambda:"")
@@ -548,6 +549,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             elif 'REACTIONGLYPH' in typeList:
                                 if group.isSetEndHead():
                                     temp_id = group.getEndHead()
+                                if group.isSetDashArray():
+                                    reaction_num_dash = group.getNumDashes()
+                                    for num in range(reaction_num_dash):
+                                        reaction_dash.append(group.getDashByIndex(num))
                                 for k in range(len(id_arrowHeadSize)):
                                     if temp_id == id_arrowHeadSize[k][0]:
                                         arrowHeadSize = id_arrowHeadSize[k][1]
@@ -557,7 +562,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setReactionLineColor(hex_to_rgb(color_list[k][1]))
                                 reaction_line_width = group.getStrokeWidth()
                                 rxn_render.append([idList, color_style.getReactionLineColor(), 
-                                reaction_line_width, arrowHeadSize])
+                                reaction_line_width, arrowHeadSize, reaction_dash])
                             elif 'TEXTGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
@@ -689,6 +694,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 color_style.setReactionLineColor(rxn_render[j][1])
                             reaction_line_width = rxn_render[j][2]
                             reaction_arrow_head_size = rxn_render[j][3]
+                            reaction_dash = rxn_render[j][4]
                     
                     try: 
                         center_position = reaction_center_list[i]
@@ -708,7 +714,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                                scale = scale)
+                                scale = scale, reaction_dash = reaction_dash)
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -743,7 +749,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                                scale = scale)
+                                scale = scale, reaction_dash = reaction_dash)
                         arrow_info.append(
                             [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -965,7 +971,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                             show_reaction_ids = showReactionIds,
                             reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                            scale = scale)
+                            scale = scale, reaction_dash = reaction_dash)
                     arrow_info.append(
                         [src_position, dst_position, mod_position, center_position, handles, src_dimension,
                          dst_dimension, mod_dimension,

@@ -519,7 +519,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center_position, handles,
                 rct_dimension, prd_dimension, mod_dimension, reaction_line_color, reaction_line_width, 
                 reaction_line_type = 'bezier', show_bezier_handles = False, show_reaction_ids = False,
-                reaction_arrow_head_size = [2., 2.], scale = 1.):
+                reaction_arrow_head_size = [2., 2.], scale = 1., reaction_dash = []):
     
     """
     Add a reaction.
@@ -647,7 +647,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         paintStroke.setColor (fill)
         canvas.drawPath(path, paintStroke)
         
-    def _drawBezier (pts, fillcolor, linewidth):
+    def _drawBezier (pts, fillcolor, linewidth, reaction_dash = reaction_dash):
 
         """
         Draw a bezier curve.
@@ -659,12 +659,21 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         """
 
         src = pts[0]; h1 = pts[1]; h2 = pts[2]; dest = pts[3]
-        paint = skia.Paint(
-          AntiAlias=True,
-          Style = skia.Paint.kStroke_Style,
-          StrokeWidth=linewidth,
-          Color = fillcolor
-        ) 
+        if len(reaction_dash) != 0:
+            paint = skia.Paint(
+            AntiAlias=True,
+            PathEffect=skia.DashPathEffect.Make(reaction_dash, 0.0),
+            Style = skia.Paint.kStroke_Style,
+            StrokeWidth=linewidth,
+            Color = fillcolor
+            ) 
+        else:
+            paint = skia.Paint(
+            AntiAlias=True,
+            Style = skia.Paint.kStroke_Style,
+            StrokeWidth=linewidth,
+            Color = fillcolor
+            ) 
         path = skia.Path()
         path.moveTo(src[0], src[1])
         path.cubicTo(h1[0], h1[1], h2[0], h2[1], dest[0], dest[1])
