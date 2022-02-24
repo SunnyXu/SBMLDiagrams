@@ -2,6 +2,7 @@ import unittest
 import os
 from SBMLDiagrams import processSBML
 from SBMLDiagrams import visualizeSBML
+import SBMLDiagrams
 #from pandas.testing import assert_frame_equal
 
 IGNORE_TEST = False
@@ -37,12 +38,13 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(visualizeSBML._getNetworkTopLeftCorner(self.sbmlStr_LinearChain) == [40.0, 109.0])
     self.assertTrue(visualizeSBML._getNetworkBottomRightCorner(self.sbmlStr_LinearChain) == [702.0, 149.0])
 
-  def plotInvalidStr(self):
-    # system exit if plot an invalid string
-    if IGNORE_TEST:
-      return    
-    with self.assertRaises(SystemExit):
-         visualizeSBML.draw("adb")
+  # def plotInvalidStr(self):
+  #   # system exit if plot an invalid string
+  #   if IGNORE_TEST:
+  #     return    
+  #   with self.assertRaises(SystemExit):
+  #        visualizeSBML.draw("adb")
+
 
 if __name__ == '__main__':
   unittest.main()
