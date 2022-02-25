@@ -262,26 +262,51 @@ def _setNodeSize(df, id, size):
 
     return df_temp
 
-def _setNodeShapeIdx(df, id, shape_idx):
+def _setNodeShape(df, id, shape_info):
 
     """
-    Set the node shape index.
+    Set the node shape info.
 
     Args:  
         df: DataFrame-initial information.
 
         id: int-node id.
 
-        shape_idx: int-0:text only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
-
+        shape_info: int/str-
+        int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle.
+        str-"text_only", "rectangle", "circle", "hexagon", "line", or "triangle".
+            
     Returns:
         df_temp: DataFrame-information after updates. 
     
     """
+    shape_idx = -1
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if isinstance(shape_info, str):
+        if shape_info == 'text_only':
+            shape_idx = 0
+        elif shape_info == 'rectangle':
+            shape_idx = 1
+        elif shape_info == 'circle':
+            shape_idx = 2
+        elif shape_info == 'hexagon':
+            shape_idx = 3
+        elif shape_info == "line":
+            shape_idx = 4
+        elif shape_info == "triangle":
+            shape_idx = 5
+        else:
+            raise Exception("This is not a valid node shape information.")
+    elif isinstance(shape_info, int):
+        if 0 <= shape_info <= 5:
+            shape_idx = shape_info
+        else:
+            raise Exception("This is not a valid node shape information.")
+    else:
+        raise Exception("This is not a valid node shape information.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
     df_temp = (df[0], df_NodeData_temp, df[2])

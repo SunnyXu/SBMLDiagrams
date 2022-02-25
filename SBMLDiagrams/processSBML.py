@@ -1390,7 +1390,7 @@ class load:
 
             (shape_idx, shape): tuple.
             
-            shape_idx: int-0:text only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+            shape_idx: int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
             
             shape: str.
         """
@@ -1843,16 +1843,19 @@ class load:
         self.df = editSBML._setNodeSize(self.df, id, size)
         return self.df
 
-    def setNodeShapeIdx(self, id, shape_idx):
+    def setNodeShape(self, id, shape_info):
         """
-        Set the node shape index.
+        Set the node shape info.
 
         Args:  
             id: str-node id.
 
-            shape_idx: int-0:text only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+            shape_info: int/str-
+            int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle.
+            str-"text_only", "rectangle", "circle", "hexagon", "line", or "triangle".
+            
         """
-        self.df = editSBML._setNodeShapeIdx(self.df, id, shape_idx)
+        self.df = editSBML._setNodeShape(self.df, id, shape_info)
         return self.df
 
     def setNodeTextPosition(self, id, txt_position):
@@ -2121,7 +2124,7 @@ class load:
         self.df = editSBML._setReactionDash(self.df, id, dash)
         return self.df
 
-    def addArbitraryText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
+    def addText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
         txt_line_width = 1., txt_font_size = 12.):
         """
         Add arbitray text onto canvas.
@@ -2147,7 +2150,7 @@ class load:
         
         return self.df_text
 
-    def removeArbitraryText(self, txt_str):
+    def removeText(self, txt_str):
         """
         Remove the arbitray text from canvas.
 
@@ -2414,7 +2417,7 @@ if __name__ == '__main__':
     # df.setNodePosition("x_1", [100.0, 100.0])
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
-    # df.setNodeShapeIdx("x_1", 0)
+    # df.setNodeShape("x_1", 0)
     # df.setNodeTextPosition("x_1", [413., 216.])
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
@@ -2434,8 +2437,8 @@ if __name__ == '__main__':
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # df.setReactionDash("r_0", [6,6])
 
-    # df.addArbitraryText("test", [413,216])
-    # df.addArbitraryText("test1", [205,216], txt_font_color="red", 
+    # df.addText("test", [413,216])
+    # df.addText("test1", [205,216], txt_font_color="red", 
     # opacity= 0.5, txt_line_width=2, txt_font_size=13)
     # df.removeArbitraryText("test")
 
@@ -2447,7 +2450,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw()
+    #df.draw()
        
 
     # print(df.getNetworkSize())
@@ -2466,9 +2469,9 @@ if __name__ == '__main__':
     # la.setNodeAndTextPosition('S4', [500, 200])
     # la.setNodeAndTextPosition('S5', [600, 200])
     # la.setNodeTextPosition('S1', [200, 180])
-    # la.setNodeShapeIdx('S1', 2)
+    # la.setNodeShape('S1', 2)
     # la.setNodeSize('S1', [10, 10])
-    # la.setNodeShapeIdx('S2', 0)
+    # la.setNodeShape('S2', 0)
     # la.setNodeTextFontSize('S2', 20)
     # la.setReactionDefaultCenterAndHandlePositions('J1')
     # la.setReactionDefaultCenterAndHandlePositions('J2')
