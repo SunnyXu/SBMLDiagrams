@@ -24,7 +24,7 @@ SBMLDiagrams can export PNG, JPG, PDF files. SBMLDiagrams can be used to add SBM
 to an existing SBML model which can be subsequently be exported. If you use this python package, 
 please cite the Gihub website (https://github.com/SunnyXu/SBMLDiagrams).
 
-We also have aninterface SBMLDiagrams to NetworkX to exploit the variety of layout algorithms as well 
+We also have an interface of SBMLDiagrams to NetworkX to exploit the variety of layout algorithms as well 
 as SBbadger which is a tool for generating realistic but random biochemical networks. 
 
 ------------
