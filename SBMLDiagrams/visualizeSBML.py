@@ -198,6 +198,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
+        drawArrow: bool-draw arrow or not
+
         setImageSize: list-1*2 matrix-size of the rectangle [width, height].
 
         scale: float-makes the figure output size = scale * default output size.
@@ -220,9 +222,13 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
         newStyleClass: color style class.
 
-        showImage: whether to display the image inside console
+        showImage: whether to display the image inside console.
 
-        save: whether to save the png
+        save: whether to save the png.
+
+        df_text: dataframe-arbitrary text.
+
+        showReversible: bool-show reversible reactions or not.
 
     Returns:
         The visualization info object containing the drawing information of the plot

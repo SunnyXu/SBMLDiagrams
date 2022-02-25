@@ -528,6 +528,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
     Args:  
         canvas: skia.Canvas.
 
+        rxn_id: str-reaction id.
+
         rct_position: list-1*2 matrix: positions of each reactant.
 
         prd_position: list-1*2 matrix: positions of each product.
@@ -553,6 +555,19 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
         show_reaction_ids: bool-show the reaction ids (True) or not (False as default).
+
+        reaction_arrow_head_size: list-1*2 matrix-size of the rectangle [width, height].
+        
+        scale: float-makes the figure output size = scale * default output size.
+        
+        reaction_dash: list - [] means solid; 
+        [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+        [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+        drawing a c-point line followed by a d-point gap.
+        
+        reverse: bool-reversible reaction or not.
+                
+        showReversible = False):
 
     """
     

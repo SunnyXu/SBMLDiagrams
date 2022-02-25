@@ -2250,9 +2250,7 @@ class load:
         """
         Draw to a PNG/JPG/PDF file.
 
-        Args:  
-            sbmlStr: str-the string of the input sbml file.
-
+        Args: 
             setImageSize: list-1*2 matrix-size of the rectangle [width, height].
 
             scale: float-makes the figure output size = scale * default output size.
@@ -2345,7 +2343,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2478,6 +2476,8 @@ if __name__ == '__main__':
     # la.setReactionDefaultCenterAndHandlePositions('J2')
     # la.setReactionDefaultCenterAndHandlePositions('J3')
     # la.setReactionDash("J1", [5,5])
+    # la.setReactionCenterPosition("J3",[550,150])
+    # la.setReactionHandlePositions("J3", [[600,150],[530,160],[600,120]])
 
     # la.draw(showReversible=True)
 
