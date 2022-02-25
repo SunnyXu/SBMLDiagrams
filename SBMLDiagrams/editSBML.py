@@ -723,7 +723,7 @@ def _setReactionDash(df, id, dash):
 
     return df_temp
 
-def _addArbitraryText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
+def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
     txt_line_width = 1., txt_font_size = 12.):
     """
     Set arbitray text onto canvas.
@@ -759,7 +759,7 @@ def _addArbitraryText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0]
 
     return df_text_temp
 
-def _removeArbitraryText(df_text, txt_str):
+def _removeText(df_text, txt_str):
     """
     Set arbitray text onto canvas.
 

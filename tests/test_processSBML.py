@@ -930,6 +930,7 @@ class TestImportSBML(unittest.TestCase):
     position_txt_position = [413., 217.]
     size = [50., 29.]
     shapeIdx = 2
+    shapeInfo = "circle"
     txt_position = [412., 216.]
     txt_size = [50., 29.]
     fill_color = [255, 204, 154]
@@ -943,7 +944,8 @@ class TestImportSBML(unittest.TestCase):
     self.df.setFloatingBoundaryNode("x_1", floating_node)
     self.df.setNodePosition("x_1", position)
     self.df.setNodeSize("x_1", size)
-    self.df.setNodeShapeIdx("x_1", shapeIdx)
+    self.df.setNodeShape("x_1", shapeIdx)
+    self.df.setNodeShape("x_1", shapeInfo)
     self.df.setNodeTextPosition("x_1", txt_position)
     self.df.setNodeTextSize("x_1", txt_size)
     self.df.setNodeFillColor("x_1", fill_color, opacity = opacity)
@@ -1049,12 +1051,12 @@ class TestImportSBML(unittest.TestCase):
     txt_line_width=2.
     txt_font_size=13.
 
-    self.df.addArbitraryText(txt_content, txt_position, txt_font_color, 
+    self.df.addText(txt_content, txt_position, txt_font_color, 
     opacity, txt_line_width, txt_font_size)
-    self.df.removeArbitraryText(txt_content)
+    self.df.removeText(txt_content)
 
     with self.assertRaises(Exception):
-      self.df.removeArbitraryText("text")
+      self.df.removeText("text")
 
 if __name__ == '__main__':
   unittest.main()

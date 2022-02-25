@@ -2144,7 +2144,7 @@ class load:
             txt_font_size: float-node text font size.
             
         """
-        self.df_text = editSBML._addArbitraryText(self.df_text, txt_str=txt_str, txt_position=txt_position, 
+        self.df_text = editSBML._addText(self.df_text, txt_str=txt_str, txt_position=txt_position, 
         txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
         txt_font_size=txt_font_size) 
         
@@ -2158,7 +2158,7 @@ class load:
             txt_str: str-the text content.
             
         """
-        self.df_text = editSBML._removeArbitraryText(self.df_text, txt_str=txt_str) 
+        self.df_text = editSBML._removeText(self.df_text, txt_str=txt_str) 
         
         return self.df_text
 

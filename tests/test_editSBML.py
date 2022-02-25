@@ -66,6 +66,7 @@ class TestEditSBML(unittest.TestCase):
     position = [412., 216.]
     size = [50., 29.]
     shapeIdx = 2
+    shapeInfo = 'circle'
     txt_position = [412., 216.]
     txt_size = [50., 29.]
     fill_color = [255, 204, 154]
@@ -79,7 +80,8 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setFloatingBoundaryNode(self.df, "x_1", floating_node)
     df_update = editSBML._setNodePosition(df_update, "x_1", position)
     df_update = editSBML._setNodeSize(df_update, "x_1", size)
-    df_update = editSBML._setNodeShapeIdx(df_update, "x_1", shapeIdx)
+    df_update = editSBML._setNodeShape(df_update, "x_1", shapeIdx)
+    df_update = editSBML._setNodeShape(df_update, "x_1", shapeInfo)
     df_update = editSBML._setNodeTextPosition(df_update, "x_1", txt_position)
     df_update = editSBML._setNodeTextSize(df_update, "x_1", txt_size)
     df_update = editSBML._setNodeFillColor(df_update, "x_1", fill_color, opacity = opacity)
@@ -112,7 +114,11 @@ class TestEditSBML(unittest.TestCase):
     with self.assertRaises(Exception):
       editSBML._setNodeSize(df_update, "XX", size)
     with self.assertRaises(Exception):
-      editSBML._setNodeShapeIdx(df_update, "XX", shapeIdx)
+      editSBML._setNodeShape(df_update, "XX", shapeIdx)
+    with self.assertRaises(Exception):
+      editSBML._setNodeShape(df_update, "x_1", 4.5)
+    with self.assertRaises(Exception):
+      editSBML._setNodeShape(df_update, "x_1", 8)
     with self.assertRaises(Exception):
       editSBML._setNodeTextPosition(df_update, "XX", txt_position)
     with self.assertRaises(Exception):
@@ -183,7 +189,7 @@ class TestEditSBML(unittest.TestCase):
     txt_font_size=13.
 
     df_text = pd.DataFrame(columns=processSBML.COLUMN_NAME_df_text).copy()
-    df_text_update = editSBML._addArbitraryText(df_text,txt_content,txt_position,txt_font_color,
+    df_text_update = editSBML._addText(df_text,txt_content,txt_position,txt_font_color,
     opacity,txt_line_width, txt_font_size)
     self.assertTrue(df_text_update.iloc[0][processSBML.ID] == txt_content)
     self.assertTrue(df_text_update.iloc[0][processSBML.TXTPOSITION] == txt_position)
@@ -191,11 +197,11 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_text_update.iloc[0][processSBML.TXTLINEWIDTH] == txt_line_width)
     self.assertTrue(df_text_update.iloc[0][processSBML.TXTFONTSIZE] == txt_font_size)
 
-    df_text_update = editSBML._removeArbitraryText(df_text_update, txt_content)
+    df_text_update = editSBML._removeText(df_text_update, txt_content)
     self.assertTrue(len(df_text_update) == 0)
 
     with self.assertRaises(Exception):
-      editSBML._removeArbitraryText(df_text_update, "text")
+      editSBML._removeText(df_text_update, "text")
 
 
 if __name__ == '__main__':
