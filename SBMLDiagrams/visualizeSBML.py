@@ -129,16 +129,17 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
         canvas = surface.getCanvas()
         for j,info in enumerate(arrow_info):
             rate = reactionRates[reactionIds[j]][i]*(1/mx_reaction_rate*min_reaction_rate*thick_changing_rate)
-            src_position, dst_position, mod_position,center_position, \
+            temp_id, src_position, dst_position, mod_position,center_position, \
             handles, src_dimension, dst_dimension, mod_dimension,\
             reaction_line_color, reaction_line_width, reactionLineType,\
-            showBezierHandles, head = info
+            showBezierHandles, showReactionIds, head, scale, reaction_dash, rxn_rev, showReversible= info
 
-            drawNetwork.addReaction(canvas,src_position, dst_position, mod_position,
+            drawNetwork.addReaction(canvas,temp_id, src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                            (0,0,0,100), reaction_line_width*rate,
+                            reaction_line_color = (0,0,0,100), reaction_line_width = reaction_line_width*rate,
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
-                            reaction_arrow_head_size = head)
+                            reaction_arrow_head_size = head, show_reaction_ids = showReactionIds, scale = scale,
+                            reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
 
         for letter, pos in posDict.items():
             [node_width, node_height] = dimDict[letter]
@@ -729,11 +730,12 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
                                 scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
                         arrow_info.append(
-                            [src_position, dst_position, mod_position, center_position, handles, src_dimension,
+                            [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
                              color_style.getReactionLineColor(), reaction_line_width * scale, reactionLineType,
-                             showBezierHandles,
-                             [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale]])
+                             showBezierHandles, showReactionIds,
+                             [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale],
+                             scale, reaction_dash, rxn_rev, showReversible])
                     except:
                         center_x = 0.
                         center_y = 0.
@@ -764,11 +766,12 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
                                 scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
                         arrow_info.append(
-                            [src_position, dst_position, mod_position, center_position, handles, src_dimension,
+                            [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
                              color_style.getReactionLineColor(), reaction_line_width * scale, reactionLineType,
-                             showBezierHandles,
-                             [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale]])
+                             showBezierHandles, showReactionIds,
+                             [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale],
+                             scale, reaction_dash, rxn_rev, showReversible])
 
                 id_list = []
                 # orphan nodes have been considered, so numSpec_in_reaction should equals to numSpecGlyphs
@@ -988,11 +991,12 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
                             scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
                     arrow_info.append(
-                        [src_position, dst_position, mod_position, center_position, handles, src_dimension,
+                        [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                          dst_dimension, mod_dimension,
                          color_style.getReactionLineColor(), reaction_line_width * scale, reactionLineType,
-                         showBezierHandles,
-                         [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale]])
+                         showBezierHandles, showReactionIds,
+                         [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale],
+                         scale, reaction_dash, rxn_rev, showReversible])
 
                 for i in range (numFloatingNodes):
                     temp_id = FloatingNodes_ids[i]
