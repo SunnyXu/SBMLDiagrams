@@ -2114,8 +2114,8 @@ class load:
             id: str-reaction id.
 
             dash: list-[] means solid; 
-            [a,b] means drawing a a-point line and folloing a b-point gap and etc;
-            [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then 
+            [a,b] means drawing a a-point line and following a b-point gap and etc;
+            [a,b,c,d] means drawing a a-point line and following a b-point gap, and then 
             drawing a c-point line followed by a d-point gap.
         """
         self.df = editSBML._setReactionDash(self.df, id, dash)
