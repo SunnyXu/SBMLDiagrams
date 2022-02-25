@@ -298,9 +298,8 @@ hex str (8 digits)].</p>
 <dt id="SBMLDiagrams.processSBML.load.getNetworkBottomRightCorner">
 <code class="sig-name descname">getNetworkBottomRightCorner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.getNetworkBottomRightCorner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the bottom right-hand corner of the network(s) from the SBML string.</p>
+<p>Args:</p>
 <dl class="simple">
-<dt>Args:  </dt><dd><p>sbmlStr: str-the string of the input sbml file.</p>
-</dd>
 <dt>Returns:</dt><dd><p>position: list-[position_x, position_y],bottom right-hand corner of the network(s).
 It is calculated by the maximum right down corner positions of compartments and nodes, 
 excluding the compartment with the id of _compartment_default_.</p>
@@ -312,9 +311,8 @@ excluding the compartment with the id of _compartment_default_.</p>
 <dt id="SBMLDiagrams.processSBML.load.getNetworkSize">
 <code class="sig-name descname">getNetworkSize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.getNetworkSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the size of the network(s).</p>
+<p>Args:</p>
 <dl class="simple">
-<dt>Args:  </dt><dd><p>sbmlStr: str-the string of the input sbml file.</p>
-</dd>
 <dt>Returns:</dt><dd><p>list-1*2 matrix-size of the rectangle [width, height].</p>
 </dd>
 </dl>
@@ -324,9 +322,8 @@ excluding the compartment with the id of _compartment_default_.</p>
 <dt id="SBMLDiagrams.processSBML.load.getNetworkTopLeftCorner">
 <code class="sig-name descname">getNetworkTopLeftCorner</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.getNetworkTopLeftCorner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the top left-hand corner of the network(s) from the SBML string.</p>
+<p>Args:</p>
 <dl class="simple">
-<dt>Args:  </dt><dd><p>sbmlStr: str-the string of the input sbml file.</p>
-</dd>
 <dt>Returns:</dt><dd><p>position: list-[position_x, position_y], top left-hand corner of the network(s).
 It is calculated by the minimum positions of compartments, nodes, centroid and handle 
 positions of reactions, excluding the compartment with the id of _compartment_default_.</p>
@@ -432,11 +429,11 @@ hex str (8 digits)].</p>
 <dl class="py method">
 <dt id="SBMLDiagrams.processSBML.load.getNodeTextFontSize">
 <code class="sig-name descname">getNodeTextFontSize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.getNodeTextFontSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the text size of a node with its certain node id.</p>
+<dd><p>Get the text font size of a node with its certain node id.</p>
 <dl>
 <dt>Args: </dt><dd><p>id: str-the id of the node.</p>
 </dd>
-<dt>Returns:</dt><dd><p>txt_font_size_list: list of txt_size.</p>
+<dt>Returns:</dt><dd><p>txt_font_size_list: list of txt_font_size.</p>
 <p>txt_font_size: float.</p>
 </dd>
 </dl>
@@ -513,10 +510,10 @@ hex str (8 digits)].</p>
 <dl>
 <dt>Args: </dt><dd><p>id: str-the id of the reaction</p>
 </dd>
-<dt>Returns:</dt><dd><p>dash_list: list of dashed</p>
+<dt>Returns:</dt><dd><p>dash_list: list of dash</p>
 <p>dash: list - [] means solid; 
-[a,b] means drawing a a-point line and folloing a b-point gap and etc;
-[a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+[a,b] means drawing a a-point line and following a b-point gap and etc;
+[a,b,c,d] means drawing a a-point line and following a b-point gap, and then
 drawing a c-point line followed by a d-point gap.</p>
 </dd>
 </dl>
@@ -571,7 +568,7 @@ hex str (8 digits)].</p>
 <dt>Args: </dt><dd><p>id: str-the id of the Node.</p>
 </dd>
 <dt>Returns:</dt><dd><p>floating_node_list: list of floating_node.</p>
-<p>floating_node: str-floating node (True) or not (False).</p>
+<p>floating_node: bool-floating node (True) or not (False).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -579,7 +576,7 @@ hex str (8 digits)].</p>
 <dl class="py method">
 <dt id="SBMLDiagrams.processSBML.load.removeArbitraryText">
 <code class="sig-name descname">removeArbitraryText</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.removeArbitraryText" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set arbitray text onto canvas.</p>
+<dd><p>Remove the arbitray text from canvas.</p>
 <dl class="simple">
 <dt>Args:  </dt><dd><p>txt_str: str-the text content.</p>
 </dd>
@@ -766,7 +763,7 @@ corner of the node.</p>
 <dl class="py method">
 <dt id="SBMLDiagrams.processSBML.load.setNodeTextFontSize">
 <code class="sig-name descname">setNodeTextFontSize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">txt_font_size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setNodeTextFontSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the node text size.</p>
+<dd><p>Set the node text font size.</p>
 <dl>
 <dt>Args:  </dt><dd><p>id: str-node id.</p>
 <p>txt_font_size: float-node text font size.</p>
