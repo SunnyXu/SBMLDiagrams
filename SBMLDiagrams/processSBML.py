@@ -1328,7 +1328,7 @@ class load:
         Returns:
             floating_node_list: list of floating_node.
 
-            floating_node: str-floating node (True) or not (False).
+            floating_node: bool-floating node (True) or not (False).
         """
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         floating_node_list =[] 
@@ -1567,13 +1567,13 @@ class load:
 
     def getNodeTextFontSize(self, id):
         """
-        Get the text size of a node with its certain node id.
+        Get the text font size of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
 
         Returns:
-            txt_font_size_list: list of txt_size.
+            txt_font_size_list: list of txt_font_size.
 
             txt_font_size: float.
         """
@@ -1711,11 +1711,11 @@ class load:
             id: str-the id of the reaction
 
         Returns:
-            dash_list: list of dashed
+            dash_list: list of dash
 
             dash: list - [] means solid; 
-            [a,b] means drawing a a-point line and folloing a b-point gap and etc;
-            [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+            [a,b] means drawing a a-point line and following a b-point gap and etc;
+            [a,b,c,d] means drawing a a-point line and following a b-point gap, and then
             drawing a c-point line followed by a d-point gap.
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
@@ -1949,7 +1949,7 @@ class load:
 
     def setNodeTextFontSize(self, id, txt_font_size):
         """
-        Set the node text size.
+        Set the node text font size.
 
         Args:  
             id: str-node id.
@@ -2149,7 +2149,7 @@ class load:
 
     def removeArbitraryText(self, txt_str):
         """
-        Set arbitray text onto canvas.
+        Remove the arbitray text from canvas.
 
         Args:  
             txt_str: str-the text content.
@@ -2196,7 +2196,7 @@ class load:
     def autolayout(self, layout="spectral"):
         """
         auto-layout the node positions using networkx lib
-        
+
         Args:
             layout: the layout name from the networkx
 
@@ -2294,7 +2294,6 @@ class load:
         Get the top left-hand corner of the network(s) from the SBML string.
 
         Args:  
-            sbmlStr: str-the string of the input sbml file.
 
         Returns:
             position: list-[position_x, position_y], top left-hand corner of the network(s).
@@ -2311,7 +2310,6 @@ class load:
         Get the bottom right-hand corner of the network(s) from the SBML string.
 
         Args:  
-            sbmlStr: str-the string of the input sbml file.
 
         Returns:
             position: list-[position_x, position_y],bottom right-hand corner of the network(s).
@@ -2328,7 +2326,6 @@ class load:
         Get the size of the network(s).
 
         Args:  
-            sbmlStr: str-the string of the input sbml file.
 
         Returns:
             list-1*2 matrix-size of the rectangle [width, height].
@@ -2344,7 +2341,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2369,7 +2366,7 @@ if __name__ == '__main__':
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
     # writer.save()
 
-    #df = load(sbmlStr)
+    df = load(sbmlStr)
     #df = load("dfgdg")
     #la = load(sbmlStr)
 
@@ -2450,7 +2447,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    #df.draw()
+    df.draw()
        
 
     # print(df.getNetworkSize())
