@@ -161,8 +161,8 @@
 <em class="property">class </em><code class="sig-prename descclassname">SBMLDiagrams.processSBML.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sbmlstr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
-<dt id="SBMLDiagrams.processSBML.load.addArbitraryText">
-<code class="sig-name descname">addArbitraryText</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt_str</span></em>, <em class="sig-param"><span class="n">txt_position</span></em>, <em class="sig-param"><span class="n">txt_font_color</span><span class="o">=</span><span class="default_value">[0, 0, 0]</span></em>, <em class="sig-param"><span class="n">opacity</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">txt_line_width</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">txt_font_size</span><span class="o">=</span><span class="default_value">12.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.addArbitraryText" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.processSBML.load.addText">
+<code class="sig-name descname">addText</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt_str</span></em>, <em class="sig-param"><span class="n">txt_position</span></em>, <em class="sig-param"><span class="n">txt_font_color</span><span class="o">=</span><span class="default_value">[0, 0, 0]</span></em>, <em class="sig-param"><span class="n">opacity</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">txt_line_width</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">txt_font_size</span><span class="o">=</span><span class="default_value">12.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.addText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add arbitray text onto canvas.</p>
 <dl>
 <dt>Args:  </dt><dd><p>txt_str: str-the text content.</p>
@@ -393,7 +393,7 @@ hex str (8 digits)].</p>
 </dd>
 <dt>Returns:</dt><dd><p>shape_list: list of tuple (shape_idx, shape).</p>
 <p>(shape_idx, shape): tuple.</p>
-<p>shape_idx: int-0:text only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.</p>
+<p>shape_idx: int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.</p>
 <p>shape: str.</p>
 </dd>
 </dl>
@@ -574,8 +574,8 @@ hex str (8 digits)].</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="SBMLDiagrams.processSBML.load.removeArbitraryText">
-<code class="sig-name descname">removeArbitraryText</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.removeArbitraryText" title="Permalink to this definition">¶</a></dt>
+<dt id="SBMLDiagrams.processSBML.load.removeText">
+<code class="sig-name descname">removeText</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">txt_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.removeText" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove the arbitray text from canvas.</p>
 <dl class="simple">
 <dt>Args:  </dt><dd><p>txt_str: str-the text content.</p>
@@ -727,12 +727,14 @@ corner of the node.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="SBMLDiagrams.processSBML.load.setNodeShapeIdx">
-<code class="sig-name descname">setNodeShapeIdx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">shape_idx</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setNodeShapeIdx" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the node shape index.</p>
+<dt id="SBMLDiagrams.processSBML.load.setNodeShape">
+<code class="sig-name descname">setNodeShape</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">id</span></em>, <em class="sig-param"><span class="n">shape_info</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.setNodeShape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the node shape info.</p>
 <dl>
 <dt>Args:  </dt><dd><p>id: str-node id.</p>
-<p>shape_idx: int-0:text only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.</p>
+<p>shape_info: int/str-
+int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle.
+str-“text_only”, “rectangle”, “circle”, “hexagon”, “line”, or “triangle”.</p>
 </dd>
 </dl>
 </dd></dl>
