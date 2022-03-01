@@ -2279,7 +2279,8 @@ class load:
 
         Returns:
             The visualization info object containing the drawing information of the plot
-    """
+        
+        """
 
         sbmlStr = self.export()
         v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, 
@@ -2450,7 +2451,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    #df.draw()
+    df.draw()
        
 
     # print(df.getNetworkSize())
