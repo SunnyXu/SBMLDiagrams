@@ -275,6 +275,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         floatingNodes_pos_dict = defaultdict(list)
         floatingNodes_dim_dict = defaultdict(list)
         shapeIdx = 1
+        textGlyph_id_list = []
+        text_content_list = []
+        text_position_list = []
+        text_dimension_list = []
 
         #set the default values without render info:
         comp_border_width = 2.0
@@ -282,6 +286,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         reaction_line_width = 3.0
         reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5]
         reaction_dash = []
+        text_content = ''
+        text_line_color = [0, 0, 0, 255]
         text_line_width = 1.
         text_font_size = 12.    
         edges = []
@@ -303,7 +309,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                 if layout is not None:
                     numCompGlyphs = layout.getNumCompartmentGlyphs()
                     numSpecGlyphs = layout.getNumSpeciesGlyphs()
-                    numReactionGlyphs = layout.getNumReactionGlyphs() 
+                    numReactionGlyphs = layout.getNumReactionGlyphs()
+                    numTextGlyphs = layout.getNumTextGlyphs() 
                     for i in range(numCompGlyphs):
                         compGlyph = layout.getCompartmentGlyph(i)
                         temp_id = compGlyph.getCompartmentId()
@@ -473,6 +480,26 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     #print(reaction_mod_list)
                     #print(mod_specGlyph_list)
                     #print(spec_specGlyph_id_list)
+
+                    #arbitrary text
+                    for i in range(numTextGlyphs):
+                        textGlyph = layout.getTextGlyph(i)
+                        if not textGlyph.isSetOriginOfTextId(): #if there is no original text id set
+                            temp_id = textGlyph.getId()
+                            text_content = textGlyph.getText()
+                            textGlyph_id_list.append(temp_id)
+                            text_content_list.append(text_content)
+                            try:
+                                text_boundingbox = textGlyph.getBoundingBox()
+                                text_pos_x = text_boundingbox.getX()
+                                text_pos_y = text_boundingbox.getY()   
+                                text_dim_w = text_boundingbox.getWidth()
+                                text_dim_h = text_boundingbox.getHeight()
+                                text_position_list.append([text_pos_x,text_pos_y])
+                                text_dimension_list.append([text_dim_w,text_dim_h])
+                            except:
+                                text_position_list.append([])
+                                text_dimension_list.append([])
 
                     rPlugin = layout.getPlugin("render")
                     if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
@@ -893,6 +920,26 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 													fontSize = text_font_size*scale)
                                 id_list.append(temp_id)
 
+                #arbitrary text
+                for i in range(numTextGlyphs):
+                    textGlyph = layout.getTextGlyph(i)
+                    if not textGlyph.isSetOriginOfTextId():
+                        textGlyph_id = textGlyph_id_list[i]
+                        text_content = text_content_list[i]
+                        dimension = text_dimension_list[i]
+                        text_position = text_position_list[i]
+                        for k in range(len(text_render)):
+                            if textGlyph_id == text_render[k][0]:
+                                text_line_color = text_render[k][1]
+                                text_line_width = text_render[k][2]
+                                text_font_size = text_render[k][3]
+                        text_position = [(text_position[0]-topLeftCorner[0])*scale,
+                        (text_position[1]-topLeftCorner[1])*scale]
+                        text_line_width = text_line_width*scale
+                        # drawNetwork.addSimpleText(canvas, text_content, text_position, 
+                        # text_line_color, text_line_width, text_font_size) 
+
+
             else: # there is no layout information, assign position randomly and size as default
                 comp_id_list = Comps_ids
                 nodeIdx_temp = 0 #to track the node index    
@@ -1036,16 +1083,17 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         #add arbitrary text
         if len(df_text) != 0:
             for i in range(len(df_text)):
-                txt_content = df_text.iloc[i][processSBML.ID] 
-                txt_position = df_text.iloc[i][processSBML.TXTPOSITION]
-                txt_position = [(txt_position[0]-topLeftCorner[0])*scale,
-                (txt_position[1]-topLeftCorner[1])*scale]
-                txt_font_color = df_text.iloc[i][processSBML.TXTFONTCOLOR]
-                txt_line_width = df_text.iloc[i][processSBML.TXTLINEWIDTH]
-                txt_line_width = txt_line_width*scale
-                txt_font_size = df_text.iloc[i][processSBML.TXTFONTSIZE]
-                drawNetwork.addSimpleText(canvas, txt_content, txt_position, txt_font_color,
-                txt_line_width, txt_font_size) 
+                text_content = df_text.iloc[i][processSBML.ID] 
+                text_position = df_text.iloc[i][processSBML.TXTPOSITION]
+                text_position = [(text_position[0]-topLeftCorner[0])*scale,
+                (text_position[1]-topLeftCorner[1])*scale]
+                text_font_color = df_text.iloc[i][processSBML.TXTFONTCOLOR]
+                text_line_width = df_text.iloc[i][processSBML.TXTLINEWIDTH]
+                text_line_width = text_line_width*scale
+                text_font_size = df_text.iloc[i][processSBML.TXTFONTSIZE]
+                text_font_size = text_font_size*scale
+                drawNetwork.addSimpleText(canvas, text_content, text_position, text_font_color,
+                text_line_width, text_font_size) 
         
         return floatingNodes_pos_dict, floatingNodes_dim_dict, allNodes_pos_dict, allNodes_dim_dict, edges, arrow_info, name_to_id
     
@@ -1282,8 +1330,8 @@ if __name__ == '__main__':
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
-
-    filename = "output.xml"
+    filename = "test_textGlyph.xml"
+    #filename = "output.xml"
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
