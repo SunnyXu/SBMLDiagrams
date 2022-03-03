@@ -28,7 +28,8 @@ from IPython.display import Video
 
 def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
             bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",
-            horizontal_offset = 15, vertical_offset = 5, text_color = (0, 0, 0, 200), savePngs = False, showImage = False):
+            horizontal_offset = 15, vertical_offset = 9, text_color = (0, 0, 0, 200), savePngs = False, showImage = False,
+            user_reaction_line_color = (91, 176, 253, 255)):
     """
 
     Args:
@@ -65,6 +66,8 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
         savePngs: if save all the pngs used for video generation
 
         showImage: if display all the generated pngs in console
+
+        user_reaction_line_color: user defined reaction line color
 
     Returns:
 
@@ -136,7 +139,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
 
             drawNetwork.addReaction(canvas,temp_id, src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                            reaction_line_color = (0,0,0,100), reaction_line_width = reaction_line_width*rate,
+                            reaction_line_color = user_reaction_line_color, reaction_line_width = reaction_line_width*rate,
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                             reaction_arrow_head_size = head, show_reaction_ids = showReactionIds, scale = scale,
                             reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)

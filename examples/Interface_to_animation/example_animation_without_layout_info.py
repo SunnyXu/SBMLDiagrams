@@ -1,4 +1,3 @@
-from SBMLDiagrams.visualizeSBML import _draw
 from SBMLDiagrams.visualizeSBML import *
 import tellurium as te
 r = te.loada('''
@@ -83,8 +82,4 @@ model *Jana_WolfGlycolysis()
 end
 ''')
 DIR = os.path.dirname(os.path.abspath(__file__))
-filename = "Jana_WolfGlycolysis.xml"
-f = open(os.path.join(DIR, filename), 'r')
-sbmlStr = f.read()
-f.close()
 animate(0,30, 50, r, 0.5, outputName="ouput2")
