@@ -29,7 +29,7 @@ from IPython.display import Video
 def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
             bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",
             horizontal_offset = 15, vertical_offset = 9, text_color = (0, 0, 0, 200), savePngs = False, showImage = False,
-            user_reaction_line_color = (91, 176, 253, 255)):
+            user_reaction_line_color = None):
     """
 
     Args:
@@ -136,6 +136,9 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
             handles, src_dimension, dst_dimension, mod_dimension,\
             reaction_line_color, reaction_line_width, reactionLineType,\
             showBezierHandles, showReactionIds, head, scale, reaction_dash, rxn_rev, showReversible= info
+
+            if not user_reaction_line_color:
+                user_reaction_line_color = reaction_line_color
 
             drawNetwork.addReaction(canvas,temp_id, src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
