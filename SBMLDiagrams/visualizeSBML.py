@@ -28,7 +28,8 @@ from IPython.display import Video
 
 def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
             bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",
-            horizontal_offset = 15, vertical_offset = 5, text_color = (0, 0, 0, 200), savePngs = False, showImage = False):
+            horizontal_offset = 15, vertical_offset = 9, text_color = (0, 0, 0, 200), savePngs = False, showImage = False,
+            user_reaction_line_color = (91, 176, 253, 255)):
     """
 
     Args:
@@ -65,6 +66,8 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
         savePngs: if save all the pngs used for video generation
 
         showImage: if display all the generated pngs in console
+
+        user_reaction_line_color: user defined reaction line color
 
     Returns:
 
@@ -136,7 +139,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
 
             drawNetwork.addReaction(canvas,temp_id, src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                            reaction_line_color = (0,0,0,100), reaction_line_width = reaction_line_width*rate,
+                            reaction_line_color = user_reaction_line_color, reaction_line_width = reaction_line_width*rate,
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                             reaction_arrow_head_size = head, show_reaction_ids = showReactionIds, scale = scale,
                             reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
@@ -188,7 +191,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
     Video(outputName + ".mp4")
 
 def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
-    output_fileName = 'output', complexShape = '', reactionLineType = 'bezier', \
+    output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, newStyleClass = styleSBML.Style(),\
     showImage = True, save = True, df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), 
     showReversible = False):
@@ -207,7 +210,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
         fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
-        output_fileName: str-filename: 'output' (default) or '' (result in a random file name) 
+        output_fileName: str-filename: '' (default: will not save the file), 
         or 'fileName' (self-designed file name).
         
         complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' 
@@ -1099,24 +1102,41 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
     
 
     baseImageArray = []
-    if fileFormat == "PNG" or fileFormat == "JPEG":
-        surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
-        canvas = surface.getCanvas()
-        pos_dict, dim_dict, all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
-        baseImageArray = drawNetwork.showPlot(surface,save=save,fileName = output_fileName, file_format = fileFormat, showImage=showImage)
-    else: #fileFormat == "PDF"
-        if output_fileName == '':
-            random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
-            fileName = os.path.join(os.getcwd(), random_string)
-            fileNamepdf = fileName + '.pdf'
-        else:
-            fileName = os.path.join(os.getcwd(), output_fileName)
-            fileNamepdf = fileName + '.pdf'
+    
+    surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
+    canvas = surface.getCanvas()
+    pos_dict, dim_dict, all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
+    baseImageArray = drawNetwork.showPlot(surface,save=save,fileName = output_fileName, file_format = fileFormat, showImage=showImage)
+    
+    if output_fileName == '':
+        tmpfileName = "temp.png" #display the file in drawNetwork
+        try:
+            os.remove(tmpfileName)
+        except:
+            pass
+
+    if fileFormat == "PDF" and output_fileName != '':
+        # if output_fileName == '':
+        #     random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
+        #     fileName = os.path.join(os.getcwd(), random_string)
+        #     fileNamepdf = fileName + '.pdf'
+        #     stream = skia.FILEWStream(fileNamepdf)
+        fileName = os.path.join(os.getcwd(), output_fileName)
+        fileNamepdf = fileName + '.pdf'
         stream = skia.FILEWStream(fileNamepdf)
+        fileNamepng = fileName + '.png' #display the file in drawNetwork
+        try:
+            os.remove(fileNamepng)
+        except:
+            pass
         with skia.PDF.MakeDocument(stream) as document:
             with document.page(int(imageSize[0]), int(imageSize[1])) as canvas:
                 pos_dict, dim_dict,  all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
-    return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
+        
+        return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
+
+    elif fileFormat == 'PNG' or fileFormat == 'JPEG':
+        return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
 
 def _getNetworkTopLeftCorner(sbmlStr):
     """

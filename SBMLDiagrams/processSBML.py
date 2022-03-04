@@ -2309,7 +2309,7 @@ class load:
         for id in reaction_ids:
             self.setReactionDefaultCenterAndHandlePositions(id)
 
-    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = 'output',\
+    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = '',\
     complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, 
     showReactionIds = False, showReversible = False):
 
@@ -2323,7 +2323,7 @@ class load:
 
             fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
-            output_fileName: str-filename: 'output' (default) or '' (result in a random file name) 
+            output_fileName: str-filename: '' (default: will not save the file), 
             or 'fileName' (self-designed file name).
             
             complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' 
@@ -2518,7 +2518,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw()
+    df.draw(output_fileName = '', fileFormat = 'PDF')
        
 
     # print(df.getNetworkSize())
