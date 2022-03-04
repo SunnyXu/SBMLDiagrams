@@ -1110,7 +1110,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
     
     if output_fileName == '':
         tmpfileName = "temp.png" #display the file in drawNetwork
-        os.remove(tmpfileName)
+        try:
+            os.remove(tmpfileName)
+        except:
+            pass
 
     if fileFormat == "PDF" and output_fileName != '':
         # if output_fileName == '':
@@ -1122,7 +1125,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         fileNamepdf = fileName + '.pdf'
         stream = skia.FILEWStream(fileNamepdf)
         fileNamepng = fileName + '.png' #display the file in drawNetwork
-        os.remove(fileNamepng)
+        try:
+            os.remove(fileNamepng)
+        except:
+            pass
         with skia.PDF.MakeDocument(stream) as document:
             with document.page(int(imageSize[0]), int(imageSize[1])) as canvas:
                 pos_dict, dim_dict,  all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
