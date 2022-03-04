@@ -983,7 +983,8 @@ def showPlot(surface, save = True, folderName = '', fileName = '', file_format =
     Args:  
         surface: skia.Surface.
 
-        fileName: str-the name for the generated file: either the input filename or a randomly generated filename if '' (default).
+        fileName: str-the name for the generated file: either the input filename or 
+                  temp.png if '' (default) in order to show the plots only instead of saving files.
         
         fileFormat = 'PNG' (default) or 'JPEG'.
 
@@ -996,37 +997,19 @@ def showPlot(surface, save = True, folderName = '', fileName = '', file_format =
         if not os.path.exists(os.getcwd() + '/' + folderName):
             os.makedirs(os.getcwd() + '/' + folderName)
     if fileName == '':
-        random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
-        tmpfileName = os.path.join(os.getcwd() + '/' + folderName, random_string)
+        #random_string = ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+        #tmpfileName = os.path.join(os.getcwd() + '/' + folderName, random_string)
+        #shows the plot only instead of saving the files
+        tmpfileName = 'temp'
         image = surface.makeImageSnapshot()
         if save:
-            if file_format == 'PNG':
-                tmpfileName = tmpfileName + '.png'
-                image.save(tmpfileName, skia.kPNG)
-                if showImage:
-                    pil_im = Image.open(tmpfileName)
-                    display(pil_im)
+            tmpfileName = tmpfileName + '.png'
+            image.save(tmpfileName, skia.kPNG)
+            if showImage:
+                pil_im = Image.open(tmpfileName)
+                display(pil_im)
                 #pil_im.show()
-            elif file_format == 'JPEG':
-                tmpfileName = tmpfileName + '.jpg'
-                image.save(tmpfileName, skia.kJPEG)
-                if showImage:
-                    pil_im = Image.open(tmpfileName)
-                    display(pil_im)
-            #pil_im.show()
-        # elif file_format == 'PDF':
-        #     tmpfileNamepdf = tmpfileName + '.pdf'
-        #     try:
-        #         tmpfileName = tmpfileName + '.png'
-        #         image.save(tmpfileName, skia.kPNG)
-        #         pil_im = Image.open(tmpfileName)
-        #         display(pil_im)
-        #         #pil_im.show() 
-        #         imagepdf = pil_im.convert('RGB')
-        #         imagepdf.save(tmpfileNamepdf)
-        #     finally:
-        #         os.remove(tmpfileName)
-
+        
         #self.surface.write_to_png(tmpfileName)
 
     else:
@@ -1039,26 +1022,21 @@ def showPlot(surface, save = True, folderName = '', fileName = '', file_format =
                 if showImage:
                     pil_im = Image.open(fileName)
                     display(pil_im)
-                #pil_im.show()
             elif file_format == 'JPEG':
                 fileName = fileName + '.jpg'
                 image.save(fileName, skia.kJPEG)
                 if showImage:
                     pil_im = Image.open(fileName)
+                    display(pil_im)  
+            elif file_format == 'PDF':
+                fileName = fileName + '.png'
+                image.save(fileName, skia.kPNG)
+                if showImage:
+                    pil_im = Image.open(fileName)
                     display(pil_im)
-            #pil_im.show()   
-        # elif file_format == 'PDF':
-        #     fileNamepdf = fileName + '.pdf'
-        #     fileName = fileName + '.png'
-        #     try:
-        #         image.save(fileName, skia.kPNG)
-        #         pil_im = Image.open(fileName)
-        #         display(pil_im)
-        #         #pil_im.show() 
-        #         imagepdf = pil_im.convert('RGB')
-        #         imagepdf.save(fileNamepdf)
-        #     finally:
-        #         os.remove(fileName)
+                    #pil_im.show() 
+                    # imagepdf = pil_im.convert('RGB')
+                    # imagepdf.save(fileNamepdf)
     return image.toarray()
 
 
