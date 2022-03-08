@@ -262,19 +262,21 @@ def _setNodeSize(df, id, size):
 
     return df_temp
 
-def _setNodeShape(df, id, shape_info):
+def _setNodeShape(df, id, shape):
 
     """
-    Set the node shape info.
+    Set the node shape by shape index or name string.
 
     Args:  
         df: DataFrame-initial information.
 
         id: int-node id.
 
-        shape_info: int/str-
-        int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle.
-        str-"text_only", "rectangle", "circle", "hexagon", "line", or "triangle".
+        shape: int/str-
+        int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle;
+            6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
+        str-"text_only", "rectangle", "circle", "hexagon", "line", or "triangle";
+            "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
             
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -285,24 +287,32 @@ def _setNodeShape(df, id, shape_info):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if isinstance(shape_info, str):
-        if shape_info == 'text_only':
+    if isinstance(shape, str):
+        if shape == 'text_only':
             shape_idx = 0
-        elif shape_info == 'rectangle':
+        elif shape == 'rectangle':
             shape_idx = 1
-        elif shape_info == 'circle':
+        elif shape == 'circle':
             shape_idx = 2
-        elif shape_info == 'hexagon':
+        elif shape == 'hexagon':
             shape_idx = 3
-        elif shape_info == "line":
+        elif shape == "line":
             shape_idx = 4
-        elif shape_info == "triangle":
+        elif shape == "triangle":
             shape_idx = 5
+        elif shape == "upTriangle":
+            shape_idx = 6
+        elif shape == "downTriangle":
+            shape_idx = 7
+        elif shape == "leftTriangle":
+            shape_idx = 8
+        elif shape == "rightTriangle":
+            shape_idx = 9
         else:
             raise Exception("This is not a valid node shape information.")
-    elif isinstance(shape_info, int):
-        if 0 <= shape_info <= 5:
-            shape_idx = shape_info
+    elif isinstance(shape, int):
+        if 0 <= shape <= 9:
+            shape_idx = shape
         else:
             raise Exception("This is not a valid node shape information.")
     else:

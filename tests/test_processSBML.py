@@ -861,7 +861,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodePosition("x_1")[0] == [413.0, 216.0])
     self.assertTrue(self.df.getNodeSize("x_1")[0] == [50.0, 30.0])
     self.assertTrue(self.df.getNodeShape("x_1")[0] == 
-    (1, 'reactangle', [[413.0, 216.0], [463.0, 216.0], [463.0, 246.0], [413.0, 246.0]]))
+    (1, 'rectangle', [[413.0, 216.0], [463.0, 216.0], [463.0, 246.0], [413.0, 246.0]]))
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == [413.0, 216.0])
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == [50.0, 30.0])
     self.assertTrue(self.df.getNodeFillColor("x_1")[0] == \
@@ -931,7 +931,7 @@ class TestImportSBML(unittest.TestCase):
     position_txt_position = [413., 217.]
     size = [50., 29.]
     shapeIdx = 2
-    shapeInfo = "circle"
+    shape = "circle"
     txt_position = [412., 216.]
     txt_size = [50., 29.]
     fill_color = [255, 204, 154]
@@ -946,7 +946,7 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodePosition("x_1", position)
     self.df.setNodeSize("x_1", size)
     self.df.setNodeShape("x_1", shapeIdx)
-    self.df.setNodeShape("x_1", shapeInfo)
+    self.df.setNodeShape("x_1", shape)
     self.df.setNodeTextPosition("x_1", txt_position)
     self.df.setNodeTextSize("x_1", txt_size)
     self.df.setNodeFillColor("x_1", fill_color, opacity = opacity)

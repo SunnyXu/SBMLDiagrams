@@ -420,7 +420,8 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
   
     
 def addNode(canvas, floating_boundary_node, alias_node, position, dimension, 
-        spec_border_color, spec_fill_color, spec_border_width, shapeIdx, complex_shape = ''):
+        spec_border_color, spec_fill_color, spec_border_width, shapeIdx, shape_name, shape_info,
+        complex_shape = ''):
     
     """
     Add a node.
@@ -483,6 +484,30 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
                 _drawLine (canvas, x, y+.5*height, x+width, y+.5*height, outline, linewidth)
         elif shapeIdx == 5: #triangle
             pts = [[x+width,y+.5*height],[x+.25*width,y+.07*height],[x+.25*width,y+.83*height]]
+            if alias_node == 'alias':
+                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
+            else:
+                _drawPolygon (canvas, pts, outline, fill, linewidth)
+        elif shapeIdx == 6: #upTriangle
+            pts = [[x+.5*width,y],[x+width,y+.806*height],[x,y+.806*height]]
+            if alias_node == 'alias':
+                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
+            else:
+                _drawPolygon (canvas, pts, outline, fill, linewidth)
+        elif shapeIdx == 7: #downTriangle
+            pts = [[x,y],[x+width,y],[x+.5*width,y+.806*height]]
+            if alias_node == 'alias':
+                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
+            else:
+                _drawPolygon (canvas, pts, outline, fill, linewidth)
+        elif shapeIdx == 8: #leftTriangle
+            pts = [[x+.806*width,y],[x+.806*width,y+height],[x,y+.5*height]]
+            if alias_node == 'alias':
+                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
+            else:
+                _drawPolygon (canvas, pts, outline, fill, linewidth)
+        elif shapeIdx == 9: #rightTriangle
+            pts = [[x,y],[x+.806*width,y+.5*height],[x,y+height]]
             if alias_node == 'alias':
                 _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
             else:

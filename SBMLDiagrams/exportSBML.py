@@ -755,7 +755,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             if spec_shapeIdx == 0: #text_only
                 pass
 
-            elif spec_shapeIdx == 2: #ellipse
+            elif spec_shapeIdx == 1: #rectangle
+                rectangle = style.getGroup().createRectangle()
+                rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+                libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+
+            elif spec_shapeIdx == 2: #ellipse-circle
                 ellipse = style.getGroup().createEllipse()
                 ellipse.setCenter2D(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
                 ellipse.setRadii(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
@@ -789,7 +794,39 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 renderPoint2.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,7))
                 renderPoint3 = polygon.createPoint()
                 renderPoint3.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,86))
-            else: #rectangle shape_index = 1/others as default (rectangle)
+            elif spec_shapeIdx == 6: #upTriangle(3)
+                polygon = style.getGroup().createPolygon()
+                renderPoint1 = polygon.createPoint()
+                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,50), libsbml.RelAbsVector(0,0))
+                renderPoint2 = polygon.createPoint()
+                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,80.6))
+                renderPoint3 = polygon.createPoint()
+                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,80.6))
+            elif spec_shapeIdx == 7: #downTriangle(3)
+                polygon = style.getGroup().createPolygon()
+                renderPoint1 = polygon.createPoint()
+                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,0))
+                renderPoint2 = polygon.createPoint()
+                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,0.))
+                renderPoint3 = polygon.createPoint()
+                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,50), libsbml.RelAbsVector(0,80.6))
+            elif spec_shapeIdx == 8: #leftTriangle(3)
+                polygon = style.getGroup().createPolygon()
+                renderPoint1 = polygon.createPoint()
+                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,80.6), libsbml.RelAbsVector(0,0))
+                renderPoint2 = polygon.createPoint()
+                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,80.6), libsbml.RelAbsVector(0,100))
+                renderPoint3 = polygon.createPoint()
+                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
+            elif spec_shapeIdx == 9: #rightTriangle(3)
+                polygon = style.getGroup().createPolygon()
+                renderPoint1 = polygon.createPoint()
+                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,0))
+                renderPoint2 = polygon.createPoint()
+                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,80.6), libsbml.RelAbsVector(0,50))
+                renderPoint3 = polygon.createPoint()
+                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,100))
+            else: #others as default (rectangle)
                 rectangle = style.getGroup().createRectangle()
                 rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
                 libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))

@@ -66,7 +66,7 @@ class TestEditSBML(unittest.TestCase):
     position = [412., 216.]
     size = [50., 29.]
     shapeIdx = 2
-    shapeInfo = 'circle'
+    shape = 'circle'
     txt_position = [412., 216.]
     txt_size = [50., 29.]
     fill_color = [255, 204, 154]
@@ -81,7 +81,7 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setNodePosition(df_update, "x_1", position)
     df_update = editSBML._setNodeSize(df_update, "x_1", size)
     df_update = editSBML._setNodeShape(df_update, "x_1", shapeIdx)
-    df_update = editSBML._setNodeShape(df_update, "x_1", shapeInfo)
+    df_update = editSBML._setNodeShape(df_update, "x_1", shape)
     df_update = editSBML._setNodeTextPosition(df_update, "x_1", txt_position)
     df_update = editSBML._setNodeTextSize(df_update, "x_1", txt_size)
     df_update = editSBML._setNodeFillColor(df_update, "x_1", fill_color, opacity = opacity)
@@ -118,7 +118,7 @@ class TestEditSBML(unittest.TestCase):
     with self.assertRaises(Exception):
       editSBML._setNodeShape(df_update, "x_1", 4.5)
     with self.assertRaises(Exception):
-      editSBML._setNodeShape(df_update, "x_1", 8)
+      editSBML._setNodeShape(df_update, "x_1", 100)
     with self.assertRaises(Exception):
       editSBML._setNodeTextPosition(df_update, "XX", txt_position)
     with self.assertRaises(Exception):

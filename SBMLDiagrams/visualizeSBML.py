@@ -598,6 +598,19 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         shapeIdx = 4
                                     elif NumRenderpoints == 3: #triangle
                                         shapeIdx = 5
+                                        #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
+                                        upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
+                                        downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
+                                        leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
+                                        rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
+                                        if all(item in shapeInfo for item in upTriangle_vertex):
+                                            shapeIdx = 6
+                                        if all(item in shapeInfo for item in downTriangle_vertex):
+                                            shapeIdx = 7
+                                        if all(item in shapeInfo for item in leftTriangle_vertex):
+                                            shapeIdx = 8
+                                        if all(item in shapeInfo for item in rightTriangle_vertex):
+                                            shapeIdx = 9
                                 else:
                                     shapeIdx = 0 
 
@@ -858,7 +871,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, complex_shape = complexShape)
+                                                    spec_border_width*scale, shapeIdx, shape_name, shape_info,
+                                                    complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale)
@@ -886,7 +900,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, complex_shape=complexShape)
+                                                    spec_border_width*scale, shapeIdx, shape_name, shape_info,
+                                                    complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
 													fontSize = text_font_size*scale)
@@ -912,7 +927,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         text_font_size = text_render[k][3]
                                 drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, complex_shape=complexShape)
+                                                    spec_border_width*scale, shapeIdx, shape_name, shape_info,
+                                                    complex_shape=complexShape)
                                 allNodes_pos_dict['[' + temp_id + ']'] = position
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
@@ -938,7 +954,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         text_font_size = text_render[k][3]
                                 drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, complex_shape=complexShape)
+                                                    spec_border_width*scale, shapeIdx, shape_name, shape_info,
+                                                    complex_shape=complexShape)
                                 allNodes_pos_dict['[' + temp_id + ']'] = position
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
@@ -1081,7 +1098,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     color_style.setNodeDimension(dimension)
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
-                                        shapeIdx, complex_shape=complexShape)
+                                        shapeIdx, shape_name, shape_info, complex_shape=complexShape)
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
                     text_line_width*scale, fontSize = text_font_size*scale)
                     floatingNodes_pos_dict['[' + temp_id + ']'] = position
@@ -1097,7 +1114,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
-                                        shapeIdx, complex_shape=complexShape)
+                                        shapeIdx, shape_name, shape_info, complex_shape=complexShape)
                     allNodes_pos_dict['[' + temp_id + ']'] = position
                     allNodes_dim_dict['[' + temp_id + ']'] = dimension
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),

@@ -493,6 +493,19 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shapeIdx = 4
                                 elif NumRenderpoints == 3: #triangle
                                     shapeIdx = 5
+                                    #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
+                                    upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
+                                    downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
+                                    leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
+                                    rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
+                                    if all(item in shapeInfo for item in upTriangle_vertex):
+                                        shapeIdx = 6
+                                    if all(item in shapeInfo for item in downTriangle_vertex):
+                                        shapeIdx = 7
+                                    if all(item in shapeInfo for item in leftTriangle_vertex):
+                                        shapeIdx = 8
+                                    if all(item in shapeInfo for item in rightTriangle_vertex):
+                                        shapeIdx = 9
                             else:
                                 shapeIdx = 0 
 
@@ -1487,7 +1500,8 @@ class load:
 
             (shape_idx, shape, vertex_positions): tuple.
             
-            shape_idx: int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+            shape_idx: int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle;
+                           6:upTriangle, 7:downTriangle, 8:leftTriangle, 9:rightTriangle 
             
             shape: str.
 
@@ -1502,34 +1516,38 @@ class load:
             shape_idx = 0
             shape = "text_only"
             shape_idx = self.df[1].iloc[idx_list[i]]["shape_idx"]
+            shape_name = self.df[1].iloc[idx_list[i]]["shape_name"]
             shape_info = self.df[1].iloc[idx_list[i]]["shape_info"]
             node_position = self.df[1].iloc[idx_list[i]]["position"]
             node_size = self.df[1].iloc[idx_list[i]]["size"]
-            if shape_idx == 1:
-                shape = "reactangle"
+            if shape_name == "rectangle":
                 vertex = [node_position,[node_position[0]+node_size[0],node_position[1]],
                 [node_position[0]+node_size[0],node_position[1]+node_size[1]],
                 [node_position[0],node_position[1]+node_size[1]]]
+            elif shape_name == "polygon":
+                for j in range(len(shape_info)):
+                    vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
+                    vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
+                    vertex.append([vertex_x,vertex_y])
+            if shape_idx == 1:
+                shape = "rectangle"
             elif shape_idx == 2:
                 shape = "circle"
             elif shape_idx == 3:
                 shape = "hexagon"
-                for j in range(len(shape_info)):
-                    vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
-                    vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
-                    vertex.append([vertex_x,vertex_y])
             elif shape_idx == 4:
                 shape = "line"
-                for j in range(len(shape_info)):
-                    vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
-                    vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
-                    vertex.append([vertex_x,vertex_y])
             elif shape_idx == 5:
                 shape = "triangle"
-                for j in range(len(shape_info)):
-                    vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
-                    vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
-                    vertex.append([vertex_x,vertex_y])
+            elif shape_idx == 6:
+                shape = "upTriangle"
+            elif shape_idx == 7:
+                shape = "downTriangle"
+            elif shape_idx == 8:
+                shape = "leftTriangle"
+            elif shape_idx == 9:
+                shape = "rightTriangle"
+            
 
             shape_list.append((shape_idx, shape, vertex))
 
@@ -1961,19 +1979,21 @@ class load:
         self.df = editSBML._setNodeSize(self.df, id, size)
         return self.df
 
-    def setNodeShape(self, id, shape_info):
+    def setNodeShape(self, id, shape):
         """
-        Set the node shape info.
+        Set the node shape by shape index or name string.
 
         Args:  
             id: str-node id.
 
-            shape_info: int/str-
-            int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle.
-            str-"text_only", "rectangle", "circle", "hexagon", "line", or "triangle".
+            shape: int/str-
+            int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle;
+                6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
+            str-"text_only", "rectangle", "circle", "hexagon", "line", or "triangle";
+                "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
             
         """
-        self.df = editSBML._setNodeShape(self.df, id, shape_info)
+        self.df = editSBML._setNodeShape(self.df, id, shape)
         return self.df
 
     def setNodeTextPosition(self, id, txt_position):
@@ -2464,7 +2484,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2479,7 +2499,7 @@ if __name__ == '__main__':
     #filename = "test_textGlyph.xml"
     #shape:
     #filename = "rectangle.xml"
-    #filename = "triangle.xml"
+    filename = "triangle.xml"
     #filename = "circle.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
@@ -2489,16 +2509,16 @@ if __name__ == '__main__':
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('triangle.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    try:
-        df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    except:
-        print("did not return textData")
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('triangle.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # try:
+    #     df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # except:
+    #     print("did not return textData")
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load("dfgdg")
@@ -2514,7 +2534,9 @@ if __name__ == '__main__':
     # print(df.getNodePosition("x_1"))
     # print(df.getNodePosition("x_0"))
     # print(df.getNodeSize("x_0"))
-    print(df.getNodeShape("x_1"))
+    # print(df.getNodeShape("x_0"))
+    # df.setNodeShape("x_0",5)
+    # print(df.getNodeShape("x_0"))
     # print(df.getNodeTextPosition("x_1"))
     # print(df.getNodeTextSize("x_1"))
     # print(df.getNodeFillColor("x_1"))
@@ -2581,7 +2603,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output', fileFormat = 'PDF')
+    df.draw(output_fileName = 'output')
        
 
     # print(df.getNetworkSize())
