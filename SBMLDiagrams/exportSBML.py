@@ -758,7 +758,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             elif spec_shapeIdx == 2: #ellipse
                 ellipse = style.getGroup().createEllipse()
                 ellipse.setCenter2D(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
-                ellipse.setRadii(libsbml.RelAbsVector(0, 100), libsbml.RelAbsVector(0, 100))
+                ellipse.setRadii(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
+                #percentage of width
             
             elif spec_shapeIdx == 3: #hexagon(6)
                 polygon = style.getGroup().createPolygon()

@@ -210,6 +210,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         setImageSize: list-1*2 matrix-size of the rectangle [width, height].
 
         scale: float-makes the figure output size = scale * default output size.
+        Increasing the scale can make the resolution higher.
 
         fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
