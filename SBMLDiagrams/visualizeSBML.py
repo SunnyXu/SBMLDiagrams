@@ -282,6 +282,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         floatingNodes_pos_dict = defaultdict(list)
         floatingNodes_dim_dict = defaultdict(list)
         shapeIdx = 1
+        shape_name = ''
+        shape_info = []
         textGlyph_id_list = []
         text_content_list = []
         text_position_list = []
@@ -569,30 +571,39 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 spec_border_width = group.getStrokeWidth()
                                 #name_list = []
                                 name = ''
-                                for element in group.getListOfElements():
-                                    name = element.getElementName()
-                                    #name_list.append(name)
-                                    try:
-                                        NumRenderpoints = element.getListOfElements().getNumRenderPoints()
-                                    except:
-                                        NumRenderpoints = 0
+                                #print(group.getNumElements())# There is only one element
+                                #for element in group.getListOfElements():
+                                element = group.getElement(0)
+                                name = element.getElementName()
                                 shapeIdx = 0
+                                shapeInfo = []
                                 if name == "rectangle":
                                     shapeIdx = 1
                                 elif name == "ellipse": #circle
                                     shapeIdx = 2
-                                elif name == "polygon" and NumRenderpoints == 6: #hexagon
-                                    shapeIdx = 3
-                                elif name == "polygon" and NumRenderpoints == 2: #line
-                                    shapeIdx = 4
-                                elif name == "polygon" and NumRenderpoints == 3: #triangle
-                                    shapeIdx = 5
+                                    center_x = element.getCX().getRelativeValue()
+                                    center_y = element.getCY().getRelativeValue()
+                                    radius_x = element.getRX().getRelativeValue()
+                                    radius_y = element.getRY().getRelativeValue()
+                                    shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
+                                elif name == "polygon":
+                                    NumRenderpoints = element.getListOfElements().getNumRenderPoints()
+                                    for num in range(NumRenderpoints):
+                                        point_x = element.getListOfElements().get(num).getX().getRelativeValue()
+                                        point_y = element.getListOfElements().get(num).getY().getRelativeValue()
+                                        shapeInfo.append([point_x,point_y]) 
+                                    if NumRenderpoints == 6: #hexagon:
+                                        shapeIdx = 3
+                                    elif NumRenderpoints == 2: #line
+                                        shapeIdx = 4
+                                    elif NumRenderpoints == 3: #triangle
+                                        shapeIdx = 5
                                 else:
-                                    shapeIdx = 0
+                                    shapeIdx = 0 
 
-                                spec_render.append([idList,color_style.getSpecFillColor(),
-                                                    color_style.getSpecBorderColor(),spec_border_width,shapeIdx])
-
+                                spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
+                                spec_border_width,shapeIdx,name,shapeInfo])
+                                
                             elif 'REACTIONGLYPH' in typeList:
                                 if group.isSetEndHead():
                                     temp_id = group.getEndHead()
@@ -833,6 +844,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_info = spec_render[k][6]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         if not color_style.getStyleName():
@@ -859,6 +872,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_info = spec_render[k][6]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         if not color_style.getStyleName():
@@ -887,6 +902,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_info = spec_render[k][6]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         if not color_style.getStyleName():
@@ -911,6 +928,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_info = spec_render[k][6]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         if not color_style.getStyleName():
@@ -1340,7 +1359,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml"
+    filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1354,7 +1373,7 @@ if __name__ == '__main__':
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
-    filename = "test_textGlyph.xml"
+    #filename = "test_textGlyph.xml"
     #filename = "output.xml"
 
 
@@ -1367,6 +1386,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr)
+        _draw(sbmlStr,output_fileName='output')
 
 
