@@ -841,20 +841,23 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     renderPoint.setCoordinates(libsbml.RelAbsVector(0,spec_shapeInfo[pts][0]),
                     libsbml.RelAbsVector(0,spec_shapeInfo[pts][1]))
 
-            elif spec_shapeType == 'ellipse':
-                try: #from dataFrame
-                    ellipse = style.getGroup().createEllipse()
-                    ellipse.setCenter2D(libsbml.RelAbsVector(0, spec_shapeInfo[0][0][0]), 
-                    libsbml.RelAbsVector(0, spec_shapeInfo[0][0][1]))
-                    ellipse.setRadii(libsbml.RelAbsVector(0, spec_shapeInfo[0][1][0]),
-                    libsbml.RelAbsVector(0, spec_shapeInfo[0][1][1]))
-                    #percentage of width
-                except: #from excel sheet
-                    ellipse = style.getGroup().createEllipse()
-                    ellipse.setCenter2D(libsbml.RelAbsVector(0, spec_shapeInfo[0][0]), 
-                    libsbml.RelAbsVector(0, spec_shapeInfo[0][1]))
-                    ellipse.setRadii(libsbml.RelAbsVector(0, spec_shapeInfo[1][0]),
-                    libsbml.RelAbsVector(0, spec_shapeInfo[1][1]))
+            elif spec_shapeIdx == 2 or spec_shapeType == 'ellipse':
+                ellipse = style.getGroup().createEllipse()
+                ellipse.setCenter2D(libsbml.RelAbsVector(0, 50.), libsbml.RelAbsVector(0, 50.))
+                ellipse.setRadii(libsbml.RelAbsVector(0, 50.),libsbml.RelAbsVector(0, 50.))
+                # try: #from dataFrame
+                #     ellipse = style.getGroup().createEllipse()
+                #     ellipse.setCenter2D(libsbml.RelAbsVector(0, spec_shapeInfo[0][0][0]), 
+                #     libsbml.RelAbsVector(0, spec_shapeInfo[0][0][1]))
+                #     ellipse.setRadii(libsbml.RelAbsVector(0, spec_shapeInfo[0][1][0]),
+                #     libsbml.RelAbsVector(0, spec_shapeInfo[0][1][1]))
+                #     #percentage of width
+                # except: #from excel sheet
+                #     ellipse = style.getGroup().createEllipse()
+                #     ellipse.setCenter2D(libsbml.RelAbsVector(0, spec_shapeInfo[0][0]), 
+                #     libsbml.RelAbsVector(0, spec_shapeInfo[0][1]))
+                #     ellipse.setRadii(libsbml.RelAbsVector(0, spec_shapeInfo[1][0]),
+                #     libsbml.RelAbsVector(0, spec_shapeInfo[1][1]))
 
             
             style = rInfo.createStyle("textStyle")

@@ -66,8 +66,8 @@ class TestEditSBML(unittest.TestCase):
     position = [412., 216.]
     size = [50., 29.]
     shapeIdx = 2
-    shape = 'circle'
-    shape_name = 'self'
+    shape = 'ellipse'
+    shape_name = 'self_shape'
     shape_info_polygon = [[0,0],[100,0],[0,100]]
     shape_info_ellipse = [[[50,50],[100,100]]]
     txt_position = [412., 216.]
@@ -86,7 +86,7 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setNodeShape(df_update, "x_1", shapeIdx)
     df_update = editSBML._setNodeShape(df_update, "x_1", shape)
     df_update = editSBML._setNodeArbitraryPolygonShape(df_update, "x_0", shape_name, shape_info_polygon)
-    df_update = editSBML._setNodeArbitraryEllipseShape(df_update, "x_0", shape_name, shape_info_ellipse)
+    # df_update = editSBML._setNodeArbitraryEllipseShape(df_update, "x_0", shape_name, shape_info_ellipse)
     df_update = editSBML._setNodeTextPosition(df_update, "x_1", txt_position)
     df_update = editSBML._setNodeTextSize(df_update, "x_1", txt_size)
     df_update = editSBML._setNodeFillColor(df_update, "x_1", fill_color, opacity = opacity)
@@ -100,9 +100,9 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[1].iloc[0]["position"] == position)
     self.assertTrue(df_update[1].iloc[0]["size"] == size)
     self.assertTrue(df_update[1].iloc[0]["shape_idx"] == shapeIdx)
+    self.assertTrue(df_update[1].iloc[0]["shape_type"] == shape)
     self.assertTrue(df_update[1].iloc[1]["shape_name"] == shape_name)
-    self.assertTrue(df_update[1].iloc[1]["shape_type"] == 'ellipse')
-    self.assertTrue(df_update[1].iloc[1]["shape_info"] == shape_info_ellipse)
+    self.assertTrue(df_update[1].iloc[1]["shape_info"] == shape_info_polygon)
     self.assertTrue(df_update[1].iloc[0]["txt_position"] == txt_position)
     self.assertTrue(df_update[1].iloc[0]["txt_size"] == txt_size)
     self.assertTrue(df_update[1].iloc[0]["fill_color"][0:-1] == fill_color)
@@ -133,12 +133,12 @@ class TestEditSBML(unittest.TestCase):
       editSBML._setNodeArbitraryPolygonShape(df_update, "x_0", 0, shape_info_polygon)
     with self.assertRaises(Exception):
       editSBML._setNodeArbitraryPolygonShape(df_update, "x_0", shape_name, shape_info_ellipse)
-    with self.assertRaises(Exception):
-      editSBML._setNodeArbitratyEllipseShape(df_update, "XX", shape_name, shape_info_ellipse)
-    with self.assertRaises(Exception):
-      editSBML._setNodeArbitratyEllipseShape(df_update, "x_0", 0, shape_info_ellipse)
-    with self.assertRaises(Exception):
-      editSBML._setNodeArbitratyEllipseShape(df_update, "x_0", shape_name, shape_info_polygon)
+    # with self.assertRaises(Exception):
+    #   editSBML._setNodeArbitraryEllipseShape(df_update, "XX", shape_name, shape_info_ellipse)
+    # with self.assertRaises(Exception):
+    #   editSBML._setNodeArbitraryEllipseShape(df_update, "x_0", 0, shape_info_ellipse)
+    # with self.assertRaises(Exception):
+    #   editSBML._setNodeArbitraryEllipseShape(df_update, "x_0", shape_name, shape_info_polygon)
     with self.assertRaises(Exception):
       editSBML._setNodeTextPosition(df_update, "XX", txt_position)
     with self.assertRaises(Exception):

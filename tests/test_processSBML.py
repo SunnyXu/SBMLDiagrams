@@ -931,10 +931,10 @@ class TestImportSBML(unittest.TestCase):
     position_txt_position = [413., 217.]
     size = [50., 29.]
     shapeIdx = 2
-    shape = "circle"
-    shape_name = "self" 
+    shape = "ellipse"
+    shape_name = "self_shape" 
     shape_info_polygon = [[0,0],[100,0],[0,100]]
-    shape_info_ellipse = [[[50,50],[100,100]]]
+    #shape_info_ellipse = [[[50,50],[100,100]]]
     txt_position = [412., 216.]
     txt_size = [50., 29.]
     fill_color = [255, 204, 154]
@@ -951,7 +951,7 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodeShape("x_1", shapeIdx)
     self.df.setNodeShape("x_1", shape)
     self.df.setNodeArbitraryPolygonShape("x_0", shape_name, shape_info_polygon)
-    self.df.setNodeArbitraryEllipseShape("x_0", shape_name, shape_info_ellipse)
+    # self.df._setNodeArbitraryEllipseShape("x_0", shape_name, shape_info_ellipse)
     self.df.setNodeTextPosition("x_1", txt_position)
     self.df.setNodeTextSize("x_1", txt_size)
     self.df.setNodeFillColor("x_1", fill_color, opacity = opacity)

@@ -582,14 +582,14 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 if shape_type == "rectangle":
                                     shapeIdx = 1
                                     shape_name = "rectangle"
-                                elif shape_type == "ellipse": #circle
+                                elif shape_type == "ellipse": #ellipse
                                     shapeIdx = 2
-                                    shape_name = "circle"
-                                    center_x = element.getCX().getRelativeValue()
-                                    center_y = element.getCY().getRelativeValue()
-                                    radius_x = element.getRX().getRelativeValue()
-                                    radius_y = element.getRY().getRelativeValue()
-                                    shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
+                                    shape_name = "ellipse"
+                                    # center_x = element.getCX().getRelativeValue()
+                                    # center_y = element.getCY().getRelativeValue()
+                                    # radius_x = element.getRX().getRelativeValue()
+                                    # radius_y = element.getRY().getRelativeValue()
+                                    # shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
                                 elif shape_type == "polygon":
                                     NumRenderpoints = element.getListOfElements().getNumRenderPoints()
                                     for num in range(NumRenderpoints):

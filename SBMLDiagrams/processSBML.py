@@ -478,14 +478,14 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             if shape_type == "rectangle":
                                 shapeIdx = 1
                                 shape_name = "rectangle"
-                            elif shape_type == "ellipse": #circle
+                            elif shape_type == "ellipse": #ellipse
                                 shapeIdx = 2
-                                shape_name = "circle"
-                                center_x = element.getCX().getRelativeValue()
-                                center_y = element.getCY().getRelativeValue()
-                                radius_x = element.getRX().getRelativeValue()
-                                radius_y = element.getRY().getRelativeValue()
-                                shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
+                                shape_name = "ellipse"
+                                # center_x = element.getCX().getRelativeValue()
+                                # center_y = element.getCY().getRelativeValue()
+                                # radius_x = element.getRX().getRelativeValue()
+                                # radius_y = element.getRY().getRelativeValue()
+                                # shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
                             elif shape_type == "polygon":
                                 NumRenderpoints = element.getListOfElements().getNumRenderPoints()
                                 for num in range(NumRenderpoints):
@@ -1983,9 +1983,9 @@ class load:
             id: str-node id.
 
             shape: int/str-
-            int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle;
+            int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
                 6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
-            str-"text_only", "rectangle", "circle", "hexagon", "line", or "triangle";
+            str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
                 "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
             
         """
@@ -2007,19 +2007,19 @@ class load:
         self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info)
         return self.df
 
-    def setNodeArbitraryEllipseShape(self, id, shape_name, shape_info):
-        """
-        Set an arbitrary ellipse shape to a node by shape name and shape info.
+    # def _setNodeArbitraryEllipseShape(self, id, shape_name, shape_info):
+    #     """
+    #     Set an arbitrary ellipse shape to a node by shape name and shape info.
 
-        Args:  
-            id: str-node id.
+    #     Args:  
+    #         id: str-node id.
 
-            shape_name: str-name of the arbitrary ellipse shape.
+    #         shape_name: str-name of the arbitrary ellipse shape.
 
-            shape_info: list-[[[x1,y1],[r1,r2]]], where x,y,r are floating numbers from 0 to 100.
-        """
-        self.df = editSBML._setNodeArbitraryEllipseShape(self.df, id, shape_name, shape_info)
-        return self.df
+    #         shape_info: list-[[[x1,y1],[r1,r2]]], where x,y,r are floating numbers from 0 to 100.
+    #     """
+    #     self.df = editSBML._setNodeArbitraryEllipseShape(self.df, id, shape_name, shape_info)
+    #     return self.df
 
     def setNodeTextPosition(self, id, txt_position):
         """
@@ -2525,7 +2525,7 @@ if __name__ == '__main__':
     #shape:
     #filename = "rectangle.xml"
     #filename = "triangle.xml"
-    filename = "circle.xml"
+    filename = "ellipse.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
 
@@ -2596,7 +2596,6 @@ if __name__ == '__main__':
     # df.setNodeShape("x_1", 0)
     # df.setNodeShape("x_0","triangle")
     # df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
-    #df.setNodeArbitraryEllipseShape("x_0","self-ellipse",[[[50,50],[100,100]]])
     # df.setNodeTextPosition("x_1", [413., 216.])
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
@@ -2629,7 +2628,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output')
+    df.draw(output_fileName = 'output')
        
 
     # print(df.getNetworkSize())

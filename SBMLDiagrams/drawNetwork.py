@@ -97,6 +97,48 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
         Color =  outline
         )    
     canvas.drawRoundRect(rect, radius, radius, paintStroke);   
+
+def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = False):
+
+    """
+    Draw an ellipse on canvas.
+
+    Args:  
+        canvas: skia.Canvas.
+        x: float-top left-hand corner position_x.
+        y: float-top left-hand corner position_y.
+        width: float-width of the rectangle.
+        height: float-height of the rectangle.
+        outline: skia.Color()-border color.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
+    """
+
+    rect = skia.Rect(x, y, x+width, y+height)    
+    paintFill = skia.Paint(
+      AntiAlias=True,
+      Style = skia.Paint.kFill_Style,
+      Color = fill
+    )    
+    canvas.drawOval(rect, paintFill)
+    if dash:
+        paintStroke = skia.Paint(
+        AntiAlias=True,
+        PathEffect=skia.DashPathEffect.Make([10.0, 5.0, 2.0, 5.0], 0.0),
+        StrokeWidth=linewidth,
+        Style = skia.Paint.kStroke_Style,
+        Color = outline
+        )  
+    else:  
+        paintStroke = skia.Paint(
+        AntiAlias=True,
+        StrokeWidth=linewidth,
+        Style = skia.Paint.kStroke_Style,
+        Color = outline
+        )  
+    canvas.drawOval(rect, paintStroke)
+ 
     
 def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
     
@@ -443,7 +485,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 
         spec_border_width: float-compartment border line width.
 
-        shapeIdx: int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle;
+        shapeIdx: int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
                       6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
 
         shape_name: str-name of the node shape. 
@@ -482,12 +524,19 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
             else:
                 _drawPolygon (canvas, pts, outline, fill, linewidth)
 
-        elif shapeIdx == 2: #circle
+        elif shape_type == 'ellipse' or shapeIdx == 2:
+            #circle
+            # if alias_node == 'alias':
+            #     _drawCircle (canvas, x, y, width, height, 
+            #                 outline, fill, linewidth, dash=True)
+            # else:
+            #     _drawCircle (canvas, x, y, width, height, 
+            #                 outline, fill, linewidth)
             if alias_node == 'alias':
-                _drawCircle (canvas, x, y, width, height, 
+                _drawEllipse (canvas, x, y, width, height, 
                             outline, fill, linewidth, dash=True)
             else:
-                _drawCircle (canvas, x, y, width, height, 
+                _drawEllipse (canvas, x, y, width, height, 
                             outline, fill, linewidth)
 
 
