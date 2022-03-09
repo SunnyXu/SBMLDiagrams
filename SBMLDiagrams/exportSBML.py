@@ -325,12 +325,37 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             for i in range(numNodes): 
                 spec_id = df_NodeData.iloc[i]['id']  
                 spec_index = df_NodeData.iloc[i]['idx']
-                spec_shapeIdx = df_NodeData.iloc[i]['shape_idx']
+                spec_shapeIdx = int(df_NodeData.iloc[i]['shape_idx'])
+                spec_shapeType = df_NodeData.iloc[i]['shape_type']
+                try:
+                    spec_shapeInfo_list_pre = list(df_NodeData.iloc[i]['shape_info'][1:-1].split(","))
+                except:
+                    spec_shapeInfo_list_pre = df_NodeData.iloc[i]['shape_info']
+                if spec_shapeInfo_list_pre == ['']:
+                    spec_shapeInfo = []
+                elif len(spec_shapeInfo_list_pre) == 0:
+                    spec_shapeInfo = []
+                else:
+                    spec_shapeInfo_pre = []
+                    spec_shapeInfo = []
+                    if type(spec_shapeInfo_list_pre[0]) is str:
+                        for ii in range(len(spec_shapeInfo_list_pre)):
+                            temp = spec_shapeInfo_list_pre[ii]
+                            if temp.find('[') != -1:
+                                temp_update = temp.replace('[', '')
+                            elif temp.find(']') != -1:
+                                temp_update = temp.replace(']', '')
+                            spec_shapeInfo_pre.append(float(temp_update))
+                        for ii in range(0,len(spec_shapeInfo_pre),2):
+                            spec_shapeInfo.append([spec_shapeInfo_pre[ii], spec_shapeInfo_pre[ii+1]])
+                    else:
+                        spec_shapeInfo = spec_shapeInfo_list_pre
                 speciesGlyph = layout.createSpeciesGlyph()
                 specG_id = "SpecG_"  + spec_id + '_idx_' + str(spec_index)
                 speciesGlyph.setId(specG_id)
                 speciesGlyph.setSpeciesId(spec_id)
                 bb_id  = "bb_" + spec_id + '_idx_' + str(spec_index)
+
                 try:
                     position_list = list(df_NodeData.iloc[i]['position'][1:-1].split(","))
                     size_list = list(df_NodeData.iloc[i]['size'][1:-1].split(","))
@@ -377,7 +402,32 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             for i in range(numNodes):
                 spec_id = df_NodeData.iloc[i]['id']  
                 spec_index = df_NodeData.iloc[i]['idx']
+                spec_shapeIdx = int(df_NodeData.iloc[i]['shape_idx'])
                 spec_shapeIdx = df_NodeData.iloc[i]['shape_idx']
+                spec_shapeType = df_NodeData.iloc[i]['shape_type']
+                try:
+                    spec_shapeInfo_list_pre = list(df_NodeData.iloc[i]['shape_info'][1:-1].split(","))
+                except:
+                    spec_shapeInfo_list_pre = df_NodeData.iloc[i]['shape_info']
+                if spec_shapeInfo_list_pre == ['']:
+                    spec_shapeInfo = []
+                elif len(spec_shapeInfo_list_pre) == 0:
+                    spec_shapeInfo = []
+                else:
+                    spec_shapeInfo_pre = []
+                    spec_shapeInfo = []
+                    if type(spec_shapeInfo_list_pre[0]) is str:
+                        for ii in range(len(spec_shapeInfo_list_pre)):
+                            temp = spec_shapeInfo_list_pre[ii]
+                            if temp.find('[') != -1:
+                                temp_update = temp.replace('[', '')
+                            elif temp.find(']') != -1:
+                                temp_update = temp.replace(']', '')
+                            spec_shapeInfo_pre.append(float(temp_update))
+                        for ii in range(0,len(spec_shapeInfo_pre),2):
+                            spec_shapeInfo.append([spec_shapeInfo_pre[ii], spec_shapeInfo_pre[ii+1]])
+                    else:
+                        spec_shapeInfo = spec_shapeInfo_list_pre
                 speciesGlyph = layout.createSpeciesGlyph()
                 specG_id = "SpecG_"  + spec_id + '_idx_' + str(spec_index)
                 speciesGlyph.setId(specG_id)
@@ -694,6 +744,32 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         for i in range(numNodes):
             spec_id = df_NodeData.iloc[i]['id']  
             spec_shapeIdx = int(df_NodeData.iloc[i]['shape_idx'])
+            spec_shapeType = df_NodeData.iloc[i]['shape_type']
+
+            try:
+                spec_shapeInfo_list_pre = list(df_NodeData.iloc[i]['shape_info'][1:-1].split(","))
+            except:
+                spec_shapeInfo_list_pre = df_NodeData.iloc[i]['shape_info']
+            if spec_shapeInfo_list_pre == ['']:
+                spec_shapeInfo = []
+            elif len(spec_shapeInfo_list_pre) == 0:
+                spec_shapeInfo = []
+            else:
+                spec_shapeInfo_pre = []
+                spec_shapeInfo = []
+                if type(spec_shapeInfo_list_pre[0]) is str:
+                    for ii in range(len(spec_shapeInfo_list_pre)):
+                        temp = spec_shapeInfo_list_pre[ii]
+                        if temp.find('[') != -1:
+                            temp_update = temp.replace('[', '')
+                        elif temp.find(']') != -1:
+                            temp_update = temp.replace(']', '')
+                        spec_shapeInfo_pre.append(float(temp_update))
+                    for ii in range(0,len(spec_shapeInfo_pre),2):
+                        spec_shapeInfo.append([spec_shapeInfo_pre[ii], spec_shapeInfo_pre[ii+1]])
+                else:
+                    spec_shapeInfo = spec_shapeInfo_list_pre
+
             try: 
                 try:
                     spec_fill_color   = list(df_NodeData.iloc[i]['fill_color'][1:-1].split(","))
@@ -752,10 +828,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             style.addType("SPECIESGLYPH")
             style.addId(spec_id)
             #Pls note that shapeIdx is different from Coyote
-            if spec_shapeIdx == 0: #text_only
-                pass
-
-            elif spec_shapeIdx == 1: #rectangle
+            if spec_shapeIdx == 1: #rectangle
                 rectangle = style.getGroup().createRectangle()
                 rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
                 libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
@@ -765,71 +838,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 ellipse.setCenter2D(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
                 ellipse.setRadii(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
                 #percentage of width
-            
-            elif spec_shapeIdx == 3: #hexagon(6)
+
+            if spec_shapeType == 'polygon':            
                 polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,75), libsbml.RelAbsVector(0,7))
-                renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,7))
-                renderPoint4 = polygon.createPoint()
-                renderPoint4.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
-                renderPoint5 = polygon.createPoint()
-                renderPoint5.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,86))
-                renderPoint6 = polygon.createPoint()
-                renderPoint6.setCoordinates(libsbml.RelAbsVector(0,75), libsbml.RelAbsVector(0,86))
-            elif spec_shapeIdx == 4: #line(2)
-                polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
-            elif spec_shapeIdx == 5: #triangle(3)
-                polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,7))
-                renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,86))
-            elif spec_shapeIdx == 6: #upTriangle(3)
-                polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,50), libsbml.RelAbsVector(0,0))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,80.6))
-                renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,80.6))
-            elif spec_shapeIdx == 7: #downTriangle(3)
-                polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,0))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,0.))
-                renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,50), libsbml.RelAbsVector(0,80.6))
-            elif spec_shapeIdx == 8: #leftTriangle(3)
-                polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,80.6), libsbml.RelAbsVector(0,0))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,80.6), libsbml.RelAbsVector(0,100))
-                renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
-            elif spec_shapeIdx == 9: #rightTriangle(3)
-                polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,0))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,80.6), libsbml.RelAbsVector(0,50))
-                renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,100))
-            else: #others as default (rectangle)
-                rectangle = style.getGroup().createRectangle()
-                rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
-                libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+                for pts in range(len(spec_shapeInfo)):
+                    renderPoint = polygon.createPoint()
+                    renderPoint.setCoordinates(libsbml.RelAbsVector(0,spec_shapeInfo[pts][0]),
+                    libsbml.RelAbsVector(0,spec_shapeInfo[pts][1]))
             
             style = rInfo.createStyle("textStyle")
             style.getGroup().setStroke("text_line_color" + "_" + spec_id)
@@ -919,7 +934,7 @@ if __name__ == '__main__':
 #     # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
 #     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
 
-    xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
+    xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'node_grid.xlsx'))
     df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
     df_NodeData = pd.read_excel(xls, 'NodeData')
     df_ReactionData = pd.read_excel(xls, 'ReactionData')
@@ -928,7 +943,7 @@ if __name__ == '__main__':
 
     sbmlStr_layout_render = _DFToSBML(df)
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
         

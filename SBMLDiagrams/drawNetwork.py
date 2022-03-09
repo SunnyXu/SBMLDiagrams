@@ -420,8 +420,8 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
   
     
 def addNode(canvas, floating_boundary_node, alias_node, position, dimension, 
-        spec_border_color, spec_fill_color, spec_border_width, shapeIdx, shape_name, shape_info,
-        complex_shape = ''):
+        spec_border_color, spec_fill_color, spec_border_width, 
+        shapeIdx, shape_name, shape_type, shape_info, complex_shape = ''):
     
     """
     Add a node.
@@ -443,7 +443,15 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 
         spec_border_width: float-compartment border line width.
 
-        shapeIdx: int-1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+        shapeIdx: int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle;
+                      6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
+
+        shape_name: str-name of the node shape. 
+
+        shape_type: str-type of the node shape: rectangle, ellipse, polygon.
+
+        shape_info: list-polygon:[[x1,y1],[x2,y2],[x3,y3],etc], ellipse:[[[x1,y1],[r1,r2]]];
+                    where x,y,r are floating numbers from 0 to 100.
 
         complex_shape: str-''(default), 'monomer', 'dimer', 'trimer', or 'tetramer'.
 
@@ -470,48 +478,15 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
             else:
                 _drawCircle (canvas, x, y, width, height, 
                             outline, fill, linewidth)
-        elif shapeIdx == 3: #hexagon
-            pts = [[x+width,y+.5*height],[x+.75*width,y+.93*height], [x+.25*width,y+.93*height],
-            [x,y+.5*height],[x+.25*width,y+.07*height],[x+.75*width,y+.07*height]]
+        if shape_type == 'polygon':
+            pts = []
+            for ii in range(len(shape_info)):
+                pts.append([x+width*shape_info[ii][0]/100.,y+height*shape_info[ii][1]/100.])
             if alias_node == 'alias':
                 _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
             else:
                 _drawPolygon (canvas, pts, outline, fill, linewidth)
-        elif shapeIdx == 4: #line
-            if alias_node == 'alias':
-                _drawLine (canvas, x, y+.5*height, x+width, y+.5*height, outline, linewidth, dash=True)
-            else:
-                _drawLine (canvas, x, y+.5*height, x+width, y+.5*height, outline, linewidth)
-        elif shapeIdx == 5: #triangle
-            pts = [[x+width,y+.5*height],[x+.25*width,y+.07*height],[x+.25*width,y+.83*height]]
-            if alias_node == 'alias':
-                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
-            else:
-                _drawPolygon (canvas, pts, outline, fill, linewidth)
-        elif shapeIdx == 6: #upTriangle
-            pts = [[x+.5*width,y],[x+width,y+.806*height],[x,y+.806*height]]
-            if alias_node == 'alias':
-                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
-            else:
-                _drawPolygon (canvas, pts, outline, fill, linewidth)
-        elif shapeIdx == 7: #downTriangle
-            pts = [[x,y],[x+width,y],[x+.5*width,y+.806*height]]
-            if alias_node == 'alias':
-                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
-            else:
-                _drawPolygon (canvas, pts, outline, fill, linewidth)
-        elif shapeIdx == 8: #leftTriangle
-            pts = [[x+.806*width,y],[x+.806*width,y+height],[x,y+.5*height]]
-            if alias_node == 'alias':
-                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
-            else:
-                _drawPolygon (canvas, pts, outline, fill, linewidth)
-        elif shapeIdx == 9: #rightTriangle
-            pts = [[x,y],[x+.806*width,y+.5*height],[x,y+height]]
-            if alias_node == 'alias':
-                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
-            else:
-                _drawPolygon (canvas, pts, outline, fill, linewidth)
+
     elif complex_shape == 'monomer':
         if alias_node == 'alias':
             _drawCircle (canvas, x, y, width, height, 

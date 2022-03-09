@@ -282,41 +282,149 @@ def _setNodeShape(df, id, shape):
         df_temp: DataFrame-information after updates. 
     
     """
-    shape_idx = -1
+    shape_idx = -1 #undefined shape
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    shape_info = []
+    shape_type = ''
     if isinstance(shape, str):
+        shape_name = shape
         if shape == 'text_only':
             shape_idx = 0
         elif shape == 'rectangle':
             shape_idx = 1
+            shape_type = 'rectangle'
         elif shape == 'circle':
             shape_idx = 2
+            shape_type = 'ellipse'
+            shape_info = [[[50.0, 50.0], [100.0, 100.0]]]
         elif shape == 'hexagon':
             shape_idx = 3
+            shape_type = 'polygon'
+            shape_info = [[100.0, 50.0], [75.0, 7.0], [25.0, 7.0], [0.0, 50.0], [25.0, 86.0], [75.0, 86.0]]
         elif shape == "line":
             shape_idx = 4
+            shape_type = 'polygon'
+            shape_info = [[0.0, 50.0], [100.0, 50.0]]
         elif shape == "triangle":
             shape_idx = 5
+            shape_type = 'polygon'
+            shape_info = [[100.0, 50.0], [25.0, 7.0], [25.0, 86.0]]
         elif shape == "upTriangle":
             shape_idx = 6
+            shape_type = 'polygon'
+            shape_info = [[50.0, 0.0], [100.0, 80.6], [0.0, 80.6]]
         elif shape == "downTriangle":
             shape_idx = 7
+            shape_type = 'polygon'
+            shape_info = [[0.0, 0.0], [100.0, 0.0], [50.0, 80.6]]
         elif shape == "leftTriangle":
             shape_idx = 8
+            shape_type = 'polygon'
+            shape_info = [[80.6, 0.0], [80.6, 100.0], [0.0, 50.0]]
         elif shape == "rightTriangle":
             shape_idx = 9
+            shape_type = 'polygon'
+            shape_info = [[0.0, 0.0], [80.6, 50.0], [0.0, 100.0]]
         else:
             raise Exception("This is not a valid node shape information.")
     elif isinstance(shape, int):
         if 0 <= shape <= 9:
             shape_idx = shape
+            if shape == 0:
+                shape_name = 'text_only'
+            elif shape == 1:
+                shape_name = 'rectangle'
+                shape_type = 'rectangle'
+            elif shape == 2:
+                shape_name = 'circle'
+                shape_type = 'ellipse'
+                shape_info = [[[50.0, 50.0], [100.0, 100.0]]]
+            elif shape == 3:
+                shape_name = 'hexagon'
+                shape_type = 'polygon'
+                shape_info = [[100.0, 50.0], [75.0, 7.0], [25.0, 7.0], [0.0, 50.0], [25.0, 86.0], [75.0, 86.0]]
+            elif shape == 4:
+                shape_name = 'line'
+                shape_type = 'polygon'
+                shape_info = [[0.0, 50.0], [100.0, 50.0]]
+            elif shape == 5:
+                shape_name = 'triangle'
+                shape_type = 'polygon'
+                shape_info = [[100.0, 50.0], [25.0, 7.0], [25.0, 86.0]]
+            elif shape == 6:
+                shape_name = 'upTriangle'
+                shape_type = 'polygon'
+                shape_info = [[50.0, 0.0], [100.0, 80.6], [0.0, 80.6]]
+            elif shape == 7:
+                shape_name = 'downTirangle'
+                shape_type = 'polygon'
+                shape_info = [[0.0, 0.0], [100.0, 0.0], [50.0, 80.6]] 
+            elif shape == 8:
+                shape_name = 'leftTriangle'
+                shape_type = 'polygon'
+                shape_info = [[80.6, 0.0], [80.6, 100.0], [0.0, 50.0]]
+            elif shape == 9:
+                shape_name = 'rightTriangle'
+                shape_type = 'polygon'
+                shape_info = [[0.0, 0.0], [80.6, 50.0], [0.0, 100.0]]
         else:
             raise Exception("This is not a valid node shape information.")
     else:
         raise Exception("This is not a valid node shape information.")
+    for i in range(len(idx_list)):
+        df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
+        df_NodeData_temp.at[idx_list[i],"shape_name"] = shape_name
+        df_NodeData_temp.at[idx_list[i],"shape_type"] = shape_type
+        df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info):
+
+    """
+        Set an arbitrary polygon shape to a node by shape name and shape info.
+
+        Args:  
+            id: str-node id.
+
+            shape_name: str-name of the arbitrary polygon shape.
+
+            shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.        
+    
+    """
+    shape_idx = -2 #arbitrary polygon
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    if isinstance(shape_name, str):
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"shape_name"] = shape_name
+    else:
+        raise Exception("This is not a valid node shape name.")
+    #check the shape_info is in the correct format:
+    shape_info_flag = True
+    if isinstance(shape_info, list) and len(shape_info) >= 2:
+        for ii in range(len(shape_info)):
+            if isinstance(shape_info[ii], list) and len(shape_info[ii]) == 2:
+                if all(isinstance(float(item), float) for item in shape_info[ii]):
+                    pass
+                else:
+                    shape_info_flag = False
+                    raise Exception("This is not a valid node shape info1.")
+            else:
+                shape_info_flag = False
+                raise Exception("This is not a valid node shape info2.")               
+    else:
+        shape_info_flag = False
+        raise Exception("This is not a valid node shape info3.")
+    if shape_info_flag == True:
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
     df_temp = (df[0], df_NodeData_temp, df[2])

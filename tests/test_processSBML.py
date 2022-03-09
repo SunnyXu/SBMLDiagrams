@@ -861,7 +861,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodePosition("x_1")[0] == [413.0, 216.0])
     self.assertTrue(self.df.getNodeSize("x_1")[0] == [50.0, 30.0])
     self.assertTrue(self.df.getNodeShape("x_1")[0] == 
-    (1, 'rectangle', [[413.0, 216.0], [463.0, 216.0], [463.0, 246.0], [413.0, 246.0]]))
+    ('rectangle', [[413.0, 216.0], [463.0, 216.0], [463.0, 246.0], [413.0, 246.0]]))
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == [413.0, 216.0])
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == [50.0, 30.0])
     self.assertTrue(self.df.getNodeFillColor("x_1")[0] == \
@@ -959,7 +959,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.isFloatingNode("x_1")[0] == floating_node)
     self.assertTrue(self.df.getNodePosition("x_1")[0] == position)
     self.assertTrue(self.df.getNodeSize("x_1")[0] == size)
-    self.assertTrue(self.df.getNodeShape("x_1")[0][0] == shapeIdx)
+    self.assertTrue(self.df.getNodeShape("x_1")[0][0] == shape)
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == txt_position)
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == txt_size)
     self.assertTrue(self.df.getNodeFillColor("x_1")[0][0][0:-1] == fill_color)

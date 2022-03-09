@@ -45,6 +45,7 @@ TXTFONTCOLOR = 'txt_font_color'
 TXTLINEWIDTH = 'txt_line_width'
 TXTFONTSIZE = 'txt_font_size'
 SHAPENAME = 'shape_name'
+SHAPETYPE = 'shape_type'
 SHAPEINFO = 'shape_info'
 SOURCES = 'sources'
 TARGETS = 'targets'
@@ -62,7 +63,7 @@ COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
 COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
     CONCENTRATION, POSITION, SIZE, SHAPEIDX, TXTPOSITION, TXTSIZE, \
     FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, 
-    SHAPENAME, SHAPEINFO]
+    SHAPENAME, SHAPETYPE, SHAPEINFO]
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV]
 COLUMN_NAME_df_TextData = [ID, TXTCONTENT, TXTPOSITION, TXTSIZE, 
@@ -168,6 +169,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     spec_text_dimension_list = []
     shapeIdx = 1
     shape_name = ''
+    shape_type = ''
     shape_info = []
     spec_concentration_list = []
     textGlyph_id_list = []
@@ -465,23 +467,26 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_color = hex_to_rgb(color_list[k][1])
                             spec_border_width = group.getStrokeWidth()
                             #name_list = []
-                            name = ''
+                            shape_type = ''
                             #print(group.getNumElements())# There is only one element
                             #for element in group.getListOfElements():
                             element = group.getElement(0)
-                            name = element.getElementName()
+                            shape_type = element.getElementName()
                             shapeIdx = 0
+                            shape_name = "text_only"
                             shapeInfo = []
-                            if name == "rectangle":
+                            if shape_type == "rectangle":
                                 shapeIdx = 1
-                            elif name == "ellipse": #circle
+                                shape_name = "rectangle"
+                            elif shape_type == "ellipse": #circle
                                 shapeIdx = 2
+                                shape_name = "circle"
                                 center_x = element.getCX().getRelativeValue()
                                 center_y = element.getCY().getRelativeValue()
                                 radius_x = element.getRX().getRelativeValue()
                                 radius_y = element.getRY().getRelativeValue()
                                 shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
-                            elif name == "polygon":
+                            elif shape_type == "polygon":
                                 NumRenderpoints = element.getListOfElements().getNumRenderPoints()
                                 for num in range(NumRenderpoints):
                                     point_x = element.getListOfElements().get(num).getX().getRelativeValue()
@@ -489,10 +494,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shapeInfo.append([point_x,point_y]) 
                                 if NumRenderpoints == 6: #hexagon:
                                     shapeIdx = 3
+                                    shape_name = "hexagon"
                                 elif NumRenderpoints == 2: #line
                                     shapeIdx = 4
+                                    shape_name = "line"
                                 elif NumRenderpoints == 3: #triangle
                                     shapeIdx = 5
+                                    shape_name = "triangle"
                                     #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
                                     upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
                                     downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
@@ -500,17 +508,21 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
                                     if all(item in shapeInfo for item in upTriangle_vertex):
                                         shapeIdx = 6
+                                        shape_name = "upTriangle"
                                     if all(item in shapeInfo for item in downTriangle_vertex):
                                         shapeIdx = 7
+                                        shape_name = "downTriangle"
                                     if all(item in shapeInfo for item in leftTriangle_vertex):
                                         shapeIdx = 8
+                                        shape_name = "leftTriangle"
                                     if all(item in shapeInfo for item in rightTriangle_vertex):
                                         shapeIdx = 9
+                                        shape_name = "rightTriangle"
                             else:
                                 shapeIdx = 0 
 
                             spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,
-                            shapeIdx,name,shapeInfo])
+                            shapeIdx, shape_name, shape_type, shapeInfo])
 
                         elif 'REACTIONGLYPH' in typeList:
                             if group.isSetEndHead():
@@ -647,7 +659,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_width = spec_render[k][3]
                                     shapeIdx = spec_render[k][4]
                                     shape_name = spec_render[k][5]
-                                    shape_info = spec_render[k][6]
+                                    shape_type = spec_render[k][6]
+                                    shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
@@ -676,6 +689,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                             NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[SHAPENAME].append(shape_name)
+                            NodeData_row_dct[SHAPETYPE].append(shape_type)
                             NodeData_row_dct[SHAPEINFO].append(shape_info)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
@@ -698,7 +712,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_width = spec_render[k][3]
                                     shapeIdx = spec_render[k][4]
                                     shape_name = spec_render[k][5]
-                                    shape_info = spec_render[k][6]
+                                    shape_type = spec_render[k][6]
+                                    shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
@@ -726,6 +741,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                             NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[SHAPENAME].append(shape_name)
+                            NodeData_row_dct[SHAPETYPE].append(shape_type)
                             NodeData_row_dct[SHAPEINFO].append(shape_info)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
@@ -748,7 +764,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_width = spec_render[k][3]
                                     shapeIdx = spec_render[k][4]
                                     shape_name = spec_render[k][5]
-                                    shape_info = spec_render[k][6]
+                                    shape_type = spec_render[k][6]
+                                    shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
@@ -777,6 +794,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                             NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[SHAPENAME].append(shape_name)
+                            NodeData_row_dct[SHAPETYPE].append(shape_type)
                             NodeData_row_dct[SHAPEINFO].append(shape_info)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
@@ -797,7 +815,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_width = spec_render[k][3]
                                     shapeIdx = spec_render[k][4]
                                     shape_name = spec_render[k][5]
-                                    shape_info = spec_render[k][6]
+                                    shape_type = spec_render[k][6]
+                                    shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
@@ -826,6 +845,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                             NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                             NodeData_row_dct[SHAPENAME].append(shape_name)
+                            NodeData_row_dct[SHAPETYPE].append(shape_type)
                             NodeData_row_dct[SHAPEINFO].append(shape_info)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
@@ -1141,6 +1161,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                 NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                 NodeData_row_dct[SHAPENAME].append(shape_name)
+                NodeData_row_dct[SHAPETYPE].append(shape_type)
                 NodeData_row_dct[SHAPEINFO].append(shape_info)
                 # for j in range(len(COLUMN_NAME_df_NodeData)):
                 #     try: 
@@ -1186,6 +1207,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                 NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
                 NodeData_row_dct[SHAPENAME].append(shape_name)
+                NodeData_row_dct[SHAPETYPE].append(shape_type)
                 NodeData_row_dct[SHAPEINFO].append(shape_info)
                 # for j in range(len(COLUMN_NAME_df_NodeData)):
                 #     try: 
@@ -1496,16 +1518,11 @@ class load:
             id: str-the id of the node.
 
         Returns:
-            shape_list: list of tuple (shape_idx, shape).
-
-            (shape_idx, shape, vertex_positions): tuple.
+            shape_list: list of tuple (shape_name, vertex_positions)
             
-            shape_idx: int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle;
-                           6:upTriangle, 7:downTriangle, 8:leftTriangle, 9:rightTriangle 
-            
-            shape: str.
+            shape_name: str-the name of the node shape.
 
-            vertex_positions: list 
+            vertex_positions: list-the vertex positions if any. 
 
         """
 
@@ -1513,43 +1530,22 @@ class load:
         vertex = []
         shape_list =[] 
         for i in range(len(idx_list)):
-            shape_idx = 0
-            shape = "text_only"
-            shape_idx = self.df[1].iloc[idx_list[i]]["shape_idx"]
             shape_name = self.df[1].iloc[idx_list[i]]["shape_name"]
+            shape_type = self.df[1].iloc[idx_list[i]]["shape_type"]
             shape_info = self.df[1].iloc[idx_list[i]]["shape_info"]
             node_position = self.df[1].iloc[idx_list[i]]["position"]
             node_size = self.df[1].iloc[idx_list[i]]["size"]
-            if shape_name == "rectangle":
+            if shape_type == "rectangle":
                 vertex = [node_position,[node_position[0]+node_size[0],node_position[1]],
                 [node_position[0]+node_size[0],node_position[1]+node_size[1]],
                 [node_position[0],node_position[1]+node_size[1]]]
-            elif shape_name == "polygon":
+            elif shape_type == "polygon":
                 for j in range(len(shape_info)):
                     vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
                     vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
-                    vertex.append([vertex_x,vertex_y])
-            if shape_idx == 1:
-                shape = "rectangle"
-            elif shape_idx == 2:
-                shape = "circle"
-            elif shape_idx == 3:
-                shape = "hexagon"
-            elif shape_idx == 4:
-                shape = "line"
-            elif shape_idx == 5:
-                shape = "triangle"
-            elif shape_idx == 6:
-                shape = "upTriangle"
-            elif shape_idx == 7:
-                shape = "downTriangle"
-            elif shape_idx == 8:
-                shape = "leftTriangle"
-            elif shape_idx == 9:
-                shape = "rightTriangle"
-            
+                    vertex.append([vertex_x,vertex_y])         
 
-            shape_list.append((shape_idx, shape, vertex))
+            shape_list.append((shape_name, vertex))
 
         return shape_list
 
@@ -1994,6 +1990,21 @@ class load:
             
         """
         self.df = editSBML._setNodeShape(self.df, id, shape)
+        return self.df
+
+    def setNodeArbitraryPolygonShape(self, id, shape_name, shape_info):
+        """
+        Set an arbitrary polygon shape to a node by shape name and shape info.
+
+        Args:  
+            id: str-node id.
+
+            shape_name: str-name of the arbitrary polygon shape.
+
+            shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
+            
+        """
+        self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info)
         return self.df
 
     def setNodeTextPosition(self, id, txt_position):
@@ -2491,7 +2502,7 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
-    #filename = "mass_action_rxn.xml"
+    filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
@@ -2499,7 +2510,7 @@ if __name__ == '__main__':
     #filename = "test_textGlyph.xml"
     #shape:
     #filename = "rectangle.xml"
-    filename = "triangle.xml"
+    #filename = "triangle.xml"
     #filename = "circle.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
@@ -2509,16 +2520,16 @@ if __name__ == '__main__':
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('triangle.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # try:
-    #     df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # except:
-    #     print("did not return textData")
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('output.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    try:
+        df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    except:
+        print("did not return textData")
+    writer.save()
 
     df = load(sbmlStr)
     #df = load("dfgdg")
@@ -2534,8 +2545,6 @@ if __name__ == '__main__':
     # print(df.getNodePosition("x_1"))
     # print(df.getNodePosition("x_0"))
     # print(df.getNodeSize("x_0"))
-    # print(df.getNodeShape("x_0"))
-    # df.setNodeShape("x_0",5)
     # print(df.getNodeShape("x_0"))
     # print(df.getNodeTextPosition("x_1"))
     # print(df.getNodeTextSize("x_1"))
@@ -2571,6 +2580,8 @@ if __name__ == '__main__':
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
     # df.setNodeShape("x_1", 0)
+    # df.setNodeShape("x_0","triangle")
+    # df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
     # df.setNodeTextPosition("x_1", [413., 216.])
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
@@ -2603,7 +2614,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output')
+    # df.draw(output_fileName = 'output')
        
 
     # print(df.getNetworkSize())
