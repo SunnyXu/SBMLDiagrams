@@ -465,20 +465,15 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
     if floating_boundary_node == 'boundary':
         linewidth = 2*linewidth
     if complex_shape == '':
+        #Pls note that shapeIdx is different from Coyote
         #shapeIdx = 0 
-        if shapeIdx == 1: #rectangle
+        if shape_type == 'rectangle' or shapeIdx == 1: #rectangle
             if alias_node == 'alias':
                 _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = True)
             else:
                 _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth)
-        elif shapeIdx == 2: #circle
-            if alias_node == 'alias':
-                _drawCircle (canvas, x, y, width, height, 
-                            outline, fill, linewidth, dash=True)
-            else:
-                _drawCircle (canvas, x, y, width, height, 
-                            outline, fill, linewidth)
-        if shape_type == 'polygon':
+        
+        elif shape_type == 'polygon':
             pts = []
             for ii in range(len(shape_info)):
                 pts.append([x+width*shape_info[ii][0]/100.,y+height*shape_info[ii][1]/100.])
@@ -486,6 +481,15 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
                 _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
             else:
                 _drawPolygon (canvas, pts, outline, fill, linewidth)
+
+        elif shapeIdx == 2: #circle
+            if alias_node == 'alias':
+                _drawCircle (canvas, x, y, width, height, 
+                            outline, fill, linewidth, dash=True)
+            else:
+                _drawCircle (canvas, x, y, width, height, 
+                            outline, fill, linewidth)
+
 
     elif complex_shape == 'monomer':
         if alias_node == 'alias':

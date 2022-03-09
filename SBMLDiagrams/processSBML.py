@@ -2007,6 +2007,20 @@ class load:
         self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info)
         return self.df
 
+    def setNodeArbitraryEllipseShape(self, id, shape_name, shape_info):
+        """
+        Set an arbitrary ellipse shape to a node by shape name and shape info.
+
+        Args:  
+            id: str-node id.
+
+            shape_name: str-name of the arbitrary ellipse shape.
+
+            shape_info: list-[[[x1,y1],[r1,r2]]], where x,y,r are floating numbers from 0 to 100.
+        """
+        self.df = editSBML._setNodeArbitraryEllipseShape(self.df, id, shape_name, shape_info)
+        return self.df
+
     def setNodeTextPosition(self, id, txt_position):
         """
         Set the x,y coordinates of the node text position.
@@ -2502,7 +2516,7 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
-    filename = "mass_action_rxn.xml"
+    #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
@@ -2511,7 +2525,7 @@ if __name__ == '__main__':
     #shape:
     #filename = "rectangle.xml"
     #filename = "triangle.xml"
-    #filename = "circle.xml"
+    filename = "circle.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
 
@@ -2520,16 +2534,16 @@ if __name__ == '__main__':
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('output.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    try:
-        df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    except:
-        print("did not return textData")
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('output.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # try:
+    #     df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # except:
+    #     print("did not return textData")
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load("dfgdg")
@@ -2582,6 +2596,7 @@ if __name__ == '__main__':
     # df.setNodeShape("x_1", 0)
     # df.setNodeShape("x_0","triangle")
     # df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
+    #df.setNodeArbitraryEllipseShape("x_0","self-ellipse",[[[50,50],[100,100]]])
     # df.setNodeTextPosition("x_1", [413., 216.])
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)

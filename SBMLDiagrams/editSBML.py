@@ -415,18 +415,68 @@ def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info):
                     pass
                 else:
                     shape_info_flag = False
-                    raise Exception("This is not a valid node shape info1.")
+                    raise Exception("This is not a valid node shape info.")
             else:
                 shape_info_flag = False
-                raise Exception("This is not a valid node shape info2.")               
+                raise Exception("This is not a valid node shape info.")               
     else:
         shape_info_flag = False
-        raise Exception("This is not a valid node shape info3.")
+        raise Exception("This is not a valid node shape info.")
     if shape_info_flag == True:
         for i in range(len(idx_list)):
             df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
+        df_NodeData_temp.at[idx_list[i],"shape_type"] = 'polygon'
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeArbitraryEllipseShape(df, id, shape_name, shape_info):
+
+    """
+        Set an arbitrary ellipse shape to a node by shape name and shape info.
+
+        Args:  
+            id: str-node id.
+
+            shape_name: str-name of the arbitrary ellipse shape.
+
+            shape_info: list-[[[x1,y1],[r1,r2]]], where x,y,r are floating numbers from 0 to 100.        
+    
+    """
+    shape_idx = -3 #arbitrary ellipse
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    if isinstance(shape_name, str):
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"shape_name"] = shape_name
+    else:
+        raise Exception("This is not a valid node shape name.")
+    #check the shape_info is in the correct format:
+    shape_info_flag = True
+    if isinstance(shape_info, list) and len(shape_info) == 1:
+        if isinstance(shape_info[0], list) and len(shape_info[0]) == 2:
+            for ii in range(len(shape_info[0])):
+                if all(isinstance(float(item), float) for item in shape_info[0][ii]):
+                    pass
+                else:
+                    shape_info_flag = False
+                    raise Exception("This is not a valid node shape info.")
+        else:
+            shape_info_flag = False
+            raise Exception("This is not a valid node shape info.")               
+    else:
+        shape_info_flag = False
+        raise Exception("This is not a valid node shape info.")
+    if shape_info_flag == True:
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
+    for i in range(len(idx_list)):
+        df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
+        df_NodeData_temp.at[idx_list[i],"shape_type"] = 'ellipse'
     df_temp = (df[0], df_NodeData_temp, df[2])
 
     return df_temp

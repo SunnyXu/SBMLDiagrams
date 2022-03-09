@@ -150,11 +150,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             rct = [] # id list of the rcts
             prd = []
             mod = []
-            try:
+            try: #from excel sheet
                 rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
                 prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
                 mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
-            except:
+            except: #from dataFrame
                 rct_list = df_ReactionData.iloc[i]['sources']
                 prd_list = df_ReactionData.iloc[i]['targets']
                 mod_list = df_ReactionData.iloc[i]['modifiers']
@@ -311,10 +311,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     compartmentGlyph.setId(compG_id)
                     compartmentGlyph.setCompartmentId(comp_id)
                     bb_id  = "bb_" + comp_id
-                    try:
+                    try: 
                         position_list = list(df_CompartmentData.iloc[i]['position'][1:-1].split(","))
                         size_list = list(df_CompartmentData.iloc[i]['size'][1:-1].split(","))
-                    except:
+                    except: 
                         position_list = df_CompartmentData.iloc[i]['position']
                         size_list = df_CompartmentData.iloc[i]['size']
                     pos_x  = float(position_list[0])
@@ -331,6 +331,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     spec_shapeInfo_list_pre = list(df_NodeData.iloc[i]['shape_info'][1:-1].split(","))
                 except:
                     spec_shapeInfo_list_pre = df_NodeData.iloc[i]['shape_info']
+                #from excel sheet
                 if spec_shapeInfo_list_pre == ['']:
                     spec_shapeInfo = []
                 elif len(spec_shapeInfo_list_pre) == 0:
@@ -553,7 +554,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 except:
                     center_pos = df_ReactionData.iloc[i]['center_pos']
                     handles_list_pre = df_ReactionData.iloc[i]['handles']
-                
+                #from excel sheet
                 handles_pre = []
                 handles = []
                 if type(handles_list_pre[0]) is str:
@@ -827,24 +828,34 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             style.getGroup().setStrokeWidth(spec_border_width)
             style.addType("SPECIESGLYPH")
             style.addId(spec_id)
-            #Pls note that shapeIdx is different from Coyote
-            if spec_shapeIdx == 1: #rectangle
+
+            if spec_shapeIdx == 1 or spec_shapeType == 'rectangle': #rectangle
                 rectangle = style.getGroup().createRectangle()
                 rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
                 libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
 
-            elif spec_shapeIdx == 2: #ellipse-circle
-                ellipse = style.getGroup().createEllipse()
-                ellipse.setCenter2D(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
-                ellipse.setRadii(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
-                #percentage of width
-
-            if spec_shapeType == 'polygon':            
+            elif spec_shapeType == 'polygon':            
                 polygon = style.getGroup().createPolygon()
                 for pts in range(len(spec_shapeInfo)):
                     renderPoint = polygon.createPoint()
                     renderPoint.setCoordinates(libsbml.RelAbsVector(0,spec_shapeInfo[pts][0]),
                     libsbml.RelAbsVector(0,spec_shapeInfo[pts][1]))
+
+            elif spec_shapeType == 'ellipse':
+                try: #from dataFrame
+                    ellipse = style.getGroup().createEllipse()
+                    ellipse.setCenter2D(libsbml.RelAbsVector(0, spec_shapeInfo[0][0][0]), 
+                    libsbml.RelAbsVector(0, spec_shapeInfo[0][0][1]))
+                    ellipse.setRadii(libsbml.RelAbsVector(0, spec_shapeInfo[0][1][0]),
+                    libsbml.RelAbsVector(0, spec_shapeInfo[0][1][1]))
+                    #percentage of width
+                except: #from excel sheet
+                    ellipse = style.getGroup().createEllipse()
+                    ellipse.setCenter2D(libsbml.RelAbsVector(0, spec_shapeInfo[0][0]), 
+                    libsbml.RelAbsVector(0, spec_shapeInfo[0][1]))
+                    ellipse.setRadii(libsbml.RelAbsVector(0, spec_shapeInfo[1][0]),
+                    libsbml.RelAbsVector(0, spec_shapeInfo[1][1]))
+
             
             style = rInfo.createStyle("textStyle")
             style.getGroup().setStroke("text_line_color" + "_" + spec_id)

@@ -932,6 +932,9 @@ class TestImportSBML(unittest.TestCase):
     size = [50., 29.]
     shapeIdx = 2
     shape = "circle"
+    shape_name = "self" 
+    shape_info_polygon = [[0,0],[100,0],[0,100]]
+    shape_info_ellipse = [[[50,50],[100,100]]]
     txt_position = [412., 216.]
     txt_size = [50., 29.]
     fill_color = [255, 204, 154]
@@ -947,6 +950,8 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodeSize("x_1", size)
     self.df.setNodeShape("x_1", shapeIdx)
     self.df.setNodeShape("x_1", shape)
+    self.df.setNodeArbitraryPolygonShape("x_0", shape_name, shape_info_polygon)
+    self.df.setNodeArbitraryEllipseShape("x_0", shape_name, shape_info_ellipse)
     self.df.setNodeTextPosition("x_1", txt_position)
     self.df.setNodeTextSize("x_1", txt_size)
     self.df.setNodeFillColor("x_1", fill_color, opacity = opacity)
@@ -960,6 +965,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodePosition("x_1")[0] == position)
     self.assertTrue(self.df.getNodeSize("x_1")[0] == size)
     self.assertTrue(self.df.getNodeShape("x_1")[0][0] == shape)
+    self.assertTrue(self.df.getNodeShape("x_0")[0][0] == shape_name)
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == txt_position)
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == txt_size)
     self.assertTrue(self.df.getNodeFillColor("x_1")[0][0][0:-1] == fill_color)
