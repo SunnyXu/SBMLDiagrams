@@ -26,7 +26,7 @@ class TestExportSBML(unittest.TestCase):
     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, "ReactionData.csv"))
     df = (df_CompartmentData, df_NodeData, df_ReactionData)
     sbmlStr_layout_render = exportSBML._DFToSBML(df)
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = processSBML._SBMLToDF(sbmlStr_layout_render)
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _ = processSBML._SBMLToDF(sbmlStr_layout_render)
     
     xls_feedback = pd.ExcelFile(os.path.join(TEST_FOLDER, 'feedback.xlsx'))
     df_CompartmentData_feedback = pd.read_excel(xls_feedback, 'CompartmentData')
@@ -35,7 +35,7 @@ class TestExportSBML(unittest.TestCase):
     df_feedback = (df_CompartmentData_feedback, \
       df_NodeData_feedback, df_ReactionData_feedback)
     sbmlStr_layout_render_feedback = exportSBML._DFToSBML(df_feedback)
-    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback \
+    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _ \
        = processSBML._SBMLToDF(sbmlStr_layout_render_feedback)
 
     xls_LinearChain = pd.ExcelFile(os.path.join(TEST_FOLDER, 'LinearChain.xlsx'))
@@ -45,7 +45,7 @@ class TestExportSBML(unittest.TestCase):
     df_LinearChain = (df_CompartmentData_LinearChain, \
       df_NodeData_LinearChain, df_ReactionData_LinearChain)
     sbmlStr_layout_render_LinearChain = exportSBML._DFToSBML(df_LinearChain)
-    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain \
+    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain, _ \
        = processSBML._SBMLToDF(sbmlStr_layout_render_LinearChain)
 
     xls_test_no_comp = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test_no_comp.xlsx'))
@@ -56,7 +56,7 @@ class TestExportSBML(unittest.TestCase):
       df_NodeData_test_no_comp, df_ReactionData_test_no_comp)
     sbmlStr_layout_render_test_no_comp = exportSBML._DFToSBML(df_test_no_comp)
     self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, \
-      self.df_ReactionData_test_no_comp = processSBML._SBMLToDF(sbmlStr_layout_render_test_no_comp)
+      self.df_ReactionData_test_no_comp, _ = processSBML._SBMLToDF(sbmlStr_layout_render_test_no_comp)
 
     xls_test_comp = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test_comp.xlsx'))
     df_CompartmentData_test_comp = pd.read_excel(xls_test_comp, 'CompartmentData')
@@ -66,7 +66,7 @@ class TestExportSBML(unittest.TestCase):
       df_NodeData_test_comp, df_ReactionData_test_comp)
     sbmlStr_layout_render_test_comp = exportSBML._DFToSBML(df_test_comp)
     self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, \
-      self.df_ReactionData_test_comp = processSBML._SBMLToDF(sbmlStr_layout_render_test_comp)
+      self.df_ReactionData_test_comp, _ = processSBML._SBMLToDF(sbmlStr_layout_render_test_comp)
 
     xls_test_modifier = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test_modifier.xlsx'))
     df_CompartmentData_test_modifier = pd.read_excel(xls_test_modifier, 'CompartmentData')
@@ -76,7 +76,7 @@ class TestExportSBML(unittest.TestCase):
       df_NodeData_test_modifier, df_ReactionData_test_modifier)
     sbmlStr_layout_render_test_modifier = exportSBML._DFToSBML(df_test_modifier)
     self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, \
-      self.df_ReactionData_test_modifier = processSBML._SBMLToDF(sbmlStr_layout_render_test_modifier)
+      self.df_ReactionData_test_modifier, _ = processSBML._SBMLToDF(sbmlStr_layout_render_test_modifier)
  
     xls_node_grid = pd.ExcelFile(os.path.join(TEST_FOLDER, 'node_grid.xlsx'))
     df_CompartmentData_node_grid = pd.read_excel(xls_node_grid, 'CompartmentData')
@@ -86,7 +86,7 @@ class TestExportSBML(unittest.TestCase):
       df_NodeData_node_grid, df_ReactionData_node_grid)
     sbmlStr_layout_render_node_grid = exportSBML._DFToSBML(df_node_grid)
     self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, \
-      self.df_ReactionData_node_grid = processSBML._SBMLToDF(sbmlStr_layout_render_node_grid)
+      self.df_ReactionData_node_grid, _ = processSBML._SBMLToDF(sbmlStr_layout_render_node_grid)
 
     xls_mass_action_rxn = pd.ExcelFile(os.path.join(TEST_FOLDER, 'mass_action_rxn.xlsx'))
     df_CompartmentData_mass_action_rxn = pd.read_excel(xls_mass_action_rxn, 'CompartmentData')
@@ -96,7 +96,7 @@ class TestExportSBML(unittest.TestCase):
       df_NodeData_mass_action_rxn, df_ReactionData_mass_action_rxn)
     sbmlStr_layout_render_mass_action_rxn = exportSBML._DFToSBML(df_mass_action_rxn)
     self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, \
-      self.df_ReactionData_mass_action_rxn = processSBML._SBMLToDF(sbmlStr_layout_render_mass_action_rxn)
+      self.df_ReactionData_mass_action_rxn, _ = processSBML._SBMLToDF(sbmlStr_layout_render_mass_action_rxn)
 
   def testCompartment1(self):
     # Test all the column names

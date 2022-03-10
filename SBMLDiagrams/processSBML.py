@@ -1325,8 +1325,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     df_ReactionData = pd.concat([df_ReactionData,\
                         pd.DataFrame(ReactionData_row_dct)], ignore_index=True)  
         
-        return (df_CompartmentData, df_NodeData, df_ReactionData)
-        #return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData) 
+        #return (df_CompartmentData, df_NodeData, df_ReactionData)
+        return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData) 
 
     # except:
     #    raise ValueError('Invalid SBML!')
@@ -2325,6 +2325,116 @@ class load:
         
         return self.df_text
 
+    def getArbitraryTextPosition(self, txt_str):
+        """
+        Get the arbitrary text position with its content.
+
+        Args: 
+            txt_str: str-the content of the text.
+
+        Returns:
+            position_list: list of position.
+
+            position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+        """
+
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        position_list =[] 
+        for i in range(len(idx_list)):
+            position_list.append(self.df[3].iloc[idx_list[i]]["txt_position"])
+        return position_list
+
+    def getArbitraryTextSize(self, txt_str):
+        """
+        Get the arbitrary text size with its text content.
+
+        Args: 
+            txt_str: str-the text content.
+
+        Returns:
+            txt_size_list: list of txt_size.
+
+            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        """
+
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        txt_size_list =[] 
+        for i in range(len(idx_list)):
+            txt_size_list.append(self.df[3].iloc[idx_list[i]]["txt_size"])
+        return txt_size_list
+
+    def getArbitraryTextFontColor(self, txt_str):
+        """
+        Get the arbitrary text font color with its text content.
+
+        Args: 
+            txt_str: str-the text content.
+
+        Returns:
+            txt_font_color_list: list of txt_font_color.
+
+            txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)].
+        """
+
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        txt_font_color_list =[] 
+        for i in range(len(idx_list)):
+            rgb = self.df[3].iloc[idx_list[i]]["txt_font_color"]
+            color = _rgb_to_color(rgb)
+            txt_font_color_list.append(color)
+
+        return txt_font_color_list
+
+    def getArbitraryTextLineWidth(self, txt_str):
+        """
+        Get the arbitrary text line width with the text content.
+
+        Args: 
+            txt_str: str-the text content.
+
+        Returns:
+            txt_line_width_list: list of txt_line_width.
+
+            txt_line_width: float-node text line width.
+        """
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        txt_line_width_list =[] 
+        for i in range(len(idx_list)):
+            txt_line_width_list.append(self.df[3].iloc[idx_list[i]]["txt_line_width"])
+
+        return txt_line_width_list
+
+    def getArbitraryTextFontSize(self, txt_str):
+        """
+        Get the arbitrary text font size with the text content.
+
+        Args: 
+            txt_str: str-the text content.
+
+        Returns:
+            txt_font_size_list: list of txt_font_size.
+
+            txt_font_size: float.
+        """
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        txt_font_size_list =[] 
+        for i in range(len(idx_list)):
+            txt_font_size_list.append(float(self.df[3].iloc[idx_list[i]]["txt_font_size"]))
+
+        return txt_font_size_list
+
+    def removeArbitraryText(self, txt_str):
+        """
+        Remove the arbitrary text from canvas.
+
+        Args:  
+            txt_str: str-the text content.
+        """
+        self.df = editSBML._removeArbitraryText(self.df, txt_str=txt_str) 
+        
+        return self.df
+
 
     def export(self):
         """
@@ -2521,11 +2631,11 @@ if __name__ == '__main__':
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
-    #filename = "test_textGlyph.xml"
+    filename = "test_textGlyph.xml"
     #shape:
     #filename = "rectangle.xml"
     #filename = "triangle.xml"
-    filename = "ellipse.xml"
+    #filename = "ellipse.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
 
@@ -2534,16 +2644,16 @@ if __name__ == '__main__':
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('output.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # try:
-    #     df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # except:
-    #     print("did not return textData")
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('output.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    try:
+        df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    except:
+        print("did not return textData")
+    writer.save()
 
     df = load(sbmlStr)
     #df = load("dfgdg")
@@ -2618,7 +2728,12 @@ if __name__ == '__main__':
     # df.addText("test", [413,216])
     # df.addText("test1", [205,216], txt_font_color="red", 
     # opacity= 0.5, txt_line_width=2, txt_font_size=13)
-    # df.removeArbitraryText("test")
+    # df.removeArbitraryText("text_content1")
+    # print(df.getArbitraryTextPosition("text_content1"))
+    # print(df.getArbitraryTextSize("text_content1"))
+    # print(df.getArbitraryTextFontColor("text_content1"))
+    # print(df.getArbitraryTextLineWidth("text_content2"))
+    # print(df.getArbitraryTextFontSize("text_content2"))
 
 
     # sbmlStr_layout_render = df.export()
@@ -2628,7 +2743,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output')
+    # df.draw(output_fileName = 'output')
        
 
     # print(df.getNetworkSize())

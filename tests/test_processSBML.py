@@ -48,20 +48,20 @@ class TestImportSBML(unittest.TestCase):
     f_mass_action_rxn = open(TEST_PATH_mass_action_rxn, 'r')
     sbmlStr_mass_action_rxn = f_mass_action_rxn.read()
     f_mass_action_rxn.close()
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = _SBMLToDF(sbmlStr_test)
-    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback = \
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _ = _SBMLToDF(sbmlStr_test)
+    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _ = \
       _SBMLToDF(sbmlStr_feedback)
-    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain = \
+    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain, _ = \
       _SBMLToDF(sbmlStr_LinearChain)
-    self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, self.df_ReactionData_test_no_comp = \
+    self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, self.df_ReactionData_test_no_comp, _ = \
       _SBMLToDF(sbmlStr_test_no_comp)
-    self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, self.df_ReactionData_test_comp = \
+    self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, self.df_ReactionData_test_comp, _ = \
       _SBMLToDF(sbmlStr_test_comp)
-    self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, self.df_ReactionData_test_modifier = \
+    self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, self.df_ReactionData_test_modifier, _ = \
       _SBMLToDF(sbmlStr_test_modifier)
-    self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, self.df_ReactionData_node_grid = \
+    self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, self.df_ReactionData_node_grid, _ = \
       _SBMLToDF(sbmlStr_node_grid)
-    self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn = \
+    self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn, _ = \
       _SBMLToDF(sbmlStr_mass_action_rxn)
     self.df = SBMLDiagrams.load(sbmlStr_test)
 

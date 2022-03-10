@@ -942,3 +942,20 @@ def _removeText(df_text, txt_str):
     df_text_temp = df_text_temp.drop(idx_list)
 
     return df_text_temp
+
+def _removeArbitraryText(df, txt_str):
+    """
+    Remove the arbitray text.
+
+    Args:  
+        txt_str: str-the text content.
+        
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    df_TextData_temp = df_TextData_temp.drop(idx_list)
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
