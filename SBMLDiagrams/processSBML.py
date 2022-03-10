@@ -2520,9 +2520,9 @@ class load:
         for id in reaction_ids:
             self.setReactionDefaultCenterAndHandlePositions(id)
 
-    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = '',\
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, 
-    showReactionIds = False, showReversible = False):
+    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = '', 
+        reactionLineType = 'bezier', showBezierHandles = False, 
+        showReactionIds = False, showReversible = False):
 
         """
         Draw to a PNG/JPG/PDF file.
@@ -2537,9 +2537,6 @@ class load:
 
             output_fileName: str-filename: '' (default: will not save the file), 
             or 'fileName' (self-designed file name).
-            
-            complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' 
-            or 'tetramer'.
 
             reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
             If there is no layout information from the SBML file, all reaction lines will look like
@@ -2558,8 +2555,7 @@ class load:
 
         sbmlStr = self.export()
         v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, 
-        scale = scale,\
-        fileFormat = fileFormat, output_fileName = output_fileName, complexShape = complexShape, \
+        scale = scale, fileFormat = fileFormat, output_fileName = output_fileName, \
         reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
         showReactionIds = showReactionIds, showReversible = showReversible,\
         newStyleClass = self.color_style, showImage = True, save = True,\
@@ -2626,12 +2622,12 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
-    #filename = "mass_action_rxn.xml"
+    filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
-    filename = "test_textGlyph.xml"
+    # filename = "test_textGlyph.xml"
     #shape:
     #filename = "rectangle.xml"
     #filename = "triangle.xml"
@@ -2644,16 +2640,16 @@ if __name__ == '__main__':
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('output.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    try:
-        df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    except:
-        print("did not return textData")
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('output.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # try:
+    #     df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # except:
+    #     print("did not return textData")
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load("dfgdg")
@@ -2703,9 +2699,11 @@ if __name__ == '__main__':
     # df.setNodePosition("x_1", [100.0, 100.0])
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
-    # df.setNodeShape("x_1", 0)
-    # df.setNodeShape("x_0","triangle")
+    # print(df.getNodeShape("x_0"))
+    # df.setNodeShape("x_0","upTriangle")
     # df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
+    # df.setNodeShape("x_0","ellipse")
+    # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
@@ -2743,7 +2741,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output')
+    df.draw(output_fileName = 'output')
        
 
     # print(df.getNetworkSize())

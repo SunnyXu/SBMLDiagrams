@@ -34,6 +34,6 @@ numRxns = model.getNumReactions()
 Rxns_ids  = model.getListOfReactionIds()
 for i in range(numRxns):
    df.setReactionDefaultCenterAndHandlePositions(Rxns_ids[i])
-df.draw(scale = 2)
+df.draw(scale = 2, output_fileName="output")
 
 
