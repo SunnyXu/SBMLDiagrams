@@ -471,55 +471,54 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             #print(group.getNumElements())# There is only one element
                             #for element in group.getListOfElements():
                             element = group.getElement(0)
-                            shape_type = element.getElementName()
                             shapeIdx = 0
                             shape_name = "text_only"
                             shapeInfo = []
-                            if shape_type == "rectangle":
-                                shapeIdx = 1
-                                shape_name = "rectangle"
-                            elif shape_type == "ellipse": #ellipse
-                                shapeIdx = 2
-                                shape_name = "ellipse"
-                                # center_x = element.getCX().getRelativeValue()
-                                # center_y = element.getCY().getRelativeValue()
-                                # radius_x = element.getRX().getRelativeValue()
-                                # radius_y = element.getRY().getRelativeValue()
-                                # shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
-                            elif shape_type == "polygon":
-                                NumRenderpoints = element.getListOfElements().getNumRenderPoints()
-                                for num in range(NumRenderpoints):
-                                    point_x = element.getListOfElements().get(num).getX().getRelativeValue()
-                                    point_y = element.getListOfElements().get(num).getY().getRelativeValue()
-                                    shapeInfo.append([point_x,point_y]) 
-                                if NumRenderpoints == 6: #hexagon:
-                                    shapeIdx = 3
-                                    shape_name = "hexagon"
-                                elif NumRenderpoints == 2: #line
-                                    shapeIdx = 4
-                                    shape_name = "line"
-                                elif NumRenderpoints == 3: #triangle
-                                    shapeIdx = 5
-                                    shape_name = "triangle"
-                                    #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
-                                    upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
-                                    downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
-                                    leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
-                                    rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
-                                    if all(item in shapeInfo for item in upTriangle_vertex):
-                                        shapeIdx = 6
-                                        shape_name = "upTriangle"
-                                    if all(item in shapeInfo for item in downTriangle_vertex):
-                                        shapeIdx = 7
-                                        shape_name = "downTriangle"
-                                    if all(item in shapeInfo for item in leftTriangle_vertex):
-                                        shapeIdx = 8
-                                        shape_name = "leftTriangle"
-                                    if all(item in shapeInfo for item in rightTriangle_vertex):
-                                        shapeIdx = 9
-                                        shape_name = "rightTriangle"
-                            else:
-                                shapeIdx = 0 
+                            if element != None:
+                                shape_type = element.getElementName()
+                                if shape_type == "rectangle":
+                                    shapeIdx = 1
+                                    shape_name = "rectangle"
+                                elif shape_type == "ellipse": #ellipse
+                                    shapeIdx = 2
+                                    shape_name = "ellipse"
+                                    # center_x = element.getCX().getRelativeValue()
+                                    # center_y = element.getCY().getRelativeValue()
+                                    # radius_x = element.getRX().getRelativeValue()
+                                    # radius_y = element.getRY().getRelativeValue()
+                                    # shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
+                                elif shape_type == "polygon":
+                                    NumRenderpoints = element.getListOfElements().getNumRenderPoints()
+                                    for num in range(NumRenderpoints):
+                                        point_x = element.getListOfElements().get(num).getX().getRelativeValue()
+                                        point_y = element.getListOfElements().get(num).getY().getRelativeValue()
+                                        shapeInfo.append([point_x,point_y]) 
+                                    if NumRenderpoints == 6: #hexagon:
+                                        shapeIdx = 3
+                                        shape_name = "hexagon"
+                                    elif NumRenderpoints == 2: #line
+                                        shapeIdx = 4
+                                        shape_name = "line"
+                                    elif NumRenderpoints == 3: #triangle
+                                        shapeIdx = 5
+                                        shape_name = "triangle"
+                                        #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
+                                        upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
+                                        downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
+                                        leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
+                                        rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
+                                        if all(item in shapeInfo for item in upTriangle_vertex):
+                                            shapeIdx = 6
+                                            shape_name = "upTriangle"
+                                        if all(item in shapeInfo for item in downTriangle_vertex):
+                                            shapeIdx = 7
+                                            shape_name = "downTriangle"
+                                        if all(item in shapeInfo for item in leftTriangle_vertex):
+                                            shapeIdx = 8
+                                            shape_name = "leftTriangle"
+                                        if all(item in shapeInfo for item in rightTriangle_vertex):
+                                            shapeIdx = 9
+                                            shape_name = "rightTriangle"
 
                             spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,
                             shapeIdx, shape_name, shape_type, shapeInfo])
@@ -2622,11 +2621,11 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
-    filename = "mass_action_rxn.xml"
+    #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
-    #filename = "Sauro1.xml"
+    filename = "Sauro1.xml"
     # filename = "test_textGlyph.xml"
     #shape:
     #filename = "rectangle.xml"
@@ -2651,9 +2650,9 @@ if __name__ == '__main__':
     #     print("did not return textData")
     # writer.save()
 
-    df = load(sbmlStr)
+    #df = load(sbmlStr)
     #df = load("dfgdg")
-    #la = load(sbmlStr)
+    la = load(sbmlStr)
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2700,6 +2699,7 @@ if __name__ == '__main__':
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
+    # df.setNodeShape("x_0",0)
     # df.setNodeShape("x_0","upTriangle")
     # df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
     # df.setNodeShape("x_0","ellipse")
@@ -2741,7 +2741,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output')
+    # df.draw(output_fileName = 'output')
        
 
     # print(df.getNetworkSize())
@@ -2754,24 +2754,24 @@ if __name__ == '__main__':
     #     visualizeSBML._draw(sbmlStr_layout_render, fileFormat='PNG')
 
 
-    # la.setNodeAndTextPosition('S1', [200, 200])
-    # la.setNodeAndTextPosition('S2', [300, 300])
-    # la.setNodeAndTextPosition('S3', [400, 200])
-    # la.setNodeAndTextPosition('S4', [500, 200])
-    # la.setNodeAndTextPosition('S5', [600, 200])
-    # la.setNodeTextPosition('S1', [200, 180])
-    # la.setNodeShape('S1', 2)
-    # la.setNodeSize('S1', [10, 10])
-    # la.setNodeShape('S2', 0)
-    # la.setNodeTextFontSize('S2', 20)
-    # la.setReactionDefaultCenterAndHandlePositions('J1')
-    # la.setReactionDefaultCenterAndHandlePositions('J2')
-    # la.setReactionDefaultCenterAndHandlePositions('J3')
-    # la.setReactionDash("J1", [5,5])
-    # la.setReactionCenterPosition("J3",[550,150])
-    # la.setReactionHandlePositions("J3", [[600,150],[530,160],[600,120]])
+    la.setNodeAndTextPosition('S1', [200, 200])
+    la.setNodeAndTextPosition('S2', [300, 300])
+    la.setNodeAndTextPosition('S3', [400, 200])
+    la.setNodeAndTextPosition('S4', [500, 200])
+    la.setNodeAndTextPosition('S5', [600, 200])
+    la.setNodeTextPosition('S1', [200, 180])
+    la.setNodeShape('S1', 2)
+    la.setNodeSize('S1', [10, 10])
+    la.setNodeTextFontSize('S2', 20)
+    la.setNodeShape('S2', 0)
+    la.setReactionDefaultCenterAndHandlePositions('J1')
+    la.setReactionDefaultCenterAndHandlePositions('J2')
+    la.setReactionDefaultCenterAndHandlePositions('J3')
+    la.setReactionDash("J1", [5,5])
+    la.setReactionCenterPosition("J3",[550,150])
+    la.setReactionHandlePositions("J3", [[600,150],[530,160],[600,120]])
 
-    # la.draw(showReversible=True)
+    la.draw(showReversible=True,output_fileName = 'output')
 
     # sbmlStr_layout_render = la.export()
     # f = open("output.xml", "w")

@@ -575,55 +575,55 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 #print(group.getNumElements())# There is only one element
                                 #for element in group.getListOfElements():
                                 element = group.getElement(0)
-                                shape_type = element.getElementName()
                                 shapeIdx = 0
                                 shape_name = 'text_only'
                                 shapeInfo = []
-                                if shape_type == "rectangle":
-                                    shapeIdx = 1
-                                    shape_name = "rectangle"
-                                elif shape_type == "ellipse": #ellipse
-                                    shapeIdx = 2
-                                    shape_name = "ellipse"
-                                    # center_x = element.getCX().getRelativeValue()
-                                    # center_y = element.getCY().getRelativeValue()
-                                    # radius_x = element.getRX().getRelativeValue()
-                                    # radius_y = element.getRY().getRelativeValue()
-                                    # shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
-                                elif shape_type == "polygon":
-                                    NumRenderpoints = element.getListOfElements().getNumRenderPoints()
-                                    for num in range(NumRenderpoints):
-                                        point_x = element.getListOfElements().get(num).getX().getRelativeValue()
-                                        point_y = element.getListOfElements().get(num).getY().getRelativeValue()
-                                        shapeInfo.append([point_x,point_y]) 
-                                    if NumRenderpoints == 6: #hexagon:
-                                        shapeIdx = 3
-                                        shape_name = "hexagon"
-                                    elif NumRenderpoints == 2: #line
-                                        shapeIdx = 4
-                                        shape_name = "line"
-                                    elif NumRenderpoints == 3: #triangle
-                                        shapeIdx = 5
-                                        shape_name = "triangle"
-                                        #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
-                                        upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
-                                        downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
-                                        leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
-                                        rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
-                                        if all(item in shapeInfo for item in upTriangle_vertex):
-                                            shapeIdx = 6
-                                            shape_name = "upTriangle"
-                                        if all(item in shapeInfo for item in downTriangle_vertex):
-                                            shapeIdx = 7
-                                            shape_name = "downTriangle"
-                                        if all(item in shapeInfo for item in leftTriangle_vertex):
-                                            shapeIdx = 8
-                                            shape_name = "leftTriangle"
-                                        if all(item in shapeInfo for item in rightTriangle_vertex):
-                                            shapeIdx = 9
-                                            shape_name = "rightTriangle"
-                                else:
-                                    shapeIdx = 0 
+                                if element != None:
+                                    shape_type = element.getElementName()
+                                    if shape_type == "rectangle":
+                                        shapeIdx = 1
+                                        shape_name = "rectangle"
+                                    elif shape_type == "ellipse": #ellipse
+                                        shapeIdx = 2
+                                        shape_name = "ellipse"
+                                        # center_x = element.getCX().getRelativeValue()
+                                        # center_y = element.getCY().getRelativeValue()
+                                        # radius_x = element.getRX().getRelativeValue()
+                                        # radius_y = element.getRY().getRelativeValue()
+                                        # shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
+                                    elif shape_type == "polygon":
+                                        NumRenderpoints = element.getListOfElements().getNumRenderPoints()
+                                        for num in range(NumRenderpoints):
+                                            point_x = element.getListOfElements().get(num).getX().getRelativeValue()
+                                            point_y = element.getListOfElements().get(num).getY().getRelativeValue()
+                                            shapeInfo.append([point_x,point_y]) 
+                                        if NumRenderpoints == 6: #hexagon:
+                                            shapeIdx = 3
+                                            shape_name = "hexagon"
+                                        elif NumRenderpoints == 2: #line
+                                            shapeIdx = 4
+                                            shape_name = "line"
+                                        elif NumRenderpoints == 3: #triangle
+                                            shapeIdx = 5
+                                            shape_name = "triangle"
+                                            #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
+                                            upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
+                                            downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
+                                            leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
+                                            rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
+                                            if all(item in shapeInfo for item in upTriangle_vertex):
+                                                shapeIdx = 6
+                                                shape_name = "upTriangle"
+                                            if all(item in shapeInfo for item in downTriangle_vertex):
+                                                shapeIdx = 7
+                                                shape_name = "downTriangle"
+                                            if all(item in shapeInfo for item in leftTriangle_vertex):
+                                                shapeIdx = 8
+                                                shape_name = "leftTriangle"
+                                            if all(item in shapeInfo for item in rightTriangle_vertex):
+                                                shapeIdx = 9
+                                                shape_name = "rightTriangle"
+
 
                                 spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
                                 spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
@@ -1391,7 +1391,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
+    #filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1405,7 +1405,7 @@ if __name__ == '__main__':
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
-    #filename = "test_textGlyph.xml"
+    filename = "test_textGlyph.xml"
     #filename = "output.xml"
 
 
