@@ -196,8 +196,8 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
 def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, newStyleClass = styleSBML.Style(),\
-    showImage = True, save = True, df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), 
-    showReversible = False):
+    showImage = True, save = True, showReversible = False): 
+    #df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), #dataframe-arbitrary text
 
     """
     Plot from an sbml string to a PNG/JPG/PDF file.
@@ -233,8 +233,6 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         showImage: whether to display the image inside console.
 
         save: whether to save the png.
-
-        df_text: dataframe-arbitrary text.
 
         showReversible: bool-show reversible reactions or not.
 
@@ -1139,19 +1137,22 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
             print(e)
 
         #add arbitrary text
-        if len(df_text) != 0:
-            for i in range(len(df_text)):
-                text_content = df_text.iloc[i][processSBML.ID] 
-                text_position = df_text.iloc[i][processSBML.TXTPOSITION]
-                text_position = [(text_position[0]-topLeftCorner[0])*scale,
-                (text_position[1]-topLeftCorner[1])*scale]
-                text_font_color = df_text.iloc[i][processSBML.TXTFONTCOLOR]
-                text_line_width = df_text.iloc[i][processSBML.TXTLINEWIDTH]
-                text_line_width = text_line_width*scale
-                text_font_size = df_text.iloc[i][processSBML.TXTFONTSIZE]
-                text_font_size = text_font_size*scale
-                drawNetwork.addSimpleText(canvas, text_content, text_position, text_font_color,
-                text_line_width, text_font_size) 
+        # df_text = df[3].copy()
+        # if len(df_text) != 0:
+        #     for i in range(len(df_text)):
+        #         text_content = df_text.iloc[i][processSBML.TXTCONTENT] 
+        #         text_position = df_text.iloc[i][processSBML.TXTPOSITION]
+        #         text_position = [(text_position[0]-topLeftCorner[0])*scale,
+        #         (text_position[1]-topLeftCorner[1])*scale]
+        #         text_size = df_text.iloc[i][processSBML.TXTSIZE]
+        #         text_size = [text_size[0]*scale,text_size[1]*scale]
+        #         text_font_color = df_text.iloc[i][processSBML.TXTFONTCOLOR]
+        #         text_line_width = df_text.iloc[i][processSBML.TXTLINEWIDTH]
+        #         text_line_width = text_line_width*scale
+        #         text_font_size = df_text.iloc[i][processSBML.TXTFONTSIZE]
+        #         text_font_size = text_font_size*scale
+        #         drawNetwork.addSimpleText(canvas, text_content, text_position, text_font_color,
+        #         text_line_width, text_font_size) 
         
         return floatingNodes_pos_dict, floatingNodes_dim_dict, allNodes_pos_dict, allNodes_dim_dict, edges, arrow_info, name_to_id
     
@@ -1405,8 +1406,10 @@ if __name__ == '__main__':
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
-    filename = "test_textGlyph.xml"
+    #filename = "test_textGlyph.xml"
     #filename = "output.xml"
+
+    filename = "putida_gb_newgenes.xml"
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')

@@ -655,7 +655,7 @@ def _setNodeTextLineWidth(df, id, txt_line_width):
     Args:  
         df: DataFrame-initial information.
 
-        id: id-node id.
+        id: str-node id.
 
         txt_line_width: float-node text line width.
 
@@ -891,8 +891,194 @@ def _setReactionDash(df, id, dash):
 
     return df_temp
 
-def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
-    txt_line_width = 1., txt_font_size = 12.):
+# def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
+#     txt_line_width = 1., txt_font_size = 12.):
+#     """
+#     Set arbitray text onto canvas.
+
+#     Args:  
+#         txt_str: str-the text content.
+
+#         txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+#         corner of the node text.
+
+#         txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+#         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+#         txt_line_width: float-node text line width.
+
+#         txt_font_size: float-node text font size.
+        
+#     """
+#     txt_font_color_rgba = _color_to_rgb(txt_font_color, opacity)
+#     df_text_temp = df_text.copy()
+#     text_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_text}
+#     text_row_dct[processSBML.ID].append(txt_str)
+#     text_row_dct[processSBML.TXTPOSITION].append(txt_position)
+#     text_row_dct[processSBML.TXTFONTCOLOR].append(txt_font_color_rgba)
+#     text_row_dct[processSBML.TXTLINEWIDTH].append(txt_line_width)
+#     text_row_dct[processSBML.TXTFONTSIZE].append(txt_font_size)
+#     if len(df_text_temp) == 0:
+#         df_text_temp = pd.DataFrame(text_row_dct)
+#     else:
+#         df_text_temp = pd.concat([df_text_temp,\
+#             pd.DataFrame(text_row_dct)], ignore_index=True)
+
+#     return df_text_temp
+
+# def _removeText(df_text, txt_str):
+#     """
+#     Set arbitray text onto canvas.
+
+#     Args:  
+#         txt_str: str-the text content.
+        
+#     """
+#     df_text_temp = df_text.copy()
+#     idx_list = df_text_temp.index[df_text_temp[processSBML.ID] == txt_str].tolist()
+#     if len(idx_list) == 0:
+#         raise Exception("This is not a valid text content.")
+#     df_text_temp = df_text_temp.drop(idx_list)
+
+#     return df_text_temp
+
+def _setArbitraryTextPosition(df, txt_str, txt_position):
+
+    """
+    Set the x,y coordinates of the node text position.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_position: [position_x, position_y], the coordinate represents the top-left hand corner of the node text.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_position"] = txt_position
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+def _setArbitraryTextSize(df, txt_str, txt_size):
+
+    """
+    Set the arbitrary text size.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_size"] = txt_size
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+def _setArbitraryTextFontColor(df, txt_str, txt_font_color, opacity):
+
+    """
+    Set the arbitrary text font color.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    txt_font_color = _color_to_rgb(txt_font_color, opacity)
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_font_color"] = txt_font_color
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+def _setArbitraryTextLineWidth(df, txt_str, txt_line_width):
+
+    """
+    Set the arbitrary text line width.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_line_width: float-node text line width.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+
+def _setArbitraryTextFontSize(df, txt_str, txt_font_size):
+
+    """
+    Set the arbitrary text font size.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_font_size: float-node text font size.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_font_size"] = txt_font_size
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+def _addArbitraryText(df, txt_str, txt_position, txt_size, 
+    txt_font_color = [0, 0, 0], opacity = 1., txt_line_width = 1., txt_font_size = 12.):
     """
     Set arbitray text onto canvas.
 
@@ -901,6 +1087,8 @@ def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity
 
         txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
         corner of the node text.
+
+        txt_size: list-1*2 matrix-size of the rectangle [width, height].
 
         txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -912,36 +1100,23 @@ def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity
         
     """
     txt_font_color_rgba = _color_to_rgb(txt_font_color, opacity)
-    df_text_temp = df_text.copy()
-    text_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_text}
-    text_row_dct[processSBML.ID].append(txt_str)
+    df_TextData_temp = df[3].copy()
+    text_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_TextData}
+    text_row_dct[processSBML.TXTCONTENT].append(txt_str)
     text_row_dct[processSBML.TXTPOSITION].append(txt_position)
+    text_row_dct[processSBML.TXTSIZE].append(txt_size)
     text_row_dct[processSBML.TXTFONTCOLOR].append(txt_font_color_rgba)
     text_row_dct[processSBML.TXTLINEWIDTH].append(txt_line_width)
     text_row_dct[processSBML.TXTFONTSIZE].append(txt_font_size)
-    if len(df_text_temp) == 0:
-        df_text_temp = pd.DataFrame(text_row_dct)
+    if len(df_TextData_temp) == 0:
+        df_TextData_temp = pd.DataFrame(text_row_dct)
     else:
-        df_text_temp = pd.concat([df_text_temp,\
+        df_TextData_temp = pd.concat([df_TextData_temp,\
             pd.DataFrame(text_row_dct)], ignore_index=True)
 
-    return df_text_temp
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+    return df_temp
 
-def _removeText(df_text, txt_str):
-    """
-    Set arbitray text onto canvas.
-
-    Args:  
-        txt_str: str-the text content.
-        
-    """
-    df_text_temp = df_text.copy()
-    idx_list = df_text_temp.index[df_text_temp[processSBML.ID] == txt_str].tolist()
-    if len(idx_list) == 0:
-        raise Exception("This is not a valid text content.")
-    df_text_temp = df_text_temp.drop(idx_list)
-
-    return df_text_temp
 
 def _removeArbitraryText(df, txt_str):
     """

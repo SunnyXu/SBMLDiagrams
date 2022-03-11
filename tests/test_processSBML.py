@@ -24,6 +24,7 @@ class TestImportSBML(unittest.TestCase):
     TEST_PATH_test_modifier = os.path.join(TEST_FOLDER, "test_modifier.xml")
     TEST_PATH_node_grid = os.path.join(TEST_FOLDER, "node_grid.xml")
     TEST_PATH_mass_action_rxn = os.path.join(TEST_FOLDER, "mass_action_rxn.xml")
+
     f_test = open(TEST_PATH_test, 'r')
     sbmlStr_test = f_test.read()
     f_test.close()
@@ -1058,12 +1059,12 @@ class TestImportSBML(unittest.TestCase):
     txt_line_width=2.
     txt_font_size=13.
 
-    self.df.addText(txt_content, txt_position, txt_font_color, 
-    opacity, txt_line_width, txt_font_size)
-    self.df.removeText(txt_content)
+    # self.df.addText(txt_content, txt_position, txt_font_color, 
+    # opacity, txt_line_width, txt_font_size)
+    # self.df.removeText(txt_content)
 
-    with self.assertRaises(Exception):
-      self.df.removeText("text")
+    # with self.assertRaises(Exception):
+    #   self.df.removeText("text")
 
 if __name__ == '__main__':
   unittest.main()

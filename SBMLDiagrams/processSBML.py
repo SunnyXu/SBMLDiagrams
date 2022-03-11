@@ -66,10 +66,10 @@ COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
     SHAPENAME, SHAPETYPE, SHAPEINFO]
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV]
-COLUMN_NAME_df_TextData = [ID, TXTCONTENT, TXTPOSITION, TXTSIZE, 
+COLUMN_NAME_df_TextData = [TXTCONTENT, TXTPOSITION, TXTSIZE, 
     TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
-#This is not supported by SBML
-COLUMN_NAME_df_text = [ID, TXTPOSITION, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
+# #This is not supported by SBML
+# COLUMN_NAME_df_text = [TXTCONTENT, TXTPOSITION, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 
 # DIR = os.path.dirname(os.path.abspath(__file__))
 # color_xls = pd.ExcelFile(os.path.join(DIR, 'colors.xlsx'))
@@ -1049,7 +1049,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             text_line_width = text_render[k][2]
                             text_font_size = text_render[k][3]
                     TextData_row_dct = {k:[] for k in COLUMN_NAME_df_TextData}
-                    TextData_row_dct[ID].append(textGlyph_id)
                     TextData_row_dct[TXTCONTENT].append(text_content)
                     TextData_row_dct[TXTPOSITION].append(position)
                     TextData_row_dct[TXTSIZE].append(dimension)
@@ -1338,7 +1337,7 @@ class load:
         self.sbmlstr = sbmlstr
         self.df = _SBMLToDF(self.sbmlstr)
         self.color_style = styleSBML.Style()
-        self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
+        # self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
 
         if self.df == None:
            sys.exit("There is no valid information to process.")
@@ -1861,7 +1860,7 @@ class load:
         Set the x,y coordinates of the compartment position.
 
         Args:  
-            id: id-compartment id.
+            id: str-compartment id.
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand corner 
             of the compartment.
@@ -1940,7 +1939,7 @@ class load:
             Set the x,y coordinates of the node position.
 
         Args:  
-            id: id-node id.
+            id: str-node id.
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node.
@@ -1953,7 +1952,7 @@ class load:
             Set the x,y coordinates of the node and node text position if there are consistent.
 
         Args:  
-            id: id-node id.
+            id: str-node id.
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node and node text position.
@@ -2025,7 +2024,7 @@ class load:
         Set the x,y coordinates of the node text position.
 
         Args:  
-            id: id-node id.
+            id: str-node id.
 
             txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node text.
@@ -2105,7 +2104,7 @@ class load:
         Set the node text line width.
 
         Args:  
-            id: id-node id.
+            id: str-node id.
 
             txt_line_width: float-node text line width.
         """
@@ -2286,43 +2285,45 @@ class load:
         self.df = editSBML._setReactionDash(self.df, id, dash)
         return self.df
 
-    def addText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
-        txt_line_width = 1., txt_font_size = 12.):
-        """
-        Add arbitrary text onto canvas.
+    # def addText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
+    #     txt_line_width = 1., txt_font_size = 12.):
+    #     """
+    #     Add arbitrary text onto canvas.
 
-        Args:  
-            txt_str: str-the text content.
+    #     Args:  
+    #         txt_str: str-the text content.
 
-            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
-            corner of the node text.
+    #         txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+    #         corner of the node text.
 
-            txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+    #         txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
-            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+    #         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            txt_line_width: float-node text line width.
+    #         txt_line_width: float-node text line width.
 
-            txt_font_size: float-node text font size.
+    #         txt_font_size: float-node text font size.
             
-        """
-        self.df_text = editSBML._addText(self.df_text, txt_str=txt_str, txt_position=txt_position, 
-        txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
-        txt_font_size=txt_font_size) 
+    #     """
+    #     self.df_text = editSBML._addText(self.df_text, txt_str=txt_str, txt_position=txt_position, 
+    #     txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
+    #     txt_font_size=txt_font_size) 
         
-        return self.df_text
+    #     return self.df_text
 
-    def removeText(self, txt_str):
-        """
-        Remove the arbitrary text from canvas.
 
-        Args:  
-            txt_str: str-the text content.
+    # def removeText(self, txt_str):
+    #     """
+    #     Remove the arbitrary text from canvas.
+
+    #     Args:  
+    #         txt_str: str-the text content.
             
-        """
-        self.df_text = editSBML._removeText(self.df_text, txt_str=txt_str) 
+    #     """
+    #     self.df_text = editSBML._removeText(self.df_text, txt_str=txt_str) 
         
-        return self.df_text
+    #     return self.df_text
+
 
     def getArbitraryTextPosition(self, txt_str):
         """
@@ -2422,6 +2423,98 @@ class load:
             txt_font_size_list.append(float(self.df[3].iloc[idx_list[i]]["txt_font_size"]))
 
         return txt_font_size_list
+
+    def setArbitraryTextPosition(self, txt_str, txt_position):
+        """
+        Set the x,y coordinates of the arbitrary text position.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node text.
+
+        """
+        self.df = editSBML._setArbitraryTextPosition(self.df, txt_str, txt_position)
+        return self.df
+
+    def setArbitraryTextSize(self, txt_str, txt_size):
+        """
+        Set the arbitrary text size.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        """
+        self.df = editSBML._setArbitraryTextSize(self.df, txt_str, txt_size)
+        return self.df
+
+    def setArbitraryTextFontColor(self, txt_str, txt_font_color, opacity = 1.):
+        """
+        Set the arbitrary text font color.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+        """
+        self.df = editSBML._setArbitraryTextFontColor(self.df, txt_str, txt_font_color, opacity)
+        return self.df
+
+    def setArbitraryTextLineWidth(self, txt_str, txt_line_width):
+        """
+        Set the arbitrary text line width.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_line_width: float-node text line width.
+        """
+        self.df = editSBML._setArbitraryTextLineWidth(self.df, txt_str, txt_line_width)
+        return self.df
+
+    def setArbitraryTextFontSize(self, txt_str, txt_font_size):
+        """
+        Set the arbitrary text font size.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_font_size: float-node text font size.
+        """
+        self.df = editSBML._setArbitraryTextFontSize(self.df, txt_str, txt_font_size)
+        return self.df
+
+    def addArbitraryText(self, txt_str, txt_position, txt_size, txt_font_color = [0, 0, 0], opacity = 1., 
+        txt_line_width = 1., txt_font_size = 12.):
+        """
+        Add arbitrary text onto canvas.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node text.
+
+            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+
+            txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+            txt_line_width: float-node text line width.
+
+            txt_font_size: float-node text font size.
+            
+        """
+        self.df = editSBML._addArbitraryText(self.df, txt_str=txt_str, txt_position=txt_position,
+        txt_size = txt_size, txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
+        txt_font_size=txt_font_size) 
+        
+        return self.df
 
     def removeArbitraryText(self, txt_str):
         """
@@ -2557,8 +2650,8 @@ class load:
         scale = scale, fileFormat = fileFormat, output_fileName = output_fileName, \
         reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
         showReactionIds = showReactionIds, showReversible = showReversible,\
-        newStyleClass = self.color_style, showImage = True, save = True,\
-        df_text = self.df_text)
+        newStyleClass = self.color_style, showImage = True, save = True)
+        #df_text = self.df_text)
 
         return v_info
 
@@ -2625,8 +2718,8 @@ if __name__ == '__main__':
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
-    filename = "Sauro1.xml"
-    # filename = "test_textGlyph.xml"
+    #filename = "Sauro1.xml"
+    filename = "test_textGlyph.xml"
     #shape:
     #filename = "rectangle.xml"
     #filename = "triangle.xml"
@@ -2650,9 +2743,9 @@ if __name__ == '__main__':
     #     print("did not return textData")
     # writer.save()
 
-    #df = load(sbmlStr)
+    df = load(sbmlStr)
     #df = load("dfgdg")
-    la = load(sbmlStr)
+    #la = load(sbmlStr)
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -2732,6 +2825,11 @@ if __name__ == '__main__':
     # print(df.getArbitraryTextFontColor("text_content1"))
     # print(df.getArbitraryTextLineWidth("text_content2"))
     # print(df.getArbitraryTextFontSize("text_content2"))
+    # df.setArbitraryTextPosition("text_content1", [413., 216.])
+    # df.setArbitraryTextSize("text_content1", [100, 100])
+    # df.setArbitraryTextFontColor("text_content1", [5, 0, 0])
+    # df.setArbitraryTextLineWidth("text_content2", 3.)
+    # df.setArbitraryTextFontSize("text_content2", 15))
 
 
     # sbmlStr_layout_render = df.export()
@@ -2754,24 +2852,24 @@ if __name__ == '__main__':
     #     visualizeSBML._draw(sbmlStr_layout_render, fileFormat='PNG')
 
 
-    la.setNodeAndTextPosition('S1', [200, 200])
-    la.setNodeAndTextPosition('S2', [300, 300])
-    la.setNodeAndTextPosition('S3', [400, 200])
-    la.setNodeAndTextPosition('S4', [500, 200])
-    la.setNodeAndTextPosition('S5', [600, 200])
-    la.setNodeTextPosition('S1', [200, 180])
-    la.setNodeShape('S1', 2)
-    la.setNodeSize('S1', [10, 10])
-    la.setNodeTextFontSize('S2', 20)
-    la.setNodeShape('S2', 0)
-    la.setReactionDefaultCenterAndHandlePositions('J1')
-    la.setReactionDefaultCenterAndHandlePositions('J2')
-    la.setReactionDefaultCenterAndHandlePositions('J3')
-    la.setReactionDash("J1", [5,5])
-    la.setReactionCenterPosition("J3",[550,150])
-    la.setReactionHandlePositions("J3", [[600,150],[530,160],[600,120]])
+    # la.setNodeAndTextPosition('S1', [200, 200])
+    # la.setNodeAndTextPosition('S2', [300, 300])
+    # la.setNodeAndTextPosition('S3', [400, 200])
+    # la.setNodeAndTextPosition('S4', [500, 200])
+    # la.setNodeAndTextPosition('S5', [600, 200])
+    # la.setNodeTextPosition('S1', [200, 180])
+    # la.setNodeShape('S1', 2)
+    # la.setNodeSize('S1', [10, 10])
+    # la.setNodeTextFontSize('S2', 20)
+    # la.setNodeShape('S2', 0)
+    # la.setReactionDefaultCenterAndHandlePositions('J1')
+    # la.setReactionDefaultCenterAndHandlePositions('J2')
+    # la.setReactionDefaultCenterAndHandlePositions('J3')
+    # la.setReactionDash("J1", [5,5])
+    # la.setReactionCenterPosition("J3",[550,150])
+    # la.setReactionHandlePositions("J3", [[600,150],[530,160],[600,120]])
 
-    la.draw(showReversible=True,output_fileName = 'output')
+    # la.draw(showReversible=True,output_fileName = 'output')
 
     # sbmlStr_layout_render = la.export()
     # f = open("output.xml", "w")
