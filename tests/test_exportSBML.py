@@ -21,10 +21,11 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
     df_NodeData = pd.read_excel(xls, 'NodeData')
     df_ReactionData = pd.read_excel(xls, 'ReactionData')
+    df_TextData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
     # df_CompartmentData = pd.read_csv(os.path.join(TEST_FOLDER, "CompartmentData.csv")) 
     # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, "NodeData.csv"))
     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, "ReactionData.csv"))
-    df = (df_CompartmentData, df_NodeData, df_ReactionData)
+    df = (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData)
     sbmlStr_layout_render = exportSBML._DFToSBML(df)
     self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _ = processSBML._SBMLToDF(sbmlStr_layout_render)
     
@@ -32,8 +33,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_feedback = pd.read_excel(xls_feedback, 'CompartmentData')
     df_NodeData_feedback = pd.read_excel(xls_feedback, 'NodeData')
     df_ReactionData_feedback = pd.read_excel(xls_feedback, 'ReactionData')
+    df_TextData_feedback = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
     df_feedback = (df_CompartmentData_feedback, \
-      df_NodeData_feedback, df_ReactionData_feedback)
+      df_NodeData_feedback, df_ReactionData_feedback, df_TextData_feedback)
     sbmlStr_layout_render_feedback = exportSBML._DFToSBML(df_feedback)
     self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _ \
        = processSBML._SBMLToDF(sbmlStr_layout_render_feedback)
@@ -42,8 +44,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_LinearChain = pd.read_excel(xls_LinearChain, 'CompartmentData')
     df_NodeData_LinearChain = pd.read_excel(xls_LinearChain, 'NodeData')
     df_ReactionData_LinearChain = pd.read_excel(xls_LinearChain, 'ReactionData')
+    df_TextData_LinearChain = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
     df_LinearChain = (df_CompartmentData_LinearChain, \
-      df_NodeData_LinearChain, df_ReactionData_LinearChain)
+      df_NodeData_LinearChain, df_ReactionData_LinearChain, df_TextData_LinearChain)
     sbmlStr_layout_render_LinearChain = exportSBML._DFToSBML(df_LinearChain)
     self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain, _ \
        = processSBML._SBMLToDF(sbmlStr_layout_render_LinearChain)
@@ -52,8 +55,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_test_no_comp = pd.read_excel(xls_test_no_comp, 'CompartmentData')
     df_NodeData_test_no_comp = pd.read_excel(xls_test_no_comp, 'NodeData')
     df_ReactionData_test_no_comp = pd.read_excel(xls_test_no_comp, 'ReactionData')
+    df_TextData_test_no_comp = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
     df_test_no_comp = (df_CompartmentData_test_no_comp, \
-      df_NodeData_test_no_comp, df_ReactionData_test_no_comp)
+      df_NodeData_test_no_comp, df_ReactionData_test_no_comp, df_TextData_test_no_comp)
     sbmlStr_layout_render_test_no_comp = exportSBML._DFToSBML(df_test_no_comp)
     self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, \
       self.df_ReactionData_test_no_comp, _ = processSBML._SBMLToDF(sbmlStr_layout_render_test_no_comp)
@@ -62,8 +66,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_test_comp = pd.read_excel(xls_test_comp, 'CompartmentData')
     df_NodeData_test_comp = pd.read_excel(xls_test_comp, 'NodeData')
     df_ReactionData_test_comp = pd.read_excel(xls_test_comp, 'ReactionData')
+    df_TextData_test_comp = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
     df_test_comp = (df_CompartmentData_test_comp, \
-      df_NodeData_test_comp, df_ReactionData_test_comp)
+      df_NodeData_test_comp, df_ReactionData_test_comp, df_TextData_test_comp)
     sbmlStr_layout_render_test_comp = exportSBML._DFToSBML(df_test_comp)
     self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, \
       self.df_ReactionData_test_comp, _ = processSBML._SBMLToDF(sbmlStr_layout_render_test_comp)
@@ -72,8 +77,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_test_modifier = pd.read_excel(xls_test_modifier, 'CompartmentData')
     df_NodeData_test_modifier = pd.read_excel(xls_test_modifier, 'NodeData')
     df_ReactionData_test_modifier = pd.read_excel(xls_test_modifier, 'ReactionData')
+    df_TextData_test_modifier = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
     df_test_modifier = (df_CompartmentData_test_modifier, \
-      df_NodeData_test_modifier, df_ReactionData_test_modifier)
+      df_NodeData_test_modifier, df_ReactionData_test_modifier, df_TextData_test_modifier)
     sbmlStr_layout_render_test_modifier = exportSBML._DFToSBML(df_test_modifier)
     self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, \
       self.df_ReactionData_test_modifier, _ = processSBML._SBMLToDF(sbmlStr_layout_render_test_modifier)
@@ -82,8 +88,9 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_node_grid = pd.read_excel(xls_node_grid, 'CompartmentData')
     df_NodeData_node_grid = pd.read_excel(xls_node_grid, 'NodeData')
     df_ReactionData_node_grid = pd.read_excel(xls_node_grid, 'ReactionData')
+    df_TextData_node_grid = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
     df_node_grid = (df_CompartmentData_node_grid, \
-      df_NodeData_node_grid, df_ReactionData_node_grid)
+      df_NodeData_node_grid, df_ReactionData_node_grid, df_TextData_node_grid)
     sbmlStr_layout_render_node_grid = exportSBML._DFToSBML(df_node_grid)
     self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, \
       self.df_ReactionData_node_grid, _ = processSBML._SBMLToDF(sbmlStr_layout_render_node_grid)
@@ -92,11 +99,24 @@ class TestExportSBML(unittest.TestCase):
     df_CompartmentData_mass_action_rxn = pd.read_excel(xls_mass_action_rxn, 'CompartmentData')
     df_NodeData_mass_action_rxn = pd.read_excel(xls_mass_action_rxn, 'NodeData')
     df_ReactionData_mass_action_rxn = pd.read_excel(xls_mass_action_rxn, 'ReactionData')
+    df_TextData_mass_action_rxn = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
     df_mass_action_rxn = (df_CompartmentData_mass_action_rxn, \
-      df_NodeData_mass_action_rxn, df_ReactionData_mass_action_rxn)
+      df_NodeData_mass_action_rxn, df_ReactionData_mass_action_rxn, df_TextData_mass_action_rxn)
     sbmlStr_layout_render_mass_action_rxn = exportSBML._DFToSBML(df_mass_action_rxn)
     self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, \
       self.df_ReactionData_mass_action_rxn, _ = processSBML._SBMLToDF(sbmlStr_layout_render_mass_action_rxn)
+
+    xls_test_textGlyph = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test_textGlyph.xlsx'))
+    df_CompartmentData_test_textGlyph = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
+    df_NodeData_test_textGlyph = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_NodeData)
+    df_ReactionData_test_textGlyph = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_ReactionData)
+    df_TextData_test_textGlyph = pd.read_excel(xls_test_textGlyph, 'ArbitraryTextData')
+    df_test_textGlyph = (df_CompartmentData_test_textGlyph, \
+      df_NodeData_test_textGlyph, df_ReactionData_test_textGlyph, df_TextData_test_textGlyph)
+    df_TextData_test_textGlyph = pd.read_excel(xls_test_textGlyph, 'ArbitraryTextData')
+    sbmlStr_layout_render_test_textGlyph = exportSBML._DFToSBML(df_test_textGlyph)
+    _, _, _, self.df_TextData = processSBML._SBMLToDF(sbmlStr_layout_render_test_textGlyph)
+
 
   def testCompartment1(self):
     # Test all the column names
@@ -861,6 +881,52 @@ class TestExportSBML(unittest.TestCase):
     self.assertTrue(test_modifier)
     self.assertTrue(test_node_grid)
     self.assertTrue(test_mass_action_rxn)
+
+  def testText1(self):
+    # Test all the column names
+    if IGNORE_TEST:
+      return    
+    test_textGlyph = all(item in self.df_TextData.columns \
+      for item in processSBML.COLUMN_NAME_df_TextData)
+    self.assertTrue(test_textGlyph)
+
+  def testText2(self):
+    # Test whether there is at least one row
+    if IGNORE_TEST:
+      return    
+    self.assertTrue(len(self.df_TextData.index)>0) 
+
+  def testText3(self):
+    # Test column 'txt_content' of df_TextData are strings
+    if IGNORE_TEST:
+      return    
+    list_text = []
+    list_text += self.df_TextData[processSBML.COLUMN_NAME_df_TextData[0]].tolist()
+    test_text = all(isinstance(item, str) for item in list_text)
+    self.assertTrue(test_text)
+
+  def testText4(self):
+    # Test column 'txt_position', 'txt_size' and 'txt_font_color' of df_TextData are lists
+    if IGNORE_TEST:
+      return    
+    list_text = []
+    list_text += self.df_TextData[processSBML.COLUMN_NAME_df_TextData[1]].tolist()
+    list_text += self.df_TextData[processSBML.COLUMN_NAME_df_TextData[2]].tolist()
+    list_text += self.df_TextData[processSBML.COLUMN_NAME_df_TextData[3]].tolist()
+    test_text = all(isinstance(item, list) for item in list_text)
+
+    self.assertTrue(test_text)
+
+  def testText5(self):
+    # Test column 'txt_line_width' and 'txt_font_size' of df_TextData are lists
+    if IGNORE_TEST:
+      return    
+    list_text = []
+    list_text += self.df_TextData[processSBML.COLUMN_NAME_df_TextData[4]].tolist()
+    list_text += self.df_TextData[processSBML.COLUMN_NAME_df_TextData[5]].tolist()
+    test_text = all(isinstance(item, float) for item in list_text)
+
+    self.assertTrue(test_text)
 
 
 if __name__ == '__main__':

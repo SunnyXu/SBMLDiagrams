@@ -136,13 +136,15 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
         reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
 
     Returns:
-        (df_CompartmentData, df_NodeData, df_ReactionData): tuple.
+        (df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData): tuple.
 
         df_CompartmentData: DataFrame-Compartment information.
 
         df_NodeData: DataFrame-Node information.
 
         df_ReactionData: DataFrame-Reaction information.
+
+        df_ArbitraryTextData: DataFrame-Arbitrary text information.
     
     """
 
@@ -2714,12 +2716,12 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
-    #filename = "mass_action_rxn.xml"
+    filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
-    filename = "test_textGlyph.xml"
+    #filename = "test_textGlyph.xml"
     #shape:
     #filename = "rectangle.xml"
     #filename = "triangle.xml"
@@ -2732,18 +2734,18 @@ if __name__ == '__main__':
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('output.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # try:
-    #     df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # except:
-    #     print("did not return textData")
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('mass_action_rxn.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    try:
+        df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    except:
+        print("did not return textData")
+    writer.save()
 
-    df = load(sbmlStr)
+    #df = load(sbmlStr)
     #df = load("dfgdg")
     #la = load(sbmlStr)
 
@@ -2816,8 +2818,8 @@ if __name__ == '__main__':
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # df.setReactionDash("r_0", [6,6])
 
-    # df.addText("test", [413,216])
-    # df.addText("test1", [205,216], txt_font_color="red", 
+    # df.addArbitraryText("test", [413,216])
+    # df.addArbitraryText("test1", [205,216], [10, 10], txt_font_color="red", 
     # opacity= 0.5, txt_line_width=2, txt_font_size=13)
     # df.removeArbitraryText("text_content1")
     # print(df.getArbitraryTextPosition("text_content1"))
@@ -2829,7 +2831,7 @@ if __name__ == '__main__':
     # df.setArbitraryTextSize("text_content1", [100, 100])
     # df.setArbitraryTextFontColor("text_content1", [5, 0, 0])
     # df.setArbitraryTextLineWidth("text_content2", 3.)
-    # df.setArbitraryTextFontSize("text_content2", 15))
+    # df.setArbitraryTextFontSize("text_content2", 15)
 
 
     # sbmlStr_layout_render = df.export()
