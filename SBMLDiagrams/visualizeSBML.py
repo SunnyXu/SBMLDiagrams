@@ -305,8 +305,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         try: #invalid sbml
             ### from here for layout ###
             document = libsbml.readSBMLFromString(sbmlStr)
+            # if document.getNumErrors() != 0:
+            #     raise Exception("There are errors in the sbml file.")
             if document.getNumErrors() != 0:
-                raise Exception("There are errors in the sbml file.")
+                errMsgRead = document.getErrorLog().toString()
+                raise Exception("Errors in SBML Model: ", errMsgRead)
             model_layout = document.getModel()
             try:
                 mplugin = model_layout.getPlugin("layout")
@@ -1409,7 +1412,8 @@ if __name__ == '__main__':
     #filename = "test_textGlyph.xml"
     #filename = "output.xml"
 
-    filename = "putida_gb_newgenes.xml"
+    #filename = "putida_gb_newgenes.xml"
+    #filename = "testbigmodel.xml" #sbml with errors
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')

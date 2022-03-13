@@ -201,8 +201,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     try: #invalid sbml
         ### from here for layout ###
         document = libsbml.readSBMLFromString(sbmlStr)
+        # if document.getNumErrors() != 0:
+        #     raise Exception("There are errors in the sbml file.")
         if document.getNumErrors() != 0:
-            raise Exception("There are errors in the sbml file.")
+            errMsgRead = document.getErrorLog().toString()
+            raise Exception("Errors in SBML Model: ", errMsgRead)
         model_layout = document.getModel()
         try:
             mplugin = model_layout.getPlugin("layout")
@@ -1336,6 +1339,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
 class load:
     def __init__(self, sbmlstr):
+
+        # if os.path.isfile(sbmlstr):
+        #     with open(sbmlstr) as f:
+        #         self.sbmlstr = f.read()
+        # else:  
+        #     self.sbmlstr = sbmlstr
+
         self.sbmlstr = sbmlstr
         self.df = _SBMLToDF(self.sbmlstr)
         self.color_style = styleSBML.Style()
@@ -2716,36 +2726,39 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
-    filename = "mass_action_rxn.xml"
+    #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
-    #shape:
-    #filename = "rectangle.xml"
+    #node shape:
+    filename = "rectangle.xml"
     #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
+
+    #filename = "testbigmodel.xml" #sbml with errors
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('mass_action_rxn.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    try:
-        df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    except:
-        print("did not return textData")
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('mass_action_rxn.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # try:
+    #     df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # except:
+    #     print("did not return textData")
+    # writer.save()
 
-    #df = load(sbmlStr)
+    df = load(sbmlStr)
+    #df = load(filename)
     #df = load("dfgdg")
     #la = load(sbmlStr)
 
@@ -2841,7 +2854,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output')
+    df.draw(output_fileName = 'output')
        
 
     # print(df.getNetworkSize())
