@@ -2721,13 +2721,46 @@ class load:
         size  = visualizeSBML._getNetworkSize(sbmlStr)
         return size
 
+    def getListOfNodeIds(self):
+        """
+        Get the list of node ids.
+
+        Args:  
+
+        Returns:
+            id_list-list of ids.
+            
+            id-str-node id.
+        
+        """ 
+
+        id_list = self.df[1]["id"].tolist()
+        return id_list
+
+    def getListOfReactionIds(self):
+        """
+        Get the list of reaction ids.
+
+        Args:  
+
+        Returns:
+            id_list-list of ids.
+            
+            id-str-reaction id.
+        
+        """ 
+
+        id_list = self.df[2]["id"].tolist()
+        return id_list
+
+
     
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2741,13 +2774,18 @@ if __name__ == '__main__':
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
     #node shape:
-    filename = "rectangle.xml"
+    #filename = "rectangle.xml"
     #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
+
+    #filename = "Sauro_test_sbml_files/branch1-1.xml"
+    #filename = "Sauro_test_sbml_files/cycle1-1.xml"
+    #filename = "Sauro_test_sbml_files/cycle2.xml"
+    #filename = "Sauro_test_sbml_files/linearchain.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2765,8 +2803,8 @@ if __name__ == '__main__':
     #     print("did not return textData")
     # writer.save()
 
-    #df = load(sbmlStr)
-    df = load(os.path.join(TEST_FOLDER, filename))
+    df = load(sbmlStr)
+    #df = load(os.path.join(TEST_FOLDER, filename))
     #df = load("dfgdg")
     #la = load(sbmlStr)
 
@@ -2833,6 +2871,10 @@ if __name__ == '__main__':
     # df.setReactionFillColor("r_0", [0, 0, 0])
     # df.setReactionLineThickness("r_0", 3.)
     # df._setBezierReactionType("r_0", True)
+    # print(df.getReactionCenterPosition("r_0"))
+    # print(df.getReactionCenterPosition("r_1"))
+    # df.setReactionCenterPosition("r_0", [449.0, 200.0])
+    # df.setReactionCenterPosition("r_1", [449.0, 278.0])
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
     # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
@@ -2854,6 +2896,12 @@ if __name__ == '__main__':
     # df.setArbitraryTextLineWidth("text_content2", 3.)
     # df.setArbitraryTextFontSize("text_content2", 15)
 
+    # print(df.getNetworkSize())
+    # print(df.getNetworkBottomRightCorner())
+    # print(df.getNetworkTopLeftCorner())
+
+    # print(df.getListOfNodeIds())
+    # print(df.getListOfReactionIds())
 
     # sbmlStr_layout_render = df.export()
 
@@ -2862,12 +2910,8 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output')
+    #df.draw(output_fileName = 'output')
        
-
-    # print(df.getNetworkSize())
-    # print(df.getNetworkBottomRightCorner())
-    # print(df.getNetworkTopLeftCorner())
 
     # if len(sbmlStr_layout_render) == 0:
     #     print("empty sbml")

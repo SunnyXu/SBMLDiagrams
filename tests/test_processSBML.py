@@ -1091,16 +1091,6 @@ class TestImportSBML(unittest.TestCase):
     sbmlStr_layout_render = self.df.export()
     self.assertTrue(isinstance(sbmlStr_layout_render, str))
 
-  def testNetworkFuncs(self):
-    # Test the Network related function
-
-    if IGNORE_TEST:
-      return
-
-    self.assertTrue(self.df.getNetworkTopLeftCorner() == [205.0, 216.0])
-    self.assertTrue(self.df.getNetworkBottomRightCorner() == [463.0, 246.0])
-    self.assertTrue(self.df.getNetworkSize() == [258, 30])
-
   def testGetArbitraryText(self):
     # Test all the get functions about arbitrary text
 
@@ -1158,6 +1148,25 @@ class TestImportSBML(unittest.TestCase):
 
     with self.assertRaises(Exception):
       self.df_text.removeArbitraryText("text")
+
+  def testNetworkFuncs(self):
+    # Test the Network related function
+
+    if IGNORE_TEST:
+      return
+
+    self.assertTrue(self.df.getNetworkTopLeftCorner() == [205.0, 216.0])
+    self.assertTrue(self.df.getNetworkBottomRightCorner() == [463.0, 246.0])
+    self.assertTrue(self.df.getNetworkSize() == [258, 30])
+
+  def testGetIds(self):
+    # Test the functions for getting ids
+
+    if IGNORE_TEST:
+      return
+
+    self.assertTrue(self.df.getListOfNodeIds() == ['x_1', 'x_0'])
+    self.assertTrue(self.df.getListOfReactionIds() == ['r_0'])
 
   # def testText(self):
   #   # set text one by one
