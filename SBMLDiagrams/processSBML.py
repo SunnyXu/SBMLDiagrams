@@ -1335,24 +1335,32 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     #    raise ValueError('Invalid SBML!')
 
     except Exception as e:
-        print(e)
+        raise Exception (e)  
+
 
 class load:
     def __init__(self, sbmlstr):
 
-        # if os.path.isfile(sbmlstr):
-        #     with open(sbmlstr) as f:
-        #         self.sbmlstr = f.read()
-        # else:  
-        #     self.sbmlstr = sbmlstr
-
-        self.sbmlstr = sbmlstr
-        self.df = _SBMLToDF(self.sbmlstr)
-        self.color_style = styleSBML.Style()
+        # self.sbmlstr = sbmlstr
+        # self.df = _SBMLToDF(self.sbmlstr)
+        # self.color_style = styleSBML.Style()
         # self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
+        # if self.df == None:
+        #    sys.exit("There is no valid information to process.")
 
-        if self.df == None:
-           sys.exit("There is no valid information to process.")
+        if os.path.isfile(sbmlstr):
+            with open(sbmlstr) as f:
+                self.sbmlstr = f.read()
+        else:  
+            self.sbmlstr = sbmlstr
+
+        try:
+          self.df = _SBMLToDF(self.sbmlstr)
+          self.color_style = styleSBML.Style()    
+          #self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
+        except Exception as err:
+            raise Exception (err)
+
 
     def getCompartmentPosition(self, id):
         """
@@ -2757,8 +2765,8 @@ if __name__ == '__main__':
     #     print("did not return textData")
     # writer.save()
 
-    df = load(sbmlStr)
-    #df = load(filename)
+    #df = load(sbmlStr)
+    df = load(os.path.join(TEST_FOLDER, filename))
     #df = load("dfgdg")
     #la = load(sbmlStr)
 

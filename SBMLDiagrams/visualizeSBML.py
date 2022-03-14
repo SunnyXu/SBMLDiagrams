@@ -1137,7 +1137,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     text_line_width*scale, fontSize = text_font_size*scale)
 
         except Exception as e:
-            print(e)
+            raise Exception (e)  
 
         #add arbitrary text
         # df_text = df[3].copy()

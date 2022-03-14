@@ -49,13 +49,16 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         [res.append(x) for x in list_update if x not in res and not x.isdigit()]
         return res
      
-    if df == None:
-        sys.exit("There is no valid information to process.")
-    else:
+    # if df == None:
+    #     sys.exit("There is no valid information to process.")
+    # else:
+    try:
         df_CompartmentData = df[0]
         df_NodeData = df[1]
         df_ReactionData = df[2]
         df_TextData = df[3]
+    except Exception as err:
+        raise Exception (err)
 
     #isReversible = False
     numNodes = len(df_NodeData)
