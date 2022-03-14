@@ -14,6 +14,7 @@ import re # to process kinetic_law string
 import pandas as pd
 import math
 import sys
+from SBMLDiagrams import processSBML
 
 def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
@@ -53,10 +54,22 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
     #     sys.exit("There is no valid information to process.")
     # else:
     try:
-        df_CompartmentData = df[0]
-        df_NodeData = df[1]
-        df_ReactionData = df[2]
-        df_TextData = df[3]
+        try: 
+            df_CompartmentData = df[0]
+        except:
+            df_CompartmentData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_CompartmentData)
+        try:
+            df_NodeData = df[1]
+        except:
+            df_NodeData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_NodeData)
+        try:
+            df_ReactionData = df[2]
+        except:
+            df_ReactionData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_ReactionData)
+        try:
+            df_TextData = df[3]
+        except:
+            df_TextData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
     except Exception as err:
         raise Exception (err)
 
