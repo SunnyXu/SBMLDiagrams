@@ -545,6 +545,238 @@ def _setNodeTextPositionCenter(df, id):
 
     return df_temp
 
+def _setNodeTextPositionLeftCenter(df, id):
+
+    """
+    Set the node text position as the left center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]-node_size[0], node_position[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionRightCenter(df, id):
+
+    """
+    Set the node text position as the right center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]+node_size[0], node_position[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionUpperCenter(df, id):
+
+    """
+    Set the node text position as the upper center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0], node_position[1]-node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionLowerCenter(df, id):
+
+    """
+    Set the node text position as the lower center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0], node_position[1]+node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionUpperLeft(df, id):
+
+    """
+    Set the node text position as the upper left of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]-node_size[0], node_position[1]-node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionUpperRight(df, id):
+
+    """
+    Set the node text position as the upper right of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]+node_size[0], node_position[1]-node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionLowerLeft(df, id):
+
+    """
+    Set the node text position as the lower left of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]-node_size[0], node_position[1]+node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionLowerRight(df, id):
+
+    """
+    Set the node text position as the lower right of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]+node_size[0], node_position[1]+node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
 def _setNodeTextSize(df, id, txt_size):
 
     """

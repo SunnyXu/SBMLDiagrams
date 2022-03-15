@@ -161,6 +161,60 @@ class TestEditSBML(unittest.TestCase):
     with self.assertRaises(Exception):
       editSBML._setNodeTextFontSize(df_update, "XX", txt_font_size)
 
+  def testSetNodeTextPosition(self):
+    # Test all the set node text position functions
+
+    if IGNORE_TEST:
+      return  
+
+    txt_position_center = [205.0, 216.0]
+    txt_position_leftCenter = [155.0, 216.0]
+    txt_position_rightCenter = [255.0, 216.0]
+    txt_position_upperCenter = [205.0, 186.0]
+    txt_position_lowerCenter = [205.0, 246.0]
+    txt_position_upperLeft = [155.0, 186.0]
+    txt_position_upperRight = [255.0, 186.0]
+    txt_position_lowerLeft = [155.0, 246.0]
+    txt_position_lowerRight = [255.0, 246.0]
+
+    df_update = editSBML._setNodeTextPositionCenter(self.df, "x_0")
+    self.assertTrue(df_update[1].iloc[1]["txt_position"] == txt_position_center)
+    df_update = editSBML._setNodeTextPositionLeftCenter(df_update, "x_0")
+    self.assertTrue(df_update[1].iloc[1]["txt_position"] == txt_position_leftCenter)
+    df_update = editSBML._setNodeTextPositionRightCenter(df_update, "x_0")
+    self.assertTrue(df_update[1].iloc[1]["txt_position"] == txt_position_rightCenter)
+    df_update = editSBML._setNodeTextPositionUpperCenter(df_update, "x_0")
+    self.assertTrue(df_update[1].iloc[1]["txt_position"] == txt_position_upperCenter)
+    df_update = editSBML._setNodeTextPositionLowerCenter(df_update, "x_0")
+    self.assertTrue(df_update[1].iloc[1]["txt_position"] == txt_position_lowerCenter)
+    df_update = editSBML._setNodeTextPositionUpperLeft(df_update, "x_0")
+    self.assertTrue(df_update[1].iloc[1]["txt_position"] == txt_position_upperLeft)
+    df_update = editSBML._setNodeTextPositionUpperRight(df_update, "x_0")
+    self.assertTrue(df_update[1].iloc[1]["txt_position"] == txt_position_upperRight)
+    df_update = editSBML._setNodeTextPositionLowerLeft(df_update, "x_0")
+    self.assertTrue(df_update[1].iloc[1]["txt_position"] == txt_position_lowerLeft)
+    df_update = editSBML._setNodeTextPositionLowerRight(df_update, "x_0")
+    self.assertTrue(df_update[1].iloc[1]["txt_position"] == txt_position_lowerRight)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPositionCenter(df_update, "XX")
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPositionLeftCenter(df_update, "XX")
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPositionRightCenter(df_update, "XX")
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPositionUpperCenter(df_update, "XX")
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPositionLowerCenter(df_update, "XX")
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPositionUpperLeft(df_update, "XX")
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPositionUpperRight(df_update, "XX")
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPositionLowerLeft(df_update, "XX")
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextPositionLowerRright(df_update, "XX")
+
+
   def testSetReaction(self):
     # set reaction one by one
     if IGNORE_TEST:

@@ -2071,6 +2071,96 @@ class load:
         """
         self.df = editSBML._setNodeTextPositionCenter(self.df, id)
         return self.df
+
+    def setNodeTextPositionLeftCenter(self, id):
+        """
+        Set the node text position as the left center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionLeftCenter(self.df, id)
+        return self.df
+
+    def setNodeTextPositionRightCenter(self, id):
+        """
+        Set the node text position as the right center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionRightCenter(self.df, id)
+        return self.df
+
+    def setNodeTextPositionUpperCenter(self, id):
+        """
+        Set the node text position as the upper center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionUpperCenter(self.df, id)
+        return self.df
+
+    def setNodeTextPositionLowerCenter(self, id):
+        """
+        Set the node text position as the lower center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionLowerCenter(self.df, id)
+        return self.df
+
+    def setNodeTextPositionUpperLeft(self, id):
+        """
+        Set the node text position as the upper left of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionUpperLeft(self.df, id)
+        return self.df
+    
+    def setNodeTextPositionUpperRight(self, id):
+        """
+        Set the node text position as the upper right of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionUpperRight(self.df, id)
+        return self.df
+
+    def setNodeTextPositionLowerLeft(self, id):
+        """
+        Set the node text position as the lower left of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionLowerLeft(self.df, id)
+        return self.df
+
+    def setNodeTextPositionLowerRight(self, id):
+        """
+        Set the node text position as the lower right of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionLowerRight(self.df, id)
+        return self.df
+
+
     
     def setNodeTextSize(self, id, txt_size):
         """
@@ -2795,7 +2885,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2809,7 +2899,7 @@ if __name__ == '__main__':
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
     #node shape:
-    filename = "rectangle.xml"
+    #filename = "rectangle.xml"
     #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
@@ -2894,7 +2984,16 @@ if __name__ == '__main__':
     # df.setNodeShape("x_0","ellipse")
     # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
-    # df.setNodeTextPositionCenter("x_3")
+    #df.setNodeTextPositionCenter("x_0")
+    #df.setNodeTextPositionLeftCenter("x_0")
+    #df.setNodeTextPositionRightCenter("x_0")
+    #df.setNodeTextPositionUpperCenter("x_0")
+    #df.setNodeTextPositionLowerCenter("x_0")
+    #df.setNodeTextPositionUpperLeft("x_0")
+    #df.setNodeTextPositionUpperRight("x_0")
+    #df.setNodeTextPositionLowerLeft("x_0")
+    #df.setNodeTextPositionLowerRight("x_0")
+    #print(df.getNodeTextPosition("x_0"))
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     # df.setNodeBorderColor("x_1", [255, 108, 9])
@@ -2947,7 +3046,7 @@ if __name__ == '__main__':
     # f.close()
 
     # # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output')
+    # df.draw(output_fileName = 'output')
        
 
     # if len(sbmlStr_layout_render) == 0:

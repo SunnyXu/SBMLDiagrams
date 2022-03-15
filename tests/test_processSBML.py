@@ -1037,6 +1037,41 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodePosition("x_1")[0] == position_txt_position)
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == position_txt_position)
 
+  def testSetNodeTextPosition(self):
+    # Test all the set node text position functions
+
+    if IGNORE_TEST:
+      return  
+
+    txt_position_center = [205.0, 216.0]
+    txt_position_leftCenter = [155.0, 216.0]
+    txt_position_rightCenter = [255.0, 216.0]
+    txt_position_upperCenter = [205.0, 186.0]
+    txt_position_lowerCenter = [205.0, 246.0]
+    txt_position_upperLeft = [155.0, 186.0]
+    txt_position_upperRight = [255.0, 186.0]
+    txt_position_lowerLeft = [155.0, 246.0]
+    txt_position_lowerRight = [255.0, 246.0]
+
+    self.df.setNodeTextPositionCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_center)
+    self.df.setNodeTextPositionLeftCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_leftCenter)
+    self.df.setNodeTextPositionRightCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_rightCenter)
+    self.df.setNodeTextPositionUpperCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_upperCenter)
+    self.df.setNodeTextPositionLowerCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_lowerCenter)
+    self.df.setNodeTextPositionUpperLeft("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_upperLeft)
+    self.df.setNodeTextPositionUpperRight("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_upperRight)
+    self.df.setNodeTextPositionLowerLeft("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_lowerLeft)
+    self.df.setNodeTextPositionLowerRight("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_lowerRight)
+
 
   def testSetReaction(self):
     # Test all the set functions about reaction
