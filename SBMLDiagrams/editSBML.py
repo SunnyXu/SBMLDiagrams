@@ -299,7 +299,7 @@ def _setNodeShape(df, id, shape):
         elif shape == 'ellipse':
             shape_idx = 2
             shape_type = 'ellipse'
-            shape_info = [[[50.0, 50.0], [100.0, 100.0]]]
+            shape_info = [[[50.0, 50.0], [50.0, 50.0]]]
         elif shape == 'hexagon':
             shape_idx = 3
             shape_type = 'polygon'
@@ -315,19 +315,23 @@ def _setNodeShape(df, id, shape):
         elif shape == "upTriangle":
             shape_idx = 6
             shape_type = 'polygon'
-            shape_info = [[50.0, 0.0], [100.0, 80.6], [0.0, 80.6]]
+            #shape_info = [[50.0, 0.0], [100.0, 80.6], [0.0, 80.6]]
+            shape_info = [[50.0, 9.7], [100.0, 90.3], [0.0, 90.3]]
         elif shape == "downTriangle":
             shape_idx = 7
             shape_type = 'polygon'
-            shape_info = [[0.0, 0.0], [100.0, 0.0], [50.0, 80.6]]
+            #shape_info = [[0.0, 0.0], [100.0, 0.0], [50.0, 80.6]]
+            shape_info = [[0.0, 9.7], [100.0, 9.7], [50.0, 90.3]]
         elif shape == "leftTriangle":
             shape_idx = 8
             shape_type = 'polygon'
-            shape_info = [[80.6, 0.0], [80.6, 100.0], [0.0, 50.0]]
+            #shape_info = [[80.6, 0.0], [80.6, 100.0], [0.0, 50.0]]
+            shape_info = [[90.3, 0.0], [90.3, 100.0], [9.7, 50.0]]
         elif shape == "rightTriangle":
             shape_idx = 9
             shape_type = 'polygon'
-            shape_info = [[0.0, 0.0], [80.6, 50.0], [0.0, 100.0]]
+            #shape_info = [[0.0, 0.0], [80.6, 50.0], [0.0, 100.0]]
+            shape_info = [[9.7, 0.0], [80.6, 50.0], [9.7, 100.0]]
         else:
             raise Exception("This is not a valid node shape information.")
     elif isinstance(shape, int):
@@ -341,7 +345,7 @@ def _setNodeShape(df, id, shape):
             elif shape == 2:
                 shape_name = 'ellipse'
                 shape_type = 'ellipse'
-                shape_info = [[[50.0, 50.0], [100.0, 100.0]]]
+                shape_info = [[[50.0, 50.0], [50.0, 50.0]]]
             elif shape == 3:
                 shape_name = 'hexagon'
                 shape_type = 'polygon'
@@ -357,19 +361,23 @@ def _setNodeShape(df, id, shape):
             elif shape == 6:
                 shape_name = 'upTriangle'
                 shape_type = 'polygon'
-                shape_info = [[50.0, 0.0], [100.0, 80.6], [0.0, 80.6]]
+                #shape_info = [[50.0, 0.0], [100.0, 80.6], [0.0, 80.6]]
+                shape_info = [[50.0, 9.7], [100.0, 90.3], [0.0, 90.3]]
             elif shape == 7:
                 shape_name = 'downTirangle'
                 shape_type = 'polygon'
-                shape_info = [[0.0, 0.0], [100.0, 0.0], [50.0, 80.6]] 
+                #shape_info = [[0.0, 0.0], [100.0, 0.0], [50.0, 80.6]]
+                shape_info = [[0.0, 9.7], [100.0, 9.7], [50.0, 90.3]] 
             elif shape == 8:
                 shape_name = 'leftTriangle'
                 shape_type = 'polygon'
-                shape_info = [[80.6, 0.0], [80.6, 100.0], [0.0, 50.0]]
+                #shape_info = [[80.6, 0.0], [80.6, 100.0], [0.0, 50.0]]
+                shape_info = [[90.3, 0.0], [90.3, 100.0], [9.7, 50.0]]
             elif shape == 9:
                 shape_name = 'rightTriangle'
                 shape_type = 'polygon'
-                shape_info = [[0.0, 0.0], [80.6, 50.0], [0.0, 100.0]]
+                #shape_info = [[0.0, 0.0], [80.6, 50.0], [0.0, 100.0]]
+                shape_info = [[9.7, 0.0], [80.6, 50.0], [9.7, 100.0]]
         else:
             raise Exception("This is not a valid node shape information.")
     else:
@@ -530,17 +538,19 @@ def _setNodeTextPositionCenter(df, id):
         # txt_str = df_NodeData_temp.at[idx_list[i],"id"]
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
-        # txt_size = node_size
-        # txt_font_size = df_NodeData_temp.at[idx_list[i],"txt_font_size"]
-        # font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), txt_font_size)
-        # #text = skia.TextBlob.MakeFromString(txt_str, font)
-        # twidth = font.measureText(txt_str)
-        # theight = font.getSpacing()
-        # position_x = node_position[0] + .5*(txt_size[0] - twidth)
-        # position_y = node_position[1] + .5*(txt_size[1] - theight)
-        # txt_position = [position_x, position_y]
-        df_NodeData_temp.at[idx_list[i],"txt_position"] = node_position
-        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+        shape_type = df_NodeData_temp.at[idx_list[i],"shape_type"]
+        txt_position = node_position
+        txt_size = node_size
+        if shape_type == "polygon":
+            vertex = []
+            shape_info = df_NodeData_temp.at[idx_list[i],"shape_type"]
+            for j in range(len(shape_info)):
+                vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
+                vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
+                vertex.append([vertex_x,vertex_y])
+            #print(vertex)  
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
     df_temp = (df[0], df_NodeData_temp, df[2])
 
     return df_temp

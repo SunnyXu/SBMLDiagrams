@@ -516,10 +516,15 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                         shapeIdx = 5
                                         shape_name = "triangle"
                                         #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
-                                        upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
-                                        downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
-                                        leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
-                                        rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
+                                        #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
+                                        # upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
+                                        # downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
+                                        # leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
+                                        # rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
+                                        upTriangle_vertex = [[50,9.7],[100,90.3],[0,90.3]]
+                                        downTriangle_vertex = [[0,9.7],[100,9.7],[50.,90.3]]
+                                        leftTriangle_vertex = [[90.3,0],[90.3,100],[9.7,50]]
+                                        rightTriangle_vertex = [[9.7,0],[90.3,50],[9.7,100]]
                                         if all(item in shapeInfo for item in upTriangle_vertex):
                                             shapeIdx = 6
                                             shape_name = "upTriangle"
@@ -2898,7 +2903,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2913,7 +2918,7 @@ if __name__ == '__main__':
     #filename = "test_textGlyph.xml"
     #node shape:
     #filename = "rectangle.xml"
-    #filename = "triangle.xml"
+    filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
@@ -2992,8 +2997,8 @@ if __name__ == '__main__':
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
     # df.setNodeShape("x_0",0)
-    # df.setNodeShape("x_0","upTriangle")
-    # df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
+    #df.setNodeShape("x_0","rightTriangle")
+    #df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
     # df.setNodeShape("x_0","ellipse")
     # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
@@ -3059,7 +3064,7 @@ if __name__ == '__main__':
     # f.close()
 
     # # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output')
+    df.draw(output_fileName = 'output')
        
 
     # if len(sbmlStr_layout_render) == 0:
