@@ -2346,7 +2346,7 @@ class load:
     #     return self.df_text
 
 
-    def getArbitraryTextPosition(self, txt_str):
+    def getTextPosition(self, txt_str):
         """
         Get the arbitrary text position with its content.
 
@@ -2365,7 +2365,7 @@ class load:
             position_list.append(self.df[3].iloc[idx_list[i]]["txt_position"])
         return position_list
 
-    def getArbitraryTextSize(self, txt_str):
+    def getTextSize(self, txt_str):
         """
         Get the arbitrary text size with its text content.
 
@@ -2384,7 +2384,7 @@ class load:
             txt_size_list.append(self.df[3].iloc[idx_list[i]]["txt_size"])
         return txt_size_list
 
-    def getArbitraryTextFontColor(self, txt_str):
+    def getTextFontColor(self, txt_str):
         """
         Get the arbitrary text font color with its text content.
 
@@ -2407,7 +2407,7 @@ class load:
 
         return txt_font_color_list
 
-    def getArbitraryTextLineWidth(self, txt_str):
+    def getTextLineWidth(self, txt_str):
         """
         Get the arbitrary text line width with the text content.
 
@@ -2426,7 +2426,7 @@ class load:
 
         return txt_line_width_list
 
-    def getArbitraryTextFontSize(self, txt_str):
+    def getTextFontSize(self, txt_str):
         """
         Get the arbitrary text font size with the text content.
 
@@ -2445,7 +2445,7 @@ class load:
 
         return txt_font_size_list
 
-    def setArbitraryTextPosition(self, txt_str, txt_position):
+    def setTextPosition(self, txt_str, txt_position):
         """
         Set the x,y coordinates of the arbitrary text position.
 
@@ -2456,10 +2456,10 @@ class load:
             corner of the node text.
 
         """
-        self.df = editSBML._setArbitraryTextPosition(self.df, txt_str, txt_position)
+        self.df = editSBML._setTextPosition(self.df, txt_str, txt_position)
         return self.df
 
-    def setArbitraryTextSize(self, txt_str, txt_size):
+    def setTextSize(self, txt_str, txt_size):
         """
         Set the arbitrary text size.
 
@@ -2468,10 +2468,10 @@ class load:
 
             txt_size: list-1*2 matrix-size of the rectangle [width, height].
         """
-        self.df = editSBML._setArbitraryTextSize(self.df, txt_str, txt_size)
+        self.df = editSBML._setTextSize(self.df, txt_str, txt_size)
         return self.df
 
-    def setArbitraryTextFontColor(self, txt_str, txt_font_color, opacity = 1.):
+    def setTextFontColor(self, txt_str, txt_font_color, opacity = 1.):
         """
         Set the arbitrary text font color.
 
@@ -2482,10 +2482,10 @@ class load:
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
-        self.df = editSBML._setArbitraryTextFontColor(self.df, txt_str, txt_font_color, opacity)
+        self.df = editSBML._setTextFontColor(self.df, txt_str, txt_font_color, opacity)
         return self.df
 
-    def setArbitraryTextLineWidth(self, txt_str, txt_line_width):
+    def setTextLineWidth(self, txt_str, txt_line_width):
         """
         Set the arbitrary text line width.
 
@@ -2494,10 +2494,10 @@ class load:
 
             txt_line_width: float-node text line width.
         """
-        self.df = editSBML._setArbitraryTextLineWidth(self.df, txt_str, txt_line_width)
+        self.df = editSBML._setTextLineWidth(self.df, txt_str, txt_line_width)
         return self.df
 
-    def setArbitraryTextFontSize(self, txt_str, txt_font_size):
+    def setTextFontSize(self, txt_str, txt_font_size):
         """
         Set the arbitrary text font size.
 
@@ -2506,10 +2506,10 @@ class load:
 
             txt_font_size: float-node text font size.
         """
-        self.df = editSBML._setArbitraryTextFontSize(self.df, txt_str, txt_font_size)
+        self.df = editSBML._setTextFontSize(self.df, txt_str, txt_font_size)
         return self.df
 
-    def addArbitraryText(self, txt_str, txt_position, txt_size, txt_font_color = [0, 0, 0], opacity = 1., 
+    def addText(self, txt_str, txt_position, txt_size, txt_font_color = [0, 0, 0], opacity = 1., 
         txt_line_width = 1., txt_font_size = 12.):
         """
         Add arbitrary text onto canvas.
@@ -2531,20 +2531,20 @@ class load:
             txt_font_size: float-node text font size.
             
         """
-        self.df = editSBML._addArbitraryText(self.df, txt_str=txt_str, txt_position=txt_position,
+        self.df = editSBML._addText(self.df, txt_str=txt_str, txt_position=txt_position,
         txt_size = txt_size, txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
         txt_font_size=txt_font_size) 
         
         return self.df
 
-    def removeArbitraryText(self, txt_str):
+    def removeText(self, txt_str):
         """
         Remove the arbitrary text from canvas.
 
         Args:  
             txt_str: str-the text content.
         """
-        self.df = editSBML._removeArbitraryText(self.df, txt_str=txt_str) 
+        self.df = editSBML._removeText(self.df, txt_str=txt_str) 
         
         return self.df
 
@@ -2722,7 +2722,7 @@ class load:
         size  = visualizeSBML._getNetworkSize(sbmlStr)
         return size
 
-    def getListOfNodeIds(self):
+    def getNodeIdList(self):
         """
         Get the list of node ids.
 
@@ -2738,7 +2738,7 @@ class load:
         id_list = self.df[1]["id"].tolist()
         return id_list
 
-    def getListOfReactionIds(self):
+    def getReactionIdList(self):
         """
         Get the list of reaction ids.
 
@@ -2754,7 +2754,7 @@ class load:
         id_list = self.df[2]["id"].tolist()
         return id_list
 
-    def getListOfArbitraryTextContents(self):
+    def getTextContentList(self):
         """
         Get the list of arbitrary text content.
 
@@ -2898,28 +2898,28 @@ if __name__ == '__main__':
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # df.setReactionDash("r_0", [6,6])
 
-    # df.addArbitraryText("test", [413,216], [50,30])
-    # df.addArbitraryText("test1", [205,216], [10, 10], txt_font_color="red", 
+    # df.addText("test", [413,216], [50,30])
+    # df.addText("test1", [205,216], [10, 10], txt_font_color="red", 
     # opacity= 0.5, txt_line_width=2, txt_font_size=13)
-    # df.removeArbitraryText("test")
-    # print(df.getArbitraryTextPosition("text_content1"))
-    # print(df.getArbitraryTextSize("text_content1"))
-    # print(df.getArbitraryTextFontColor("text_content1"))
-    # print(df.getArbitraryTextLineWidth("text_content2"))
-    # print(df.getArbitraryTextFontSize("text_content2"))
-    # df.setArbitraryTextPosition("text_content1", [413., 216.])
-    # df.setArbitraryTextSize("text_content1", [100, 100])
-    # df.setArbitraryTextFontColor("text_content1", [5, 0, 0])
-    # df.setArbitraryTextLineWidth("text_content2", 3.)
-    # df.setArbitraryTextFontSize("text_content2", 15)
+    # df.removeText("test")
+    # print(df.getTextPosition("text_content1"))
+    # print(df.getTextSize("text_content1"))
+    # print(df.getTextFontColor("text_content1"))
+    # print(df.getTextLineWidth("text_content2"))
+    # print(df.getTextFontSize("text_content2"))
+    # df.setTextPosition("text_content1", [413., 216.])
+    # df.setTextSize("text_content1", [100, 100])
+    # df.setTextFontColor("text_content1", [5, 0, 0])
+    # df.setTextLineWidth("text_content2", 3.)
+    # df.setTextFontSize("text_content2", 15)
 
     # print("NetworkSize:", df.getNetworkSize())
     # print("NetworkBottomRight:", df.getNetworkBottomRightCorner())
     # print("NetworkTopLeft", df.getNetworkTopLeftCorner())
 
-    # print(df.getListOfNodeIds())
-    # print(df.getListOfReactionIds())
-    # print(df.getListOfArbitraryTextContents())
+    # print(df.getNodeIdList())
+    # print(df.getReactionIdList())
+    # print(df.getTextContentList())
 
     # sbmlStr_layout_render = df.export()
 

@@ -1097,11 +1097,11 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return  
 
-    self.assertTrue(self.df_text.getArbitraryTextPosition("text_content1")[0] == [92.0, 26.0])
-    self.assertTrue(self.df_text.getArbitraryTextSize("text_content1")[0] == [228.0, 24.0])
-    self.assertTrue(self.df_text.getArbitraryTextFontColor("text_content1")[0] == [[0, 0, 0, 255], 'Black', '#000000FF'])
-    self.assertTrue(self.df_text.getArbitraryTextLineWidth("text_content2")[0] == 1.)
-    self.assertTrue(self.df_text.getArbitraryTextFontSize("text_content2")[0] == 11.)
+    self.assertTrue(self.df_text.getTextPosition("text_content1")[0] == [92.0, 26.0])
+    self.assertTrue(self.df_text.getTextSize("text_content1")[0] == [228.0, 24.0])
+    self.assertTrue(self.df_text.getTextFontColor("text_content1")[0] == [[0, 0, 0, 255], 'Black', '#000000FF'])
+    self.assertTrue(self.df_text.getTextLineWidth("text_content2")[0] == 1.)
+    self.assertTrue(self.df_text.getTextFontSize("text_content2")[0] == 11.)
 
   def testSetArbitraryText(self):
     # Test all the set functions about arbitrary text
@@ -1116,17 +1116,17 @@ class TestImportSBML(unittest.TestCase):
     text_line_width = 3.
     text_font_size = 15.
     
-    self.df_text.setArbitraryTextPosition("text_content1", text_position)
-    self.df_text.setArbitraryTextSize("text_content1", text_size)
-    self.df_text.setArbitraryTextFontColor("text_content1", text_font_color, opacity)
-    self.df_text.setArbitraryTextLineWidth("text_content2", text_line_width)
-    self.df_text.setArbitraryTextFontSize("text_content2", text_font_size)
+    self.df_text.setTextPosition("text_content1", text_position)
+    self.df_text.setTextSize("text_content1", text_size)
+    self.df_text.setTextFontColor("text_content1", text_font_color, opacity)
+    self.df_text.setTextLineWidth("text_content2", text_line_width)
+    self.df_text.setTextFontSize("text_content2", text_font_size)
 
-    self.assertTrue(self.df_text.getArbitraryTextPosition("text_content1")[0] == text_position)
-    self.assertTrue(self.df_text.getArbitraryTextSize("text_content1")[0] == text_size)
-    self.assertTrue(self.df_text.getArbitraryTextFontColor("text_content1")[0][0] == [5, 0, 0, 255])
-    self.assertTrue(self.df_text.getArbitraryTextLineWidth("text_content2")[0] == text_line_width)
-    self.assertTrue(self.df_text.getArbitraryTextFontSize("text_content2")[0] == text_font_size)
+    self.assertTrue(self.df_text.getTextPosition("text_content1")[0] == text_position)
+    self.assertTrue(self.df_text.getTextSize("text_content1")[0] == text_size)
+    self.assertTrue(self.df_text.getTextFontColor("text_content1")[0][0] == [5, 0, 0, 255])
+    self.assertTrue(self.df_text.getTextLineWidth("text_content2")[0] == text_line_width)
+    self.assertTrue(self.df_text.getTextFontSize("text_content2")[0] == text_font_size)
 
 
   def testArbitraryText(self):
@@ -1142,12 +1142,12 @@ class TestImportSBML(unittest.TestCase):
     txt_line_width=2.
     txt_font_size=13.
 
-    self.df_text.addArbitraryText(txt_content, txt_position, txt_size, txt_font_color, 
+    self.df_text.addText(txt_content, txt_position, txt_size, txt_font_color, 
     opacity, txt_line_width, txt_font_size)
-    self.df_text.removeArbitraryText(txt_content)
+    self.df_text.removeText(txt_content)
 
     with self.assertRaises(Exception):
-      self.df_text.removeArbitraryText("text")
+      self.df_text.removeText("text")
 
   def testNetworkFuncs(self):
     # Test the Network related function
@@ -1165,10 +1165,10 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return
 
-    self.assertTrue(self.df.getListOfNodeIds() == ['x_1', 'x_0'])
-    self.assertTrue(self.df.getListOfReactionIds() == ['r_0'])
+    self.assertTrue(self.df.getNodeIdList() == ['x_1', 'x_0'])
+    self.assertTrue(self.df.getReactionIdList() == ['r_0'])
 
-    self.assertTrue(self.df_text.getListOfArbitraryTextContents() == ['text_content1', 'text_content2'])
+    self.assertTrue(self.df_text.getTextContentList() == ['text_content1', 'text_content2'])
 
   # def testText(self):
   #   # set text one by one

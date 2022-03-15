@@ -943,7 +943,7 @@ def _setReactionDash(df, id, dash):
 
 #     return df_text_temp
 
-def _setArbitraryTextPosition(df, txt_str, txt_position):
+def _setTextPosition(df, txt_str, txt_position):
 
     """
     Set the x,y coordinates of the node text position.
@@ -969,7 +969,7 @@ def _setArbitraryTextPosition(df, txt_str, txt_position):
 
     return df_temp
 
-def _setArbitraryTextSize(df, txt_str, txt_size):
+def _setTextSize(df, txt_str, txt_size):
 
     """
     Set the arbitrary text size.
@@ -995,7 +995,7 @@ def _setArbitraryTextSize(df, txt_str, txt_size):
 
     return df_temp
 
-def _setArbitraryTextFontColor(df, txt_str, txt_font_color, opacity):
+def _setTextFontColor(df, txt_str, txt_font_color, opacity):
 
     """
     Set the arbitrary text font color.
@@ -1024,7 +1024,7 @@ def _setArbitraryTextFontColor(df, txt_str, txt_font_color, opacity):
 
     return df_temp
 
-def _setArbitraryTextLineWidth(df, txt_str, txt_line_width):
+def _setTextLineWidth(df, txt_str, txt_line_width):
 
     """
     Set the arbitrary text line width.
@@ -1051,7 +1051,7 @@ def _setArbitraryTextLineWidth(df, txt_str, txt_line_width):
     return df_temp
 
 
-def _setArbitraryTextFontSize(df, txt_str, txt_font_size):
+def _setTextFontSize(df, txt_str, txt_font_size):
 
     """
     Set the arbitrary text font size.
@@ -1077,7 +1077,7 @@ def _setArbitraryTextFontSize(df, txt_str, txt_font_size):
 
     return df_temp
 
-def _addArbitraryText(df, txt_str, txt_position, txt_size, 
+def _addText(df, txt_str, txt_position, txt_size, 
     txt_font_color = [0, 0, 0], opacity = 1., txt_line_width = 1., txt_font_size = 12.):
     """
     Set arbitray text onto canvas.
@@ -1118,7 +1118,7 @@ def _addArbitraryText(df, txt_str, txt_position, txt_size,
     return df_temp
 
 
-def _removeArbitraryText(df, txt_str):
+def _removeText(df, txt_str):
     """
     Remove the arbitray text.
 

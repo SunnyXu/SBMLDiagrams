@@ -213,11 +213,11 @@ class TestEditSBML(unittest.TestCase):
     text_line_width = 3.
     text_font_size = 15.
 
-    df_update = editSBML._setArbitraryTextPosition(self.df_text, "text_content1", text_position)
-    df_update = editSBML._setArbitraryTextSize(df_update, "text_content1", text_size)
-    df_update = editSBML._setArbitraryTextFontColor(df_update, "text_content1", text_font_color, opacity)
-    df_update = editSBML._setArbitraryTextLineWidth(df_update, "text_content2", text_line_width)
-    df_update = editSBML._setArbitraryTextFontSize(df_update, "text_content2", text_font_size)
+    df_update = editSBML._setTextPosition(self.df_text, "text_content1", text_position)
+    df_update = editSBML._setTextSize(df_update, "text_content1", text_size)
+    df_update = editSBML._setTextFontColor(df_update, "text_content1", text_font_color, opacity)
+    df_update = editSBML._setTextLineWidth(df_update, "text_content2", text_line_width)
+    df_update = editSBML._setTextFontSize(df_update, "text_content2", text_font_size)
     
     self.assertTrue(df_update[3].iloc[0]["txt_position"] == text_position)
     self.assertTrue(df_update[3].iloc[0]["txt_size"] == text_size)
@@ -226,15 +226,15 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[3].iloc[1]["txt_font_size"] == text_font_size)
 
     with self.assertRaises(Exception):
-      editSBML._setArbitraryTextPosition(df_update, "XX", text_position)
+      editSBML._setTextPosition(df_update, "XX", text_position)
     with self.assertRaises(Exception):  
-      editSBML._setArbitraryTextSize(df_update, "XX", text_size)
+      editSBML._setTextSize(df_update, "XX", text_size)
     with self.assertRaises(Exception):
-      editSBML._setArbitraryTextFontColor(df_update, "XX", text_font_color,opacity)
+      editSBML._setTextFontColor(df_update, "XX", text_font_color,opacity)
     with self.assertRaises(Exception):  
-      editSBML._setArbitraryTextLineWidth(df_update, "XX", text_line_width)
+      editSBML._setTextLineWidth(df_update, "XX", text_line_width)
     with self.assertRaises(Exception):
-      editSBML._setArbitraryTextFontSize(df_update, "XX", text_font_size)
+      editSBML._setTextFontSize(df_update, "XX", text_font_size)
 
   def testArbitraryText(self):
     # set arbitrary text one by one
@@ -249,7 +249,7 @@ class TestEditSBML(unittest.TestCase):
     txt_line_width=2.
     txt_font_size=13.
 
-    df_text_update = editSBML._addArbitraryText(self.df_text,txt_content,txt_position,txt_size,txt_font_color,
+    df_text_update = editSBML._addText(self.df_text,txt_content,txt_position,txt_size,txt_font_color,
     opacity,txt_line_width, txt_font_size)
     self.assertTrue(df_text_update[3].iloc[2][processSBML.TXTCONTENT] == txt_content)
     self.assertTrue(df_text_update[3].iloc[2][processSBML.TXTPOSITION] == txt_position)
@@ -258,11 +258,11 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_text_update[3].iloc[2][processSBML.TXTLINEWIDTH] == txt_line_width)
     self.assertTrue(df_text_update[3].iloc[2][processSBML.TXTFONTSIZE] == txt_font_size)
 
-    df_text_update = editSBML._removeArbitraryText(df_text_update, txt_content)
+    df_text_update = editSBML._removeText(df_text_update, txt_content)
     self.assertTrue(len(df_text_update[3]) == 2)
 
     with self.assertRaises(Exception):
-      editSBML._removeArbitraryText(df_text_update, "text")
+      editSBML._removeText(df_text_update, "text")
 
   # def testText(self):
   #   # set text one by one

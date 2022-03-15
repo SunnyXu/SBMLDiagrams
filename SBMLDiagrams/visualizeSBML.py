@@ -1230,7 +1230,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
-    txt_content = df.getListOfArbitraryTextContents()
+    txt_content = df.getTextContentList()
     numTexts = len(txt_content)
 
     if numFloatingNodes > 0 :
@@ -1238,11 +1238,11 @@ def _getNetworkTopLeftCorner(sbmlStr):
     if numBoundaryNodes > 0:
         position = df.getNodePosition(BoundaryNodes_ids[0])[0]
     # if numTexts > 0:
-    #     position_list = df.getArbitraryTextPosition(txt_content[0])
-    #     size = df.getArbitraryTextSize(txt_content[0])[0]
+    #     position_list = df.getTextPosition(txt_content[0])
+    #     size = df.getTextSize(txt_content[0])[0]
     #     position = [position_list[0][0], position_list[0][1]-size[1]]
     if numTexts > 0:
-        position_list = df.getArbitraryTextPosition(txt_content[0])
+        position_list = df.getTextPosition(txt_content[0])
         position = position_list[0]
     for i in range(numFloatingNodes):
         node_temp_position = df.getNodePosition(FloatingNodes_ids[i])
@@ -1293,8 +1293,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[1] = handle_positions[j][1]
 
     # for i in range(numTexts):
-    #     text_position_list = df.getArbitraryTextPosition(txt_content[i])
-    #     text_size = df.getArbitraryTextSize(txt_content[i])[0]
+    #     text_position_list = df.getTextPosition(txt_content[i])
+    #     text_size = df.getTextSize(txt_content[i])[0]
     #     text_position = [text_position_list[0][0],text_position_list[0][1]-text_size[1]] 
     #     if text_position[0] < position[0]:
     #         position[0] = text_position[0]
@@ -1302,7 +1302,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
     #         position[1] = text_position[1]
 
     for i in range(numTexts):
-        text_position_list = df.getArbitraryTextPosition(txt_content[i])
+        text_position_list = df.getTextPosition(txt_content[i])
         text_position = text_position_list[0]
         if text_position[0] < position[0]:
             position[0] = text_position[0]
@@ -1337,7 +1337,7 @@ def _getNetworkBottomRightCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
-    txt_content = df.getListOfArbitraryTextContents()
+    txt_content = df.getTextContentList()
     numTexts = len(txt_content)
 
     if numFloatingNodes > 0:
@@ -1349,12 +1349,12 @@ def _getNetworkBottomRightCorner(sbmlStr):
         size = df.getNodeSize(BoundaryNodes_ids[0])[0]
         position = [position_list[0][0]+size[0], position_list[0][1]+size[1]]
     # if numTexts > 0:
-    #     position_list = df.getArbitraryTextPosition(txt_content[0])
-    #     size = df.getArbitraryTextSize(txt_content[0])[0]
+    #     position_list = df.getTextPosition(txt_content[0])
+    #     size = df.getTextSize(txt_content[0])[0]
     #     position = [position_list[0][0]+size[0],position_list[0][1]]
     if numTexts > 0:
-        position_list = df.getArbitraryTextPosition(txt_content[0])
-        size = df.getArbitraryTextSize(txt_content[0])[0]
+        position_list = df.getTextPosition(txt_content[0])
+        size = df.getTextSize(txt_content[0])[0]
         position = [position_list[0][0]+size[0],position_list[0][1]+size[1]]
 
     for i in range(numFloatingNodes):
@@ -1421,8 +1421,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[1] = handle_positions[j][1]
 
     # for i in range(numTexts):
-    #     text_position_list = df.getArbitraryTextPosition(txt_content[i])
-    #     text_size = df.getArbitraryTextSize(txt_content[i])[0]
+    #     text_position_list = df.getTextPosition(txt_content[i])
+    #     text_size = df.getTextSize(txt_content[i])[0]
     #     text_position = [text_position_list[0][0] + text_size[0],text_position_list[0][1]] 
     #     if text_position[0] > position[0]:
     #         position[0] = text_position[0]
@@ -1430,8 +1430,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
     #         position[1] = text_position[1]
 
     for i in range(numTexts):
-        text_position_list = df.getArbitraryTextPosition(txt_content[i])
-        text_size = df.getArbitraryTextSize(txt_content[i])[0]
+        text_position_list = df.getTextPosition(txt_content[i])
+        text_size = df.getTextSize(txt_content[i])[0]
         text_position = [text_position_list[0][0] + text_size[0],
                         text_position_list[0][1] + text_size[1]] 
         if text_position[0] > position[0]:
