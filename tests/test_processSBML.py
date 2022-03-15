@@ -1168,6 +1168,8 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getListOfNodeIds() == ['x_1', 'x_0'])
     self.assertTrue(self.df.getListOfReactionIds() == ['r_0'])
 
+    self.assertTrue(self.df_text.getListOfArbitraryTextContents() == ['text_content1', 'text_content2'])
+
   # def testText(self):
   #   # set text one by one
   #   if IGNORE_TEST:

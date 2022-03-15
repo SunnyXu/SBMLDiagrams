@@ -7,6 +7,7 @@ Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu and Jessie Jiang
 """
 
+from operator import pos
 import os
 import re
 from pandas import DataFrame
@@ -495,7 +496,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     #arbitrary text
                     for i in range(numTextGlyphs):
                         textGlyph = layout.getTextGlyph(i)
-                        if not textGlyph.isSetOriginOfTextId(): #if there is no original text id set
+                        if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                            #if there is no original text id set
                             temp_id = textGlyph.getId()
                             text_content = textGlyph.getText()
                             textGlyph_id_list.append(temp_id)
@@ -671,7 +673,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
             for i in range(numComps):
                 comp_node_list[i] = []
             #if there is layout info:
-            if len(spec_id_list) != 0:
+            if len(spec_id_list) != 0 or len(textGlyph_id_list) != 0:
+            #if len(spec_id_list) != 0:
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
@@ -980,22 +983,28 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 id_list.append(temp_id)
 
                 #arbitrary text
-                for i in range(numTextGlyphs):
-                    textGlyph = layout.getTextGlyph(i)
-                    if not textGlyph.isSetOriginOfTextId():
+                for i in range(len(textGlyph_id_list)):
+                    textGlyph = layout.getTextGlyph(textGlyph_id_list[i])
+                    if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                        #if there is no original text id set
                         textGlyph_id = textGlyph_id_list[i]
                         text_content = text_content_list[i]
-                        dimension = text_dimension_list[i]
                         text_position = text_position_list[i]
+                        text_dimension = text_dimension_list[i]
                         for k in range(len(text_render)):
                             if textGlyph_id == text_render[k][0]:
                                 text_line_color = text_render[k][1]
                                 text_line_width = text_render[k][2]
                                 text_font_size = text_render[k][3]
+
                         text_position = [(text_position[0]-topLeftCorner[0])*scale,
                         (text_position[1]-topLeftCorner[1])*scale]
+                        text_dimension = [text_dimension[0]*scale,text_dimension[1]*scale]
                         text_line_width = text_line_width*scale
-                        # drawNetwork.addSimpleText(canvas, text_content, text_position, 
+                        text_font_size = text_font_size*scale 
+                        drawNetwork.addText(canvas, text_content, text_position, text_dimension,
+                        text_line_color, text_line_width, text_font_size) 
+                        # drawNetwork.addSimpleText(canvas, text_content,
                         # text_line_color, text_line_width, text_font_size) 
 
 
@@ -1140,7 +1149,6 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
             raise Exception (e)  
 
         #add arbitrary text
-        # df_text = df[3].copy()
         # if len(df_text) != 0:
         #     for i in range(len(df_text)):
         #         text_content = df_text.iloc[i][processSBML.TXTCONTENT] 
@@ -1207,7 +1215,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
     Returns:
         position: list-[position_x, position_y], top left-hand corner of the network(s).
         It is calculated by the minimum positions of compartments, nodes, centroid and handle 
-        positions of reactions, excluding the compartment with the id of _compartment_default_.
+        positions of reactions and aribitrary text, 
+        excluding the compartment with the id of _compartment_default_.
     
     """    
     model = simplesbml.loadSBMLStr(sbmlStr)
@@ -1221,10 +1230,20 @@ def _getNetworkTopLeftCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
+    txt_content = df.getListOfArbitraryTextContents()
+    numTexts = len(txt_content)
+
     if numFloatingNodes > 0 :
         position = df.getNodePosition(FloatingNodes_ids[0])[0]
     if numBoundaryNodes > 0:
         position = df.getNodePosition(BoundaryNodes_ids[0])[0]
+    # if numTexts > 0:
+    #     position_list = df.getArbitraryTextPosition(txt_content[0])
+    #     size = df.getArbitraryTextSize(txt_content[0])[0]
+    #     position = [position_list[0][0], position_list[0][1]-size[1]]
+    if numTexts > 0:
+        position_list = df.getArbitraryTextPosition(txt_content[0])
+        position = position_list[0]
     for i in range(numFloatingNodes):
         node_temp_position = df.getNodePosition(FloatingNodes_ids[i])
         text_temp_position = df.getNodeTextPosition(FloatingNodes_ids[i])
@@ -1273,6 +1292,23 @@ def _getNetworkTopLeftCorner(sbmlStr):
             if handle_positions[j][1] < position[1]:
                 position[1] = handle_positions[j][1]
 
+    # for i in range(numTexts):
+    #     text_position_list = df.getArbitraryTextPosition(txt_content[i])
+    #     text_size = df.getArbitraryTextSize(txt_content[i])[0]
+    #     text_position = [text_position_list[0][0],text_position_list[0][1]-text_size[1]] 
+    #     if text_position[0] < position[0]:
+    #         position[0] = text_position[0]
+    #     if text_position[1] < position[1]:
+    #         position[1] = text_position[1]
+
+    for i in range(numTexts):
+        text_position_list = df.getArbitraryTextPosition(txt_content[i])
+        text_position = text_position_list[0]
+        if text_position[0] < position[0]:
+            position[0] = text_position[0]
+        if text_position[1] < position[1]:
+            position[1] = text_position[1]
+
     return position
 
 def _getNetworkBottomRightCorner(sbmlStr):
@@ -1284,8 +1320,10 @@ def _getNetworkBottomRightCorner(sbmlStr):
 
     Returns:
         position: list-[position_x, position_y],bottom right-hand corner of the network(s).
-        It is calculated by the maximum right down corner positions of compartments and nodes, 
+        It is calculated by the maximum right down corner positions of positions of compartments, 
+        nodes, centroid and handle positions of reactions and aribitrary text, 
         excluding the compartment with the id of _compartment_default_.
+    
     
     """    
     model = simplesbml.loadSBMLStr(sbmlStr)
@@ -1299,6 +1337,9 @@ def _getNetworkBottomRightCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
+    txt_content = df.getListOfArbitraryTextContents()
+    numTexts = len(txt_content)
+
     if numFloatingNodes > 0:
         position_list = df.getNodePosition(FloatingNodes_ids[0])
         size = df.getNodeSize(FloatingNodes_ids[0])[0]
@@ -1307,6 +1348,14 @@ def _getNetworkBottomRightCorner(sbmlStr):
         position_list = df.getNodePosition(BoundaryNodes_ids[0])
         size = df.getNodeSize(BoundaryNodes_ids[0])[0]
         position = [position_list[0][0]+size[0], position_list[0][1]+size[1]]
+    # if numTexts > 0:
+    #     position_list = df.getArbitraryTextPosition(txt_content[0])
+    #     size = df.getArbitraryTextSize(txt_content[0])[0]
+    #     position = [position_list[0][0]+size[0],position_list[0][1]]
+    if numTexts > 0:
+        position_list = df.getArbitraryTextPosition(txt_content[0])
+        size = df.getArbitraryTextSize(txt_content[0])[0]
+        position = [position_list[0][0]+size[0],position_list[0][1]+size[1]]
 
     for i in range(numFloatingNodes):
         node_temp_position_list = df.getNodePosition(FloatingNodes_ids[i])
@@ -1370,6 +1419,26 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[0] = handle_positions[j][0]
             if handle_positions[j][1] > position[1]:
                 position[1] = handle_positions[j][1]
+
+    # for i in range(numTexts):
+    #     text_position_list = df.getArbitraryTextPosition(txt_content[i])
+    #     text_size = df.getArbitraryTextSize(txt_content[i])[0]
+    #     text_position = [text_position_list[0][0] + text_size[0],text_position_list[0][1]] 
+    #     if text_position[0] > position[0]:
+    #         position[0] = text_position[0]
+    #     if text_position[1] > position[1]:
+    #         position[1] = text_position[1]
+
+    for i in range(numTexts):
+        text_position_list = df.getArbitraryTextPosition(txt_content[i])
+        text_size = df.getArbitraryTextSize(txt_content[i])[0]
+        text_position = [text_position_list[0][0] + text_size[0],
+                        text_position_list[0][1] + text_size[1]] 
+        if text_position[0] > position[0]:
+            position[0] = text_position[0]
+        if text_position[1] > position[1]:
+            position[1] = text_position[1]
+
     return position
 
 def _getNetworkSize(sbmlStr):
@@ -1410,7 +1479,7 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
     #filename = "test_textGlyph.xml"
-    #filename = "output.xml"
+    filename = "output.xml"
 
     #filename = "putida_gb_newgenes.xml"
     #filename = "testbigmodel.xml" #sbml with errors

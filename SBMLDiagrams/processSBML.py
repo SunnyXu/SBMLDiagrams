@@ -402,7 +402,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 #arbitrary text
                 for i in range(numTextGlyphs):
                     textGlyph = layout.getTextGlyph(i)
-                    if not textGlyph.isSetOriginOfTextId(): #if there is no original text id set
+                    if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                        #if there is no original text id set
                         temp_id = textGlyph.getId()
                         text_content = textGlyph.getText()
                         textGlyph_id_list.append(temp_id)
@@ -1041,9 +1042,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             pd.DataFrame(ReactionData_row_dct)], ignore_index=True)
 
             #arbitrary text
-            for i in range(numTextGlyphs):
-                textGlyph = layout.getTextGlyph(i)
-                if not textGlyph.isSetOriginOfTextId():
+            for i in range(len(textGlyph_id_list)):
+                textGlyph = layout.getTextGlyph(textGlyph_id_list[i])
+                if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
                     textGlyph_id = textGlyph_id_list[i]
                     text_content = text_content_list[i]
                     dimension = text_dimension_list[i]
@@ -2753,6 +2754,22 @@ class load:
         id_list = self.df[2]["id"].tolist()
         return id_list
 
+    def getListOfArbitraryTextContents(self):
+        """
+        Get the list of arbitrary text content.
+
+        Args:  
+
+        Returns:
+            txt_content_list-list of txt_content.
+            
+            txt_content-str-reaction id.
+        
+        """ 
+
+        txt_content_list = self.df[3]["txt_content"].tolist()
+        return txt_content_list
+
 
     
 
@@ -2760,7 +2777,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2769,7 +2786,7 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
 
-    #filename = "Jana_WolfGlycolysis.xml"
+    filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
@@ -2784,7 +2801,7 @@ if __name__ == '__main__':
 
     #filename = "Sauro_test_sbml_files/branch1-1.xml"
     #filename = "Sauro_test_sbml_files/cycle1-1.xml"
-    #filename = "Sauro_test_sbml_files/cycle2.xml"
+    #filename = "Sauro_test_sbml_files/cycle2-1.xml"
     #filename = "Sauro_test_sbml_files/linearchain.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -2793,7 +2810,7 @@ if __name__ == '__main__':
 
 
     # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('mass_action_rxn.xlsx')
+    # writer = pd.ExcelWriter('output.xlsx')
     # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
     # df_excel[1].to_excel(writer, sheet_name='NodeData')
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
@@ -2817,7 +2834,7 @@ if __name__ == '__main__':
     # print(df.isFloatingNode("x_1"))
     # print(df.getNodePosition("x_1"))
     # print(df.getNodePosition("x_0"))
-    # print(df.getNodeSize("x_0"))
+    # print(df.getNodeSize("x_1"))
     # print(df.getNodeShape("x_0"))
     # print(df.getNodeTextPosition("x_1"))
     # print(df.getNodeTextSize("x_1"))
@@ -2881,10 +2898,10 @@ if __name__ == '__main__':
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # df.setReactionDash("r_0", [6,6])
 
-    # df.addArbitraryText("test", [413,216])
+    # df.addArbitraryText("test", [413,216], [50,30])
     # df.addArbitraryText("test1", [205,216], [10, 10], txt_font_color="red", 
     # opacity= 0.5, txt_line_width=2, txt_font_size=13)
-    # df.removeArbitraryText("text_content1")
+    # df.removeArbitraryText("test")
     # print(df.getArbitraryTextPosition("text_content1"))
     # print(df.getArbitraryTextSize("text_content1"))
     # print(df.getArbitraryTextFontColor("text_content1"))
@@ -2896,12 +2913,13 @@ if __name__ == '__main__':
     # df.setArbitraryTextLineWidth("text_content2", 3.)
     # df.setArbitraryTextFontSize("text_content2", 15)
 
-    # print(df.getNetworkSize())
-    # print(df.getNetworkBottomRightCorner())
-    # print(df.getNetworkTopLeftCorner())
+    # print("NetworkSize:", df.getNetworkSize())
+    # print("NetworkBottomRight:", df.getNetworkBottomRightCorner())
+    # print("NetworkTopLeft", df.getNetworkTopLeftCorner())
 
     # print(df.getListOfNodeIds())
     # print(df.getListOfReactionIds())
+    # print(df.getListOfArbitraryTextContents())
 
     # sbmlStr_layout_render = df.export()
 
@@ -2910,7 +2928,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    #df.draw(output_fileName = 'output')
+    df.draw(output_fileName = 'output')
        
 
     # if len(sbmlStr_layout_render) == 0:

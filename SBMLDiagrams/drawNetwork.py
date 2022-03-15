@@ -981,7 +981,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         2*modifier_linewidth, 2*modifier_linewidth,
                         modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
 
-def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, fontSize = 12.):
+def addText(canvas, txt_str, position, dimension, 
+    text_line_color = [0, 0, 0, 255], text_line_width = 1., fontSize = 12.):
 
     """
     Add the text.
@@ -989,7 +990,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
     Args:  
         canvas: skia.Canvas.
 
-        node_id: str-the content of the text.
+        txt_str: str-the content of the text.
 
         position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
 
@@ -1000,27 +1001,29 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
         text_line_width: float-text line width.
 
     """ 
-
-    id = node_id 
-    position = [position[0], (position[1]-dimension[1]*0.1)]
+    
     #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
+
     stop_flag_1 = False
     while stop_flag_1 == False:
         fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
         paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
         font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
 
-        text = skia.TextBlob.MakeFromString(id, font)
-        twidth = font.measureText(id)
-        #theight = font.getSize() 
+        text = skia.TextBlob.MakeFromString(txt_str, font)
+        twidth = font.measureText(txt_str)
+        #fontSize = font.getSize() 
         theight = font.getSpacing()
+        
         if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
-            position_x = position[0] + .5*(dimension[0] - twidth)
-            position_y = position[1] + dimension[1] - .5*(dimension[1] - theight)
             stop_flag_1 = True
+            position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
+            position_x = position[0] + .5*(dimension[0] - twidth)
+            position_y = position[1] + .5*(dimension[1] - theight)
         else:
             # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
             fontSize = fontSize - 1.
+            
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 
 def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, fontSize = 12):
