@@ -985,6 +985,7 @@ class TestImportSBML(unittest.TestCase):
     position = [412., 216.]
     position_txt_position = [413., 217.]
     size = [50., 29.]
+    size_txt_size = [50., 29.]
     shapeIdx = 2
     shape = "ellipse"
     shape_name = "self_shape" 
@@ -1036,6 +1037,10 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodeAndTextPosition("x_1", position_txt_position)
     self.assertTrue(self.df.getNodePosition("x_1")[0] == position_txt_position)
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == position_txt_position)
+
+    self.df.setNodeAndTextSize("x_1", size_txt_size)
+    self.assertTrue(self.df.getNodeSize("x_1")[0] == size_txt_size)
+    self.assertTrue(self.df.getNodeTextSize("x_1")[0] == size_txt_size)
 
   def testSetNodeTextPosition(self):
     # Test all the set node text position functions

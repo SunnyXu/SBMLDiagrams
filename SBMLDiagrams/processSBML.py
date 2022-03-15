@@ -2001,6 +2001,19 @@ class load:
         self.df = editSBML._setNodeSize(self.df, id, size)
         return self.df
 
+    def setNodeAndTextSize(self, id, size):
+        """
+        Set the node and node text size if there are consistent.
+
+        Args:  
+            id: str-node id.
+
+            size: list-1*2 matrix-size of the rectangle [width, height].
+        """
+        self.df = editSBML._setNodeSize(self.df, id, size)
+        self.df = editSBML._setNodeTextSize(self.df, id, size)
+        return self.df
+
     def setNodeShape(self, id, shape):
         """
         Set the node shape by shape index or name string.
