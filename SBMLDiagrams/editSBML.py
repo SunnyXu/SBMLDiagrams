@@ -507,6 +507,44 @@ def _setNodeTextPosition(df, id, txt_position):
 
     return df_temp
 
+def _setNodeTextPositionCenter(df, id):
+
+    """
+    Set the node text position as the center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        # txt_str = df_NodeData_temp.at[idx_list[i],"id"]
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        # txt_size = node_size
+        # txt_font_size = df_NodeData_temp.at[idx_list[i],"txt_font_size"]
+        # font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), txt_font_size)
+        # #text = skia.TextBlob.MakeFromString(txt_str, font)
+        # twidth = font.measureText(txt_str)
+        # theight = font.getSpacing()
+        # position_x = node_position[0] + .5*(txt_size[0] - twidth)
+        # position_y = node_position[1] + .5*(txt_size[1] - theight)
+        # txt_position = [position_x, position_y]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = node_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
 def _setNodeTextSize(df, id, txt_size):
 
     """

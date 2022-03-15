@@ -301,7 +301,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         
                         for k in range(numSpecGlyphs):
                             textGlyph_temp = layout.getTextGlyph(k)
-                            temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            if textGlyph_temp.isSetOriginOfTextId():
+                                temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            elif textGlyph_temp.isSetGraphicalObjectId():
+                                temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
                             if temp_specGlyph_id == specGlyph_id:
                                 textGlyph = textGlyph_temp
 
@@ -373,9 +376,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         spec_position_list.append([pos_x,pos_y])
                         for k in range(numSpecGlyphs):
                             textGlyph_temp = layout.getTextGlyph(k)
-                            temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            if textGlyph_temp.isSetOriginOfTextId():
+                                temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            elif textGlyph_temp.isSetGraphicalObjectId():
+                                temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
                             if temp_specGlyph_id == specGlyph_id:
                                 textGlyph = textGlyph_temp
+
                         try:
                             text_boundingbox = textGlyph.getBoundingBox()
                             text_pos_x = text_boundingbox.getX()
@@ -2053,6 +2060,17 @@ class load:
         """
         self.df = editSBML._setNodeTextPosition(self.df, id, txt_position)
         return self.df
+
+    def setNodeTextPositionCenter(self, id):
+        """
+        Set the node text position as the center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionCenter(self.df, id)
+        return self.df
     
     def setNodeTextSize(self, id, txt_size):
         """
@@ -2786,12 +2804,12 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
 
-    filename = "Jana_WolfGlycolysis.xml"
+    #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
     #node shape:
-    #filename = "rectangle.xml"
+    filename = "rectangle.xml"
     #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
@@ -2876,6 +2894,7 @@ if __name__ == '__main__':
     # df.setNodeShape("x_0","ellipse")
     # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
+    # df.setNodeTextPositionCenter("x_3")
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     # df.setNodeBorderColor("x_1", [255, 108, 9])
@@ -2927,7 +2946,7 @@ if __name__ == '__main__':
     # f.write(sbmlStr_layout_render)
     # f.close()
 
-    # df.draw(reactionLineType='bezier', scale = 2.)
+    # # df.draw(reactionLineType='bezier', scale = 2.)
     df.draw(output_fileName = 'output')
        
 

@@ -400,9 +400,13 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
                             specGlyph = layout.getSpeciesGlyph(specGlyph_id)
                             
+
                             for k in range(numSpecGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
-                                temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                if textGlyph_temp.isSetOriginOfTextId():
+                                    temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                elif textGlyph_temp.isSetGraphicalObjectId():
+                                    temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
                                 if temp_specGlyph_id == specGlyph_id:
                                     textGlyph = textGlyph_temp
 
@@ -470,9 +474,13 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             pos_y = boundingbox.getY()
                             spec_dimension_list.append([width,height])
                             spec_position_list.append([pos_x,pos_y])
+
                             for k in range(numSpecGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
-                                temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                if textGlyph_temp.isSetOriginOfTextId():
+                                    temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                elif textGlyph_temp.isSetGraphicalObjectId():
+                                    temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
                                 if temp_specGlyph_id == specGlyph_id:
                                     textGlyph = textGlyph_temp
                             try:
@@ -1003,9 +1011,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                         text_line_width = text_line_width*scale
                         text_font_size = text_font_size*scale 
                         drawNetwork.addText(canvas, text_content, text_position, text_dimension,
-                        text_line_color, text_line_width, text_font_size) 
-                        # drawNetwork.addSimpleText(canvas, text_content,
-                        # text_line_color, text_line_width, text_font_size) 
+                        text_line_color, text_line_width, text_font_size)  
 
 
             else: # there is no layout information, assign position randomly and size as default

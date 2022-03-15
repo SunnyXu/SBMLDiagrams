@@ -1026,6 +1026,7 @@ def addText(canvas, txt_str, position, dimension,
             
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 
+
 def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, fontSize = 12):
     fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])
     font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
