@@ -516,15 +516,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                         shapeIdx = 5
                                         shape_name = "triangle"
                                         #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
-                                        #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
-                                        # upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
-                                        # downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
-                                        # leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
-                                        # rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
-                                        upTriangle_vertex = [[50,9.7],[100,90.3],[0,90.3]]
-                                        downTriangle_vertex = [[0,9.7],[100,9.7],[50.,90.3]]
-                                        leftTriangle_vertex = [[90.3,0],[90.3,100],[9.7,50]]
-                                        rightTriangle_vertex = [[9.7,0],[90.3,50],[9.7,100]]
+                                        upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
+                                        downTriangle_vertex = [[0,19.4],[100,19.5],[50.,100.]]
+                                        leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
+                                        rightTriangle_vertex = [[19.4,0],[100.,50],[19.4,100]]
                                         if all(item in shapeInfo for item in upTriangle_vertex):
                                             shapeIdx = 6
                                             shape_name = "upTriangle"
@@ -2046,6 +2041,7 @@ class load:
             shape_name: str-name of the arbitrary polygon shape.
 
             shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
+            x represents the percentage of width, and y represents the percentage of height.
             
         """
         self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info)
@@ -2997,12 +2993,12 @@ if __name__ == '__main__':
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
     # df.setNodeShape("x_0",0)
-    #df.setNodeShape("x_0","rightTriangle")
+    df.setNodeShape("x_0","downTriangle")
     #df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
     # df.setNodeShape("x_0","ellipse")
     # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
-    #df.setNodeTextPositionCenter("x_0")
+    df.setNodeTextPositionCenter("x_0")
     #df.setNodeTextPositionLeftCenter("x_0")
     #df.setNodeTextPositionRightCenter("x_0")
     #df.setNodeTextPositionUpperCenter("x_0")

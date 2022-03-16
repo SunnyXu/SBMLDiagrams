@@ -618,14 +618,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             shapeIdx = 5
                                             shape_name = "triangle"
                                             #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
-                                            # upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
-                                            # downTriangle_vertex = [[0,0],[100,0],[50.,80.6]]
-                                            # leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
-                                            # rightTriangle_vertex = [[0,0],[80.6,50],[0,100]]
-                                            upTriangle_vertex = [[50,9.7],[100,90.3],[0,90.3]]
-                                            downTriangle_vertex = [[0,9.7],[100,9.7],[50.,90.3]]
-                                            leftTriangle_vertex = [[90.3,0],[90.3,100],[9.7,50]]
-                                            rightTriangle_vertex = [[9.7,0],[90.3,50],[9.7,100]]
+                                            upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
+                                            downTriangle_vertex = [[0,19.4],[100,19.4],[50.,100.]]
+                                            leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
+                                            rightTriangle_vertex = [[19.4,0],[100.,50],[19.4,100]]
                                             if all(item in shapeInfo for item in upTriangle_vertex):
                                                 shapeIdx = 6
                                                 shape_name = "upTriangle"
