@@ -24,6 +24,8 @@ class TestImportSBML(unittest.TestCase):
     TEST_PATH_test_modifier = os.path.join(TEST_FOLDER, "test_modifier.xml")
     TEST_PATH_node_grid = os.path.join(TEST_FOLDER, "node_grid.xml")
     TEST_PATH_mass_action_rxn = os.path.join(TEST_FOLDER, "mass_action_rxn.xml")
+    TEST_PATH_test_textGlyph = os.path.join(TEST_FOLDER, "test_textGlyph.xml")
+
     f_test = open(TEST_PATH_test, 'r')
     sbmlStr_test = f_test.read()
     f_test.close()
@@ -48,22 +50,28 @@ class TestImportSBML(unittest.TestCase):
     f_mass_action_rxn = open(TEST_PATH_mass_action_rxn, 'r')
     sbmlStr_mass_action_rxn = f_mass_action_rxn.read()
     f_mass_action_rxn.close()
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData = _SBMLToDF(sbmlStr_test)
-    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback = \
+    f_test_textGlyph = open(TEST_PATH_test_textGlyph, 'r')
+    sbmlStr_test_textGlyph = f_test_textGlyph.read()
+    f_test_textGlyph.close()
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _ = _SBMLToDF(sbmlStr_test)
+    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _ = \
       _SBMLToDF(sbmlStr_feedback)
-    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain = \
+    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain, _ = \
       _SBMLToDF(sbmlStr_LinearChain)
-    self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, self.df_ReactionData_test_no_comp = \
+    self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, self.df_ReactionData_test_no_comp, _ = \
       _SBMLToDF(sbmlStr_test_no_comp)
-    self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, self.df_ReactionData_test_comp = \
+    self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, self.df_ReactionData_test_comp, _ = \
       _SBMLToDF(sbmlStr_test_comp)
-    self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, self.df_ReactionData_test_modifier = \
+    self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, self.df_ReactionData_test_modifier, _ = \
       _SBMLToDF(sbmlStr_test_modifier)
-    self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, self.df_ReactionData_node_grid = \
+    self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, self.df_ReactionData_node_grid, _ = \
       _SBMLToDF(sbmlStr_node_grid)
-    self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn = \
+    self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn, _ = \
       _SBMLToDF(sbmlStr_mass_action_rxn)
+    _, _, _, self.df_TextData_test_textGlyph = \
+      _SBMLToDF(sbmlStr_test_textGlyph)
     self.df = SBMLDiagrams.load(sbmlStr_test)
+    self.df_text = SBMLDiagrams.load(sbmlStr_test_textGlyph)
 
   def loadInvalidStr(self):
     # an exception raises if load an invalid string
@@ -838,7 +846,54 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(test_comp)
     self.assertTrue(test_modifier) 
     self.assertTrue(test_node_grid)
-    self.assertTrue(test_mass_action_rxn) 
+    self.assertTrue(test_mass_action_rxn)
+
+  def testText1(self):
+    # Test all the column names
+    if IGNORE_TEST:
+      return    
+    test_textGlyph = all(item in self.df_TextData_test_textGlyph.columns \
+      for item in COLUMN_NAME_df_TextData)
+    self.assertTrue(test_textGlyph)
+
+  def testText2(self):
+    # Test whether there is at least one row
+    if IGNORE_TEST:
+      return    
+    self.assertTrue(len(self.df_TextData_test_textGlyph.index)>0) 
+
+  def testText3(self):
+    # Test column 'txt_content' of df_TextData are strings
+    if IGNORE_TEST:
+      return    
+    list_text = []
+    list_text += self.df_TextData_test_textGlyph[COLUMN_NAME_df_TextData[0]].tolist()
+    test_text = all(isinstance(item, str) for item in list_text)
+    self.assertTrue(test_text)
+
+  def testText4(self):
+    # Test column 'txt_position', 'txt_size' and 'txt_font_color' of df_TextData are lists
+    if IGNORE_TEST:
+      return    
+    list_text = []
+    list_text += self.df_TextData_test_textGlyph[COLUMN_NAME_df_TextData[1]].tolist()
+    list_text += self.df_TextData_test_textGlyph[COLUMN_NAME_df_TextData[2]].tolist()
+    list_text += self.df_TextData_test_textGlyph[COLUMN_NAME_df_TextData[3]].tolist()
+    test_text = all(isinstance(item, list) for item in list_text)
+
+    self.assertTrue(test_text)
+
+  def testText5(self):
+    # Test column 'txt_line_width' and 'txt_font_size' of df_TextData are lists
+    if IGNORE_TEST:
+      return    
+    list_text = []
+    list_text += self.df_TextData_test_textGlyph[COLUMN_NAME_df_TextData[4]].tolist()
+    list_text += self.df_TextData_test_textGlyph[COLUMN_NAME_df_TextData[5]].tolist()
+    test_text = all(isinstance(item, float) for item in list_text)
+
+    self.assertTrue(test_text)
+
 
   def testGetCompartment(self):
     # Test all the get functions about compartment
@@ -860,7 +915,8 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.isFloatingNode("x_1")[0] == True)
     self.assertTrue(self.df.getNodePosition("x_1")[0] == [413.0, 216.0])
     self.assertTrue(self.df.getNodeSize("x_1")[0] == [50.0, 30.0])
-    self.assertTrue(self.df.getNodeShape("x_1")[0] == (1, 'reactangle'))
+    self.assertTrue(self.df.getNodeShape("x_1")[0] == 
+    ('rectangle', [[413.0, 216.0], [463.0, 216.0], [463.0, 246.0], [413.0, 246.0]]))
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == [413.0, 216.0])
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == [50.0, 30.0])
     self.assertTrue(self.df.getNodeFillColor("x_1")[0] == \
@@ -894,7 +950,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionDash("r_0")[0] == [])
 
   def testSetCompartment(self):
-    # Test all the get functions about compartment
+    # Test all the set functions about compartment
     if IGNORE_TEST:
       return  
 
@@ -920,7 +976,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_")[0] == border_width)
 
   def testSetNode(self):
-    # Test all the get functions about node
+    # Test all the set functions about node
 
     if IGNORE_TEST:
       return  
@@ -929,8 +985,12 @@ class TestImportSBML(unittest.TestCase):
     position = [412., 216.]
     position_txt_position = [413., 217.]
     size = [50., 29.]
+    size_txt_size = [50., 29.]
     shapeIdx = 2
-    shapeInfo = "circle"
+    shape = "ellipse"
+    shape_name = "self_shape" 
+    shape_info_polygon = [[0,0],[100,0],[0,100]]
+    #shape_info_ellipse = [[[50,50],[100,100]]]
     txt_position = [412., 216.]
     txt_size = [50., 29.]
     fill_color = [255, 204, 154]
@@ -945,7 +1005,9 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodePosition("x_1", position)
     self.df.setNodeSize("x_1", size)
     self.df.setNodeShape("x_1", shapeIdx)
-    self.df.setNodeShape("x_1", shapeInfo)
+    self.df.setNodeShape("x_1", shape)
+    self.df.setNodeArbitraryPolygonShape("x_0", shape_name, shape_info_polygon)
+    # self.df._setNodeArbitraryEllipseShape("x_0", shape_name, shape_info_ellipse)
     self.df.setNodeTextPosition("x_1", txt_position)
     self.df.setNodeTextSize("x_1", txt_size)
     self.df.setNodeFillColor("x_1", fill_color, opacity = opacity)
@@ -958,7 +1020,8 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.isFloatingNode("x_1")[0] == floating_node)
     self.assertTrue(self.df.getNodePosition("x_1")[0] == position)
     self.assertTrue(self.df.getNodeSize("x_1")[0] == size)
-    self.assertTrue(self.df.getNodeShape("x_1")[0][0] == shapeIdx)
+    self.assertTrue(self.df.getNodeShape("x_1")[0][0] == shape)
+    self.assertTrue(self.df.getNodeShape("x_0")[0][0] == shape_name)
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == txt_position)
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == txt_size)
     self.assertTrue(self.df.getNodeFillColor("x_1")[0][0][0:-1] == fill_color)
@@ -975,9 +1038,48 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodePosition("x_1")[0] == position_txt_position)
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == position_txt_position)
 
+    self.df.setNodeAndTextSize("x_1", size_txt_size)
+    self.assertTrue(self.df.getNodeSize("x_1")[0] == size_txt_size)
+    self.assertTrue(self.df.getNodeTextSize("x_1")[0] == size_txt_size)
+
+  def testSetNodeTextPosition(self):
+    # Test all the set node text position functions
+
+    if IGNORE_TEST:
+      return  
+
+    txt_position_center = [205.0, 216.0]
+    txt_position_leftCenter = [155.0, 216.0]
+    txt_position_rightCenter = [255.0, 216.0]
+    txt_position_upperCenter = [205.0, 186.0]
+    txt_position_lowerCenter = [205.0, 246.0]
+    txt_position_upperLeft = [155.0, 186.0]
+    txt_position_upperRight = [255.0, 186.0]
+    txt_position_lowerLeft = [155.0, 246.0]
+    txt_position_lowerRight = [255.0, 246.0]
+
+    self.df.setNodeTextPositionCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_center)
+    self.df.setNodeTextPositionLeftCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_leftCenter)
+    self.df.setNodeTextPositionRightCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_rightCenter)
+    self.df.setNodeTextPositionUpperCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_upperCenter)
+    self.df.setNodeTextPositionLowerCenter("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_lowerCenter)
+    self.df.setNodeTextPositionUpperLeft("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_upperLeft)
+    self.df.setNodeTextPositionUpperRight("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_upperRight)
+    self.df.setNodeTextPositionLowerLeft("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_lowerLeft)
+    self.df.setNodeTextPositionLowerRight("x_0")
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0] == txt_position_lowerRight)
+
 
   def testSetReaction(self):
-    # Test all the get functions about reaction
+    # Test all the set functions about reaction
 
     if IGNORE_TEST:
       return
@@ -1029,6 +1131,64 @@ class TestImportSBML(unittest.TestCase):
     sbmlStr_layout_render = self.df.export()
     self.assertTrue(isinstance(sbmlStr_layout_render, str))
 
+  def testGetArbitraryText(self):
+    # Test all the get functions about arbitrary text
+
+    if IGNORE_TEST:
+      return  
+
+    self.assertTrue(self.df_text.getTextPosition("text_content1")[0] == [92.0, 26.0])
+    self.assertTrue(self.df_text.getTextSize("text_content1")[0] == [228.0, 24.0])
+    self.assertTrue(self.df_text.getTextFontColor("text_content1")[0] == [[0, 0, 0, 255], 'Black', '#000000FF'])
+    self.assertTrue(self.df_text.getTextLineWidth("text_content2")[0] == 1.)
+    self.assertTrue(self.df_text.getTextFontSize("text_content2")[0] == 11.)
+
+  def testSetArbitraryText(self):
+    # Test all the set functions about arbitrary text
+
+    if IGNORE_TEST:
+      return  
+
+    text_position = [413., 216.]
+    text_size = [413., 216.]
+    text_font_color = [5,0,0]
+    opacity = 1.
+    text_line_width = 3.
+    text_font_size = 15.
+    
+    self.df_text.setTextPosition("text_content1", text_position)
+    self.df_text.setTextSize("text_content1", text_size)
+    self.df_text.setTextFontColor("text_content1", text_font_color, opacity)
+    self.df_text.setTextLineWidth("text_content2", text_line_width)
+    self.df_text.setTextFontSize("text_content2", text_font_size)
+
+    self.assertTrue(self.df_text.getTextPosition("text_content1")[0] == text_position)
+    self.assertTrue(self.df_text.getTextSize("text_content1")[0] == text_size)
+    self.assertTrue(self.df_text.getTextFontColor("text_content1")[0][0] == [5, 0, 0, 255])
+    self.assertTrue(self.df_text.getTextLineWidth("text_content2")[0] == text_line_width)
+    self.assertTrue(self.df_text.getTextFontSize("text_content2")[0] == text_font_size)
+
+
+  def testArbitraryText(self):
+    # set reaction one by one
+    if IGNORE_TEST:
+      return
+
+    txt_content = "test1"
+    txt_position = [205,216]
+    txt_size = [10,10]
+    txt_font_color="black" 
+    opacity= 1
+    txt_line_width=2.
+    txt_font_size=13.
+
+    self.df_text.addText(txt_content, txt_position, txt_size, txt_font_color, 
+    opacity, txt_line_width, txt_font_size)
+    self.df_text.removeText(txt_content)
+
+    with self.assertRaises(Exception):
+      self.df_text.removeText("text")
+
   def testNetworkFuncs(self):
     # Test the Network related function
 
@@ -1039,24 +1199,35 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNetworkBottomRightCorner() == [463.0, 246.0])
     self.assertTrue(self.df.getNetworkSize() == [258, 30])
 
-  def testArbitraryText(self):
-    # set reaction one by one
+  def testGetIds(self):
+    # Test the functions for getting ids
+
     if IGNORE_TEST:
       return
 
-    txt_content = "test1"
-    txt_position = [205,216]
-    txt_font_color="black" 
-    opacity= 1
-    txt_line_width=2.
-    txt_font_size=13.
+    self.assertTrue(self.df.getNodeIdList() == ['x_1', 'x_0'])
+    self.assertTrue(self.df.getReactionIdList() == ['r_0'])
 
-    self.df.addText(txt_content, txt_position, txt_font_color, 
-    opacity, txt_line_width, txt_font_size)
-    self.df.removeText(txt_content)
+    self.assertTrue(self.df_text.getTextContentList() == ['text_content1', 'text_content2'])
 
-    with self.assertRaises(Exception):
-      self.df.removeText("text")
+  # def testText(self):
+  #   # set text one by one
+  #   if IGNORE_TEST:
+  #     return
+
+  #   txt_content = "test1"
+  #   txt_position = [205,216]
+  #   txt_font_color="black" 
+  #   opacity= 1
+  #   txt_line_width=2.
+  #   txt_font_size=13.
+
+  #   self.df.addText(txt_content, txt_position, txt_font_color, 
+  #   opacity, txt_line_width, txt_font_size)
+  #   self.df.removeText(txt_content)
+
+  #   with self.assertRaises(Exception):
+  #     self.df.removeText("text")
 
 if __name__ == '__main__':
   unittest.main()

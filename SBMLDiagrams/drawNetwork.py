@@ -97,6 +97,48 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
         Color =  outline
         )    
     canvas.drawRoundRect(rect, radius, radius, paintStroke);   
+
+def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = False):
+
+    """
+    Draw an ellipse on canvas.
+
+    Args:  
+        canvas: skia.Canvas.
+        x: float-top left-hand corner position_x.
+        y: float-top left-hand corner position_y.
+        width: float-width of the rectangle.
+        height: float-height of the rectangle.
+        outline: skia.Color()-border color.
+        fill: skia.Color()-fill color.
+        linewidth: float-line width.
+        dash: bool-dashline (True) or not (False as default).
+    """
+
+    rect = skia.Rect(x, y, x+width, y+height)    
+    paintFill = skia.Paint(
+      AntiAlias=True,
+      Style = skia.Paint.kFill_Style,
+      Color = fill
+    )    
+    canvas.drawOval(rect, paintFill)
+    if dash:
+        paintStroke = skia.Paint(
+        AntiAlias=True,
+        PathEffect=skia.DashPathEffect.Make([10.0, 5.0, 2.0, 5.0], 0.0),
+        StrokeWidth=linewidth,
+        Style = skia.Paint.kStroke_Style,
+        Color = outline
+        )  
+    else:  
+        paintStroke = skia.Paint(
+        AntiAlias=True,
+        StrokeWidth=linewidth,
+        Style = skia.Paint.kStroke_Style,
+        Color = outline
+        )  
+    canvas.drawOval(rect, paintStroke)
+ 
     
 def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
     
@@ -420,7 +462,8 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
   
     
 def addNode(canvas, floating_boundary_node, alias_node, position, dimension, 
-        spec_border_color, spec_fill_color, spec_border_width, shapeIdx, complex_shape = ''):
+        spec_border_color, spec_fill_color, spec_border_width, 
+        shapeIdx, shape_name, shape_type, shape_info, complex_shape = ''):
     
     """
     Add a node.
@@ -442,7 +485,15 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 
         spec_border_width: float-compartment border line width.
 
-        shapeIdx: int-1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
+        shapeIdx: int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
+                      6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
+
+        shape_name: str-name of the node shape. 
+
+        shape_type: str-type of the node shape: rectangle, ellipse, polygon.
+
+        shape_info: list-polygon:[[x1,y1],[x2,y2],[x3,y3],etc], ellipse:[[[x1,y1],[r1,r2]]];
+                    where x,y,r are floating numbers from 0 to 100.
 
         complex_shape: str-''(default), 'monomer', 'dimer', 'trimer', or 'tetramer'.
 
@@ -456,37 +507,39 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
     if floating_boundary_node == 'boundary':
         linewidth = 2*linewidth
     if complex_shape == '':
+        #Pls note that shapeIdx is different from Coyote
         #shapeIdx = 0 
-        if shapeIdx == 1: #rectangle
+        if shape_type == 'rectangle' or shapeIdx == 1: #rectangle
             if alias_node == 'alias':
                 _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = True)
             else:
                 _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth)
-        elif shapeIdx == 2: #circle
+        
+        elif shape_type == 'polygon':
+            pts = []
+            for ii in range(len(shape_info)):
+                pts.append([x+width*shape_info[ii][0]/100.,y+height*shape_info[ii][1]/100.])
             if alias_node == 'alias':
-                _drawCircle (canvas, x, y, width, height, 
+                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
+            else:
+                _drawPolygon (canvas, pts, outline, fill, linewidth)
+
+        elif shape_type == 'ellipse' or shapeIdx == 2:
+            #circle
+            # if alias_node == 'alias':
+            #     _drawCircle (canvas, x, y, width, height, 
+            #                 outline, fill, linewidth, dash=True)
+            # else:
+            #     _drawCircle (canvas, x, y, width, height, 
+            #                 outline, fill, linewidth)
+            if alias_node == 'alias':
+                _drawEllipse (canvas, x, y, width, height, 
                             outline, fill, linewidth, dash=True)
             else:
-                _drawCircle (canvas, x, y, width, height, 
+                _drawEllipse (canvas, x, y, width, height, 
                             outline, fill, linewidth)
-        elif shapeIdx == 3: #hexagon
-            pts = [[x+width,y+.5*height],[x+.75*width,y+.93*height], [x+.25*width,y+.93*height],
-            [x,y+.5*height],[x+.25*width,y+.07*height],[x+.75*width,y+.07*height]]
-            if alias_node == 'alias':
-                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
-            else:
-                _drawPolygon (canvas, pts, outline, fill, linewidth)
-        elif shapeIdx == 4: #line
-            if alias_node == 'alias':
-                _drawLine (canvas, x, y+.5*height, x+width, y+.5*height, outline, linewidth, dash=True)
-            else:
-                _drawLine (canvas, x, y+.5*height, x+width, y+.5*height, outline, linewidth)
-        elif shapeIdx == 5: #triangle
-            pts = [[x+width,y+.5*height],[x+.25*width,y+.07*height],[x+.25*width,y+.83*height]]
-            if alias_node == 'alias':
-                _drawPolygon (canvas, pts, outline, fill, linewidth, dash=True)
-            else:
-                _drawPolygon (canvas, pts, outline, fill, linewidth)
+
+
     elif complex_shape == 'monomer':
         if alias_node == 'alias':
             _drawCircle (canvas, x, y, width, height, 
@@ -928,7 +981,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         2*modifier_linewidth, 2*modifier_linewidth,
                         modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
 
-def addText(canvas, node_id, position, dimension, text_line_color, text_line_width, fontSize = 12.):
+def addText(canvas, txt_str, position, dimension, 
+    text_line_color = [0, 0, 0, 255], text_line_width = 1., fontSize = 12.):
 
     """
     Add the text.
@@ -936,7 +990,7 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
     Args:  
         canvas: skia.Canvas.
 
-        node_id: str-the content of the text.
+        txt_str: str-the content of the text.
 
         position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
 
@@ -947,28 +1001,31 @@ def addText(canvas, node_id, position, dimension, text_line_color, text_line_wid
         text_line_width: float-text line width.
 
     """ 
-
-    id = node_id 
-    position = [position[0], (position[1]-dimension[1]*0.1)]
+    
     #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
+
     stop_flag_1 = False
     while stop_flag_1 == False:
         fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
         paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
         font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
 
-        text = skia.TextBlob.MakeFromString(id, font)
-        twidth = font.measureText(id)
-        #theight = font.getSize() 
+        text = skia.TextBlob.MakeFromString(txt_str, font)
+        twidth = font.measureText(txt_str)
+        #fontSize = font.getSize() 
         theight = font.getSpacing()
+        
         if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
-            position_x = position[0] + .5*(dimension[0] - twidth)
-            position_y = position[1] + dimension[1] - .5*(dimension[1] - theight)
             stop_flag_1 = True
+            position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
+            position_x = position[0] + .5*(dimension[0] - twidth)
+            position_y = position[1] + .5*(dimension[1] - theight)
         else:
             # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
             fontSize = fontSize - 1.
+            
     canvas.drawTextBlob(text, position_x, position_y, paintText)
+
 
 def addSimpleText(canvas, text, position, text_line_color, text_line_width=1, fontSize = 12):
     fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])

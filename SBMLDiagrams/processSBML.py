@@ -44,6 +44,9 @@ TXTSIZE = 'txt_size'
 TXTFONTCOLOR = 'txt_font_color'
 TXTLINEWIDTH = 'txt_line_width'
 TXTFONTSIZE = 'txt_font_size'
+SHAPENAME = 'shape_name'
+SHAPETYPE = 'shape_type'
+SHAPEINFO = 'shape_info'
 SOURCES = 'sources'
 TARGETS = 'targets'
 RATELAW = 'rate_law'
@@ -59,13 +62,14 @@ COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
     POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH]
 COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
     CONCENTRATION, POSITION, SIZE, SHAPEIDX, TXTPOSITION, TXTSIZE, \
-    FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
+    FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, 
+    SHAPENAME, SHAPETYPE, SHAPEINFO]
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV]
-COLUMN_NAME_df_TextData = [ID, TXTCONTENT, TXTPOSITION, TXTSIZE, 
+COLUMN_NAME_df_TextData = [TXTCONTENT, TXTPOSITION, TXTSIZE, 
     TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
-#This is not supported by SBML
-COLUMN_NAME_df_text = [ID, TXTPOSITION, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
+# #This is not supported by SBML
+# COLUMN_NAME_df_text = [TXTCONTENT, TXTPOSITION, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 
 # DIR = os.path.dirname(os.path.abspath(__file__))
 # color_xls = pd.ExcelFile(os.path.join(DIR, 'colors.xlsx'))
@@ -132,13 +136,15 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
         reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
 
     Returns:
-        (df_CompartmentData, df_NodeData, df_ReactionData): tuple.
+        (df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData): tuple.
 
         df_CompartmentData: DataFrame-Compartment information.
 
         df_NodeData: DataFrame-Node information.
 
         df_ReactionData: DataFrame-Reaction information.
+
+        df_ArbitraryTextData: DataFrame-Arbitrary text information.
     
     """
 
@@ -164,6 +170,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     spec_text_position_list = []
     spec_text_dimension_list = []
     shapeIdx = 1
+    shape_name = ''
+    shape_type = ''
+    shape_info = []
     spec_concentration_list = []
     textGlyph_id_list = []
     text_content_list = []
@@ -192,8 +201,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     try: #invalid sbml
         ### from here for layout ###
         document = libsbml.readSBMLFromString(sbmlStr)
+        # if document.getNumErrors() != 0:
+        #     raise Exception("There are errors in the sbml file.")
         if document.getNumErrors() != 0:
-            raise Exception("There are errors in the sbml file.")
+            errMsgRead = document.getErrorLog().toString()
+            raise Exception("Errors in SBML Model: ", errMsgRead)
         model_layout = document.getModel()
         try:
             mplugin = model_layout.getPlugin("layout")
@@ -289,7 +301,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         
                         for k in range(numSpecGlyphs):
                             textGlyph_temp = layout.getTextGlyph(k)
-                            temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            if textGlyph_temp.isSetOriginOfTextId():
+                                temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            elif textGlyph_temp.isSetGraphicalObjectId():
+                                temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
                             if temp_specGlyph_id == specGlyph_id:
                                 textGlyph = textGlyph_temp
 
@@ -361,9 +376,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         spec_position_list.append([pos_x,pos_y])
                         for k in range(numSpecGlyphs):
                             textGlyph_temp = layout.getTextGlyph(k)
-                            temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            if textGlyph_temp.isSetOriginOfTextId():
+                                temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            elif textGlyph_temp.isSetGraphicalObjectId():
+                                temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
                             if temp_specGlyph_id == specGlyph_id:
                                 textGlyph = textGlyph_temp
+
                         try:
                             text_boundingbox = textGlyph.getBoundingBox()
                             text_pos_x = text_boundingbox.getX()
@@ -390,7 +409,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 #arbitrary text
                 for i in range(numTextGlyphs):
                     textGlyph = layout.getTextGlyph(i)
-                    if not textGlyph.isSetOriginOfTextId(): #if there is no original text id set
+                    if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                        #if there is no original text id set
                         temp_id = textGlyph.getId()
                         text_content = textGlyph.getText()
                         textGlyph_id_list.append(temp_id)
@@ -460,29 +480,61 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_color = hex_to_rgb(color_list[k][1])
                             spec_border_width = group.getStrokeWidth()
                             #name_list = []
-                            name = ''
-                            for element in group.getListOfElements():
-                                name = element.getElementName()
-                                #name_list.append(name)
-                                try:
-                                    NumRenderpoints = element.getListOfElements().getNumRenderPoints()
-                                except:
-                                    NumRenderpoints = 0
+                            shape_type = ''
+                            #print(group.getNumElements())# There is only one element
+                            #for element in group.getListOfElements():
+                            element = group.getElement(0)
                             shapeIdx = 0
-                            if name == "rectangle":
-                                shapeIdx = 1
-                            elif name == "ellipse": #circle
-                                shapeIdx = 2
-                            elif name == "polygon" and NumRenderpoints == 6: #hexagon
-                                shapeIdx = 3
-                            elif name == "polygon" and NumRenderpoints == 2: #line
-                                shapeIdx = 4
-                            elif name == "polygon" and NumRenderpoints == 3: #triangle
-                                shapeIdx = 5
-                            else:
-                                shapeIdx = 0
+                            shape_name = "text_only"
+                            shapeInfo = []
+                            if element != None:
+                                shape_type = element.getElementName()
+                                if shape_type == "rectangle":
+                                    shapeIdx = 1
+                                    shape_name = "rectangle"
+                                elif shape_type == "ellipse": #ellipse
+                                    shapeIdx = 2
+                                    shape_name = "ellipse"
+                                    # center_x = element.getCX().getRelativeValue()
+                                    # center_y = element.getCY().getRelativeValue()
+                                    # radius_x = element.getRX().getRelativeValue()
+                                    # radius_y = element.getRY().getRelativeValue()
+                                    # shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
+                                elif shape_type == "polygon":
+                                    NumRenderpoints = element.getListOfElements().getNumRenderPoints()
+                                    for num in range(NumRenderpoints):
+                                        point_x = element.getListOfElements().get(num).getX().getRelativeValue()
+                                        point_y = element.getListOfElements().get(num).getY().getRelativeValue()
+                                        shapeInfo.append([point_x,point_y]) 
+                                    if NumRenderpoints == 6: #hexagon:
+                                        shapeIdx = 3
+                                        shape_name = "hexagon"
+                                    elif NumRenderpoints == 2: #line
+                                        shapeIdx = 4
+                                        shape_name = "line"
+                                    elif NumRenderpoints == 3: #triangle
+                                        shapeIdx = 5
+                                        shape_name = "triangle"
+                                        #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
+                                        upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
+                                        downTriangle_vertex = [[0,19.4],[100,19.5],[50.,100.]]
+                                        leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
+                                        rightTriangle_vertex = [[19.4,0],[100.,50],[19.4,100]]
+                                        if all(item in shapeInfo for item in upTriangle_vertex):
+                                            shapeIdx = 6
+                                            shape_name = "upTriangle"
+                                        if all(item in shapeInfo for item in downTriangle_vertex):
+                                            shapeIdx = 7
+                                            shape_name = "downTriangle"
+                                        if all(item in shapeInfo for item in leftTriangle_vertex):
+                                            shapeIdx = 8
+                                            shape_name = "leftTriangle"
+                                        if all(item in shapeInfo for item in rightTriangle_vertex):
+                                            shapeIdx = 9
+                                            shape_name = "rightTriangle"
 
-                            spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,shapeIdx])
+                            spec_render.append([idList,spec_fill_color,spec_border_color,spec_border_width,
+                            shapeIdx, shape_name, shape_type, shapeInfo])
 
                         elif 'REACTIONGLYPH' in typeList:
                             if group.isSetEndHead():
@@ -618,6 +670,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_color = spec_render[k][2]
                                     spec_border_width = spec_render[k][3]
                                     shapeIdx = spec_render[k][4]
+                                    shape_name = spec_render[k][5]
+                                    shape_type = spec_render[k][6]
+                                    shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
@@ -645,6 +700,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                             NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
+                            NodeData_row_dct[SHAPENAME].append(shape_name)
+                            NodeData_row_dct[SHAPETYPE].append(shape_type)
+                            NodeData_row_dct[SHAPEINFO].append(shape_info)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -665,6 +723,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_color = spec_render[k][2]
                                     spec_border_width = spec_render[k][3]
                                     shapeIdx = spec_render[k][4]
+                                    shape_name = spec_render[k][5]
+                                    shape_type = spec_render[k][6]
+                                    shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
@@ -691,6 +752,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                             NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
+                            NodeData_row_dct[SHAPENAME].append(shape_name)
+                            NodeData_row_dct[SHAPETYPE].append(shape_type)
+                            NodeData_row_dct[SHAPEINFO].append(shape_info)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -711,6 +775,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_color = spec_render[k][2]
                                     spec_border_width = spec_render[k][3]
                                     shapeIdx = spec_render[k][4]
+                                    shape_name = spec_render[k][5]
+                                    shape_type = spec_render[k][6]
+                                    shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
@@ -738,6 +805,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                             NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
+                            NodeData_row_dct[SHAPENAME].append(shape_name)
+                            NodeData_row_dct[SHAPETYPE].append(shape_type)
+                            NodeData_row_dct[SHAPEINFO].append(shape_info)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -756,6 +826,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_border_color = spec_render[k][2]
                                     spec_border_width = spec_render[k][3]
                                     shapeIdx = spec_render[k][4]
+                                    shape_name = spec_render[k][5]
+                                    shape_type = spec_render[k][6]
+                                    shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
                                 if temp_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
@@ -783,6 +856,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                             NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                             NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
+                            NodeData_row_dct[SHAPENAME].append(shape_name)
+                            NodeData_row_dct[SHAPETYPE].append(shape_type)
+                            NodeData_row_dct[SHAPEINFO].append(shape_info)
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -973,9 +1049,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             pd.DataFrame(ReactionData_row_dct)], ignore_index=True)
 
             #arbitrary text
-            for i in range(numTextGlyphs):
-                textGlyph = layout.getTextGlyph(i)
-                if not textGlyph.isSetOriginOfTextId():
+            for i in range(len(textGlyph_id_list)):
+                textGlyph = layout.getTextGlyph(textGlyph_id_list[i])
+                if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
                     textGlyph_id = textGlyph_id_list[i]
                     text_content = text_content_list[i]
                     dimension = text_dimension_list[i]
@@ -986,7 +1062,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             text_line_width = text_render[k][2]
                             text_font_size = text_render[k][3]
                     TextData_row_dct = {k:[] for k in COLUMN_NAME_df_TextData}
-                    TextData_row_dct[ID].append(textGlyph_id)
                     TextData_row_dct[TXTCONTENT].append(text_content)
                     TextData_row_dct[TXTPOSITION].append(position)
                     TextData_row_dct[TXTSIZE].append(dimension)
@@ -1096,6 +1171,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                 NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                 NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
+                NodeData_row_dct[SHAPENAME].append(shape_name)
+                NodeData_row_dct[SHAPETYPE].append(shape_type)
+                NodeData_row_dct[SHAPEINFO].append(shape_info)
                 # for j in range(len(COLUMN_NAME_df_NodeData)):
                 #     try: 
                 #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1139,6 +1217,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 NodeData_row_dct[TXTFONTCOLOR].append(text_line_color)
                 NodeData_row_dct[TXTLINEWIDTH].append(text_line_width)
                 NodeData_row_dct[TXTFONTSIZE].append(text_font_size)
+                NodeData_row_dct[SHAPENAME].append(shape_name)
+                NodeData_row_dct[SHAPETYPE].append(shape_type)
+                NodeData_row_dct[SHAPEINFO].append(shape_info)
                 # for j in range(len(COLUMN_NAME_df_NodeData)):
                 #     try: 
                 #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1255,24 +1336,39 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     df_ReactionData = pd.concat([df_ReactionData,\
                         pd.DataFrame(ReactionData_row_dct)], ignore_index=True)  
         
-        return (df_CompartmentData, df_NodeData, df_ReactionData)
-        #return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData) 
+        #return (df_CompartmentData, df_NodeData, df_ReactionData)
+        return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData) 
 
     # except:
     #    raise ValueError('Invalid SBML!')
 
     except Exception as e:
-        print(e)
+        raise Exception (e)  
+
 
 class load:
     def __init__(self, sbmlstr):
-        self.sbmlstr = sbmlstr
-        self.df = _SBMLToDF(self.sbmlstr)
-        self.color_style = styleSBML.Style()
-        self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
 
-        if self.df == None:
-           sys.exit("There is no valid information to process.")
+        # self.sbmlstr = sbmlstr
+        # self.df = _SBMLToDF(self.sbmlstr)
+        # self.color_style = styleSBML.Style()
+        # self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
+        # if self.df == None:
+        #    sys.exit("There is no valid information to process.")
+
+        if os.path.isfile(sbmlstr):
+            with open(sbmlstr) as f:
+                self.sbmlstr = f.read()
+        else:  
+            self.sbmlstr = sbmlstr
+
+        try:
+          self.df = _SBMLToDF(self.sbmlstr)
+          self.color_style = styleSBML.Style()    
+          #self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
+        except Exception as err:
+            raise Exception (err)
+
 
     def getCompartmentPosition(self, id):
         """
@@ -1448,34 +1544,34 @@ class load:
             id: str-the id of the node.
 
         Returns:
-            shape_list: list of tuple (shape_idx, shape).
+            shape_list: list of tuple (shape_name, vertex_positions)
+            
+            shape_name: str-the name of the node shape.
 
-            (shape_idx, shape): tuple.
-            
-            shape_idx: int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, 5:triangle.
-            
-            shape: str.
+            vertex_positions: list-the vertex positions if any. 
+
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
-
+        vertex = []
         shape_list =[] 
         for i in range(len(idx_list)):
-            shape_idx = 0
-            shape = "text_only"
-            shape_idx = self.df[1].iloc[idx_list[i]]["shape_idx"]
-            if shape_idx == 1:
-                shape = "reactangle"
-            elif shape_idx == 2:
-                shape = "circle"
-            elif shape_idx == 3:
-                shape = "hexagon"
-            elif shape_idx == 4:
-                shape = "line"
-            elif shape_idx == 5:
-                shape = "triangle"
+            shape_name = self.df[1].iloc[idx_list[i]]["shape_name"]
+            shape_type = self.df[1].iloc[idx_list[i]]["shape_type"]
+            shape_info = self.df[1].iloc[idx_list[i]]["shape_info"]
+            node_position = self.df[1].iloc[idx_list[i]]["position"]
+            node_size = self.df[1].iloc[idx_list[i]]["size"]
+            if shape_type == "rectangle":
+                vertex = [node_position,[node_position[0]+node_size[0],node_position[1]],
+                [node_position[0]+node_size[0],node_position[1]+node_size[1]],
+                [node_position[0],node_position[1]+node_size[1]]]
+            elif shape_type == "polygon":
+                for j in range(len(shape_info)):
+                    vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
+                    vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
+                    vertex.append([vertex_x,vertex_y])         
 
-            shape_list.append((shape_idx, shape))
+            shape_list.append((shape_name, vertex))
 
         return shape_list
 
@@ -1792,7 +1888,7 @@ class load:
         Set the x,y coordinates of the compartment position.
 
         Args:  
-            id: id-compartment id.
+            id: str-compartment id.
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand corner 
             of the compartment.
@@ -1871,7 +1967,7 @@ class load:
             Set the x,y coordinates of the node position.
 
         Args:  
-            id: id-node id.
+            id: str-node id.
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node.
@@ -1884,7 +1980,7 @@ class load:
             Set the x,y coordinates of the node and node text position if there are consistent.
 
         Args:  
-            id: id-node id.
+            id: str-node id.
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node and node text position.
@@ -1905,27 +2001,72 @@ class load:
         self.df = editSBML._setNodeSize(self.df, id, size)
         return self.df
 
-    def setNodeShape(self, id, shape_info):
+    def setNodeAndTextSize(self, id, size):
         """
-        Set the node shape info.
+        Set the node and node text size if there are consistent.
 
         Args:  
             id: str-node id.
 
-            shape_info: int/str-
-            int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle.
-            str-"text_only", "rectangle", "circle", "hexagon", "line", or "triangle".
+            size: list-1*2 matrix-size of the rectangle [width, height].
+        """
+        self.df = editSBML._setNodeSize(self.df, id, size)
+        self.df = editSBML._setNodeTextSize(self.df, id, size)
+        return self.df
+
+    def setNodeShape(self, id, shape):
+        """
+        Set the node shape by shape index or name string.
+
+        Args:  
+            id: str-node id.
+
+            shape: int/str-
+            int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
+                6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
+            str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
+                "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
             
         """
-        self.df = editSBML._setNodeShape(self.df, id, shape_info)
+        self.df = editSBML._setNodeShape(self.df, id, shape)
         return self.df
+
+    def setNodeArbitraryPolygonShape(self, id, shape_name, shape_info):
+        """
+        Set an arbitrary polygon shape to a node by shape name and shape info.
+
+        Args:  
+            id: str-node id.
+
+            shape_name: str-name of the arbitrary polygon shape.
+
+            shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
+            x represents the percentage of width, and y represents the percentage of height.
+            
+        """
+        self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info)
+        return self.df
+
+    # def _setNodeArbitraryEllipseShape(self, id, shape_name, shape_info):
+    #     """
+    #     Set an arbitrary ellipse shape to a node by shape name and shape info.
+
+    #     Args:  
+    #         id: str-node id.
+
+    #         shape_name: str-name of the arbitrary ellipse shape.
+
+    #         shape_info: list-[[[x1,y1],[r1,r2]]], where x,y,r are floating numbers from 0 to 100.
+    #     """
+    #     self.df = editSBML._setNodeArbitraryEllipseShape(self.df, id, shape_name, shape_info)
+    #     return self.df
 
     def setNodeTextPosition(self, id, txt_position):
         """
         Set the x,y coordinates of the node text position.
 
         Args:  
-            id: id-node id.
+            id: str-node id.
 
             txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node text.
@@ -1933,6 +2074,107 @@ class load:
         """
         self.df = editSBML._setNodeTextPosition(self.df, id, txt_position)
         return self.df
+
+    def setNodeTextPositionCenter(self, id):
+        """
+        Set the node text position as the center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionCenter(self.df, id)
+        return self.df
+
+    def setNodeTextPositionLeftCenter(self, id):
+        """
+        Set the node text position as the left center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionLeftCenter(self.df, id)
+        return self.df
+
+    def setNodeTextPositionRightCenter(self, id):
+        """
+        Set the node text position as the right center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionRightCenter(self.df, id)
+        return self.df
+
+    def setNodeTextPositionUpperCenter(self, id):
+        """
+        Set the node text position as the upper center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionUpperCenter(self.df, id)
+        return self.df
+
+    def setNodeTextPositionLowerCenter(self, id):
+        """
+        Set the node text position as the lower center of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionLowerCenter(self.df, id)
+        return self.df
+
+    def setNodeTextPositionUpperLeft(self, id):
+        """
+        Set the node text position as the upper left of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionUpperLeft(self.df, id)
+        return self.df
+    
+    def setNodeTextPositionUpperRight(self, id):
+        """
+        Set the node text position as the upper right of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionUpperRight(self.df, id)
+        return self.df
+
+    def setNodeTextPositionLowerLeft(self, id):
+        """
+        Set the node text position as the lower left of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionLowerLeft(self.df, id)
+        return self.df
+
+    def setNodeTextPositionLowerRight(self, id):
+        """
+        Set the node text position as the lower right of the node.
+
+        Args:  
+            id: str-node id.
+
+        """
+        self.df = editSBML._setNodeTextPositionLowerRight(self.df, id)
+        return self.df
+
+
     
     def setNodeTextSize(self, id, txt_size):
         """
@@ -2005,7 +2247,7 @@ class load:
         Set the node text line width.
 
         Args:  
-            id: id-node id.
+            id: str-node id.
 
             txt_line_width: float-node text line width.
         """
@@ -2186,7 +2428,210 @@ class load:
         self.df = editSBML._setReactionDash(self.df, id, dash)
         return self.df
 
-    def addText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
+    # def addText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
+    #     txt_line_width = 1., txt_font_size = 12.):
+    #     """
+    #     Add arbitrary text onto canvas.
+
+    #     Args:  
+    #         txt_str: str-the text content.
+
+    #         txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+    #         corner of the node text.
+
+    #         txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+    #         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+    #         txt_line_width: float-node text line width.
+
+    #         txt_font_size: float-node text font size.
+            
+    #     """
+    #     self.df_text = editSBML._addText(self.df_text, txt_str=txt_str, txt_position=txt_position, 
+    #     txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
+    #     txt_font_size=txt_font_size) 
+        
+    #     return self.df_text
+
+
+    # def removeText(self, txt_str):
+    #     """
+    #     Remove the arbitrary text from canvas.
+
+    #     Args:  
+    #         txt_str: str-the text content.
+            
+    #     """
+    #     self.df_text = editSBML._removeText(self.df_text, txt_str=txt_str) 
+        
+    #     return self.df_text
+
+
+    def getTextPosition(self, txt_str):
+        """
+        Get the arbitrary text position with its content.
+
+        Args: 
+            txt_str: str-the content of the text.
+
+        Returns:
+            position_list: list of position.
+
+            position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+        """
+
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        position_list =[] 
+        for i in range(len(idx_list)):
+            position_list.append(self.df[3].iloc[idx_list[i]]["txt_position"])
+        return position_list
+
+    def getTextSize(self, txt_str):
+        """
+        Get the arbitrary text size with its text content.
+
+        Args: 
+            txt_str: str-the text content.
+
+        Returns:
+            txt_size_list: list of txt_size.
+
+            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        """
+
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        txt_size_list =[] 
+        for i in range(len(idx_list)):
+            txt_size_list.append(self.df[3].iloc[idx_list[i]]["txt_size"])
+        return txt_size_list
+
+    def getTextFontColor(self, txt_str):
+        """
+        Get the arbitrary text font color with its text content.
+
+        Args: 
+            txt_str: str-the text content.
+
+        Returns:
+            txt_font_color_list: list of txt_font_color.
+
+            txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)].
+        """
+
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        txt_font_color_list =[] 
+        for i in range(len(idx_list)):
+            rgb = self.df[3].iloc[idx_list[i]]["txt_font_color"]
+            color = _rgb_to_color(rgb)
+            txt_font_color_list.append(color)
+
+        return txt_font_color_list
+
+    def getTextLineWidth(self, txt_str):
+        """
+        Get the arbitrary text line width with the text content.
+
+        Args: 
+            txt_str: str-the text content.
+
+        Returns:
+            txt_line_width_list: list of txt_line_width.
+
+            txt_line_width: float-node text line width.
+        """
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        txt_line_width_list =[] 
+        for i in range(len(idx_list)):
+            txt_line_width_list.append(self.df[3].iloc[idx_list[i]]["txt_line_width"])
+
+        return txt_line_width_list
+
+    def getTextFontSize(self, txt_str):
+        """
+        Get the arbitrary text font size with the text content.
+
+        Args: 
+            txt_str: str-the text content.
+
+        Returns:
+            txt_font_size_list: list of txt_font_size.
+
+            txt_font_size: float.
+        """
+        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        txt_font_size_list =[] 
+        for i in range(len(idx_list)):
+            txt_font_size_list.append(float(self.df[3].iloc[idx_list[i]]["txt_font_size"]))
+
+        return txt_font_size_list
+
+    def setTextPosition(self, txt_str, txt_position):
+        """
+        Set the x,y coordinates of the arbitrary text position.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node text.
+
+        """
+        self.df = editSBML._setTextPosition(self.df, txt_str, txt_position)
+        return self.df
+
+    def setTextSize(self, txt_str, txt_size):
+        """
+        Set the arbitrary text size.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        """
+        self.df = editSBML._setTextSize(self.df, txt_str, txt_size)
+        return self.df
+
+    def setTextFontColor(self, txt_str, txt_font_color, opacity = 1.):
+        """
+        Set the arbitrary text font color.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+        """
+        self.df = editSBML._setTextFontColor(self.df, txt_str, txt_font_color, opacity)
+        return self.df
+
+    def setTextLineWidth(self, txt_str, txt_line_width):
+        """
+        Set the arbitrary text line width.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_line_width: float-node text line width.
+        """
+        self.df = editSBML._setTextLineWidth(self.df, txt_str, txt_line_width)
+        return self.df
+
+    def setTextFontSize(self, txt_str, txt_font_size):
+        """
+        Set the arbitrary text font size.
+
+        Args:  
+            txt_str: str-the text content.
+
+            txt_font_size: float-node text font size.
+        """
+        self.df = editSBML._setTextFontSize(self.df, txt_str, txt_font_size)
+        return self.df
+
+    def addText(self, txt_str, txt_position, txt_size, txt_font_color = [0, 0, 0], opacity = 1., 
         txt_line_width = 1., txt_font_size = 12.):
         """
         Add arbitrary text onto canvas.
@@ -2197,6 +2642,8 @@ class load:
             txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node text.
 
+            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+
             txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
@@ -2206,11 +2653,11 @@ class load:
             txt_font_size: float-node text font size.
             
         """
-        self.df_text = editSBML._addText(self.df_text, txt_str=txt_str, txt_position=txt_position, 
-        txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
+        self.df = editSBML._addText(self.df, txt_str=txt_str, txt_position=txt_position,
+        txt_size = txt_size, txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
         txt_font_size=txt_font_size) 
         
-        return self.df_text
+        return self.df
 
     def removeText(self, txt_str):
         """
@@ -2218,11 +2665,10 @@ class load:
 
         Args:  
             txt_str: str-the text content.
-            
         """
-        self.df_text = editSBML._removeText(self.df_text, txt_str=txt_str) 
+        self.df = editSBML._removeText(self.df, txt_str=txt_str) 
         
-        return self.df_text
+        return self.df
 
 
     def export(self):
@@ -2309,9 +2755,9 @@ class load:
         for id in reaction_ids:
             self.setReactionDefaultCenterAndHandlePositions(id)
 
-    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = '',\
-    complexShape = '', reactionLineType = 'bezier', showBezierHandles = False, 
-    showReactionIds = False, showReversible = False):
+    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = '', 
+        reactionLineType = 'bezier', showBezierHandles = False, 
+        showReactionIds = False, showReversible = False):
 
         """
         Draw to a PNG/JPG/PDF file.
@@ -2320,14 +2766,12 @@ class load:
             setImageSize: list-1*2 matrix-size of the rectangle [width, height].
 
             scale: float-makes the figure output size = scale * default output size.
+            Increasing the scale can make the resolution higher.
 
             fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
             output_fileName: str-filename: '' (default: will not save the file), 
             or 'fileName' (self-designed file name).
-            
-            complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' 
-            or 'tetramer'.
 
             reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
             If there is no layout information from the SBML file, all reaction lines will look like
@@ -2346,12 +2790,11 @@ class load:
 
         sbmlStr = self.export()
         v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, 
-        scale = scale,\
-        fileFormat = fileFormat, output_fileName = output_fileName, complexShape = complexShape, \
+        scale = scale, fileFormat = fileFormat, output_fileName = output_fileName, \
         reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
         showReactionIds = showReactionIds, showReversible = showReversible,\
-        newStyleClass = self.color_style, showImage = True, save = True,\
-        df_text = self.df_text)
+        newStyleClass = self.color_style, showImage = True, save = True)
+        #df_text = self.df_text)
 
         return v_info
 
@@ -2401,13 +2844,62 @@ class load:
         size  = visualizeSBML._getNetworkSize(sbmlStr)
         return size
 
+    def getNodeIdList(self):
+        """
+        Get the list of node ids.
+
+        Args:  
+
+        Returns:
+            id_list-list of ids.
+            
+            id-str-node id.
+        
+        """ 
+
+        id_list = self.df[1]["id"].tolist()
+        return id_list
+
+    def getReactionIdList(self):
+        """
+        Get the list of reaction ids.
+
+        Args:  
+
+        Returns:
+            id_list-list of ids.
+            
+            id-str-reaction id.
+        
+        """ 
+
+        id_list = self.df[2]["id"].tolist()
+        return id_list
+
+    def getTextContentList(self):
+        """
+        Get the list of arbitrary text content.
+
+        Args:  
+
+        Returns:
+            txt_content_list-list of txt_content.
+            
+            txt_content-str-reaction id.
+        
+        """ 
+
+        txt_content_list = self.df[3]["txt_content"].tolist()
+        return txt_content_list
+
+
     
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2420,6 +2912,19 @@ if __name__ == '__main__':
     #filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
+    #node shape:
+    #filename = "rectangle.xml"
+    filename = "triangle.xml"
+    #filename = "ellipse.xml"
+    #filename = "line.xml"
+    #filename = "hexagon.xml"
+
+    #filename = "testbigmodel.xml" #sbml with errors
+
+    #filename = "Sauro_test_sbml_files/branch1-1.xml"
+    #filename = "Sauro_test_sbml_files/cycle1-1.xml"
+    #filename = "Sauro_test_sbml_files/cycle2-1.xml"
+    #filename = "Sauro_test_sbml_files/linearchain.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2427,7 +2932,7 @@ if __name__ == '__main__':
 
 
     # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('test_textGlyph.xlsx')
+    # writer = pd.ExcelWriter('output.xlsx')
     # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
     # df_excel[1].to_excel(writer, sheet_name='NodeData')
     # df_excel[2].to_excel(writer, sheet_name='ReactionData')
@@ -2438,6 +2943,7 @@ if __name__ == '__main__':
     # writer.save()
 
     df = load(sbmlStr)
+    #df = load(os.path.join(TEST_FOLDER, filename))
     #df = load("dfgdg")
     #la = load(sbmlStr)
 
@@ -2451,7 +2957,7 @@ if __name__ == '__main__':
     # print(df.getNodePosition("x_1"))
     # print(df.getNodePosition("x_0"))
     # print(df.getNodeSize("x_1"))
-    # print(df.getNodeShape("x_1"))
+    # print(df.getNodeShape("x_0"))
     # print(df.getNodeTextPosition("x_1"))
     # print(df.getNodeTextSize("x_1"))
     # print(df.getNodeFillColor("x_1"))
@@ -2485,8 +2991,23 @@ if __name__ == '__main__':
     # df.setNodePosition("x_1", [100.0, 100.0])
     # df.setNodeTextPosition("x_1", [100.0, 100.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
-    # df.setNodeShape("x_1", 0)
+    # print(df.getNodeShape("x_0"))
+    # df.setNodeShape("x_0",0)
+    df.setNodeShape("x_0","downTriangle")
+    #df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
+    # df.setNodeShape("x_0","ellipse")
+    # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
+    df.setNodeTextPositionCenter("x_0")
+    #df.setNodeTextPositionLeftCenter("x_0")
+    #df.setNodeTextPositionRightCenter("x_0")
+    #df.setNodeTextPositionUpperCenter("x_0")
+    #df.setNodeTextPositionLowerCenter("x_0")
+    #df.setNodeTextPositionUpperLeft("x_0")
+    #df.setNodeTextPositionUpperRight("x_0")
+    #df.setNodeTextPositionLowerLeft("x_0")
+    #df.setNodeTextPositionLowerRight("x_0")
+    #print(df.getNodeTextPosition("x_0"))
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     # df.setNodeBorderColor("x_1", [255, 108, 9])
@@ -2499,17 +3020,38 @@ if __name__ == '__main__':
     # df.setReactionFillColor("r_0", [0, 0, 0])
     # df.setReactionLineThickness("r_0", 3.)
     # df._setBezierReactionType("r_0", True)
+    # print(df.getReactionCenterPosition("r_0"))
+    # print(df.getReactionCenterPosition("r_1"))
+    # df.setReactionCenterPosition("r_0", [449.0, 200.0])
+    # df.setReactionCenterPosition("r_1", [449.0, 278.0])
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
     # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # df.setReactionDash("r_0", [6,6])
 
-    # df.addText("test", [413,216])
-    # df.addText("test1", [205,216], txt_font_color="red", 
+    # df.addText("test", [413,216], [50,30])
+    # df.addText("test1", [205,216], [10, 10], txt_font_color="red", 
     # opacity= 0.5, txt_line_width=2, txt_font_size=13)
-    # df.removeArbitraryText("test")
+    # df.removeText("test")
+    # print(df.getTextPosition("text_content1"))
+    # print(df.getTextSize("text_content1"))
+    # print(df.getTextFontColor("text_content1"))
+    # print(df.getTextLineWidth("text_content2"))
+    # print(df.getTextFontSize("text_content2"))
+    # df.setTextPosition("text_content1", [413., 216.])
+    # df.setTextSize("text_content1", [100, 100])
+    # df.setTextFontColor("text_content1", [5, 0, 0])
+    # df.setTextLineWidth("text_content2", 3.)
+    # df.setTextFontSize("text_content2", 15)
 
+    # print("NetworkSize:", df.getNetworkSize())
+    # print("NetworkBottomRight:", df.getNetworkBottomRightCorner())
+    # print("NetworkTopLeft", df.getNetworkTopLeftCorner())
+
+    # print(df.getNodeIdList())
+    # print(df.getReactionIdList())
+    # print(df.getTextContentList())
 
     # sbmlStr_layout_render = df.export()
 
@@ -2517,13 +3059,9 @@ if __name__ == '__main__':
     # f.write(sbmlStr_layout_render)
     # f.close()
 
-    # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = '', fileFormat = 'PDF')
+    # # df.draw(reactionLineType='bezier', scale = 2.)
+    df.draw(output_fileName = 'output')
        
-
-    # print(df.getNetworkSize())
-    # print(df.getNetworkBottomRightCorner())
-    # print(df.getNetworkTopLeftCorner())
 
     # if len(sbmlStr_layout_render) == 0:
     #     print("empty sbml")
@@ -2539,8 +3077,8 @@ if __name__ == '__main__':
     # la.setNodeTextPosition('S1', [200, 180])
     # la.setNodeShape('S1', 2)
     # la.setNodeSize('S1', [10, 10])
-    # la.setNodeShape('S2', 0)
     # la.setNodeTextFontSize('S2', 20)
+    # la.setNodeShape('S2', 0)
     # la.setReactionDefaultCenterAndHandlePositions('J1')
     # la.setReactionDefaultCenterAndHandlePositions('J2')
     # la.setReactionDefaultCenterAndHandlePositions('J3')
@@ -2548,7 +3086,7 @@ if __name__ == '__main__':
     # la.setReactionCenterPosition("J3",[550,150])
     # la.setReactionHandlePositions("J3", [[600,150],[530,160],[600,120]])
 
-    # la.draw(showReversible=True)
+    # la.draw(showReversible=True,output_fileName = 'output')
 
     # sbmlStr_layout_render = la.export()
     # f = open("output.xml", "w")
