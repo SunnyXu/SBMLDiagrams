@@ -25,6 +25,28 @@ import numpy as np
 import cv2
 import shutil
 from IPython.display import Video
+import json
+
+
+def loadJsonColor(filename):
+    file = open(filename)
+    data = json.load(file)
+    res = {}
+    for d in data["colorStyle"]:
+        new_style = styleSBML.Style(d["styleName"],
+                                      eval(d["comp_fill_color"]),
+                                      eval(d["comp_border_color"]),
+                                      eval(d["spec_fill_color"]),
+                                      eval(d["spec_border_color"]),
+                                      eval(d["reaction_line_color"]),
+                                      eval(d["text_line_color"]),
+                                      eval(d["process_fill_color"]),
+                                      eval(d["full_fill_color"]),
+                                      eval(d["process_border_color"]))
+        res[d["styleName"]] = new_style
+    return res
+        
+
 
 def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
             bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",

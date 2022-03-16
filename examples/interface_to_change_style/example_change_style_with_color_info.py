@@ -1,5 +1,6 @@
 import SBMLDiagrams
 from SBMLDiagrams.visualizeSBML import *
+from SBMLDiagrams.styleSBML import Style
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 filename = "test_comp.xml"
@@ -18,3 +19,7 @@ df.draw(output_fileName="with-color/simplicity-color")
 
 df.setColorStyle(None)
 df.draw(output_fileName="with-color/back-sbml-color")
+
+# json file
+new_style = Style("new", (255, 255, 255, 255), )
+new_style.setCompFillColor()
