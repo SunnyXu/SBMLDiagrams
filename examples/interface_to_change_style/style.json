@@ -1,0 +1,28 @@
+{
+  "colorStyle": [
+    {
+      "styleName": "default",
+      "comp_fill_color": "255, 255, 255, 255",
+      "comp_border_color": "255, 255, 255, 255",
+      "spec_fill_color": "255, 204, 153, 200",
+      "spec_border_color": "255, 108, 9, 255",
+      "reaction_line_color": "91, 176, 253, 255",
+      "text_line_color": "0, 0, 0, 255",
+      "process_fill_color": "255, 108, 9, 200",
+      "full_fill_color": "91, 176, 253, 200",
+      "process_border_color": "255, 204, 153, 200"
+    },
+    {
+      "styleName": "simplicity",
+      "comp_fill_color": "255, 255, 255, 255",
+      "comp_border_color": "255, 255, 255, 255",
+      "spec_fill_color": "255, 255, 255, 255",
+      "spec_border_color": "0, 0, 0, 255",
+      "reaction_line_color": "0, 0, 0, 255",
+      "text_line_color": "0, 0, 0, 255",
+      "process_fill_color": "255, 108, 9, 200",
+      "full_fill_color": "91, 176, 253, 200",
+      "process_border_color": "255, 204, 153, 200"
+    }
+  ]
+}

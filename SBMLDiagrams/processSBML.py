@@ -2682,7 +2682,7 @@ class load:
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
 
-    def setColorStyle(self, styleName, newStyleClass = None):
+    def setColorStyle(self, styleName = None, newStyleClass = None):
         """
 
         Args:

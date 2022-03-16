@@ -2,7 +2,16 @@
 @author: Jessie Jiang
 """
 class Style:
-    def __init__(self, styleName=None):
+    def __init__(self, styleName=None,
+                 comp_fill_color=None,
+                 comp_border_color=None,
+                 spec_fill_color=None,
+                 spec_border_color=None,
+                 reaction_line_color=None,
+                 text_line_color=None,
+                 process_fill_color=None,
+                 full_fill_color=None,
+                 process_border_color=None):
         self.styleName = styleName
         self.comp_fill_color = None
         self.comp_border_color = None

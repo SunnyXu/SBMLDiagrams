@@ -1,5 +1,5 @@
-import tellurium as te
 import SBMLDiagrams
+import tellurium as te
 
 r = te.loada('''
     A -> B; k1*A
