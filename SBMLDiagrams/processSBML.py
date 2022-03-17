@@ -2699,12 +2699,12 @@ class load:
 
     def getColorStyle(self):
         """
-        Returns: self.color_style
+        Returns: the current color style
 
         """
         return self.color_style
 
-    def autolayout(self, layout="spectral"):
+    def autolayout(self, layout):
         """
         auto-layout the node positions using networkx lib
 
