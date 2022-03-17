@@ -2757,7 +2757,7 @@ class load:
 
     def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = '', 
         reactionLineType = 'bezier', showBezierHandles = False, 
-        showReactionIds = False, showReversible = False):
+        showReactionIds = False, showReversible = False, longText = 'auto-font'):
 
         """
         Draw to a PNG/JPG/PDF file.
@@ -2792,7 +2792,7 @@ class load:
         v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, 
         scale = scale, fileFormat = fileFormat, output_fileName = output_fileName, \
         reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
-        showReactionIds = showReactionIds, showReversible = showReversible,\
+        showReactionIds = showReactionIds, showReversible = showReversible, longText = longText, \
         newStyleClass = self.color_style, showImage = True, save = True)
         #df_text = self.df_text)
 
