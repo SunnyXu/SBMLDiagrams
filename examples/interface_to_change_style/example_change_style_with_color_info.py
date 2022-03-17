@@ -22,4 +22,4 @@ df.draw(output_fileName="with-color/back-sbml-color")
 
 # json file
 new_style = Style("new", (255, 255, 255, 255), )
-new_style.setCompFillColor()
+#new_style.setCompFillColor()

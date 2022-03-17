@@ -219,7 +219,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
 def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, newStyleClass = styleSBML.Style(),\
-    showImage = True, save = True, showReversible = False): 
+    showImage = True, save = True, showReversible = False, longText = 'auto-font'): 
     #df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), #dataframe-arbitrary text
 
     """
@@ -258,6 +258,9 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         save: whether to save the png.
 
         showReversible: bool-show reversible reactions or not.
+
+        longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
+        node; 'ellipsis' will show '....' if the text is too long to show in the node
 
     Returns:
         The visualization info object containing the drawing information of the plot
@@ -921,7 +924,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                     complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale, 
+                                                    longText = longText)
                                 id_list.append(temp_id)                    
                             else:
                                 for k in range(len(spec_render)):
@@ -951,7 +955,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                     complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
-													fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale, 
+                                                    longText = longText)
                                 id_list.append(temp_id)
                     for j in range(numBoundaryNodes):
                         if temp_id == BoundaryNodes_ids[j]:
@@ -981,7 +986,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale, 
+                                                    longText = longText)
                                 id_list.append(temp_id)
                             else:
                                 for k in range(len(spec_render)):
@@ -1009,7 +1015,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale, 
+                                                    longText = longText)
                                 id_list.append(temp_id)
 
                 #arbitrary text
@@ -1153,7 +1160,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
                                         shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
-                    text_line_width*scale, fontSize = text_font_size*scale)
+                    text_line_width*scale, fontSize = text_font_size*scale, 
+                    longText = longText)
                     floatingNodes_pos_dict['[' + temp_id + ']'] = position
                     floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
                     allNodes_pos_dict['[' + temp_id + ']'] = position
@@ -1171,7 +1179,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     allNodes_pos_dict['[' + temp_id + ']'] = position
                     allNodes_dim_dict['[' + temp_id + ']'] = dimension
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
-                    text_line_width*scale, fontSize = text_font_size*scale)
+                    text_line_width*scale, fontSize = text_font_size*scale, 
+                    longText = longText)
 
         except Exception as e:
             raise Exception (e)  
@@ -1501,13 +1510,13 @@ if __name__ == '__main__':
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
-    #filename = "Jana_WolfGlycolysis.xml"
+    filename = "Jana_WolfGlycolysis.xml"
     #filename = "BorisEJB.xml"
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
     #filename = "test_textGlyph.xml"
-    filename = "output.xml"
+    #filename = "output.xml"
 
     #filename = "putida_gb_newgenes.xml"
     #filename = "testbigmodel.xml" #sbml with errors
@@ -1522,6 +1531,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output')
+        _draw(sbmlStr,output_fileName='output', longText='ellipsis')
 
 
