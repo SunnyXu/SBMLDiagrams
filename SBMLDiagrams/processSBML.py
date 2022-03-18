@@ -3033,8 +3033,8 @@ if __name__ == '__main__':
     # df.setReactionDash("r_0", [6,6])
 
     # df.addText("test", [413,216], [50,30])
-    df.addText("test1", [400,200], [100, 100], txt_font_color="blue", 
-    opacity= 0.5, txt_line_width=2, txt_font_size=13)
+    # df.addText("test1", [400,200], [100, 100], txt_font_color="blue", 
+    # opacity= 0.5, txt_line_width=2, txt_font_size=13)
     # df.removeText("test")
     # print(df.getTextPosition("text_content1"))
     # print(df.getTextSize("text_content1"))
