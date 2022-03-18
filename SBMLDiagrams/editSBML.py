@@ -262,56 +262,224 @@ def _setNodeSize(df, id, size):
 
     return df_temp
 
-def _setNodeShape(df, id, shape_info):
+def _setNodeShape(df, id, shape):
 
     """
-    Set the node shape info.
+    Set the node shape by shape index or name string.
 
     Args:  
         df: DataFrame-initial information.
 
         id: int-node id.
 
-        shape_info: int/str-
-        int-0:text_only, 1:rectangle, 2:circle, 3:hexagon, 4:line, or 5:triangle.
-        str-"text_only", "rectangle", "circle", "hexagon", "line", or "triangle".
+        shape: int/str-
+        int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
+            6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
+        str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
+            "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
             
     Returns:
         df_temp: DataFrame-information after updates. 
     
     """
-    shape_idx = -1
+    shape_idx = -1 #undefined shape
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if isinstance(shape_info, str):
-        if shape_info == 'text_only':
+    shape_info = []
+    shape_type = ''
+    if isinstance(shape, str):
+        shape_name = shape
+        if shape == 'text_only':
             shape_idx = 0
-        elif shape_info == 'rectangle':
+        elif shape == 'rectangle':
             shape_idx = 1
-        elif shape_info == 'circle':
+            shape_type = 'rectangle'
+        elif shape == 'ellipse':
             shape_idx = 2
-        elif shape_info == 'hexagon':
+            shape_type = 'ellipse'
+            shape_info = [[[50.0, 50.0], [50.0, 50.0]]]
+        elif shape == 'hexagon':
             shape_idx = 3
-        elif shape_info == "line":
+            shape_type = 'polygon'
+            shape_info = [[100.0, 50.0], [75.0, 7.0], [25.0, 7.0], [0.0, 50.0], [25.0, 86.0], [75.0, 86.0]]
+        elif shape == "line":
             shape_idx = 4
-        elif shape_info == "triangle":
+            shape_type = 'polygon'
+            shape_info = [[0.0, 50.0], [100.0, 50.0]]
+        elif shape == "triangle":
             shape_idx = 5
+            shape_type = 'polygon'
+            shape_info = [[100.0, 50.0], [25.0, 7.0], [25.0, 86.0]]
+        elif shape == "upTriangle":
+            shape_idx = 6
+            shape_type = 'polygon'
+            shape_info = [[50.0, 0.0], [100.0, 80.6], [0.0, 80.6]]
+        elif shape == "downTriangle":
+            shape_idx = 7
+            shape_type = 'polygon'
+            shape_info = [[0.0, 19.4], [100.0, 19.4], [50.0, 100.]]
+        elif shape == "leftTriangle":
+            shape_idx = 8
+            shape_type = 'polygon'
+            shape_info = [[80.6, 0.0], [80.6, 100.0], [0.0, 50.0]]
+        elif shape == "rightTriangle":
+            shape_idx = 9
+            shape_type = 'polygon'
+            shape_info = [[19.4, 0.0], [100., 50.0], [19.4, 100.0]]
         else:
             raise Exception("This is not a valid node shape information.")
-    elif isinstance(shape_info, int):
-        if 0 <= shape_info <= 5:
-            shape_idx = shape_info
+    elif isinstance(shape, int):
+        if 0 <= shape <= 9:
+            shape_idx = shape
+            if shape == 0:
+                shape_name = 'text_only'
+            elif shape == 1:
+                shape_name = 'rectangle'
+                shape_type = 'rectangle'
+            elif shape == 2:
+                shape_name = 'ellipse'
+                shape_type = 'ellipse'
+                shape_info = [[[50.0, 50.0], [50.0, 50.0]]]
+            elif shape == 3:
+                shape_name = 'hexagon'
+                shape_type = 'polygon'
+                shape_info = [[100.0, 50.0], [75.0, 7.0], [25.0, 7.0], [0.0, 50.0], [25.0, 86.0], [75.0, 86.0]]
+            elif shape == 4:
+                shape_name = 'line'
+                shape_type = 'polygon'
+                shape_info = [[0.0, 50.0], [100.0, 50.0]]
+            elif shape == 5:
+                shape_name = 'triangle'
+                shape_type = 'polygon'
+                shape_info = [[100.0, 50.0], [25.0, 7.0], [25.0, 86.0]]
+            elif shape == 6:
+                shape_name = 'upTriangle'
+                shape_type = 'polygon'
+                shape_info = [[50.0, 0.0], [100.0, 80.6], [0.0, 80.6]]
+            elif shape == 7:
+                shape_name = 'downTirangle'
+                shape_type = 'polygon'
+                shape_info = [[0.0, 19.4], [100.0, 19.4], [50.0, 100.]]
+            elif shape == 8:
+                shape_name = 'leftTriangle'
+                shape_type = 'polygon'
+                shape_info = [[80.6, 0.0], [80.6, 100.0], [0.0, 50.0]]
+            elif shape == 9:
+                shape_name = 'rightTriangle'
+                shape_type = 'polygon'
+                shape_info = [[19.4, 0.0], [100., 50.0], [19.4, 100.0]]
         else:
             raise Exception("This is not a valid node shape information.")
     else:
         raise Exception("This is not a valid node shape information.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
+        df_NodeData_temp.at[idx_list[i],"shape_name"] = shape_name
+        df_NodeData_temp.at[idx_list[i],"shape_type"] = shape_type
+        df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
     df_temp = (df[0], df_NodeData_temp, df[2])
 
     return df_temp
+
+def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info):
+
+    """
+        Set an arbitrary polygon shape to a node by shape name and shape info.
+
+        Args:  
+            id: str-node id.
+
+            shape_name: str-name of the arbitrary polygon shape.
+
+            shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.        
+            x represents the percentage of width, and y represents the percentage of height.
+    """
+    shape_idx = -2 #arbitrary polygon
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    if isinstance(shape_name, str):
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"shape_name"] = shape_name
+    else:
+        raise Exception("This is not a valid node shape name.")
+    #check the shape_info is in the correct format:
+    shape_info_flag = True
+    if isinstance(shape_info, list) and len(shape_info) >= 2:
+        for ii in range(len(shape_info)):
+            if isinstance(shape_info[ii], list) and len(shape_info[ii]) == 2:
+                if all(isinstance(float(item), float) for item in shape_info[ii]):
+                    pass
+                else:
+                    shape_info_flag = False
+                    raise Exception("This is not a valid node shape info.")
+            else:
+                shape_info_flag = False
+                raise Exception("This is not a valid node shape info.")               
+    else:
+        shape_info_flag = False
+        raise Exception("This is not a valid node shape info.")
+    if shape_info_flag == True:
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
+    for i in range(len(idx_list)):
+        df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
+        df_NodeData_temp.at[idx_list[i],"shape_type"] = 'polygon'
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+# def _setNodeArbitraryEllipseShape(df, id, shape_name, shape_info):
+
+#     """
+#         Set an arbitrary ellipse shape to a node by shape name and shape info.
+
+#         Args:  
+#             id: str-node id.
+
+#             shape_name: str-name of the arbitrary ellipse shape.
+
+#             shape_info: list-[[[x1,y1],[r1,r2]]], where x,y,r are floating numbers from 0 to 100.        
+    
+#     """
+#     shape_idx = -3 #arbitrary ellipse
+#     df_NodeData_temp = df[1].copy()
+#     idx_list = df[1].index[df[1]["id"] == id].tolist()
+#     if len(idx_list) == 0:
+#         raise Exception("This is not a valid id.")
+#     if isinstance(shape_name, str):
+#         for i in range(len(idx_list)):
+#             df_NodeData_temp.at[idx_list[i],"shape_name"] = shape_name
+#     else:
+#         raise Exception("This is not a valid node shape name.")
+#     #check the shape_info is in the correct format:
+#     shape_info_flag = True
+#     if isinstance(shape_info, list) and len(shape_info) == 1:
+#         if isinstance(shape_info[0], list) and len(shape_info[0]) == 2:
+#             for ii in range(len(shape_info[0])):
+#                 if all(isinstance(float(item), float) for item in shape_info[0][ii]):
+#                     pass
+#                 else:
+#                     shape_info_flag = False
+#                     raise Exception("This is not a valid node shape info.")
+#         else:
+#             shape_info_flag = False
+#             raise Exception("This is not a valid node shape info.")               
+#     else:
+#         shape_info_flag = False
+#         raise Exception("This is not a valid node shape info.")
+#     if shape_info_flag == True:
+#         for i in range(len(idx_list)):
+#             df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
+#     for i in range(len(idx_list)):
+#         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
+#         df_NodeData_temp.at[idx_list[i],"shape_type"] = 'ellipse'
+#     df_temp = (df[0], df_NodeData_temp, df[2])
+
+#     return df_temp
 
 def _setNodeTextPosition(df, id, txt_position):
 
@@ -335,6 +503,286 @@ def _setNodeTextPosition(df, id, txt_position):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionCenter(df, id):
+
+    """
+    Set the node text position as the center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        # txt_str = df_NodeData_temp.at[idx_list[i],"id"]
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        shape_type = df_NodeData_temp.at[idx_list[i],"shape_type"]
+        txt_position = node_position
+        txt_size = node_size
+        # if shape_type == "polygon":
+        #     vertex = []
+        #     shape_info = df_NodeData_temp.at[idx_list[i],"shape_info"]
+        #     for j in range(len(shape_info)):
+        #         vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
+        #         vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
+        #         vertex.append([vertex_x,vertex_y])
+        #     def centroid(vertexes):
+        #         _x_list = [vertex [0] for vertex in vertexes]
+        #         _y_list = [vertex [1] for vertex in vertexes]
+        #         _len = len(vertexes)
+        #         _x = sum(_x_list) / _len
+        #         _y = sum(_y_list) / _len
+        #         return[_x, _y]         
+        #     centroid_pos = centroid(vertex)
+
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionLeftCenter(df, id):
+
+    """
+    Set the node text position as the left center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]-node_size[0], node_position[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionRightCenter(df, id):
+
+    """
+    Set the node text position as the right center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]+node_size[0], node_position[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionUpperCenter(df, id):
+
+    """
+    Set the node text position as the upper center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0], node_position[1]-node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionLowerCenter(df, id):
+
+    """
+    Set the node text position as the lower center of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0], node_position[1]+node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionUpperLeft(df, id):
+
+    """
+    Set the node text position as the upper left of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]-node_size[0], node_position[1]-node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionUpperRight(df, id):
+
+    """
+    Set the node text position as the upper right of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]+node_size[0], node_position[1]-node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionLowerLeft(df, id):
+
+    """
+    Set the node text position as the lower left of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]-node_size[0], node_position[1]+node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    df_temp = (df[0], df_NodeData_temp, df[2])
+
+    return df_temp
+
+def _setNodeTextPositionLowerRight(df, id):
+
+    """
+    Set the node text position as the lower right of the node.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        node_position = df_NodeData_temp.at[idx_list[i],"position"]
+        node_size = df_NodeData_temp.at[idx_list[i],"size"]
+        txt_position = [node_position[0]+node_size[0], node_position[1]+node_size[1]]
+        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
     df_temp = (df[0], df_NodeData_temp, df[2])
 
     return df_temp
@@ -487,7 +935,7 @@ def _setNodeTextLineWidth(df, id, txt_line_width):
     Args:  
         df: DataFrame-initial information.
 
-        id: id-node id.
+        id: str-node id.
 
         txt_line_width: float-node text line width.
 
@@ -723,8 +1171,194 @@ def _setReactionDash(df, id, dash):
 
     return df_temp
 
-def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
-    txt_line_width = 1., txt_font_size = 12.):
+# def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
+#     txt_line_width = 1., txt_font_size = 12.):
+#     """
+#     Set arbitray text onto canvas.
+
+#     Args:  
+#         txt_str: str-the text content.
+
+#         txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+#         corner of the node text.
+
+#         txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+#         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+#         txt_line_width: float-node text line width.
+
+#         txt_font_size: float-node text font size.
+        
+#     """
+#     txt_font_color_rgba = _color_to_rgb(txt_font_color, opacity)
+#     df_text_temp = df_text.copy()
+#     text_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_text}
+#     text_row_dct[processSBML.ID].append(txt_str)
+#     text_row_dct[processSBML.TXTPOSITION].append(txt_position)
+#     text_row_dct[processSBML.TXTFONTCOLOR].append(txt_font_color_rgba)
+#     text_row_dct[processSBML.TXTLINEWIDTH].append(txt_line_width)
+#     text_row_dct[processSBML.TXTFONTSIZE].append(txt_font_size)
+#     if len(df_text_temp) == 0:
+#         df_text_temp = pd.DataFrame(text_row_dct)
+#     else:
+#         df_text_temp = pd.concat([df_text_temp,\
+#             pd.DataFrame(text_row_dct)], ignore_index=True)
+
+#     return df_text_temp
+
+# def _removeText(df_text, txt_str):
+#     """
+#     Set arbitray text onto canvas.
+
+#     Args:  
+#         txt_str: str-the text content.
+        
+#     """
+#     df_text_temp = df_text.copy()
+#     idx_list = df_text_temp.index[df_text_temp[processSBML.ID] == txt_str].tolist()
+#     if len(idx_list) == 0:
+#         raise Exception("This is not a valid text content.")
+#     df_text_temp = df_text_temp.drop(idx_list)
+
+#     return df_text_temp
+
+def _setTextPosition(df, txt_str, txt_position):
+
+    """
+    Set the x,y coordinates of the node text position.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_position: [position_x, position_y], the coordinate represents the top-left hand corner of the node text.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_position"] = txt_position
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+def _setTextSize(df, txt_str, txt_size):
+
+    """
+    Set the arbitrary text size.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_size"] = txt_size
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+def _setTextFontColor(df, txt_str, txt_font_color, opacity):
+
+    """
+    Set the arbitrary text font color.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    txt_font_color = _color_to_rgb(txt_font_color, opacity)
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_font_color"] = txt_font_color
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+def _setTextLineWidth(df, txt_str, txt_line_width):
+
+    """
+    Set the arbitrary text line width.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_line_width: float-node text line width.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+
+def _setTextFontSize(df, txt_str, txt_font_size):
+
+    """
+    Set the arbitrary text font size.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_str: str-the text content.
+
+        txt_font_size: float-node text font size.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_font_size"] = txt_font_size
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+
+    return df_temp
+
+def _addText(df, txt_str, txt_position, txt_size, 
+    txt_font_color = [0, 0, 0], opacity = 1., txt_line_width = 1., txt_font_size = 12.):
     """
     Set arbitray text onto canvas.
 
@@ -733,6 +1367,8 @@ def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity
 
         txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
         corner of the node text.
+
+        txt_size: list-1*2 matrix-size of the rectangle [width, height].
 
         txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -744,33 +1380,37 @@ def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity
         
     """
     txt_font_color_rgba = _color_to_rgb(txt_font_color, opacity)
-    df_text_temp = df_text.copy()
-    text_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_text}
-    text_row_dct[processSBML.ID].append(txt_str)
+    df_TextData_temp = df[3].copy()
+    text_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_TextData}
+    text_row_dct[processSBML.TXTCONTENT].append(txt_str)
     text_row_dct[processSBML.TXTPOSITION].append(txt_position)
+    text_row_dct[processSBML.TXTSIZE].append(txt_size)
     text_row_dct[processSBML.TXTFONTCOLOR].append(txt_font_color_rgba)
     text_row_dct[processSBML.TXTLINEWIDTH].append(txt_line_width)
     text_row_dct[processSBML.TXTFONTSIZE].append(txt_font_size)
-    if len(df_text_temp) == 0:
-        df_text_temp = pd.DataFrame(text_row_dct)
+    if len(df_TextData_temp) == 0:
+        df_TextData_temp = pd.DataFrame(text_row_dct)
     else:
-        df_text_temp = pd.concat([df_text_temp,\
+        df_TextData_temp = pd.concat([df_TextData_temp,\
             pd.DataFrame(text_row_dct)], ignore_index=True)
 
-    return df_text_temp
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
+    return df_temp
 
-def _removeText(df_text, txt_str):
+
+def _removeText(df, txt_str):
     """
-    Set arbitray text onto canvas.
+    Remove the arbitray text.
 
     Args:  
         txt_str: str-the text content.
         
     """
-    df_text_temp = df_text.copy()
-    idx_list = df_text_temp.index[df_text_temp[processSBML.ID] == txt_str].tolist()
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
     if len(idx_list) == 0:
-        raise Exception("This is not a valid text content.")
-    df_text_temp = df_text_temp.drop(idx_list)
+        raise Exception("This is not a valid id.")
+    df_TextData_temp = df_TextData_temp.drop(idx_list)
+    df_temp = (df[0], df[1], df[2], df_TextData_temp)
 
-    return df_text_temp
+    return df_temp

@@ -7,6 +7,7 @@ Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu and Jessie Jiang
 """
 
+from operator import pos
 import os
 import re
 from pandas import DataFrame
@@ -25,11 +26,33 @@ import numpy as np
 import cv2
 import shutil
 from IPython.display import Video
+import json
+
+
+def loadJsonColor(filename):
+    file = open(filename)
+    data = json.load(file)
+    res = {}
+    for d in data["colorStyle"]:
+        new_style = styleSBML.Style(d["styleName"],
+                                      eval(d["comp_fill_color"]),
+                                      eval(d["comp_border_color"]),
+                                      eval(d["spec_fill_color"]),
+                                      eval(d["spec_border_color"]),
+                                      eval(d["reaction_line_color"]),
+                                      eval(d["text_line_color"]),
+                                      eval(d["process_fill_color"]),
+                                      eval(d["full_fill_color"]),
+                                      eval(d["process_border_color"]))
+        res[d["styleName"]] = new_style
+    return res
+        
+
 
 def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
             bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",
             horizontal_offset = 15, vertical_offset = 9, text_color = (0, 0, 0, 200), savePngs = False, showImage = False,
-            user_reaction_line_color = (91, 176, 253, 255)):
+            user_reaction_line_color = None):
     """
 
     Args:
@@ -137,6 +160,9 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
             reaction_line_color, reaction_line_width, reactionLineType,\
             showBezierHandles, showReactionIds, head, scale, reaction_dash, rxn_rev, showReversible= info
 
+            if not user_reaction_line_color:
+                user_reaction_line_color = reaction_line_color
+
             drawNetwork.addReaction(canvas,temp_id, src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
                             reaction_line_color = user_reaction_line_color, reaction_line_width = reaction_line_width*rate,
@@ -193,8 +219,8 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
 def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, newStyleClass = styleSBML.Style(),\
-    showImage = True, save = True, df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), 
-    showReversible = False):
+    showImage = True, save = True, showReversible = False, longText = 'auto-font'): 
+    #df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), #dataframe-arbitrary text
 
     """
     Plot from an sbml string to a PNG/JPG/PDF file.
@@ -207,6 +233,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         setImageSize: list-1*2 matrix-size of the rectangle [width, height].
 
         scale: float-makes the figure output size = scale * default output size.
+        Increasing the scale can make the resolution higher.
 
         fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
 
@@ -230,9 +257,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
         save: whether to save the png.
 
-        df_text: dataframe-arbitrary text.
-
         showReversible: bool-show reversible reactions or not.
+
+        longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
+        node; 'ellipsis' will show '....' if the text is too long to show in the node
 
     Returns:
         The visualization info object containing the drawing information of the plot
@@ -278,6 +306,9 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         floatingNodes_pos_dict = defaultdict(list)
         floatingNodes_dim_dict = defaultdict(list)
         shapeIdx = 1
+        shape_name = ''
+        shape_type = ''
+        shape_info = []
         textGlyph_id_list = []
         text_content_list = []
         text_position_list = []
@@ -300,8 +331,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         try: #invalid sbml
             ### from here for layout ###
             document = libsbml.readSBMLFromString(sbmlStr)
+            # if document.getNumErrors() != 0:
+            #     raise Exception("There are errors in the sbml file.")
             if document.getNumErrors() != 0:
-                raise Exception("There are errors in the sbml file.")
+                errMsgRead = document.getErrorLog().toString()
+                raise Exception("Errors in SBML Model: ", errMsgRead)
             model_layout = document.getModel()
             try:
                 mplugin = model_layout.getPlugin("layout")
@@ -391,9 +425,13 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
                             specGlyph = layout.getSpeciesGlyph(specGlyph_id)
                             
+
                             for k in range(numSpecGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
-                                temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                if textGlyph_temp.isSetOriginOfTextId():
+                                    temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                elif textGlyph_temp.isSetGraphicalObjectId():
+                                    temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
                                 if temp_specGlyph_id == specGlyph_id:
                                     textGlyph = textGlyph_temp
 
@@ -461,9 +499,13 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             pos_y = boundingbox.getY()
                             spec_dimension_list.append([width,height])
                             spec_position_list.append([pos_x,pos_y])
+
                             for k in range(numSpecGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
-                                temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                if textGlyph_temp.isSetOriginOfTextId():
+                                    temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                elif textGlyph_temp.isSetGraphicalObjectId():
+                                    temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
                                 if temp_specGlyph_id == specGlyph_id:
                                     textGlyph = textGlyph_temp
                             try:
@@ -487,7 +529,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     #arbitrary text
                     for i in range(numTextGlyphs):
                         textGlyph = layout.getTextGlyph(i)
-                        if not textGlyph.isSetOriginOfTextId(): #if there is no original text id set
+                        if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                            #if there is no original text id set
                             temp_id = textGlyph.getId()
                             text_content = textGlyph.getText()
                             textGlyph_id_list.append(temp_id)
@@ -564,31 +607,63 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setSpecBorderColor(hex_to_rgb(color_list[k][1]))
                                 spec_border_width = group.getStrokeWidth()
                                 #name_list = []
-                                name = ''
-                                for element in group.getListOfElements():
-                                    name = element.getElementName()
-                                    #name_list.append(name)
-                                    try:
-                                        NumRenderpoints = element.getListOfElements().getNumRenderPoints()
-                                    except:
-                                        NumRenderpoints = 0
+                                shape_type = ''
+                                #print(group.getNumElements())# There is only one element
+                                #for element in group.getListOfElements():
+                                element = group.getElement(0)
                                 shapeIdx = 0
-                                if name == "rectangle":
-                                    shapeIdx = 1
-                                elif name == "ellipse": #circle
-                                    shapeIdx = 2
-                                elif name == "polygon" and NumRenderpoints == 6: #hexagon
-                                    shapeIdx = 3
-                                elif name == "polygon" and NumRenderpoints == 2: #line
-                                    shapeIdx = 4
-                                elif name == "polygon" and NumRenderpoints == 3: #triangle
-                                    shapeIdx = 5
-                                else:
-                                    shapeIdx = 0
+                                shape_name = 'text_only'
+                                shapeInfo = []
+                                if element != None:
+                                    shape_type = element.getElementName()
+                                    if shape_type == "rectangle":
+                                        shapeIdx = 1
+                                        shape_name = "rectangle"
+                                    elif shape_type == "ellipse": #ellipse
+                                        shapeIdx = 2
+                                        shape_name = "ellipse"
+                                        # center_x = element.getCX().getRelativeValue()
+                                        # center_y = element.getCY().getRelativeValue()
+                                        # radius_x = element.getRX().getRelativeValue()
+                                        # radius_y = element.getRY().getRelativeValue()
+                                        # shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
+                                    elif shape_type == "polygon":
+                                        NumRenderpoints = element.getListOfElements().getNumRenderPoints()
+                                        for num in range(NumRenderpoints):
+                                            point_x = element.getListOfElements().get(num).getX().getRelativeValue()
+                                            point_y = element.getListOfElements().get(num).getY().getRelativeValue()
+                                            shapeInfo.append([point_x,point_y]) 
+                                        if NumRenderpoints == 6: #hexagon:
+                                            shapeIdx = 3
+                                            shape_name = "hexagon"
+                                        elif NumRenderpoints == 2: #line
+                                            shapeIdx = 4
+                                            shape_name = "line"
+                                        elif NumRenderpoints == 3: #triangle
+                                            shapeIdx = 5
+                                            shape_name = "triangle"
+                                            #triangle_vertex = [[25.0, 7.0],[100.0, 50.0],[25.0, 86.0]]
+                                            upTriangle_vertex = [[50,0],[100,80.6],[0,80.6]]
+                                            downTriangle_vertex = [[0,19.4],[100,19.4],[50.,100.]]
+                                            leftTriangle_vertex = [[80.6,0],[80.6,100],[0,50]]
+                                            rightTriangle_vertex = [[19.4,0],[100.,50],[19.4,100]]
+                                            if all(item in shapeInfo for item in upTriangle_vertex):
+                                                shapeIdx = 6
+                                                shape_name = "upTriangle"
+                                            if all(item in shapeInfo for item in downTriangle_vertex):
+                                                shapeIdx = 7
+                                                shape_name = "downTriangle"
+                                            if all(item in shapeInfo for item in leftTriangle_vertex):
+                                                shapeIdx = 8
+                                                shape_name = "leftTriangle"
+                                            if all(item in shapeInfo for item in rightTriangle_vertex):
+                                                shapeIdx = 9
+                                                shape_name = "rightTriangle"
 
-                                spec_render.append([idList,color_style.getSpecFillColor(),
-                                                    color_style.getSpecBorderColor(),spec_border_width,shapeIdx])
 
+                                spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
+                                spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
+                                
                             elif 'REACTIONGLYPH' in typeList:
                                 if group.isSetEndHead():
                                     temp_id = group.getEndHead()
@@ -631,7 +706,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
             for i in range(numComps):
                 comp_node_list[i] = []
             #if there is layout info:
-            if len(spec_id_list) != 0:
+            if len(spec_id_list) != 0 or len(textGlyph_id_list) != 0:
+            #if len(spec_id_list) != 0:
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
@@ -829,6 +905,9 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_type = spec_render[k][6]
+                                        shape_info = spec_render[k][7]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         if not color_style.getStyleName():
@@ -841,10 +920,12 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, complex_shape = complexShape)
+                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                    complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale, 
+                                                    longText = longText)
                                 id_list.append(temp_id)                    
                             else:
                                 for k in range(len(spec_render)):
@@ -855,6 +936,9 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_type = spec_render[k][6]
+                                        shape_info = spec_render[k][7]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         if not color_style.getStyleName():
@@ -867,10 +951,12 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, complex_shape=complexShape)
+                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                    complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
-													fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale, 
+                                                    longText = longText)
                                 id_list.append(temp_id)
                     for j in range(numBoundaryNodes):
                         if temp_id == BoundaryNodes_ids[j]:
@@ -883,6 +969,9 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_type = spec_render[k][6]
+                                        shape_info = spec_render[k][7]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         if not color_style.getStyleName():
@@ -891,12 +980,14 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         text_font_size = text_render[k][3]
                                 drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, complex_shape=complexShape)
+                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                    complex_shape=complexShape)
                                 allNodes_pos_dict['[' + temp_id + ']'] = position
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale, 
+                                                    longText = longText)
                                 id_list.append(temp_id)
                             else:
                                 for k in range(len(spec_render)):
@@ -907,6 +998,9 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
                                         shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_type = spec_render[k][6]
+                                        shape_info = spec_render[k][7]
                                 for k in range(len(text_render)):
                                     if temp_id == text_render[k][0]:
                                         if not color_style.getStyleName():
@@ -915,32 +1009,38 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                         text_font_size = text_render[k][3]
                                 drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, complex_shape=complexShape)
+                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                    complex_shape=complexShape)
                                 allNodes_pos_dict['[' + temp_id + ']'] = position
                                 allNodes_dim_dict['[' + temp_id + ']'] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													fontSize = text_font_size*scale)
+													fontSize = text_font_size*scale, 
+                                                    longText = longText)
                                 id_list.append(temp_id)
 
                 #arbitrary text
-                for i in range(numTextGlyphs):
-                    textGlyph = layout.getTextGlyph(i)
-                    if not textGlyph.isSetOriginOfTextId():
+                for i in range(len(textGlyph_id_list)):
+                    textGlyph = layout.getTextGlyph(textGlyph_id_list[i])
+                    if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                        #if there is no original text id set
                         textGlyph_id = textGlyph_id_list[i]
                         text_content = text_content_list[i]
-                        dimension = text_dimension_list[i]
                         text_position = text_position_list[i]
+                        text_dimension = text_dimension_list[i]
                         for k in range(len(text_render)):
                             if textGlyph_id == text_render[k][0]:
                                 text_line_color = text_render[k][1]
                                 text_line_width = text_render[k][2]
                                 text_font_size = text_render[k][3]
+
                         text_position = [(text_position[0]-topLeftCorner[0])*scale,
                         (text_position[1]-topLeftCorner[1])*scale]
+                        text_dimension = [text_dimension[0]*scale,text_dimension[1]*scale]
                         text_line_width = text_line_width*scale
-                        # drawNetwork.addSimpleText(canvas, text_content, text_position, 
-                        # text_line_color, text_line_width, text_font_size) 
+                        text_font_size = text_font_size*scale 
+                        drawNetwork.addText(canvas, text_content, text_position, text_dimension,
+                        text_line_color, text_line_width, text_font_size)  
 
 
             else: # there is no layout information, assign position randomly and size as default
@@ -1058,9 +1158,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     color_style.setNodeDimension(dimension)
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
-                                        shapeIdx, complex_shape=complexShape)
+                                        shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
-                    text_line_width*scale, fontSize = text_font_size*scale)
+                    text_line_width*scale, fontSize = text_font_size*scale, 
+                    longText = longText)
                     floatingNodes_pos_dict['[' + temp_id + ']'] = position
                     floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
                     allNodes_pos_dict['[' + temp_id + ']'] = position
@@ -1074,29 +1175,32 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
-                                        shapeIdx, complex_shape=complexShape)
+                                        shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
                     allNodes_pos_dict['[' + temp_id + ']'] = position
                     allNodes_dim_dict['[' + temp_id + ']'] = dimension
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
-                    text_line_width*scale, fontSize = text_font_size*scale)
+                    text_line_width*scale, fontSize = text_font_size*scale, 
+                    longText = longText)
 
         except Exception as e:
-            print(e)
+            raise Exception (e)  
 
         #add arbitrary text
-        if len(df_text) != 0:
-            for i in range(len(df_text)):
-                text_content = df_text.iloc[i][processSBML.ID] 
-                text_position = df_text.iloc[i][processSBML.TXTPOSITION]
-                text_position = [(text_position[0]-topLeftCorner[0])*scale,
-                (text_position[1]-topLeftCorner[1])*scale]
-                text_font_color = df_text.iloc[i][processSBML.TXTFONTCOLOR]
-                text_line_width = df_text.iloc[i][processSBML.TXTLINEWIDTH]
-                text_line_width = text_line_width*scale
-                text_font_size = df_text.iloc[i][processSBML.TXTFONTSIZE]
-                text_font_size = text_font_size*scale
-                drawNetwork.addSimpleText(canvas, text_content, text_position, text_font_color,
-                text_line_width, text_font_size) 
+        # if len(df_text) != 0:
+        #     for i in range(len(df_text)):
+        #         text_content = df_text.iloc[i][processSBML.TXTCONTENT] 
+        #         text_position = df_text.iloc[i][processSBML.TXTPOSITION]
+        #         text_position = [(text_position[0]-topLeftCorner[0])*scale,
+        #         (text_position[1]-topLeftCorner[1])*scale]
+        #         text_size = df_text.iloc[i][processSBML.TXTSIZE]
+        #         text_size = [text_size[0]*scale,text_size[1]*scale]
+        #         text_font_color = df_text.iloc[i][processSBML.TXTFONTCOLOR]
+        #         text_line_width = df_text.iloc[i][processSBML.TXTLINEWIDTH]
+        #         text_line_width = text_line_width*scale
+        #         text_font_size = df_text.iloc[i][processSBML.TXTFONTSIZE]
+        #         text_font_size = text_font_size*scale
+        #         drawNetwork.addSimpleText(canvas, text_content, text_position, text_font_color,
+        #         text_line_width, text_font_size) 
         
         return floatingNodes_pos_dict, floatingNodes_dim_dict, allNodes_pos_dict, allNodes_dim_dict, edges, arrow_info, name_to_id
     
@@ -1148,7 +1252,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
     Returns:
         position: list-[position_x, position_y], top left-hand corner of the network(s).
         It is calculated by the minimum positions of compartments, nodes, centroid and handle 
-        positions of reactions, excluding the compartment with the id of _compartment_default_.
+        positions of reactions and aribitrary text, 
+        excluding the compartment with the id of _compartment_default_.
     
     """    
     model = simplesbml.loadSBMLStr(sbmlStr)
@@ -1162,10 +1267,20 @@ def _getNetworkTopLeftCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
+    txt_content = df.getTextContentList()
+    numTexts = len(txt_content)
+
     if numFloatingNodes > 0 :
         position = df.getNodePosition(FloatingNodes_ids[0])[0]
     if numBoundaryNodes > 0:
         position = df.getNodePosition(BoundaryNodes_ids[0])[0]
+    # if numTexts > 0:
+    #     position_list = df.getTextPosition(txt_content[0])
+    #     size = df.getTextSize(txt_content[0])[0]
+    #     position = [position_list[0][0], position_list[0][1]-size[1]]
+    if numTexts > 0:
+        position_list = df.getTextPosition(txt_content[0])
+        position = position_list[0]
     for i in range(numFloatingNodes):
         node_temp_position = df.getNodePosition(FloatingNodes_ids[i])
         text_temp_position = df.getNodeTextPosition(FloatingNodes_ids[i])
@@ -1214,6 +1329,23 @@ def _getNetworkTopLeftCorner(sbmlStr):
             if handle_positions[j][1] < position[1]:
                 position[1] = handle_positions[j][1]
 
+    # for i in range(numTexts):
+    #     text_position_list = df.getTextPosition(txt_content[i])
+    #     text_size = df.getTextSize(txt_content[i])[0]
+    #     text_position = [text_position_list[0][0],text_position_list[0][1]-text_size[1]] 
+    #     if text_position[0] < position[0]:
+    #         position[0] = text_position[0]
+    #     if text_position[1] < position[1]:
+    #         position[1] = text_position[1]
+
+    for i in range(numTexts):
+        text_position_list = df.getTextPosition(txt_content[i])
+        text_position = text_position_list[0]
+        if text_position[0] < position[0]:
+            position[0] = text_position[0]
+        if text_position[1] < position[1]:
+            position[1] = text_position[1]
+
     return position
 
 def _getNetworkBottomRightCorner(sbmlStr):
@@ -1225,8 +1357,10 @@ def _getNetworkBottomRightCorner(sbmlStr):
 
     Returns:
         position: list-[position_x, position_y],bottom right-hand corner of the network(s).
-        It is calculated by the maximum right down corner positions of compartments and nodes, 
+        It is calculated by the maximum right down corner positions of positions of compartments, 
+        nodes, centroid and handle positions of reactions and aribitrary text, 
         excluding the compartment with the id of _compartment_default_.
+    
     
     """    
     model = simplesbml.loadSBMLStr(sbmlStr)
@@ -1240,6 +1374,9 @@ def _getNetworkBottomRightCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
+    txt_content = df.getTextContentList()
+    numTexts = len(txt_content)
+
     if numFloatingNodes > 0:
         position_list = df.getNodePosition(FloatingNodes_ids[0])
         size = df.getNodeSize(FloatingNodes_ids[0])[0]
@@ -1248,6 +1385,14 @@ def _getNetworkBottomRightCorner(sbmlStr):
         position_list = df.getNodePosition(BoundaryNodes_ids[0])
         size = df.getNodeSize(BoundaryNodes_ids[0])[0]
         position = [position_list[0][0]+size[0], position_list[0][1]+size[1]]
+    # if numTexts > 0:
+    #     position_list = df.getTextPosition(txt_content[0])
+    #     size = df.getTextSize(txt_content[0])[0]
+    #     position = [position_list[0][0]+size[0],position_list[0][1]]
+    if numTexts > 0:
+        position_list = df.getTextPosition(txt_content[0])
+        size = df.getTextSize(txt_content[0])[0]
+        position = [position_list[0][0]+size[0],position_list[0][1]+size[1]]
 
     for i in range(numFloatingNodes):
         node_temp_position_list = df.getNodePosition(FloatingNodes_ids[i])
@@ -1311,6 +1456,26 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[0] = handle_positions[j][0]
             if handle_positions[j][1] > position[1]:
                 position[1] = handle_positions[j][1]
+
+    # for i in range(numTexts):
+    #     text_position_list = df.getTextPosition(txt_content[i])
+    #     text_size = df.getTextSize(txt_content[i])[0]
+    #     text_position = [text_position_list[0][0] + text_size[0],text_position_list[0][1]] 
+    #     if text_position[0] > position[0]:
+    #         position[0] = text_position[0]
+    #     if text_position[1] > position[1]:
+    #         position[1] = text_position[1]
+
+    for i in range(numTexts):
+        text_position_list = df.getTextPosition(txt_content[i])
+        text_size = df.getTextSize(txt_content[i])[0]
+        text_position = [text_position_list[0][0] + text_size[0],
+                        text_position_list[0][1] + text_size[1]] 
+        if text_position[0] > position[0]:
+            position[0] = text_position[0]
+        if text_position[1] > position[1]:
+            position[1] = text_position[1]
+
     return position
 
 def _getNetworkSize(sbmlStr):
@@ -1345,13 +1510,16 @@ if __name__ == '__main__':
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
-    #filename = "Jana_WolfGlycolysis.xml"
+    filename = "Jana_WolfGlycolysis.xml"
     #filename = "BorisEJB.xml"
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
-    filename = "test_textGlyph.xml"
+    #filename = "test_textGlyph.xml"
     #filename = "output.xml"
+
+    #filename = "putida_gb_newgenes.xml"
+    #filename = "testbigmodel.xml" #sbml with errors
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -1363,6 +1531,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr)
+        _draw(sbmlStr,output_fileName='output', longText='ellipsis')
 
 

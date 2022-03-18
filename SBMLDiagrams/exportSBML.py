@@ -14,6 +14,7 @@ import re # to process kinetic_law string
 import pandas as pd
 import math
 import sys
+from SBMLDiagrams import processSBML
 
 def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
@@ -21,13 +22,15 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
     Write the information of a set of dataframe to an SBML string. 
 
     Args:  
-        (df_CompartmentData, df_NodeData, df_ReactionData): tuple.
+        (df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData): tuple.
 
         df_CompartmentData: DataFrame-Compartment information.
 
         df_NodeData: DataFrame-Node information.
 
         df_ReactionData: DataFrame-Reaction information.
+
+        df_ArbitraryTextData: DataFrame-Arbitrary text information.
 
     Returns:
         SBMLStr_layout_render: str-the string of the output sbml file. 
@@ -47,18 +50,35 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         [res.append(x) for x in list_update if x not in res and not x.isdigit()]
         return res
      
-    if df == None:
-        sys.exit("There is no valid information to process.")
-    else:
-        df_CompartmentData = df[0]
-        df_NodeData = df[1]
-        df_ReactionData = df[2]
+    # if df == None:
+    #     sys.exit("There is no valid information to process.")
+    # else:
+    try:
+        try: 
+            df_CompartmentData = df[0]
+        except:
+            df_CompartmentData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_CompartmentData)
+        try:
+            df_NodeData = df[1]
+        except:
+            df_NodeData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_NodeData)
+        try:
+            df_ReactionData = df[2]
+        except:
+            df_ReactionData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_ReactionData)
+        try:
+            df_TextData = df[3]
+        except:
+            df_TextData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_TextData)
+    except Exception as err:
+        raise Exception (err)
 
     #isReversible = False
     numNodes = len(df_NodeData)
     numReactions = len(df_ReactionData)
+    numArbitraryTexts = len(df_TextData)
 
-    if numNodes != 0:
+    if numNodes != 0 or numArbitraryTexts != 0:
         numCompartments = len(df_CompartmentData)      
     # #######################################
 
@@ -150,11 +170,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             rct = [] # id list of the rcts
             prd = []
             mod = []
-            try:
+            try: #from excel sheet
                 rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
                 prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
                 mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
-            except:
+            except: #from dataFrame
                 rct_list = df_ReactionData.iloc[i]['sources']
                 prd_list = df_ReactionData.iloc[i]['targets']
                 mod_list = df_ReactionData.iloc[i]['modifiers']
@@ -311,10 +331,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     compartmentGlyph.setId(compG_id)
                     compartmentGlyph.setCompartmentId(comp_id)
                     bb_id  = "bb_" + comp_id
-                    try:
+                    try: 
                         position_list = list(df_CompartmentData.iloc[i]['position'][1:-1].split(","))
                         size_list = list(df_CompartmentData.iloc[i]['size'][1:-1].split(","))
-                    except:
+                    except: 
                         position_list = df_CompartmentData.iloc[i]['position']
                         size_list = df_CompartmentData.iloc[i]['size']
                     pos_x  = float(position_list[0])
@@ -325,12 +345,38 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             for i in range(numNodes): 
                 spec_id = df_NodeData.iloc[i]['id']  
                 spec_index = df_NodeData.iloc[i]['idx']
-                spec_shapeIdx = df_NodeData.iloc[i]['shape_idx']
+                spec_shapeIdx = int(df_NodeData.iloc[i]['shape_idx'])
+                spec_shapeType = df_NodeData.iloc[i]['shape_type']
+                try:
+                    spec_shapeInfo_list_pre = list(df_NodeData.iloc[i]['shape_info'][1:-1].split(","))
+                except:
+                    spec_shapeInfo_list_pre = df_NodeData.iloc[i]['shape_info']
+                #from excel sheet
+                if spec_shapeInfo_list_pre == ['']:
+                    spec_shapeInfo = []
+                elif len(spec_shapeInfo_list_pre) == 0:
+                    spec_shapeInfo = []
+                else:
+                    spec_shapeInfo_pre = []
+                    spec_shapeInfo = []
+                    if type(spec_shapeInfo_list_pre[0]) is str:
+                        for ii in range(len(spec_shapeInfo_list_pre)):
+                            temp = spec_shapeInfo_list_pre[ii]
+                            if temp.find('[') != -1:
+                                temp_update = temp.replace('[', '')
+                            elif temp.find(']') != -1:
+                                temp_update = temp.replace(']', '')
+                            spec_shapeInfo_pre.append(float(temp_update))
+                        for ii in range(0,len(spec_shapeInfo_pre),2):
+                            spec_shapeInfo.append([spec_shapeInfo_pre[ii], spec_shapeInfo_pre[ii+1]])
+                    else:
+                        spec_shapeInfo = spec_shapeInfo_list_pre
                 speciesGlyph = layout.createSpeciesGlyph()
                 specG_id = "SpecG_"  + spec_id + '_idx_' + str(spec_index)
                 speciesGlyph.setId(specG_id)
                 speciesGlyph.setSpeciesId(spec_id)
                 bb_id  = "bb_" + spec_id + '_idx_' + str(spec_index)
+
                 try:
                     position_list = list(df_NodeData.iloc[i]['position'][1:-1].split(","))
                     size_list = list(df_NodeData.iloc[i]['size'][1:-1].split(","))
@@ -346,7 +392,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
                 textGlyph.setId(textG_id)
-                #textGlyph.setText(spec_id)
+                #textGlyph.setText(spec_id) # this will merge "setOriginOfTextId"
                 bb_id  = "bb_spec_text_" + spec_id + '_idx_' + str(spec_index)
                 try:
                     position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
@@ -377,7 +423,32 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             for i in range(numNodes):
                 spec_id = df_NodeData.iloc[i]['id']  
                 spec_index = df_NodeData.iloc[i]['idx']
+                spec_shapeIdx = int(df_NodeData.iloc[i]['shape_idx'])
                 spec_shapeIdx = df_NodeData.iloc[i]['shape_idx']
+                spec_shapeType = df_NodeData.iloc[i]['shape_type']
+                try:
+                    spec_shapeInfo_list_pre = list(df_NodeData.iloc[i]['shape_info'][1:-1].split(","))
+                except:
+                    spec_shapeInfo_list_pre = df_NodeData.iloc[i]['shape_info']
+                if spec_shapeInfo_list_pre == ['']:
+                    spec_shapeInfo = []
+                elif len(spec_shapeInfo_list_pre) == 0:
+                    spec_shapeInfo = []
+                else:
+                    spec_shapeInfo_pre = []
+                    spec_shapeInfo = []
+                    if type(spec_shapeInfo_list_pre[0]) is str:
+                        for ii in range(len(spec_shapeInfo_list_pre)):
+                            temp = spec_shapeInfo_list_pre[ii]
+                            if temp.find('[') != -1:
+                                temp_update = temp.replace('[', '')
+                            elif temp.find(']') != -1:
+                                temp_update = temp.replace(']', '')
+                            spec_shapeInfo_pre.append(float(temp_update))
+                        for ii in range(0,len(spec_shapeInfo_pre),2):
+                            spec_shapeInfo.append([spec_shapeInfo_pre[ii], spec_shapeInfo_pre[ii+1]])
+                    else:
+                        spec_shapeInfo = spec_shapeInfo_list_pre
                 speciesGlyph = layout.createSpeciesGlyph()
                 specG_id = "SpecG_"  + spec_id + '_idx_' + str(spec_index)
                 speciesGlyph.setId(specG_id)
@@ -398,7 +469,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
                 textGlyph.setId(textG_id)
-                #textGlyph.setText(spec_id)
+                #textGlyph.setText(spec_id) # this will merge "setOriginOfTextId
                 try:
                     position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
                     size_list = list(df_NodeData.iloc[i]['txt_size'][1:-1].split(","))
@@ -503,7 +574,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 except:
                     center_pos = df_ReactionData.iloc[i]['center_pos']
                     handles_list_pre = df_ReactionData.iloc[i]['handles']
-                
+                #from excel sheet
                 handles_pre = []
                 handles = []
                 if type(handles_list_pre[0]) is str:
@@ -599,6 +670,25 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 speciesReferenceGlyph.setSpeciesReferenceId(ref_id)
                 speciesReferenceGlyph.setRole(libsbml.SPECIES_ROLE_MODIFIER)
 
+        for i in range(numArbitraryTexts):
+            txt_content = df_TextData.iloc[i]['txt_content'] 
+            try:
+                position_list = list(df_TextData.iloc[i]['txt_position'][1:-1].split(","))
+                size_list = list(df_TextData.iloc[i]['txt_size'][1:-1].split(","))
+            except:
+                position_list = df_TextData.iloc[i]['txt_position']
+                size_list = df_TextData.iloc[i]['txt_size'] 
+
+            textGlyph = layout.createTextGlyph()
+            textG_id = "TextG_" + txt_content + '_idx_' + str(i)
+            textGlyph.setId(textG_id)
+            textGlyph.setText(txt_content)
+            bb_id  = "bb_spec_text_" + txt_content + '_idx_' + str(i)
+            pos_x_text  = float(position_list[0])
+            pos_y_text  = float(position_list[1])
+            width_text  = float(size_list[0])
+            height_text = float(size_list[1])
+            textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
 
         sbmlStr_layout = libsbml.writeSBMLToString(document) #sbmlStr_layout is w layout info but w/o render info
 
@@ -694,6 +784,32 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         for i in range(numNodes):
             spec_id = df_NodeData.iloc[i]['id']  
             spec_shapeIdx = int(df_NodeData.iloc[i]['shape_idx'])
+            spec_shapeType = df_NodeData.iloc[i]['shape_type']
+
+            try:
+                spec_shapeInfo_list_pre = list(df_NodeData.iloc[i]['shape_info'][1:-1].split(","))
+            except:
+                spec_shapeInfo_list_pre = df_NodeData.iloc[i]['shape_info']
+            if spec_shapeInfo_list_pre == ['']:
+                spec_shapeInfo = []
+            elif len(spec_shapeInfo_list_pre) == 0:
+                spec_shapeInfo = []
+            else:
+                spec_shapeInfo_pre = []
+                spec_shapeInfo = []
+                if type(spec_shapeInfo_list_pre[0]) is str:
+                    for ii in range(len(spec_shapeInfo_list_pre)):
+                        temp = spec_shapeInfo_list_pre[ii]
+                        if temp.find('[') != -1:
+                            temp_update = temp.replace('[', '')
+                        elif temp.find(']') != -1:
+                            temp_update = temp.replace(']', '')
+                        spec_shapeInfo_pre.append(float(temp_update))
+                    for ii in range(0,len(spec_shapeInfo_pre),2):
+                        spec_shapeInfo.append([spec_shapeInfo_pre[ii], spec_shapeInfo_pre[ii+1]])
+                else:
+                    spec_shapeInfo = spec_shapeInfo_list_pre
+
             try: 
                 try:
                     spec_fill_color   = list(df_NodeData.iloc[i]['fill_color'][1:-1].split(","))
@@ -713,8 +829,6 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
                 spec_border_width = float(df_NodeData.iloc[i]['border_width'])
 
-                text_font_size = float(df_NodeData.iloc[i]['txt_font_size'])
-
                 try:
                     font_color = list(df_NodeData.iloc[i]['txt_font_color'][1:-1].split(","))
                 except:
@@ -724,6 +838,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 elif len(font_color) == 3:
                     text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
                 text_line_width = float(df_NodeData.iloc[i]['txt_line_width'])
+                text_font_size = float(df_NodeData.iloc[i]['txt_font_size'])
             except: #text-only: set default species/node with white color
                 spec_fill_color_str = '#ffffffff'
                 spec_border_color_str = '#ffffffff'
@@ -751,47 +866,37 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             style.getGroup().setStrokeWidth(spec_border_width)
             style.addType("SPECIESGLYPH")
             style.addId(spec_id)
-            #Pls note that shapeIdx is different from Coyote
-            if spec_shapeIdx == 0: #text_only
-                pass
 
-            elif spec_shapeIdx == 2: #ellipse
-                ellipse = style.getGroup().createEllipse()
-                ellipse.setCenter2D(libsbml.RelAbsVector(0, 50), libsbml.RelAbsVector(0, 50))
-                ellipse.setRadii(libsbml.RelAbsVector(0, 100), libsbml.RelAbsVector(0, 100))
-            
-            elif spec_shapeIdx == 3: #hexagon(6)
-                polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,75), libsbml.RelAbsVector(0,7))
-                renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,7))
-                renderPoint4 = polygon.createPoint()
-                renderPoint4.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
-                renderPoint5 = polygon.createPoint()
-                renderPoint5.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,86))
-                renderPoint6 = polygon.createPoint()
-                renderPoint6.setCoordinates(libsbml.RelAbsVector(0,75), libsbml.RelAbsVector(0,86))
-            elif spec_shapeIdx == 4: #line(2)
-                polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
-            elif spec_shapeIdx == 5: #triangle(3)
-                polygon = style.getGroup().createPolygon()
-                renderPoint1 = polygon.createPoint()
-                renderPoint1.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
-                renderPoint2 = polygon.createPoint()
-                renderPoint2.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,7))
-                renderPoint3 = polygon.createPoint()
-                renderPoint3.setCoordinates(libsbml.RelAbsVector(0,25), libsbml.RelAbsVector(0,86))
-            else: #rectangle shape_index = 1/others as default (rectangle)
+            if spec_shapeIdx == 1 or spec_shapeType == 'rectangle': #rectangle
                 rectangle = style.getGroup().createRectangle()
                 rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
                 libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+
+            elif spec_shapeType == 'polygon':            
+                polygon = style.getGroup().createPolygon()
+                for pts in range(len(spec_shapeInfo)):
+                    renderPoint = polygon.createPoint()
+                    renderPoint.setCoordinates(libsbml.RelAbsVector(0,spec_shapeInfo[pts][0]),
+                    libsbml.RelAbsVector(0,spec_shapeInfo[pts][1]))
+
+            elif spec_shapeIdx == 2 or spec_shapeType == 'ellipse':
+                ellipse = style.getGroup().createEllipse()
+                ellipse.setCenter2D(libsbml.RelAbsVector(0, 50.), libsbml.RelAbsVector(0, 50.))
+                ellipse.setRadii(libsbml.RelAbsVector(0, 50.),libsbml.RelAbsVector(0, 50.))
+                # try: #from dataFrame
+                #     ellipse = style.getGroup().createEllipse()
+                #     ellipse.setCenter2D(libsbml.RelAbsVector(0, spec_shapeInfo[0][0][0]), 
+                #     libsbml.RelAbsVector(0, spec_shapeInfo[0][0][1]))
+                #     ellipse.setRadii(libsbml.RelAbsVector(0, spec_shapeInfo[0][1][0]),
+                #     libsbml.RelAbsVector(0, spec_shapeInfo[0][1][1]))
+                #     #percentage of width
+                # except: #from excel sheet
+                #     ellipse = style.getGroup().createEllipse()
+                #     ellipse.setCenter2D(libsbml.RelAbsVector(0, spec_shapeInfo[0][0]), 
+                #     libsbml.RelAbsVector(0, spec_shapeInfo[0][1]))
+                #     ellipse.setRadii(libsbml.RelAbsVector(0, spec_shapeInfo[1][0]),
+                #     libsbml.RelAbsVector(0, spec_shapeInfo[1][1]))
+
             
             style = rInfo.createStyle("textStyle")
             style.getGroup().setStroke("text_line_color" + "_" + spec_id)
@@ -862,13 +967,42 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
                 style.getGroup().setEndHead("reaction_arrow_head" + "_" + rxn_id)
 
-        
+        if numArbitraryTexts != 0:
+            for i in range(numArbitraryTexts):
+                text_content = df_TextData.iloc[i]['txt_content']  
+
+                try: 
+                    try:
+                        font_color = list(df_TextData.iloc[i]['txt_font_color'][1:-1].split(","))
+                    except:
+                        font_color = df_TextData.iloc[i]['txt_font_color']
+                    if len(font_color) == 4:
+                        text_line_color_str =  '#%02x%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]),int(font_color[3]))
+                    elif len(font_color) == 3:
+                        text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
+                    text_line_width = float(df_TextData.iloc[i]['txt_line_width'])
+                    text_font_size = float(df_TextData.iloc[i]['txt_font_size'])
+                except: #text-only: set default species/node with white color
+                    text_line_color_str = '#000000ff'
+                    text_line_width = 1.
+                    text_font_size = 12.
+
+                color = rInfo.createColorDefinition()
+                color.setId("text_line_color" + "_" + text_content)
+                color.setColorValue(text_line_color_str)
+                
+                style = rInfo.createStyle("textStyle")
+                style.getGroup().setStroke("text_line_color" + "_" + text_content)
+                style.getGroup().setStrokeWidth(text_line_width)
+                style.getGroup().setFontSize(libsbml.RelAbsVector(text_font_size,0))
+                style.addType("TEXTGLYPH")
+                style.addId(text_content)
 
         sbmlStr_layout_render = libsbml.writeSBMLToString(doc) #sbmlStr_layout_render includes both layout and render
     
         return sbmlStr_layout_render
     else:
-        raise ValueError('There is no node!')
+        raise ValueError('There is no node or arbitrary text!')
 
 
 
@@ -881,7 +1015,7 @@ if __name__ == '__main__':
 #     # df_NodeData = pd.read_csv(os.path.join(TEST_FOLDER, 'NodeData.csv'))
 #     # df_ReactionData = pd.read_csv(os.path.join(TEST_FOLDER, 'ReactionData.csv'))
 
-    xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'test.xlsx'))
+    xls = pd.ExcelFile(os.path.join(TEST_FOLDER, 'node_grid.xlsx'))
     df_CompartmentData = pd.read_excel(xls, 'CompartmentData')
     df_NodeData = pd.read_excel(xls, 'NodeData')
     df_ReactionData = pd.read_excel(xls, 'ReactionData')
@@ -890,7 +1024,7 @@ if __name__ == '__main__':
 
     sbmlStr_layout_render = _DFToSBML(df)
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
         

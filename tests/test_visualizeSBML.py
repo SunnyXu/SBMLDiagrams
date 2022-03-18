@@ -24,6 +24,10 @@ class TestEditSBML(unittest.TestCase):
     f_LinearChain = open(TEST_PATH_LinearChain, 'r')
     self.sbmlStr_LinearChain = f_LinearChain.read()
     f_LinearChain.close()
+    TEST_PATH_test_textGlyph = os.path.join(TEST_FOLDER, "test_textGlyph.xml")
+    f_test_textGlyph = open(TEST_PATH_test_textGlyph, 'r')
+    self.sbmlStr_test_textGlyph = f_test_textGlyph.read()
+    f_test_textGlyph.close()
 
   def test(self):
     # Test the functions related to network positions and size
@@ -37,6 +41,10 @@ class TestEditSBML(unittest.TestCase):
     #boundary nodes from LinearChain.xml
     self.assertTrue(visualizeSBML._getNetworkTopLeftCorner(self.sbmlStr_LinearChain) == [40.0, 109.0])
     self.assertTrue(visualizeSBML._getNetworkBottomRightCorner(self.sbmlStr_LinearChain) == [702.0, 149.0])
+    #text from test_textGlyph.xml
+    self.assertTrue(visualizeSBML._getNetworkTopLeftCorner(self.sbmlStr_test_textGlyph) == [92.0, 26.0])
+    self.assertTrue(visualizeSBML._getNetworkBottomRightCorner(self.sbmlStr_test_textGlyph) == [320.0, 194.0])
+
 
   # def plotInvalidStr(self):
   #   # system exit if plot an invalid string
