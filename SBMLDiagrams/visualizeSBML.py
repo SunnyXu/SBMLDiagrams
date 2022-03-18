@@ -151,7 +151,8 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
         min_reaction_rate = min(min_reaction_rate, min(reactionRates[reaction]))
 
     for i in range(len(simulationData)):
-        surface = skia.Surface(np.array(baseImageArray, copy=True))
+        temp = np.array(baseImageArray, copy=True)
+        surface = skia.Surface(temp)
         canvas = surface.getCanvas()
         for j,info in enumerate(arrow_info):
             rate = reactionRates[reactionIds[j]][i]*(1/mx_reaction_rate*min_reaction_rate*thick_changing_rate)
