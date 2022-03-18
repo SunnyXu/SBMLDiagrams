@@ -1029,7 +1029,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                         text_position = text_position_list[i]
                         text_dimension = text_dimension_list[i]
                         for k in range(len(text_render)):
-                            if textGlyph_id == text_render[k][0]:
+                            if text_content == text_render[k][0]:
                                 text_line_color = text_render[k][1]
                                 text_line_width = text_render[k][2]
                                 text_font_size = text_render[k][3]
@@ -1510,7 +1510,7 @@ if __name__ == '__main__':
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
-    filename = "Jana_WolfGlycolysis.xml"
+    #filename = "Jana_WolfGlycolysis.xml"
     #filename = "BorisEJB.xml"
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
@@ -1531,6 +1531,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output', longText='ellipsis')
+        _draw(sbmlStr,output_fileName='output')
 
 
