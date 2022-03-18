@@ -562,7 +562,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             text_render.append([idList,text_line_color,text_line_width,
 							text_font_size])
 
-        #print(rxn_render)
+        #print(text_render)
         model = simplesbml.loadSBMLStr(sbmlStr)
         numFloatingNodes  = model.getNumFloatingSpecies()
         FloatingNodes_ids = model.getListOfFloatingSpecies()
@@ -1057,7 +1057,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     dimension = text_dimension_list[i]
                     position = text_position_list[i]
                     for k in range(len(text_render)):
-                        if textGlyph_id == text_render[k][0]:
+                        if text_content == text_render[k][0]:
                             text_line_color = text_render[k][1]
                             text_line_width = text_render[k][2]
                             text_font_size = text_render[k][3]
@@ -2022,8 +2022,10 @@ class load:
             id: str-node id.
 
             shape: int/str-
+            
             int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
                 6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
+            
             str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
                 "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
             
@@ -2911,10 +2913,10 @@ if __name__ == '__main__':
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
-    #filename = "test_textGlyph.xml"
+    filename = "test_textGlyph.xml"
     #node shape:
     #filename = "rectangle.xml"
-    filename = "triangle.xml"
+    #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
@@ -2993,12 +2995,12 @@ if __name__ == '__main__':
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
     # df.setNodeShape("x_0",0)
-    df.setNodeShape("x_0","downTriangle")
+    #df.setNodeShape("x_0","downTriangle")
     #df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
     # df.setNodeShape("x_0","ellipse")
     # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
-    df.setNodeTextPositionCenter("x_0")
+    #df.setNodeTextPositionCenter("x_0")
     #df.setNodeTextPositionLeftCenter("x_0")
     #df.setNodeTextPositionRightCenter("x_0")
     #df.setNodeTextPositionUpperCenter("x_0")
@@ -3031,8 +3033,8 @@ if __name__ == '__main__':
     # df.setReactionDash("r_0", [6,6])
 
     # df.addText("test", [413,216], [50,30])
-    # df.addText("test1", [205,216], [10, 10], txt_font_color="red", 
-    # opacity= 0.5, txt_line_width=2, txt_font_size=13)
+    df.addText("test1", [400,200], [100, 100], txt_font_color="blue", 
+    opacity= 0.5, txt_line_width=2, txt_font_size=13)
     # df.removeText("test")
     # print(df.getTextPosition("text_content1"))
     # print(df.getTextSize("text_content1"))
@@ -3041,7 +3043,7 @@ if __name__ == '__main__':
     # print(df.getTextFontSize("text_content2"))
     # df.setTextPosition("text_content1", [413., 216.])
     # df.setTextSize("text_content1", [100, 100])
-    # df.setTextFontColor("text_content1", [5, 0, 0])
+    # df.setTextFontColor("text_content1", "red")
     # df.setTextLineWidth("text_content2", 3.)
     # df.setTextFontSize("text_content2", 15)
 
@@ -3053,11 +3055,11 @@ if __name__ == '__main__':
     # print(df.getReactionIdList())
     # print(df.getTextContentList())
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
     # # df.draw(reactionLineType='bezier', scale = 2.)
     df.draw(output_fileName = 'output')

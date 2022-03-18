@@ -1028,18 +1028,27 @@ def addText(canvas, txt_str, position, dimension,
 
     elif longText == 'ellipsis':
 
-        fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
-        paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
-        font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
+        txt_str_len = len(txt_str)
+        stop_flag_1 = False
+        while stop_flag_1 == False:
+            fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
+            paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
+            font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
 
-        text = skia.TextBlob.MakeFromString(txt_str, font)
-        twidth = font.measureText(txt_str) 
-        theight = font.getSpacing() 
+            text = skia.TextBlob.MakeFromString(txt_str, font)
+            twidth = font.measureText(txt_str)
+            #fontSize = font.getSize() 
+            theight = font.getSpacing() 
 
-        #if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):         
-        position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
-        position_x = position[0] + .5*(dimension[0] - twidth)
-        position_y = position[1] + .5*(dimension[1] - theight)
+            if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
+                stop_flag_1 = True
+                position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
+                position_x = position[0] + .5*(dimension[0] - twidth)
+                position_y = position[1] + .5*(dimension[1] - theight)
+            else:
+                # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
+                txt_str_len = txt_str_len - 1
+                txt_str = txt_str[:txt_str_len] + '....'
 
             
     canvas.drawTextBlob(text, position_x, position_y, paintText)
