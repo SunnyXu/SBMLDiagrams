@@ -34,22 +34,22 @@ def loadJsonColor(filename):
     data = json.load(file)
     res = {}
     for d in data["colorStyle"]:
-        new_style = styleSBML.Style(d["styleName"],
-                                      eval(d["comp_fill_color"]),
-                                      eval(d["comp_border_color"]),
-                                      eval(d["spec_fill_color"]),
-                                      eval(d["spec_border_color"]),
+        new_style = styleSBML.Style(d["style_name"],
+                                      eval(d["compartment_fill_color"]),
+                                      eval(d["compartment_border_color"]),
+                                      eval(d["species_fill_color"]),
+                                      eval(d["species_border_color"]),
                                       eval(d["reaction_line_color"]),
-                                      eval(d["text_line_color"]),
-                                      eval(d["process_fill_color"]),
-                                      eval(d["full_fill_color"]),
-                                      eval(d["process_border_color"]))
-        res[d["styleName"]] = new_style
+                                      eval(d["font_color"]),
+                                      eval(d["progress_bar_fill_color"]),
+                                      eval(d["progress_bar_full_fill_color"]),
+                                      eval(d["progress_bar_border_color"]))
+        res[d["style_name"]] = new_style
     return res
         
 
 
-def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
+def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
             bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",
             horizontal_offset = 15, vertical_offset = 9, text_color = (0, 0, 0, 200), savePngs = False, showImage = False,
             user_reaction_line_color = None):
@@ -98,7 +98,7 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
     if not sbmlStr:
         sbmlStr = r.getSBML()
     v_info = _draw(sbmlStr,save = False, drawArrow = False)
-    simulationData = r.simulate(start, end, points)
+    simulationData = r.simulate(start, end, points, selections=['time'] + r.getFloatingSpeciesIds())
     reactionRates = r.simulate(start, end, points, selections=r.getReactionIds())
 
     mx = float("-inf")
@@ -141,7 +141,6 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
     addNode(pos_list)
 
     for species in floatingSpecies:
-        species = '[' + species + ']'
         mx = max(mx,max(simulationData[species]))
 
     mx_reaction_rate = float('-inf')
@@ -213,13 +212,14 @@ def animate(start, end, points ,  r, thick_changing_rate, sbmlStr = None, frame_
     out.release()
 
     if not savePngs:
+        print(os.path.join(os.getcwd())  + '/' + folderName)
         shutil.rmtree(os.path.join(os.getcwd())  + '/' + folderName)
 
     Video(outputName + ".mp4")
 
 def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
-    showBezierHandles = False, showReactionIds = False, newStyleClass = styleSBML.Style(),\
+    showBezierHandles = False, showReactionIds = False, newStyle = styleSBML.Style(),\
     showImage = True, save = True, showReversible = False, longText = 'auto-font'): 
     #df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), #dataframe-arbitrary text
 
@@ -252,7 +252,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
         showReactionIds: bool-show the reaction ids (True) or not (False as default).
 
-        newStyleClass: color style class.
+        newStyle: color style class.
 
         showImage: whether to display the image inside console.
 
@@ -281,7 +281,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         imageSize = setImageSize
         scale = min(setImageSize[0]/(networkSize[0]+20), setImageSize[1]/(networkSize[1]+20))
 
-    color_style = newStyleClass
+    color_style = newStyle
     color_style.setImageSize(imageSize)
 
     def draw_on_canvas(canvas, color_style):
@@ -915,10 +915,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
-                                floatingNodes_pos_dict['[' + temp_id + ']'] = position
-                                floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
-                                allNodes_pos_dict['[' + temp_id + ']'] = position
-                                allNodes_dim_dict['[' + temp_id + ']'] = dimension
+                                floatingNodes_pos_dict[temp_id] = position
+                                floatingNodes_dim_dict[temp_id] = dimension
+                                allNodes_pos_dict[temp_id] = position
+                                allNodes_dim_dict[temp_id] = dimension
                                 drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
@@ -946,10 +946,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
-                                floatingNodes_pos_dict['[' + temp_id + ']'] = position
-                                floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
-                                allNodes_pos_dict['[' + temp_id + ']'] = position
-                                allNodes_dim_dict['[' + temp_id + ']'] = dimension
+                                floatingNodes_pos_dict[temp_id] = position
+                                floatingNodes_dim_dict[temp_id] = dimension
+                                allNodes_pos_dict[temp_id] = position
+                                allNodes_dim_dict[temp_id] = dimension
                                 drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
@@ -983,8 +983,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                     complex_shape=complexShape)
-                                allNodes_pos_dict['[' + temp_id + ']'] = position
-                                allNodes_dim_dict['[' + temp_id + ']'] = dimension
+                                allNodes_pos_dict[temp_id] = position
+                                allNodes_dim_dict[temp_id] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, 
@@ -1012,8 +1012,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                     color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                     spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                     complex_shape=complexShape)
-                                allNodes_pos_dict['[' + temp_id + ']'] = position
-                                allNodes_dim_dict['[' + temp_id + ']'] = dimension
+                                allNodes_pos_dict[temp_id] = position
+                                allNodes_dim_dict[temp_id] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, 
@@ -1163,10 +1163,10 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
                     text_line_width*scale, fontSize = text_font_size*scale, 
                     longText = longText)
-                    floatingNodes_pos_dict['[' + temp_id + ']'] = position
-                    floatingNodes_dim_dict['[' + temp_id + ']'] = dimension
-                    allNodes_pos_dict['[' + temp_id + ']'] = position
-                    allNodes_dim_dict['[' + temp_id + ']'] = dimension
+                    floatingNodes_pos_dict[temp_id] = position
+                    floatingNodes_dim_dict[temp_id] = dimension
+                    allNodes_pos_dict[temp_id] = position
+                    allNodes_dim_dict[temp_id] = dimension
                 for i in range (numBoundaryNodes):
                     temp_id = BoundaryNodes_ids[i]
                     for k in range(numNodes):
@@ -1177,8 +1177,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
                                         shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
-                    allNodes_pos_dict['[' + temp_id + ']'] = position
-                    allNodes_dim_dict['[' + temp_id + ']'] = dimension
+                    allNodes_pos_dict[temp_id] = position
+                    allNodes_dim_dict[temp_id] = dimension
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
                     text_line_width*scale, fontSize = text_font_size*scale, 
                     longText = longText)
