@@ -1,6 +1,5 @@
 import SBMLDiagrams
 from SBMLDiagrams.visualizeSBML import *
-from SBMLDiagrams.styleSBML import Style
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 filename = "test_comp.xml"
