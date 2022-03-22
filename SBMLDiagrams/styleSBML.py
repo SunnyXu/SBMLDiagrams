@@ -2,6 +2,9 @@
 @author: Jessie Jiang
 """
 class Style:
+    '''
+    class describing the style for the ploting and drawing
+    '''
     def __init__(self, styleName=None,
                  comp_fill_color=None,
                  comp_border_color=None,
@@ -12,6 +15,20 @@ class Style:
                  process_fill_color=None,
                  full_fill_color=None,
                  process_border_color=None):
+        '''
+
+        Args:
+            styleName: name for the style
+            comp_fill_color: compartment filled color
+            comp_border_color: compartment border color
+            spec_fill_color: species nodes filled color
+            spec_border_color: species nodes border color
+            reaction_line_color: reaction line color
+            text_line_color: font color
+            process_fill_color: progress bar filled color
+            full_fill_color: progress bar full filled color
+            process_border_color: progress bar border color
+        '''
         self.styleName = styleName
         self.comp_fill_color = None
         self.comp_border_color = None
@@ -63,66 +80,189 @@ class Style:
             self.node_dimension = [40, 60]
 
     def getStyleName(self):
+        '''
+
+        Returns: the style name
+
+        '''
         return self.styleName
 
     def setStyleName(self, styleName):
+        '''
+        set the style name
+
+        Args:
+            styleName:
+
+        '''
         self.styleName = styleName
 
     def getImageSize(self):
+        '''
+
+        Returns: image size
+
+        '''
         return self.image_size
 
     def setImageSize(self, imageSize):
+        '''
+        set the image size
+
+        Args:
+            imageSize: size of the image drew
+
+        '''
         self.image_size = imageSize
 
     def getNodeDimension(self):
+        '''
+
+        Returns: node dimension
+
+        '''
         return self.node_dimension
 
     def setNodeDimension(self, dimension):
+        '''
+        set the node dimension
+
+        Args:
+            dimension: dimension of the node
+
+        '''
         self.node_dimension = dimension
 
     def getProcessFillColor(self):
+        '''
+
+        Returns: the progress bar filled color or the default progress bar filled color
+
+        '''
         return self.process_fill_color if self.process_fill_color else (255, 108, 9, 200)
 
     def getProcessBorderColor(self):
+        '''
+
+        Returns: the progress bar border color or the default the progress bar border
+
+        '''
         return self.process_border_color if self.process_border_color else (255, 204, 153, 200)
 
     def getFullFillColor(self):
+        '''
+
+        Returns: progress bar full filled color or the default progress bar full filled color
+
+        '''
         return self.full_fill_color if self.full_fill_color else (91, 176, 253, 200)
 
     def getCompFillColor(self):
+        '''
+
+        Returns: compartment filled color or the default compartment filled color
+
+        '''
         return self.comp_fill_color if self.comp_fill_color else (255, 255, 255, 255)
         
     def getCompBorderColor(self):
+        '''
+
+        Returns: compartment border color or the default compartment border color
+
+        '''
         return self.comp_border_color if self.comp_border_color else (255, 255, 255, 255)
         
     def getSpecFillColor(self):
+        '''
+
+        Returns: species nodes filled color or the default species nodes filled color
+
+        '''
         return self.spec_fill_color if self.spec_fill_color else (255, 204, 153, 200)
         
     def getSpecBorderColor(self):
+        '''
+
+        Returns: species nodes border color or the default species nodes border color
+
+        '''
         return self.spec_border_color if self.spec_border_color else (255, 108, 9, 255)
         
     def getReactionLineColor(self):
+        '''
+
+        Returns: reaction line color or the default reaction line color
+
+        '''
         return self.reaction_line_color if self.reaction_line_color else (91, 176, 253, 255)
         
     def getTextLineColor(self):
+        '''
+
+        Returns: font color or the default font color
+
+        '''
         return self.text_line_color if self.text_line_color else (0, 0, 0, 255)
 
     def setCompFillColor(self, color):
+        '''
+        set compartment filled color
+
+        Args:
+            color: color
+
+        '''
         self.comp_fill_color = color
 
     def setCompBorderColor(self, color):
+        '''
+        set compartment border color
+
+        Args:
+            color: color
+
+        '''
         self.comp_border_color = color
 
     def setSpecFillColor(self, color):
+        '''
+        set species nodes filled color
+
+        Args:
+            color: color
+
+        '''
         self.spec_fill_color = color
 
     def setSpecBorderColor(self, color):
+        '''
+        set species nodes border color
+
+        Args:
+            color: color
+
+        '''
         self.spec_border_color = color
 
     def setReactionLineColor(self, color):
+        '''
+        set reaction line color
+
+        Args:
+            color: color
+
+        '''
         self.reaction_line_color = color
 
     def setTextLineColor(self, color):
+        '''
+        set font color
+
+        Args:
+            color:
+
+        '''
         self.text_line_color = color
 
 
