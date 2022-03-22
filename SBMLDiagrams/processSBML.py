@@ -68,6 +68,8 @@ COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIF
     FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV]
 COLUMN_NAME_df_TextData = [TXTCONTENT, TXTPOSITION, TXTSIZE, 
     TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
+COLUMN_NAME_df_ShapeData = [SHAPENAME, POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
+                        SHAPETYPE, SHAPEINFO]
 # #This is not supported by SBML
 # COLUMN_NAME_df_text = [TXTCONTENT, TXTPOSITION, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 
@@ -2672,6 +2674,33 @@ class load:
         
         return self.df
 
+    def addRectangle(self, shape_name, position, size, fill_color, opacity = 1., 
+        border_color = [0,0,0], border_width = 2.):
+        """
+        Add a rectangle onto canvas.
+
+        Args:  
+            id: str-the name of the rectangle.
+
+            position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node text.
+
+            size: list-1*2 matrix-size of the rectangle [width, height].
+
+            fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+            border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            border_width: float-node text line width.
+            
+        """
+        self.df = editSBML._addRectangle(self.df, shape_name, position, size, fill_color, opacity, 
+        border_color, border_width) 
+        
+        return self.df
+
 
     def export(self):
         """
@@ -2918,13 +2947,15 @@ if __name__ == '__main__':
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
-    filename = "test_textGlyph.xml"
+    #filename = "test_textGlyph.xml"
     #node shape:
-    #filename = "rectangle.xml"
+    filename = "rectangle.xml"
     #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
     #filename = "hexagon.xml"
+    #SBGN:
+    #filename = "SBGN1-specComplex.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
 
@@ -3038,8 +3069,8 @@ if __name__ == '__main__':
     # df.setReactionDash("r_0", [6,6])
 
     # df.addText("test", [413,216], [50,30])
-    df.addText("test1", [400,200], [100, 100], txt_font_color="blue", 
-    opacity= 0.5, txt_line_width=2, txt_font_size=13)
+    # df.addText("test1", [400,200], [100, 100], txt_font_color="blue", 
+    # opacity= 0.5, txt_line_width=2, txt_font_size=13)
     # df.removeText("test")
     # print(df.getTextPosition("text_content1"))
     # print(df.getTextSize("text_content1"))
@@ -3052,6 +3083,8 @@ if __name__ == '__main__':
     # df.setTextLineWidth("text_content2", 3.)
     # df.setTextFontSize("text_content2", 15)
 
+    #df.addRectangle("self-rectangle", [400,200], [100, 100], txt_font_color="blue")
+
     # print("NetworkSize:", df.getNetworkSize())
     # print("NetworkBottomRight:", df.getNetworkBottomRightCorner())
     # print("NetworkTopLeft", df.getNetworkTopLeftCorner())
@@ -3060,14 +3093,33 @@ if __name__ == '__main__':
     # print(df.getReactionIdList())
     # print(df.getTextContentList())
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
-    # # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output')
+    # df.draw(reactionLineType='bezier', scale = 2.)
+    # df.draw(output_fileName = 'output')
+
+    # #SBGN1
+    # df.setNodeAndTextPosition("ATP",[100,100])
+    # df.setNodeAndTextPosition("myosin",[50,200])
+    # df.setNodeAndTextPosition("myosinATP",[300,120])
+    # df.setNodeShape("ATP","ellipse")
+    # df.setNodeAndTextSize("ATP",[50,50])
+    # df.setNodeAndTextSize("myosinATP",[70,100])
+    # df.setNodeArbitraryPolygonShape("myosinATP","myosinATP-polygon", [[12.5,0],[87.5,0],[100,12.5],[100,87.5],
+    # [87.5,100],[12.5,100],[0,87.5],[0,12.5]])
+    # df.setReactionDefaultCenterAndHandlePositions('J1')
+
+    # # # df.draw(reactionLineType='bezier', scale = 2.)
+    # df.draw(output_fileName = 'output')
+
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
        
 
     # if len(sbmlStr_layout_render) == 0:
