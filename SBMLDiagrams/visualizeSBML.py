@@ -217,10 +217,10 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
 
     Video(outputName + ".mp4")
 
-def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
+def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
-    showBezierHandles = False, showReactionIds = False, newStyle = styleSBML.Style(),\
-    showImage = True, save = True, showReversible = False, longText = 'auto-font'): 
+    showBezierHandles = False, showReactionIds = False, showReversible = False, longText = 'auto-font',\
+    newStyle = styleSBML.Style(), drawArrow = True, showImage = True, save = True): 
     #df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), #dataframe-arbitrary text
 
     """
@@ -228,8 +228,6 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
     Args:  
         sbmlStr: str-the string of the input sbml file.
-
-        drawArrow: bool-draw arrow or not
 
         setImageSize: list-1*2 matrix-size of the rectangle [width, height].
 
@@ -252,16 +250,18 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
         showReactionIds: bool-show the reaction ids (True) or not (False as default).
 
-        newStyle: color style class.
-
-        showImage: whether to display the image inside console.
-
-        save: whether to save the png.
-
         showReversible: bool-show reversible reactions or not.
 
         longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
         node; 'ellipsis' will show '....' if the text is too long to show in the node
+
+        newStyle: color style class.
+
+        drawArrow: bool-draw arrow or not
+
+        showImage: whether to display the image inside console.
+
+        save: whether to save the png.
 
     Returns:
         The visualization info object containing the drawing information of the plot
@@ -1502,7 +1502,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml"
+    filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"

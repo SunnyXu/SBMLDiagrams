@@ -2819,17 +2819,20 @@ class load:
 
             showReversible: bool-show the reaction reversible (True) or not (False as default).
 
+            longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
+            node; 'ellipsis' will show '....' if the text is too long to show in the node
+
         Returns:
             The visualization info object containing the drawing information of the plot
         
         """
 
         sbmlStr = self.export()
-        v_info = visualizeSBML._draw(sbmlStr, drawArrow = True, setImageSize = setImageSize, 
-        scale = scale, fileFormat = fileFormat, output_fileName = output_fileName, \
+        v_info = visualizeSBML._draw(sbmlStr,  setImageSize = setImageSize, 
+        scale = scale, fileFormat = fileFormat, output_fileName = output_fileName, 
         reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
-        showReactionIds = showReactionIds, showReversible = showReversible, longText = longText, \
-        newStyle = self.color_style, showImage = True, save = True)
+        showReactionIds = showReactionIds, showReversible = showReversible, longText = longText)
+        #newStyle = self.color_style)
         #df_text = self.df_text)
 
         return v_info
@@ -2935,7 +2938,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -2949,7 +2952,7 @@ if __name__ == '__main__':
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
     #node shape:
-    filename = "rectangle.xml"
+    #filename = "rectangle.xml"
     #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
@@ -3100,7 +3103,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output')
+    df.draw(output_fileName = 'output')
 
     # #SBGN1
     # df.setNodeAndTextPosition("ATP",[100,100])
