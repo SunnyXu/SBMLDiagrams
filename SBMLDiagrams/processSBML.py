@@ -2684,18 +2684,18 @@ class load:
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
 
-    def setColorStyle(self, styleName = None, newStyleClass = None):
+    def setColorStyle(self, styleName = None, newStyle = None):
         """
 
         Args:
             styleName: the style name
-            newStyleClass: the user customized style class
+            newStyle: the user customized style class
 
         Returns:
 
         """
-        if newStyleClass:
-            self.color_style = newStyleClass
+        if newStyle:
+            self.color_style = newStyle
         else:
             self.color_style = styleSBML.Style(styleName)
 
@@ -2706,18 +2706,21 @@ class load:
         """
         return self.color_style
 
-    def autolayout(self, layout):
+    def autolayout(self, layout="spectral"):
         """
         auto-layout the node positions using networkx lib
 
         Args:
             layout: the layout name from the networkx
-
+            default spectral positions the nodes using the eigenvectors of the graph Laplacian.
+            spring: positions nodes using Fruchterman-Reingold force-directed algorithm
+            random: positions nodes randomly
+            circular: positions nodes on a circle
         Returns:
 
         """
         sbmlStr = self.export()
-        v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyleClass=self.color_style)
+        v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyle=self.color_style)
         edges = v_info.edges
         model = simplesbml.loadSBMLStr(sbmlStr)
 
@@ -2748,6 +2751,8 @@ class load:
             pos = nx.random_layout(graph, center=center)
         elif layout == "circular":
             pos = nx.circular_layout(graph, scale=scale, center=center)
+        else:
+            raise Exception("no such layout")
 
         for n, p in pos.items():
             if layout == "random":
@@ -2795,7 +2800,7 @@ class load:
         scale = scale, fileFormat = fileFormat, output_fileName = output_fileName, \
         reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
         showReactionIds = showReactionIds, showReversible = showReversible, longText = longText, \
-        newStyleClass = self.color_style, showImage = True, save = True)
+        newStyle = self.color_style, showImage = True, save = True)
         #df_text = self.df_text)
 
         return v_info

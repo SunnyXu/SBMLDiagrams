@@ -88,6 +88,6 @@ df.autolayout(layout="spectral")
 df.setColorStyle("simplicity")
 df.draw(output_fileName="simplicity-spectral")
 
-df.autolayout(layout="spring")
+df.autolayout(layout="sprin")
 df.setColorStyle("default")
 df.draw(output_fileName="simplicity-spring")
