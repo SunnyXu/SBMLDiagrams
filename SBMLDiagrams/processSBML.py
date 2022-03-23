@@ -1104,29 +1104,30 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
             #arbitrary text
             for i in range(len(textGlyph_id_list)):
                 textGlyph = layout.getTextGlyph(textGlyph_id_list[i])
-                if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
-                    textGlyph_id = textGlyph_id_list[i]
-                    text_content = text_content_list[i]
-                    position = text_position_list[i]
-                    dimension = text_dimension_list[i]
-                    for k in range(len(text_render)):
-                        if text_content == text_render[k][0]:
-                            text_line_color = text_render[k][1]
-                            text_line_width = text_render[k][2]
-                            text_font_size = text_render[k][3]
-                    TextData_row_dct = {k:[] for k in COLUMN_NAME_df_TextData}
-                    TextData_row_dct[TXTCONTENT].append(text_content)
-                    TextData_row_dct[TXTPOSITION].append(position)
-                    TextData_row_dct[TXTSIZE].append(dimension)
-                    TextData_row_dct[TXTFONTCOLOR].append(text_line_color)
-                    TextData_row_dct[TXTLINEWIDTH].append(text_line_width)
-                    TextData_row_dct[TXTFONTSIZE].append(text_font_size)
+                #if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                textGlyph_id = textGlyph_id_list[i]
+                text_content = text_content_list[i]
+                position = text_position_list[i]
+                dimension = text_dimension_list[i]
+                for k in range(len(text_render)):
+                    if text_content == text_render[k][0]:
+                        text_line_color = text_render[k][1]
+                        text_line_width = text_render[k][2]
+                        text_font_size = text_render[k][3]
+                TextData_row_dct = {k:[] for k in COLUMN_NAME_df_TextData}
+                TextData_row_dct[TXTCONTENT].append(text_content)
+                TextData_row_dct[TXTPOSITION].append(position)
+                TextData_row_dct[TXTSIZE].append(dimension)
+                TextData_row_dct[TXTFONTCOLOR].append(text_line_color)
+                TextData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                TextData_row_dct[TXTFONTSIZE].append(text_font_size)
+                
 
-                    if len(df_TextData) == 0:
-                        df_TextData = pd.DataFrame(TextData_row_dct)
-                    else:
-                        df_TextData = pd.concat([df_TextData,\
-                            pd.DataFrame(TextData_row_dct)], ignore_index=True)
+                if len(df_TextData) == 0:
+                    df_TextData = pd.DataFrame(TextData_row_dct)
+                else:
+                    df_TextData = pd.concat([df_TextData,\
+                        pd.DataFrame(TextData_row_dct)], ignore_index=True)
 
             #arbitrary shape
             for i in range(len(gen_id_list)):
@@ -3163,7 +3164,7 @@ if __name__ == '__main__':
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
-    #filename = "test_textGlyph.xml"
+    # filename = "test_textGlyph.xml"
     #node shape:
     #filename = "rectangle.xml"
     #filename = "triangle.xml"
@@ -3172,7 +3173,8 @@ if __name__ == '__main__':
     #filename = "hexagon.xml"
     #SBGN:
     #filename = "SBGN1-specComplex.xml"
-    filename = "test_genGlyph.xml"
+    filename = "SBGN2-modifier.xml"
+    #filename = "test_genGlyph.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
 
@@ -3325,7 +3327,7 @@ if __name__ == '__main__':
     # df.draw(reactionLineType='bezier', scale = 2.)
     # df.draw(output_fileName = 'output')
 
-    # #SBGN1
+    # #SBGN1-complexSpec
     # df.setNodeAndTextPosition("ATP",[100,100])
     # df.setNodeAndTextPosition("myosin",[50,200])
     # df.setNodeAndTextPosition("myosinATP",[300,120])
@@ -3335,9 +3337,43 @@ if __name__ == '__main__':
     # df.setNodeArbitraryPolygonShape("myosinATP","myosinATP-polygon", [[12.5,0],[87.5,0],[100,12.5],[100,87.5],
     # [87.5,100],[12.5,100],[0,87.5],[0,12.5]])
     # df.setReactionDefaultCenterAndHandlePositions('J1')
+    # df.addRectangle("myosinATP_ATP", [305,130], [60,40])
+    # df.addEllipse("myosinATP_myosin", [315,175], [40,40])
+    # df.addText("myosin", [305,130], [60,40])
+    # df.addText("ATP", [315,175], [40,40])
+    # #print(df.getReactionCenterPosition("J1"))
+    # #print(df.getReactionFillColor("J1"))
+    # df.addEllipse("left_small_circle", [176.0, 166.], [10,10], 
+    # fill_color=[91, 176, 253], border_color = [91,176,253])
+    # df.addEllipse("right_small_circle", [216.0, 166.], [10,10], 
+    # fill_color=[91, 176, 253], border_color = [91,176,253])
+    # df.addEllipse("middle_big_circle", [191.0, 160.], [20,20], 
+    # fill_color=[91, 176, 253], border_color = [91,176,253])
+
+    # #SBGN2-modifier:
+    # df.setNodeAndTextPosition("ADH1",[215,110])
+    # df.setNodeAndTextPosition("Ethanol",[50,200])
+    # df.setNodeAndTextPosition("NAD",[50,300])
+    # df.setNodeAndTextPosition("Ethanal",[300,200])
+    # df.setNodeAndTextPosition("H",[300,300])
+    # df.setNodeAndTextPosition("NADH",[400,250])
+    # df.setNodeShape("Ethanol","ellipse")
+    # df.setNodeShape("NAD","ellipse")
+    # df.setNodeShape("Ethanal","ellipse")
+    # df.setNodeShape("H","ellipse")
+    # df.setNodeShape("NADH","ellipse")
+    # df.setNodeAndTextSize("Ethanol",[50,50])
+    # df.setNodeAndTextSize("NAD",[50,50])
+    # df.setNodeAndTextSize("Ethanal",[50,50])
+    # df.setNodeAndTextSize("H",[50,50])
+    # df.setNodeAndTextSize("NADH",[50,50])
+    # df.setReactionDefaultCenterAndHandlePositions('J0')
+    # #print(df.getReactionCenterPosition("J0"))  
+    # df.addRectangle("centroid_sqaure", [235.0, 265.0], [20,20], 
+    # fill_color=[91, 176, 253], border_color = [91,176,253])
 
     # # # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output')
+    # df.draw(output_fileName = 'output')
 
     # sbmlStr_layout_render = df.export()
     # f = open("output.xml", "w")
