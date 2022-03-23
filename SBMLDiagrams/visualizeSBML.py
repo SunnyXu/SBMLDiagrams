@@ -1068,29 +1068,6 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                                     longText = longText)
                                 id_list.append(temp_id)
 
-                #arbitrary text
-                for i in range(len(textGlyph_id_list)):
-                    textGlyph = layout.getTextGlyph(textGlyph_id_list[i])
-                    if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
-                        #if there is no original text id set
-                        textGlyph_id = textGlyph_id_list[i]
-                        text_content = text_content_list[i]
-                        text_position = text_position_list[i]
-                        text_dimension = text_dimension_list[i]
-                        for k in range(len(text_render)):
-                            if text_content == text_render[k][0]:
-                                text_line_color = text_render[k][1]
-                                text_line_width = text_render[k][2]
-                                text_font_size = text_render[k][3]
-
-                        text_position = [(text_position[0]-topLeftCorner[0])*scale,
-                        (text_position[1]-topLeftCorner[1])*scale]
-                        text_dimension = [text_dimension[0]*scale,text_dimension[1]*scale]
-                        text_line_width = text_line_width*scale
-                        text_font_size = text_font_size*scale 
-                        drawNetwork.addText(canvas, text_content, text_position, text_dimension,
-                        text_line_color, text_line_width, text_font_size)  
-                
                 #arbitrary shape
                 if len(gen_id_list) > 0:
                     for i in range(len(gen_id_list)):
@@ -1126,6 +1103,28 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                             for ii in range(len(shape_info)):
                                 pts.append([x+width*shape_info[ii][0]/100.,y+height*shape_info[ii][1]/100.])
                             drawNetwork._drawPolygon (canvas, pts, outline, fill, linewidth)
+
+                #arbitrary text
+                for i in range(len(textGlyph_id_list)):
+                    textGlyph = layout.getTextGlyph(textGlyph_id_list[i])
+                    #if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                    textGlyph_id = textGlyph_id_list[i]
+                    text_content = text_content_list[i]
+                    text_position = text_position_list[i]
+                    text_dimension = text_dimension_list[i]
+                    for k in range(len(text_render)):
+                        if text_content == text_render[k][0]:
+                            text_line_color = text_render[k][1]
+                            text_line_width = text_render[k][2]
+                            text_font_size = text_render[k][3]
+
+                    text_position = [(text_position[0]-topLeftCorner[0])*scale,
+                    (text_position[1]-topLeftCorner[1])*scale]
+                    text_dimension = [text_dimension[0]*scale,text_dimension[1]*scale]
+                    text_line_width = text_line_width*scale
+                    text_font_size = text_font_size*scale 
+                    drawNetwork.addText(canvas, text_content, text_position, text_dimension,
+                    text_line_color, text_line_width, text_font_size)  
                         
 
             else: # there is no layout information, assign position randomly and size as default
@@ -1631,12 +1630,12 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
     #filename = "test_textGlyph.xml"
-    #filename = "output.xml"
+    filename = "output.xml"
 
     #filename = "putida_gb_newgenes.xml"
     #filename = "testbigmodel.xml" #sbml with errors
 
-    filename = 'test_genGlyph.xml'
+    #filename = 'test_genGlyph.xml'
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
