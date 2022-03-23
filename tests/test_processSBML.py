@@ -25,6 +25,7 @@ class TestImportSBML(unittest.TestCase):
     TEST_PATH_node_grid = os.path.join(TEST_FOLDER, "node_grid.xml")
     TEST_PATH_mass_action_rxn = os.path.join(TEST_FOLDER, "mass_action_rxn.xml")
     TEST_PATH_test_textGlyph = os.path.join(TEST_FOLDER, "test_textGlyph.xml")
+    TEST_PATH_test_genGlyph = os.path.join(TEST_FOLDER, "test_genGlyph.xml")
 
     f_test = open(TEST_PATH_test, 'r')
     sbmlStr_test = f_test.read()
@@ -53,6 +54,9 @@ class TestImportSBML(unittest.TestCase):
     f_test_textGlyph = open(TEST_PATH_test_textGlyph, 'r')
     sbmlStr_test_textGlyph = f_test_textGlyph.read()
     f_test_textGlyph.close()
+    f_test_genGlyph = open(TEST_PATH_test_genGlyph, 'r')
+    sbmlStr_test_genGlyph = f_test_genGlyph.read()
+    f_test_genGlyph.close()
     self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _, _ = _SBMLToDF(sbmlStr_test)
     self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _, _ = \
       _SBMLToDF(sbmlStr_feedback)
@@ -68,10 +72,11 @@ class TestImportSBML(unittest.TestCase):
       _SBMLToDF(sbmlStr_node_grid)
     self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn, _, _ = \
       _SBMLToDF(sbmlStr_mass_action_rxn)
-    _, _, _, self.df_TextData_test_textGlyph, _ = \
-      _SBMLToDF(sbmlStr_test_textGlyph)
+    _, _, _, self.df_TextData_test_textGlyph, _ = _SBMLToDF(sbmlStr_test_textGlyph)
+    _, _, _, _, self.df_ShapeData_test_genGlyph = _SBMLToDF(sbmlStr_test_genGlyph)
     self.df = SBMLDiagrams.load(sbmlStr_test)
     self.df_text = SBMLDiagrams.load(sbmlStr_test_textGlyph)
+    self.df_shape = SBMLDiagrams.load(sbmlStr_test_genGlyph)
 
   def loadInvalidStr(self):
     # an exception raises if load an invalid string
@@ -895,6 +900,55 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(test_text)
 
 
+  def testShape1(self):
+    # Test all the column names
+    if IGNORE_TEST:
+      return    
+    test_genGlyph = all(item in self.df_ShapeData_test_genGlyph.columns \
+      for item in COLUMN_NAME_df_ShapeData)
+    self.assertTrue(test_genGlyph)
+
+  def testShape2(self):
+    # Test whether there is at least one row
+    if IGNORE_TEST:
+      return    
+    self.assertTrue(len(self.df_ShapeData_test_genGlyph.index)>0) 
+
+  def testShape3(self):
+    # Test column 'shape_name' and 'shape_type' of df_TextData are strings
+    if IGNORE_TEST:
+      return    
+    list_shape = []
+    list_shape += self.df_ShapeData_test_genGlyph[COLUMN_NAME_df_ShapeData[0]].tolist()
+    list_shape += self.df_ShapeData_test_genGlyph[COLUMN_NAME_df_ShapeData[6]].tolist()
+    test_shape = all(isinstance(item, str) for item in list_shape)
+    self.assertTrue(test_shape)
+
+  def testShape4(self):
+    # Test column 'position', 'size', 'fill_color', 'border_color', 'shape_info' of df_ShapeData are lists
+    if IGNORE_TEST:
+      return    
+    list_shape = []
+    list_shape += self.df_ShapeData_test_genGlyph[COLUMN_NAME_df_ShapeData[1]].tolist()
+    list_shape += self.df_ShapeData_test_genGlyph[COLUMN_NAME_df_ShapeData[2]].tolist()
+    list_shape += self.df_ShapeData_test_genGlyph[COLUMN_NAME_df_ShapeData[3]].tolist()
+    list_shape += self.df_ShapeData_test_genGlyph[COLUMN_NAME_df_ShapeData[4]].tolist()
+    list_shape += self.df_ShapeData_test_genGlyph[COLUMN_NAME_df_ShapeData[7]].tolist()
+    test_shape = all(isinstance(item, list) for item in list_shape)
+
+    self.assertTrue(test_shape)
+
+  def testShape5(self):
+    # Test column 'border_width' of df_TextData are float
+    if IGNORE_TEST:
+      return    
+    list_shape = []
+    list_shape += self.df_ShapeData_test_genGlyph[COLUMN_NAME_df_ShapeData[5]].tolist()
+    test_shape = all(isinstance(item, float) for item in list_shape)
+
+    self.assertTrue(test_shape)
+
+
   def testGetCompartment(self):
     # Test all the get functions about compartment
     if IGNORE_TEST:
@@ -1189,6 +1243,41 @@ class TestImportSBML(unittest.TestCase):
     with self.assertRaises(Exception):
       self.df_text.removeText("text")
 
+  def testGetArbitraryShape(self):
+    # Test all the get functions about arbitrary shape
+
+    if IGNORE_TEST:
+      return  
+
+    self.assertTrue(self.df_shape.getShapePosition("shape_name")[0] == [177., 107.])
+    self.assertTrue(self.df_shape.getShapeSize("shape_name")[0] == [50., 30.])
+
+
+  def testArbitraryShape(self):
+    # set reaction one by one
+    if IGNORE_TEST:
+      return
+
+    shape_name = "self_rectangle"
+    position = [400,200]
+    size = [100,100]
+    fill_color = "red" 
+    fill_opacity = 0.5
+    border_color = "blue"
+    border_opacity = 1.
+    border_width = 3.
+    shape_info = [[0,0],[100,0],[0,100]]
+
+    self.df_shape.addRectangle(shape_name, position, size,
+    fill_color, fill_opacity, border_color, border_opacity, border_width)
+    self.df_shape.removeShape("shape_name")
+
+    with self.assertRaises(Exception):
+      self.df_shape.removeShape("test")
+
+    self.df_shape.addEllipse('self_ellipse', position, size)
+    self.df_shape.addPolygon('self_polygon', shape_info, position, size)
+
   def testNetworkFuncs(self):
     # Test the Network related function
 
@@ -1209,6 +1298,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionIdList() == ['r_0'])
 
     self.assertTrue(self.df_text.getTextContentList() == ['text_content1', 'text_content2'])
+    self.assertTrue(self.df_shape.getShapeNameList() == ['shape_name'])
 
   # def testText(self):
   #   # set text one by one
