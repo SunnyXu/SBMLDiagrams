@@ -53,22 +53,22 @@ class TestImportSBML(unittest.TestCase):
     f_test_textGlyph = open(TEST_PATH_test_textGlyph, 'r')
     sbmlStr_test_textGlyph = f_test_textGlyph.read()
     f_test_textGlyph.close()
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _ = _SBMLToDF(sbmlStr_test)
-    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _ = \
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _, _ = _SBMLToDF(sbmlStr_test)
+    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _, _ = \
       _SBMLToDF(sbmlStr_feedback)
-    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain, _ = \
+    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain, _ , _= \
       _SBMLToDF(sbmlStr_LinearChain)
-    self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, self.df_ReactionData_test_no_comp, _ = \
+    self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, self.df_ReactionData_test_no_comp, _, _ = \
       _SBMLToDF(sbmlStr_test_no_comp)
-    self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, self.df_ReactionData_test_comp, _ = \
+    self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, self.df_ReactionData_test_comp, _, _ = \
       _SBMLToDF(sbmlStr_test_comp)
-    self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, self.df_ReactionData_test_modifier, _ = \
+    self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, self.df_ReactionData_test_modifier, _, _ = \
       _SBMLToDF(sbmlStr_test_modifier)
-    self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, self.df_ReactionData_node_grid, _ = \
+    self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, self.df_ReactionData_node_grid, _, _ = \
       _SBMLToDF(sbmlStr_node_grid)
-    self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn, _ = \
+    self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn, _, _ = \
       _SBMLToDF(sbmlStr_mass_action_rxn)
-    _, _, _, self.df_TextData_test_textGlyph = \
+    _, _, _, self.df_TextData_test_textGlyph, _ = \
       _SBMLToDF(sbmlStr_test_textGlyph)
     self.df = SBMLDiagrams.load(sbmlStr_test)
     self.df_text = SBMLDiagrams.load(sbmlStr_test_textGlyph)

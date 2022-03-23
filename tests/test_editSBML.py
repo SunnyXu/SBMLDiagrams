@@ -23,9 +23,14 @@ class TestEditSBML(unittest.TestCase):
     f_test_text = open(TEST_PATH_test_text, 'r')
     sbmlStr_test_text = f_test_text.read()
     f_test_text.close()
+    TEST_PATH_test_shape = os.path.join(TEST_FOLDER, "test_genGlyph.xml")
+    f_test_shape = open(TEST_PATH_test_shape, 'r')
+    sbmlStr_test_shape = f_test_shape.read()
+    f_test_shape.close()
 
     self.df = processSBML._SBMLToDF(sbmlStr_test)
     self.df_text = processSBML._SBMLToDF(sbmlStr_test_text)
+    self.df_shape = processSBML._SBMLToDF(sbmlStr_test_shape)
 
   def testSetCompartment(self):
     # setCompartment one by one
@@ -317,6 +322,60 @@ class TestEditSBML(unittest.TestCase):
 
     with self.assertRaises(Exception):
       editSBML._removeText(df_text_update, "text")
+
+  def testArbitraryShape1(self):
+    # set arbitrary shape one by one
+    if IGNORE_TEST:
+      return
+
+    shape_name = "self_rectangle"
+    position = [400,200]
+    size = [100,100]
+    fill_color = "red" 
+    fill_opacity = 0.5
+    border_color = "blue"
+    border_opacity = 1.
+    border_width = 3.
+
+    df_shape_update = editSBML._addRectangle(self.df_shape, shape_name, position, size,
+    fill_color, fill_opacity, border_color, border_opacity, border_width)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SHAPENAME] == shape_name)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.POSITION] == position)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SIZE] == size)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.BORDERWIDTH] == border_width)
+
+    df_shape_update = editSBML._removeShape(df_shape_update, "shape_name")
+    self.assertTrue(len(df_shape_update[4]) == 1)
+
+    with self.assertRaises(Exception):
+      editSBML._removeShape(df_shape_update, "shape")
+
+  def testArbitraryShape2(self):
+    # set arbitrary shape one by one
+    if IGNORE_TEST:
+      return
+
+    position = [400,200]
+    size = [100,100]
+
+    df_shape_update = editSBML._addEllipse(self.df_shape, 'self_ellipse', position, size)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SHAPETYPE] == 'ellipse')
+
+  
+  def testArbitraryShape3(self):
+    # set arbitrary shape one by one
+    if IGNORE_TEST:
+      return
+
+    position = [400,200]
+    size = [100,100]
+    shape_info = [[0,0],[100,0],[0,100]]
+
+    df_shape_update = editSBML._addPolygon(self.df_shape, 'self_polygon', shape_info, 
+    position, size)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SHAPETYPE] == 'polygon')
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SHAPEINFO] == shape_info)
+
 
   # def testText(self):
   #   # set text one by one
