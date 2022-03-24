@@ -391,12 +391,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         spec_position_list.append([pos_x,pos_y])
                         for k in range(numSpecGlyphs):
                             textGlyph_temp = layout.getTextGlyph(k)
-                            if textGlyph_temp.isSetOriginOfTextId():
-                                temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
-                            elif textGlyph_temp.isSetGraphicalObjectId():
-                                temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
-                            if temp_specGlyph_id == specGlyph_id:
-                                textGlyph = textGlyph_temp
+                            if textGlyph_temp != None:
+                                if textGlyph_temp.isSetOriginOfTextId():
+                                    temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                elif textGlyph_temp.isSetGraphicalObjectId():
+                                    temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                                if temp_specGlyph_id == specGlyph_id:
+                                    textGlyph = textGlyph_temp
 
                         try:
                             text_boundingbox = textGlyph.getBoundingBox()
@@ -463,6 +464,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
                     info = rPlugin.getRenderInformation(0)
                     color_list = []
+                    gradient_list = []
                     comp_render = []
                     spec_render = []
                     rxn_render = []
@@ -470,6 +472,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     gen_render = []
                     arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                     id_arrowHeadSize = []
+                    
                     for j in range(0, info.getNumLineEndings()):
                         lineEnding = info.getLineEnding(j)
                         temp_id = lineEnding.getId()
@@ -487,9 +490,34 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         #         x = element.getListOfElements().get(k).getX().getCoordinate()
                         #         y = element.getListOfElements().get(k).getY().getCoordinate()
 
-                    for  j in range ( 0, info.getNumColorDefinitions()):
+                    for  j in range(0, info.getNumColorDefinitions()):
                         color = info.getColorDefinition(j)
                         color_list.append([color.getId(),color.createValueString()])
+
+                    for j in range(0, info.getNumGradientDefinitions()):
+                        gradient = info.getGradientDefinition(j)
+                        grad_type = gradient.getElementName()
+                        if grad_type == "linearGradient":
+                            id = gradient.getId()
+                            grad_start = [gradient.getXPoint1().getRelativeValue(),gradient.getYPoint1().getRelativeValue()]
+                            grad_end = [gradient.getXPoint2().getRelativeValue(),gradient.getYPoint2().getRelativeValue()]
+                            grad_info = [grad_start,grad_end]
+                        elif grad_type == "radialGradient":
+                            id = gradient.getId()
+                            grad_center = [gradient.getCenterX().getRelativeValue(),gradient.getCenterY().getRelativeValue()]
+                            grad_radius = [gradient.getRadius().getRelativeValue()]
+                            grad_info = [grad_center,grad_radius]
+                        stop_info = []
+                        for k in range(0,gradient.getNumGradientStops()):
+                            stop = gradient.getGradientStop(k)
+                            offset = stop.getOffset().getRelativeValue()
+                            stop_color_name = stop.getStopColor()
+                            stop_color = spec_fill_color
+                            for kk in range(len(color_list)):
+                                if color_list[kk][0] == stop_color_name:
+                                    stop_color = hex_to_rgb(color_list[kk][1])
+                            stop_info.append([offset,stop_color])
+                        gradient_list.append([id,grad_type, grad_info,stop_info])
 
                     for j in range (0, info.getNumStyles()):
                         style = info.getStyle(j)
@@ -510,6 +538,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_fill_color = hex_to_rgb(color_list[k][1])
                                 if color_list[k][0] == group.getStroke():
                                     spec_border_color = hex_to_rgb(color_list[k][1])
+                            for k in range(len(gradient_list)):
+                                if gradient_list[k][0] == group.getFill():
+                                    spec_fill_color = gradient_list[k][1:]
                             spec_border_width = group.getStrokeWidth()
                             #name_list = []
                             shape_type = ''
@@ -616,6 +647,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             gen_border_width, gen_shape_type, gen_shape_info])
 
         #print(gen_render)
+        #print(gradient_list)
 
         model = simplesbml.loadSBMLStr(sbmlStr)
         numFloatingNodes  = model.getNumFloatingSpecies()
@@ -1710,14 +1742,20 @@ class load:
             fill_color_list: list of fill_color.
 
             fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
-            hex str (8 digits)].
+            hex str (8 digits)]; or list-[str-gradient_type, list-gradient_info, list-stop_info],
+            where gradient_type can be 'linearGradient' or 'radialGradient', while gradient_info
+            and stop_info refers to setNodeFillLinearGradient() and setNodeFillRadialGradient.
+
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         fill_color_list =[] 
         for i in range(len(idx_list)):
             rgb = self.df[1].iloc[idx_list[i]]["fill_color"]
-            color = _rgb_to_color(rgb)
+            if type(rgb[0]) == str:
+                color = rgb
+            else:
+                color = _rgb_to_color(rgb)
             fill_color_list.append(color)
 
         return fill_color_list
@@ -2285,6 +2323,40 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
         self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity)
+        return self.df
+
+    def setNodeFillLinearGradient(self, id, gradient_info, stop_info):
+        """
+        Set the node fill linear gradient.
+
+        Args:  
+            id: str-node id.
+
+            gradient_info: list - [[x1,y1],[x2,y2]], where x,y are floating numbers from 0 to 100.
+            x represents the percentage of width, and y represents the percentage of height.
+
+            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],[x3,[r3,g3,b3,a3]], etc],
+            where x is floating number from 0 to 100.
+
+        """
+        self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info)
+        return self.df
+
+    def setNodeFillRadialGradient(self, id, gradient_info, stop_info):
+        """
+        Set the node fill radial gradient.
+
+        Args:  
+            id: str-node id.
+
+            gradient_info: list - [[x1,y1],[r]], where x,y,r are floating numbers from 0 to 100.
+            x represents the center with percentage of width and height; r represents the radius.
+
+            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],[x3,[r3,g3,b3,a3]], etc],
+            where x is floating number from 0 to 100.
+
+        """
+        self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info)
         return self.df
 
     def setNodeBorderColor(self, id, border_color, opacity = 1.):
@@ -3173,8 +3245,11 @@ if __name__ == '__main__':
     #filename = "hexagon.xml"
     #SBGN:
     #filename = "SBGN1-specComplex.xml"
-    filename = "SBGN2-modifier.xml"
+    #filename = "SBGN2-modifier.xml"
     #filename = "test_genGlyph.xml"
+    #gradient:
+    filename = "test_gradientLinear.xml"
+    #filename = "test_gradientRadial.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
 
@@ -3219,7 +3294,7 @@ if __name__ == '__main__':
     # print(df.getNodeShape("x_0"))
     # print(df.getNodeTextPosition("x_1"))
     # print(df.getNodeTextSize("x_1"))
-    # print(df.getNodeFillColor("x_1"))
+    # print(df.getNodeFillColor("Species_1"))
     # print(df.getNodeBorderColor("x_1"))
     # print(df.getNodeBorderWidth("x_1"))
     # print(df.getNodeTextFontColor("x_1"))
@@ -3269,6 +3344,9 @@ if __name__ == '__main__':
     #print(df.getNodeTextPosition("x_0"))
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
+    #df.setNodeFillLinearGradient("Species_1", [[0.0, 0.0], [100.0, 100.0]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 0]]])
+    # df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 0]]])
+    # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # df.setNodeBorderWidth("x_1", 2.)
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
@@ -3318,7 +3396,7 @@ if __name__ == '__main__':
     # print(df.getReactionIdList())
     # print(df.getTextContentList())
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
     # f = open("output.xml", "w")
     # f.write(sbmlStr_layout_render)

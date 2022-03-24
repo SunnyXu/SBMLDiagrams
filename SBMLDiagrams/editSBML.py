@@ -843,6 +843,131 @@ def _setNodeFillColor(df, id, fill_color, opacity):
 
     return df_temp
 
+def _setNodeFillLinearGradient(df, id, gradient_info, stop_info):
+    """
+    Set the node fill linear gradient.
+
+    Args:  
+        id: str-node id.
+
+        gradient_info: list - [[x1,y1],[x2,y2]], where x,y are floating numbers from 0 to 100.
+        x represents the percentage of width, and y represents the percentage of height.
+
+        stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],[x3,[r3,g3,b3,a3]], etc],
+        where x is floating number from 0 to 100.
+
+    """
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    #check the gradient_info is in the correct format:
+    gradient_info_flag = True
+    stop_info_flag = True
+    if isinstance(gradient_info, list) and len(gradient_info) == 2:
+        for ii in range(len(gradient_info)):
+            if isinstance(gradient_info[ii], list) and len(gradient_info[ii]) == 2:
+                if all(isinstance(float(item), float) for item in gradient_info[ii]):
+                    pass
+                else:
+                    gradient_info_flag = False
+                    raise Exception("This is not a valid gradient info.")
+            else:
+                gradient_info_flag = False
+                raise Exception("This is not a valid gradient info.")               
+    else:
+        gradient_info_flag = False
+        raise Exception("This is not a valid gradient info.")
+
+    if isinstance(stop_info, list) and len(stop_info) >= 2:
+        for ii in range(len(stop_info)):
+            if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
+                if len(stop_info[ii][1]) == 4 and all(isinstance(float(item), int) for item in stop_info[ii][1]):
+                    pass
+                else:
+                    stop_info_flag = False
+                    raise Exception("This is not a valid stop info.")
+            else:
+                stop_info_flag = False
+                raise Exception("This is not a valid stop info.")               
+    else:
+        stop_info_flag = False
+        raise Exception("This is not a valid stop info.")
+
+    if gradient_info_flag == True and stop_info_flag == True:
+        fill_color = ['linearGradient', gradient_info, stop_info]
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+        df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
+        return df_temp
+
+def _setNodeFillRadialGradient(df, id, gradient_info, stop_info):
+    """
+    Set the node fill radial gradient.
+
+    Args:  
+        id: str-node id.
+
+        gradient_info: list - [[x1,y1],[r]], where x,y,r are floating numbers from 0 to 100.
+        x represents the center with percentage of width and height; r represents the radius.
+
+        stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],[x3,[r3,g3,b3,a3]], etc],
+        where x is floating number from 0 to 100.
+
+    """
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    #check the gradient_info is in the correct format:
+    gradient_info_flag = True
+    stop_info_flag = True
+    if isinstance(gradient_info, list) and len(gradient_info) == 2:
+        if isinstance(gradient_info[0], list) and len(gradient_info[0]) == 2:
+            if all(isinstance(float(item), float) for item in gradient_info[0]):
+                pass
+            else:
+                gradient_info_flag = False
+                raise Exception("This is not a valid gradient info.")
+        else:
+            gradient_info_flag = False
+            raise Exception("This is not a valid gradient info.")   
+        if isinstance(gradient_info[1], list) and len(gradient_info[1]) == 1:
+            if type(gradient_info[1][0]) == float:
+                pass
+            else:
+                gradient_info_flag = False
+                raise Exception("This is not a valid gradient info.")
+        else:
+            gradient_info_flag = False
+            raise Exception("This is not a valid gradient info.")            
+    else:
+        gradient_info_flag = False
+        raise Exception("This is not a valid gradient info.")
+
+    if isinstance(stop_info, list) and len(stop_info) >= 2:
+        for ii in range(len(stop_info)):
+            if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
+                if len(stop_info[ii][1]) == 4 and all(isinstance(float(item), int) for item in stop_info[ii][1]):
+                    pass
+                else:
+                    stop_info_flag = False
+                    raise Exception("This is not a valid stop info.")
+            else:
+                stop_info_flag = False
+                raise Exception("This is not a valid stop info.")               
+    else:
+        stop_info_flag = False
+        raise Exception("This is not a valid stop info.")
+
+    if gradient_info_flag == True and stop_info_flag == True:
+        fill_color = ['radialGradient', gradient_info, stop_info]
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+        df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
+
+        return df_temp
+
 def _setNodeBorderColor(df, id, border_color, opacity):
 
     """

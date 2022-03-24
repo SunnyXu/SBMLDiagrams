@@ -811,6 +811,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
 
         for i in range(numNodes):
+            gradient_type = ''
             spec_id = df_NodeData.iloc[i]['id']  
             spec_shapeIdx = int(df_NodeData.iloc[i]['shape_idx'])
             spec_shapeType = df_NodeData.iloc[i]['shape_type']
@@ -848,9 +849,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     spec_border_color = df_NodeData.iloc[i]['border_color']
                 if len(spec_fill_color) == 4:
                     spec_fill_color_str   = '#%02x%02x%02x%02x' % (int(spec_fill_color[0]),int(spec_fill_color[1]),int(spec_fill_color[2]),int(spec_fill_color[3]))
-                elif len(spec_fill_color) == 3:
+                elif len(spec_fill_color) == 3 and type(spec_fill_color[0]) != str:
                     spec_fill_color_str   = '#%02x%02x%02x' % (int(spec_fill_color[0]),int(spec_fill_color[1]),int(spec_fill_color[2]))
-               
+                elif len(spec_fill_color) and type(spec_fill_color[0]) == str:
+                    gradient_type = spec_fill_color[0]
+                    gradient_info = spec_fill_color[1]
+                    stop_info = spec_fill_color[2]  
+
                 if len(spec_border_color) == 4:    
                     spec_border_color_str = '#%02x%02x%02x%02x' % (int(spec_border_color[0]),int(spec_border_color[1]),int(spec_border_color[2]),int(spec_border_color[3]))
                 elif len(spec_border_color) == 3:
@@ -876,25 +881,63 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 text_line_width = 1.
                 text_font_size = 12.
 
+            if gradient_type == '':
+                color = rInfo.createColorDefinition()
+                color.setId("spec_fill_color" + "_" + spec_id)
+                color.setColorValue(spec_fill_color_str)
 
-            color = rInfo.createColorDefinition()
-            color.setId("spec_fill_color" + "_" + spec_id)
-            color.setColorValue(spec_fill_color_str)
+                color = rInfo.createColorDefinition()
+                color.setId("spec_border_color" + "_" + spec_id)
+                color.setColorValue(spec_border_color_str)
 
-            color = rInfo.createColorDefinition()
-            color.setId("spec_border_color" + "_" + spec_id)
-            color.setColorValue(spec_border_color_str)
+                color = rInfo.createColorDefinition()
+                color.setId("text_line_color" + "_" + spec_id)
+                color.setColorValue(text_line_color_str)
 
-            color = rInfo.createColorDefinition()
-            color.setId("text_line_color" + "_" + spec_id)
-            color.setColorValue(text_line_color_str)
+                style = rInfo.createStyle("specStyle" + "_" + spec_id)
+                style.getGroup().setFillColor("spec_fill_color" + "_" + spec_id)
+                style.getGroup().setStroke("spec_border_color" + "_" + spec_id)
+                style.getGroup().setStrokeWidth(spec_border_width)
+                style.addType("SPECIESGLYPH")
+                style.addId(spec_id)
+            elif gradient_type == 'linearGradient':
+                for ii in range(len(stop_info)):
+                    color = rInfo.createColorDefinition()
+                    color.setId("spec_fill_stop_color" + "_" + spec_id + str(ii))
+                    stop_color = stop_info[ii][1]
+                    spec_fill_stop_color_str = '#%02x%02x%02x%02x' % (int(stop_color[0]),int(stop_color[1]),int(stop_color[2]),int(stop_color[3]))
+                    color.setColorValue(spec_fill_stop_color_str)
 
-            style = rInfo.createStyle("specStyle" + "_" + spec_id)
-            style.getGroup().setFillColor("spec_fill_color" + "_" + spec_id)
-            style.getGroup().setStroke("spec_border_color" + "_" + spec_id)
-            style.getGroup().setStrokeWidth(spec_border_width)
-            style.addType("SPECIESGLYPH")
-            style.addId(spec_id)
+                color = rInfo.createColorDefinition()
+                color.setId("spec_border_color" + "_" + spec_id)
+                color.setColorValue(spec_border_color_str)
+
+                color = rInfo.createColorDefinition()
+                color.setId("text_line_color" + "_" + spec_id)
+                color.setColorValue(text_line_color_str)
+
+                style = rInfo.createStyle("specStyle" + "_" + spec_id)
+                # style.getGroup().setFillColor("spec_fill_color" + "_" + spec_id)
+                style.getGroup().setStroke("spec_border_color" + "_" + spec_id)
+                style.getGroup().setStrokeWidth(spec_border_width)
+                style.addType("SPECIESGLYPH")
+                style.addId(spec_id)
+
+                gradient = rInfo.createLinearGradientDefinition()
+                gradient.setId("simpleGradient")
+                gradient.setPoint1(libsbml.RelAbsVector(0, 0), libsbml.RelAbsVector(0, 50))
+                gradient.setPoint2(libsbml.RelAbsVector(0, 100), libsbml.RelAbsVector(0, 50))
+
+                stop = gradient.createGradientStop()
+                stop.setOffset(libsbml.RelAbsVector(0, 0))
+                stop.setStopColor("white");
+
+                stop = gradient.createGradientStop()
+                stop.setOffset(libsbml.RelAbsVector(0, 100))
+                stop.setStopColor("silver")
+            elif gradient_type == 'radialGradient':
+                print("radialGradient")
+
 
             if spec_shapeIdx == 1 or spec_shapeType == 'rectangle': #rectangle
                 rectangle = style.getGroup().createRectangle()

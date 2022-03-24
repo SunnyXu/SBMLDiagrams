@@ -578,6 +578,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                     if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
                         info = rPlugin.getRenderInformation(0)
                         color_list = []
+                        gradient_list = []
                         comp_render = []
                         spec_render = []
                         rxn_render = []
@@ -604,10 +605,34 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                             #     for k in range(NumRenderPoints):
                             #         x = element.getListOfElements().get(k).getX().getCoordinate()
                             #         y = element.getListOfElements().get(k).getY().getCoordinate()
-
+                        
                         for  j in range ( 0, info.getNumColorDefinitions()):
                             color = info.getColorDefinition(j)
                             color_list.append([color.getId(),color.createValueString()])
+                        #print(info.getNumGradientDefinitions())
+                        for j in range(0, info.getNumGradientDefinitions()):
+                            gradient = info.getGradientDefinition(j)
+                            grad_type = gradient.getElementName()
+                            if grad_type == "linearGradient":
+                                id = gradient.getId()
+                                grad_start = [gradient.getXPoint1().getRelativeValue(),gradient.getYPoint1().getRelativeValue()]
+                                grad_end = [gradient.getXPoint2().getRelativeValue(),gradient.getYPoint2().getRelativeValue()]
+                                grad_info = [grad_start,grad_end]
+                            elif grad_type == "radialGradient":
+                                id = gradient.getId()
+                                grad_center = [gradient.getCenterX().getRelativeValue(),gradient.getCenterY().getRelativeValue()]
+                                grad_radius = [gradient.getRadius().getRelativeValue()]
+                                grad_info = [grad_center,grad_radius]
+                            stop_info = []
+                            for k in range(0,gradient.getNumGradientStops()):
+                                stop = gradient.getGradientStop(k)
+                                offset = stop.getOffset().getRelativeValue()
+                                stop_color_name = stop.getStopColor()
+                                for kk in range(len(color_list)):
+                                    if color_list[kk][0] == stop_color_name:
+                                        stop_color = hex_to_rgb(color_list[kk][1])
+                                stop_info.append([offset,stop_color])
+                            gradient_list.append([id,grad_type, grad_info,stop_info])
 
                         for j in range (0, info.getNumStyles()):
                             style = info.getStyle(j)
@@ -633,6 +658,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(hex_to_rgb(color_list[k][1]))
+                                for k in range(len(gradient_list)):
+                                    if gradient_list[k][0] == group.getFill():
+                                        spec_fill_color = gradient_list[k][1:]
+                                        #print(spec_fill_color)
+                                
                                 spec_border_width = group.getStrokeWidth()
                                 #name_list = []
                                 shape_type = ''
@@ -688,7 +718,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                                 shapeIdx = 9
                                                 shape_name = "rightTriangle"
 
-
+                                #if type(spec_fill_color[0]) == str:
+                                #    print("test")
+                                #    spec_render.append([idList,spec_fill_color,color_style.getSpecBorderColor(),
+                                #    spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
+                                #else:
                                 spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
                                 spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
                                 
@@ -1630,12 +1664,13 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
     #filename = "test_textGlyph.xml"
-    filename = "output.xml"
+    #filename = "output.xml"
 
     #filename = "putida_gb_newgenes.xml"
     #filename = "testbigmodel.xml" #sbml with errors
 
     #filename = 'test_genGlyph.xml'
+    filename = "test_gradientLinear.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
