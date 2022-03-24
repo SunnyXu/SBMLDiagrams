@@ -632,7 +632,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                     if color_list[kk][0] == stop_color_name:
                                         stop_color = hex_to_rgb(color_list[kk][1])
                                 stop_info.append([offset,stop_color])
-                            gradient_list.append([id,grad_type, grad_info,stop_info])
+                            gradient_list.append([id,grad_type,grad_info,stop_info])
 
                         for j in range (0, info.getNumStyles()):
                             style = info.getStyle(j)
@@ -661,7 +661,6 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                 for k in range(len(gradient_list)):
                                     if gradient_list[k][0] == group.getFill():
                                         spec_fill_color = gradient_list[k][1:]
-                                        #print(spec_fill_color)
                                 
                                 spec_border_width = group.getStrokeWidth()
                                 #name_list = []
@@ -718,13 +717,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                                 shapeIdx = 9
                                                 shape_name = "rightTriangle"
 
-                                #if type(spec_fill_color[0]) == str:
-                                #    print("test")
-                                #    spec_render.append([idList,spec_fill_color,color_style.getSpecBorderColor(),
-                                #    spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
-                                #else:
-                                spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
-                                spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
+                                if type(spec_fill_color[0]) == str:
+                                   spec_render.append([idList,spec_fill_color,color_style.getSpecBorderColor(),
+                                   spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
+                                else:
+                                    spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
+                                    spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
+                                
                                 
                             elif 'REACTIONGLYPH' in typeList:
                                 if group.isSetEndHead():
@@ -774,7 +773,6 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                             gen_shape_info.append([point_x,point_y]) 
                                 gen_render.append([idList, gen_fill_color, gen_border_color,
                                 gen_border_width, gen_shape_type, gen_shape_info])
-
         #try: 
             model = simplesbml.loadSBMLStr(sbmlStr)
             numFloatingNodes  = model.getNumFloatingSpecies()
@@ -977,13 +975,17 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                     (spec_text_position_list[i][1]-topLeftCorner[1])*scale]
                     text_dimension = [spec_text_dimension_list[i][0]*scale,
                     spec_text_dimension_list[i][1]*scale]
+                    gradient_fill_color = []
                     for j in range(numFloatingNodes):
                         if temp_id == FloatingNodes_ids[j]:
-                            if temp_id not in id_list:
+                            if temp_id not in id_list: 
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style.getStyleName():
-                                            color_style.setSpecFillColor(spec_render[k][1])
+                                        if type(spec_render[k][1][0]) == str:
+                                            gradient_fill_color = spec_render[k][1]
+                                        else:
+                                            if not color_style.getStyleName():
+                                                color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
@@ -1001,10 +1003,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                 floatingNodes_dim_dict[temp_id] = dimension
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
-                                drawNetwork.addNode(canvas, 'floating', '', position, dimension,
-                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
-                                                    complex_shape = complexShape)
+                                if gradient_fill_color == []:
+                                    drawNetwork.addNode(canvas, 'floating', '', position, dimension,
+                                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape = complexShape)
+                                else:
+                                    drawNetwork.addNode(canvas, 'floating', '', position, dimension,
+                                                        color_style.getSpecBorderColor(), gradient_fill_color,
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, 
@@ -1013,8 +1021,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style.getStyleName():
-                                            color_style.setSpecFillColor(spec_render[k][1])
+                                        if type(spec_render[k][1][0]) == str:
+                                            gradient_fill_color = spec_render[k][1]
+                                        else:
+                                            if not color_style.getStyleName():
+                                                color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
@@ -1032,10 +1043,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                 floatingNodes_dim_dict[temp_id] = dimension
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
-                                drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
-                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
-                                                    complex_shape=complexShape)
+                                if gradient_fill_color == []:
+                                    drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
+                                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
+                                else:
+                                    drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
+                                                        color_style.getSpecBorderColor(), gradient_fill_color,
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
 													fontSize = text_font_size*scale, 
@@ -1046,8 +1063,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                             if temp_id not in id_list:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style.getStyleName():
-                                            color_style.setSpecFillColor(spec_render[k][1])
+                                        if type(spec_render[k][1][0]) == str:
+                                            gradient_fill_color = spec_render[k][1]
+                                        else:
+                                            if not color_style.getStyleName():
+                                                color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
@@ -1061,10 +1081,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
-                                drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
-                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
-                                                    complex_shape=complexShape)
+                                if gradient_fill_color == []:
+                                    drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
+                                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
+                                else:
+                                    drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
+                                                        color_style.getSpecBorderColor(), gradient_fill_color,
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
@@ -1075,8 +1101,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style.getStyleName():
-                                            color_style.setSpecFillColor(spec_render[k][1])
+                                        if type(spec_render[k][1][0]) == str:
+                                            gradient_fill_color = spec_render[k][1]
+                                        else:
+                                            if not color_style.getStyleName():
+                                                color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
@@ -1090,8 +1119,14 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
-                                drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
-                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                if gradient_fill_color == []:
+                                    drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
+                                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
+                                else:
+                                    drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
+                                                    color_style.getSpecBorderColor(), gradient_fill_color,
                                                     spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                     complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
@@ -1670,7 +1705,8 @@ if __name__ == '__main__':
     #filename = "testbigmodel.xml" #sbml with errors
 
     #filename = 'test_genGlyph.xml'
-    filename = "test_gradientLinear.xml"
+    #filename = "test_gradientLinear.xml"
+    filename = "test_gradientRadial.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
