@@ -1294,6 +1294,7 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return
 
+    self.assertTrue(self.df.getCompartmentIdList() == ['_compartment_default_'])
     self.assertTrue(self.df.getNodeIdList() == ['x_1', 'x_0'])
     self.assertTrue(self.df.getReactionIdList() == ['r_0'])
 

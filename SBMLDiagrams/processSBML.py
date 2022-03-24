@@ -3154,6 +3154,22 @@ class load:
         size  = visualizeSBML._getNetworkSize(sbmlStr)
         return size
 
+    def getCompartmentIdList(self):
+        """
+        Get the list of node ids.
+
+        Args:  
+
+        Returns:
+            id_list-list of ids.
+            
+            id-str-node id.
+        
+        """ 
+
+        id_list = self.df[0]["id"].tolist()
+        return id_list
+
     def getNodeIdList(self):
         """
         Get the list of node ids.
@@ -3224,7 +3240,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3248,7 +3264,7 @@ if __name__ == '__main__':
     #filename = "SBGN2-modifier.xml"
     #filename = "test_genGlyph.xml"
     #gradient:
-    filename = "test_gradientLinear.xml"
+    #filename = "test_gradientLinear.xml"
     #filename = "test_gradientRadial.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
@@ -3395,6 +3411,7 @@ if __name__ == '__main__':
     # print(df.getNodeIdList())
     # print(df.getReactionIdList())
     # print(df.getTextContentList())
+    print(df.getCompartmentIdList())
 
     sbmlStr_layout_render = df.export()
 
