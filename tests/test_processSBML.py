@@ -1054,6 +1054,9 @@ class TestImportSBML(unittest.TestCase):
     txt_line_width = 1.
     txt_font_size = 12.
     opacity = 1.
+    gradient_linear_info = [[0.0, 0.0], [100.0, 100.0]]
+    gradient_radial_info = [[50.0, 50.0], [50.]]
+    stop_info = [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]]
     
     self.df.setFloatingBoundaryNode("x_1", floating_node)
     self.df.setNodePosition("x_1", position)
@@ -1065,6 +1068,8 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodeTextPosition("x_1", txt_position)
     self.df.setNodeTextSize("x_1", txt_size)
     self.df.setNodeFillColor("x_1", fill_color, opacity = opacity)
+    self.df.setNodeFillLinearGradient("x_0", gradient_linear_info, stop_info)
+    self.df.setNodeFillRadialGradient("x_0", gradient_radial_info, stop_info)
     self.df.setNodeBorderColor("x_1", border_color, opacity = opacity)
     self.df.setNodeBorderWidth("x_1", border_width)
     self.df.setNodeTextFontColor("x_1", txt_font_color)
@@ -1080,6 +1085,8 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == txt_size)
     self.assertTrue(self.df.getNodeFillColor("x_1")[0][0][0:-1] == fill_color)
     self.assertTrue(self.df.getNodeFillColor("x_1")[0][0][3] == int(opacity*255/1.))
+    self.assertTrue(self.df.getNodeFillColor("x_0") == 
+    [['radialGradient', [[50.0, 50.0], [50.0]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]]]])
     self.assertTrue(self.df.getNodeBorderColor("x_1")[0][0][0:-1] == border_color)
     self.assertTrue(self.df.getNodeBorderColor("x_1")[0][0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getNodeBorderWidth("x_1")[0] == border_width)

@@ -882,7 +882,7 @@ def _setNodeFillLinearGradient(df, id, gradient_info, stop_info):
     if isinstance(stop_info, list) and len(stop_info) >= 2:
         for ii in range(len(stop_info)):
             if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
-                if len(stop_info[ii][1]) == 4 and all(isinstance(float(item), int) for item in stop_info[ii][1]):
+                if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
                     pass
                 else:
                     stop_info_flag = False
@@ -948,7 +948,7 @@ def _setNodeFillRadialGradient(df, id, gradient_info, stop_info):
     if isinstance(stop_info, list) and len(stop_info) >= 2:
         for ii in range(len(stop_info)):
             if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
-                if len(stop_info[ii][1]) == 4 and all(isinstance(float(item), int) for item in stop_info[ii][1]):
+                if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
                     pass
                 else:
                     stop_info_flag = False

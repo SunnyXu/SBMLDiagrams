@@ -89,6 +89,9 @@ class TestEditSBML(unittest.TestCase):
     txt_line_width = 1.
     txt_font_size = 12.
     opacity = 1.
+    gradient_linear_info = [[0.0, 0.0], [100.0, 100.0]]
+    gradient_radial_info = [[50.0, 50.0], [50.]]
+    stop_info = [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]]
 
     df_update = editSBML._setFloatingBoundaryNode(self.df, "x_1", floating_node)
     df_update = editSBML._setNodePosition(df_update, "x_1", position)
@@ -100,6 +103,8 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setNodeTextPosition(df_update, "x_1", txt_position)
     df_update = editSBML._setNodeTextSize(df_update, "x_1", txt_size)
     df_update = editSBML._setNodeFillColor(df_update, "x_1", fill_color, opacity = opacity)
+    df_update = editSBML._setNodeFillLinearGradient(df_update, "x_0", gradient_linear_info, stop_info)
+    df_update = editSBML._setNodeFillRadialGradient(df_update, "x_0", gradient_radial_info, stop_info)
     df_update = editSBML._setNodeBorderColor(df_update, "x_1", border_color, opacity = opacity)
     df_update = editSBML._setNodeBorderWidth(df_update, "x_1", border_width)
     df_update = editSBML._setNodeTextFontColor(df_update, "x_1", txt_font_color, opacity = opacity)
@@ -117,6 +122,8 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[1].iloc[0]["txt_size"] == txt_size)
     self.assertTrue(df_update[1].iloc[0]["fill_color"][0:-1] == fill_color)
     self.assertTrue(df_update[1].iloc[0]["fill_color"][3] == int(opacity*255/1.))
+    self.assertTrue(df_update[1].iloc[1]["fill_color"] == 
+    ['radialGradient', [[50.0, 50.0], [50.0]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]]])
     self.assertTrue(df_update[1].iloc[0]["border_color"][0:-1] == border_color)
     self.assertTrue(df_update[1].iloc[0]["border_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[1].iloc[0]["border_width"] == border_width)
@@ -155,6 +162,10 @@ class TestEditSBML(unittest.TestCase):
       editSBML._setNodeTextSize(df_update, "XX", txt_size)
     with self.assertRaises(Exception):
       editSBML._setNodeFillColor(df_update, "XX", fill_color, opacity = opacity)
+    with self.assertRaises(Exception):
+      editSBML._setNodeFillLinearGradient(df_update, "XX", gradient_linear_info, stop_info)
+    with self.assertRaises(Exception):
+      editSBML._setNodeFillRadialGradient(df_update, "XX", gradient_radial_info, stop_info)
     with self.assertRaises(Exception):
       editSBML._setNodeBorderColor(df_update, "XX", border_color, opacity = opacity)
     with self.assertRaises(Exception):

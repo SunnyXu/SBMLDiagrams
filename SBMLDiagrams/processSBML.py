@@ -3265,8 +3265,8 @@ if __name__ == '__main__':
     #filename = "SBGN2-modifier.xml"
     #filename = "test_genGlyph.xml"
     #gradient:
-    #filename = "test_gradientLinear.xml"
-    filename = "test_gradientRadial.xml"
+    filename = "test_gradientLinear.xml"
+    #filename = "test_gradientRadial.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
 
@@ -3361,8 +3361,8 @@ if __name__ == '__main__':
     #print(df.getNodeTextPosition("x_0"))
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
-    #df.setNodeFillLinearGradient("Species_1", [[0.0, 0.0], [100.0, 100.0]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 0]]])
-    # df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 0]]])
+    # df.setNodeFillLinearGradient("Species_1", [[0.0, 0.0], [100.0, 100.0]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
+    # df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
     # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # df.setNodeBorderWidth("x_1", 2.)
