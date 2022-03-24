@@ -538,6 +538,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     spec_fill_color = hex_to_rgb(color_list[k][1])
                                 if color_list[k][0] == group.getStroke():
                                     spec_border_color = hex_to_rgb(color_list[k][1])
+                            
                             for k in range(len(gradient_list)):
                                 if gradient_list[k][0] == group.getFill():
                                     spec_fill_color = gradient_list[k][1:]
@@ -3240,7 +3241,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3265,7 +3266,7 @@ if __name__ == '__main__':
     #filename = "test_genGlyph.xml"
     #gradient:
     #filename = "test_gradientLinear.xml"
-    #filename = "test_gradientRadial.xml"
+    filename = "test_gradientRadial.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
 
@@ -3411,9 +3412,9 @@ if __name__ == '__main__':
     # print(df.getNodeIdList())
     # print(df.getReactionIdList())
     # print(df.getTextContentList())
-    print(df.getCompartmentIdList())
+    # print(df.getCompartmentIdList())
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
     # f = open("output.xml", "w")
     # f.write(sbmlStr_layout_render)
