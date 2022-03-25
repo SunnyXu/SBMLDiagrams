@@ -3241,7 +3241,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3265,7 +3265,7 @@ if __name__ == '__main__':
     #filename = "SBGN2-modifier.xml"
     #filename = "test_genGlyph.xml"
     #gradient:
-    filename = "test_gradientLinear.xml"
+    # filename = "test_gradientLinear.xml"
     #filename = "test_gradientRadial.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
@@ -3361,7 +3361,7 @@ if __name__ == '__main__':
     #print(df.getNodeTextPosition("x_0"))
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
-    # df.setNodeFillLinearGradient("Species_1", [[0.0, 0.0], [100.0, 100.0]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
+    #df.setNodeFillLinearGradient("Species_1", [[0.0, 0.0], [100.0, 100.0]], [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
     # df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
     # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
@@ -3414,14 +3414,14 @@ if __name__ == '__main__':
     # print(df.getTextContentList())
     # print(df.getCompartmentIdList())
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output')
+    df.draw(output_fileName = 'output')
 
     # #SBGN1-complexSpec
     # df.setNodeAndTextPosition("ATP",[100,100])
@@ -3467,8 +3467,11 @@ if __name__ == '__main__':
     # #print(df.getReactionCenterPosition("J0"))  
     # df.addRectangle("centroid_sqaure", [235.0, 265.0], [20,20], 
     # fill_color=[91, 176, 253], border_color = [91,176,253])
+    # df.setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
+    #  [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
+    # df.setNodeBorderColor("ADH1", "black")
 
-    # # # df.draw(reactionLineType='bezier', scale = 2.)
+    # # # # df.draw(reactionLineType='bezier', scale = 2.)
     # df.draw(output_fileName = 'output')
 
     # sbmlStr_layout_render = df.export()

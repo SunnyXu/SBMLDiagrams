@@ -56,15 +56,15 @@ def _drawRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash 
         if gradient_type == 'linearGradient':
             paintFill = skia.Paint(
                 Shader=skia.GradientShader.MakeLinear(
-                points=[(width*gradient_info[0][0]/100., height*gradient_info[0][1]/100.), 
-                (width*gradient_info[1][0]/100., height*gradient_info[1][1]/100.)],
+                points=[(x+width*gradient_info[0][0]/100., y+height*gradient_info[0][1]/100.), 
+                (x+width*gradient_info[1][0]/100., y+height*gradient_info[1][1]/100.)],
                 colors=stop_colors,
                 positions = stop_positions)
                 )
         elif gradient_type == 'radialGradient':
             paintFill = skia.Paint(
                 Shader = skia.GradientShader.MakeRadial(
-                center=(width*gradient_info[0][0]/100., height*gradient_info[0][1]/100.),
+                center=(x+width*gradient_info[0][0]/100., y+height*gradient_info[0][1]/100.),
                 radius=max(width,height)*gradient_info[1][0]/100.,
                 colors=stop_colors,
                 positions = stop_positions)
@@ -130,15 +130,16 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
         if gradient_type == 'linearGradient':
             paintFill = skia.Paint(
                 Shader=skia.GradientShader.MakeLinear(
-                points=[(width*gradient_info[0][0]/100., height*gradient_info[0][1]/100.), 
-                (width*gradient_info[1][0]/100., height*gradient_info[1][1]/100.)],
+                points=[(x+width*gradient_info[0][0]/100., y+height*gradient_info[0][1]/100.), 
+                (x+width*gradient_info[1][0]/100., y+height*gradient_info[1][1]/100.)],
                 colors=stop_colors,
                 positions = stop_positions)
                 )
+
         elif gradient_type == 'radialGradient':
             paintFill = skia.Paint(
                 Shader = skia.GradientShader.MakeRadial(
-                center=(width*gradient_info[0][0]/100., height*gradient_info[0][1]/100.),
+                center=(x+width*gradient_info[0][0]/100., y+height*gradient_info[0][1]/100.),
                 radius=max(width,height)*gradient_info[1][0]/100.,
                 colors=stop_colors,
                 positions = stop_positions)
@@ -203,15 +204,15 @@ def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = 
         if gradient_type == 'linearGradient':
             paintFill = skia.Paint(
                 Shader=skia.GradientShader.MakeLinear(
-                points=[(width*gradient_info[0][0]/100., height*gradient_info[0][1]/100.), 
-                (width*gradient_info[1][0]/100., height*gradient_info[1][1]/100.)],
+                points=[(x+width*gradient_info[0][0]/100., y+height*gradient_info[0][1]/100.), 
+                (x+width*gradient_info[1][0]/100., y+height*gradient_info[1][1]/100.)],
                 colors=stop_colors,
                 positions = stop_positions)
                 )
         elif gradient_type == 'radialGradient':
             paintFill = skia.Paint(
                 Shader = skia.GradientShader.MakeRadial(
-                center=(width*gradient_info[0][0]/100., height*gradient_info[0][1]/100.),
+                center=(x+width*gradient_info[0][0]/100., y+height*gradient_info[0][1]/100.),
                 radius=max(width,height)*gradient_info[1][0]/100.,
                 colors=stop_colors,
                 positions = stop_positions)
@@ -280,15 +281,15 @@ def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
         if gradient_type == 'linearGradient':
             paint = skia.Paint(
                 Shader=skia.GradientShader.MakeLinear(
-                points=[(w*gradient_info[0][0]/100., h*gradient_info[0][1]/100.), 
-                (w*gradient_info[1][0]/100., h*gradient_info[1][1]/100.)],
+                points=[(x1+w*gradient_info[0][0]/100., y1+h*gradient_info[0][1]/100.), 
+                (x1+w*gradient_info[1][0]/100., y1+h*gradient_info[1][1]/100.)],
                 colors=stop_colors,
                 positions = stop_positions)
                 )
         elif gradient_type == 'radialGradient':
             paint = skia.Paint(
                 Shader = skia.GradientShader.MakeRadial(
-                center=(w*gradient_info[0][0]/100., h*gradient_info[0][1]/100.),
+                center=(x1+w*gradient_info[0][0]/100., y1+h*gradient_info[0][1]/100.),
                 radius=max(w,h)*gradient_info[1][0]/100.,
                 colors=stop_colors,
                 positions = stop_positions)
@@ -467,13 +468,15 @@ def _drawTetramer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False)
     canvas.drawCircle (centerX3, centerY3, radius, paint)
     canvas.drawCircle (centerX4, centerY4, radius, paint)
 
-def _drawPolygon (canvas, width, height, pts, outline, fill, linewidth, dash = False):
+def _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, dash = False):
     
     """
     Draw a polygon.
 
     Args:  
         canvas: skia.Canvas.
+        x: float-top left-hand corner position_x of the rectangle.
+        y: float-top left-hand corner position_y of the rectangle
         width: float-width of the rectangle.
         height: float-height of the rectangle.
         pts: list of 1*2 matrix: positions of the vertices/corners of the polygon.
@@ -506,15 +509,15 @@ def _drawPolygon (canvas, width, height, pts, outline, fill, linewidth, dash = F
         if gradient_type == 'linearGradient':
             paintFill = skia.Paint(
                 Shader=skia.GradientShader.MakeLinear(
-                points=[(width*gradient_info[0][0]/100., height*gradient_info[0][1]/100.), 
-                (width*gradient_info[1][0]/100., height*gradient_info[1][1]/100.)],
+                points=[(x+width*gradient_info[0][0]/100., y+height*gradient_info[0][1]/100.), 
+                (x+width*gradient_info[1][0]/100., y+height*gradient_info[1][1]/100.)],
                 colors=stop_colors,
                 positions = stop_positions)
                 )
         elif gradient_type == 'radialGradient':
             paintFill = skia.Paint(
                 Shader = skia.GradientShader.MakeRadial(
-                center=(width*gradient_info[0][0]/100., height*gradient_info[0][1]/100.),
+                center=(x+width*gradient_info[0][0]/100., y+height*gradient_info[0][1]/100.),
                 radius=max(width,height)*gradient_info[1][0]/100.,
                 colors=stop_colors,
                 positions = stop_positions)
@@ -687,9 +690,9 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
             for ii in range(len(shape_info)):
                 pts.append([x+width*shape_info[ii][0]/100.,y+height*shape_info[ii][1]/100.])
             if alias_node == 'alias':
-                _drawPolygon (canvas, width, height, pts, outline, fill, linewidth, dash=True)
+                _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, dash=True)
             else:
-                _drawPolygon (canvas, width, height, pts, outline, fill, linewidth)
+                _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth)
 
         elif shape_type == 'ellipse' or shapeIdx == 2:
             #circle

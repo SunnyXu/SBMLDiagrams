@@ -658,6 +658,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(hex_to_rgb(color_list[k][1]))
+                                spec_fill_color = []
                                 for k in range(len(gradient_list)):
                                     if gradient_list[k][0] == group.getFill():
                                         spec_fill_color = gradient_list[k][1:]
@@ -717,7 +718,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                                                 shapeIdx = 9
                                                 shape_name = "rightTriangle"
 
-                                if type(spec_fill_color[0]) == str:
+                                
+                                if spec_fill_color != []:
                                    spec_render.append([idList,spec_fill_color,color_style.getSpecBorderColor(),
                                    spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
                                 else:
@@ -1699,14 +1701,14 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
     #filename = "test_textGlyph.xml"
-    #filename = "output.xml"
+    filename = "output.xml"
 
     #filename = "putida_gb_newgenes.xml"
     #filename = "testbigmodel.xml" #sbml with errors
 
     #filename = 'test_genGlyph.xml'
     #filename = "test_gradientLinear.xml"
-    filename = "test_gradientRadial.xml"
+    #filename = "test_gradientRadial.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
