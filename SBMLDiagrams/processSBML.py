@@ -1985,13 +1985,13 @@ class load:
 
     def getReactionDash(self, id):
         """
-        Get the dash information with its certain reaction id
+        Get the dash information with its certain reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
-            dash_list: list of dash
+            dash_list: list of dash.
 
             dash: list - [] means solid; 
             [a,b] means drawing a a-point line and following a b-point gap and etc;
@@ -2086,7 +2086,7 @@ class load:
 
     def setNodePosition(self, id, position):
         """
-            Set the x,y coordinates of the node position.
+        Set the x,y coordinates of the node position.
 
         Args:  
             id: str-node id.
@@ -2099,7 +2099,7 @@ class load:
 
     def setNodeAndTextPosition(self, id, position):
         """
-            Set the x,y coordinates of the node and node text position if there are consistent.
+        Set the x,y coordinates of the node and node text position if there are consistent.
 
         Args:  
             id: str-node id.
@@ -2144,11 +2144,13 @@ class load:
             id: str-node id.
 
             shape: int/str-
-            
-            int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
+
+            int-
+                0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
                 6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
-            
-            str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
+
+            str-
+                "text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
                 "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
             
         """
@@ -2336,7 +2338,7 @@ class load:
             gradient_info: list - [[x1,y1],[x2,y2]], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],[x3,[r3,g3,b3,a3]], etc],
+            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
 
         """
@@ -2353,7 +2355,7 @@ class load:
             gradient_info: list - [[x1,y1],[r]], where x,y,r are floating numbers from 0 to 100.
             x represents the center with percentage of width and height; r represents the radius.
 
-            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],[x3,[r3,g3,b3,a3]], etc],
+            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
 
         """
@@ -2565,7 +2567,6 @@ class load:
         Set the reaction arrow head size with a certain reaction id.
 
         Args:  
-
             size: list-1*2 matrix-size of the rectangle [width, height].
         """
         self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
@@ -2985,12 +2986,12 @@ class load:
 
     def setColorStyle(self, styleName = None, newStyle = None):
         """
+        Set the color style.
 
         Args:
-            styleName: the style name
-            newStyle: the user customized style class
+            styleName: the style name.
 
-        Returns:
+            newStyle: the user customized style class.
 
         """
         if newStyle:
@@ -3000,22 +3001,28 @@ class load:
 
     def getColorStyle(self):
         """
-        Returns: the current color style
+        Get the current color style.
+
+        Returns: 
+            The current color style.
 
         """
         return self.color_style
 
     def autolayout(self, layout="spectral"):
         """
-        auto-layout the node positions using networkx lib
+        Autolayout the node positions using networkX library.
 
         Args:
-            layout: the layout name from the networkx
-            default spectral positions the nodes using the eigenvectors of the graph Laplacian.
-            spring: positions nodes using Fruchterman-Reingold force-directed algorithm
-            random: positions nodes randomly
-            circular: positions nodes on a circle
-        Returns:
+            layout: str-the layout name from the networkX.
+
+            spectral(default): positioning the nodes using the eigenvectors of the graph Laplacian.
+
+            spring: positioning nodes using Fruchterman-Reingold force-directed algorithm.
+
+            random: positioning nodes randomly.
+
+            circular: positioning nodes on a circle.
 
         """
         sbmlStr = self.export()
@@ -3092,10 +3099,8 @@ class load:
             longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
             node; 'ellipsis' will show '....' if the text is too long to show in the node
 
-            newStyle: color style class.
-
         Returns:
-            The visualization info object containing the drawing information of the plot
+            The visualization info object containing the drawing information of the plot.
         
         """
 
@@ -3113,8 +3118,6 @@ class load:
         """
         Get the top left-hand corner of the network(s) from the SBML string.
 
-        Args:  
-
         Returns:
             position: list-[position_x, position_y], top left-hand corner of the network(s).
             It is calculated by the minimum positions of compartments, nodes, centroid and handle 
@@ -3129,8 +3132,6 @@ class load:
         """
         Get the bottom right-hand corner of the network(s) from the SBML string.
 
-        Args:  
-
         Returns:
             position: list-[position_x, position_y],bottom right-hand corner of the network(s).
             It is calculated by the maximum right down corner positions of compartments and nodes, 
@@ -3144,8 +3145,6 @@ class load:
     def getNetworkSize(self):
         """
         Get the size of the network(s).
-
-        Args:  
 
         Returns:
             list-1*2 matrix-size of the rectangle [width, height].
@@ -3175,8 +3174,6 @@ class load:
         """
         Get the list of node ids.
 
-        Args:  
-
         Returns:
             id_list-list of ids.
             
@@ -3190,8 +3187,6 @@ class load:
     def getReactionIdList(self):
         """
         Get the list of reaction ids.
-
-        Args:  
 
         Returns:
             id_list-list of ids.
@@ -3207,8 +3202,6 @@ class load:
         """
         Get the list of arbitrary text content.
 
-        Args:  
-
         Returns:
             txt_content_list-list of txt_content.
             
@@ -3222,8 +3215,6 @@ class load:
     def getShapeNameList(self):
         """
         Get the list of arbitrary shape names.
-
-        Args:  
 
         Returns:
             shape_name_list-list of txt_content.

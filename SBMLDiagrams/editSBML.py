@@ -853,7 +853,7 @@ def _setNodeFillLinearGradient(df, id, gradient_info, stop_info):
         gradient_info: list - [[x1,y1],[x2,y2]], where x,y are floating numbers from 0 to 100.
         x represents the percentage of width, and y represents the percentage of height.
 
-        stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],[x3,[r3,g3,b3,a3]], etc],
+        stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
         where x is floating number from 0 to 100.
 
     """
@@ -911,7 +911,7 @@ def _setNodeFillRadialGradient(df, id, gradient_info, stop_info):
         gradient_info: list - [[x1,y1],[r]], where x,y,r are floating numbers from 0 to 100.
         x represents the center with percentage of width and height; r represents the radius.
 
-        stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],[x3,[r3,g3,b3,a3]], etc],
+        stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
         where x is floating number from 0 to 100.
 
     """

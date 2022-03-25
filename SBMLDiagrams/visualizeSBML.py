@@ -3,7 +3,6 @@
 # https://github.com/SunnyXu/SBMLDiagrams
 
 """
-Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu and Jessie Jiang
 """
 
@@ -48,7 +47,6 @@ def loadJsonColor(filename):
     return res
         
 
-
 def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
             bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",
             horizontal_offset = 15, vertical_offset = 9, text_color = (0, 0, 0, 200), savePngs = False, showImage = False,
@@ -56,43 +54,41 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
     """
 
     Args:
-        start: start point for the simulation
+        start: start point for the simulation.
 
-        end: end point for the simulation
+        end: end point for the simulation.
 
-        points: total points for the simulation
+        points: total points for the simulation.
 
-        r: tellurium loada object
+        r: tellurium loada object.
 
-        thick_changing_rate: thickness for the arrow, smaller means thinner
+        thick_changing_rate: thickness for the arrow, smaller means thinner.
 
-        sbmlStr: sbml layout information if any
+        sbmlStr: sbml layout information if any.
 
-        frame_per_second: number of frames per second of the ouput video
+        frame_per_second: number of frames per second of the ouput video.
 
-        show_digit: if show digits
+        show_digit: if show digits.
 
-        bar_dimension: width and height of the bar
+        bar_dimension: width and height of the bar.
 
-        numDigit: number of digits displayed
+        numDigit: number of digits displayed.
 
-        folderName: output folder name
+        folderName: output folder name.
 
-        outputName: ouput video name
+        outputName: ouput video name.
 
-        horizontal_offset:  horizontal_offset of the bar from the node
+        horizontal_offset:  horizontal_offset of the bar from the node.
 
-        vertical_offset: vertical offset of text from the node
+        vertical_offset: vertical offset of text from the node.
 
-        text_color: color for the text
+        text_color: color for the text.
 
-        savePngs: if save all the pngs used for video generation
+        savePngs: if save all the pngs used for video generation.
 
-        showImage: if display all the generated pngs in console
+        showImage: if display all the generated pngs in console.
 
-        user_reaction_line_color: user defined reaction line color
-
-    Returns:
+        user_reaction_line_color: user defined reaction line color.
 
     """
     if not sbmlStr:

@@ -3,6 +3,9 @@
 
 colors
 =============
+This is a table for colors in different formats as input supported by SBMLDiaram, 
+i.e. HTML name, decimal RGB and HEX string. Please refer to wiki 
+(https://en.wikipedia.org/wiki/Web_colors) for more details.
  
 .. list-table:: 
    :widths: 25 25 25
