@@ -10,8 +10,13 @@ Welcome to SBMLDiagrams's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   APIs
-   colors
+   Visualization
+   Compartment
+   Node
+   Reaction
+   ArbitraryText
+   ArbitraryShape
+   Colors
 
 ------------
 Introduction

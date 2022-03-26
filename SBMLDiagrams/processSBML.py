@@ -1463,6 +1463,15 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
 
 class load:
+    """
+    Load SBML string for further process, i.e. read, edit, visualize the SBML string or
+    export it to an updated SBML string.
+
+    Args: 
+        sbmlstr: str-the SBML string.
+
+    """
+
     def __init__(self, sbmlstr):
 
         # self.sbmlstr = sbmlstr
