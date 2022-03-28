@@ -6,30 +6,30 @@ Compartment
 
     (1) Read the compartment information.
 
-.. autofunction:: SBMLDiagrams.processSBML.load.getCompartmentIdList
+.. autofunction:: SBMLDiagrams.load.getCompartmentIdList
  
-.. autofunction:: SBMLDiagrams.processSBML.load.getCompartmentPosition
+.. autofunction:: SBMLDiagrams.load.getCompartmentPosition
 
-.. autofunction:: SBMLDiagrams.processSBML.load.getCompartmentSize
+.. autofunction:: SBMLDiagrams.load.getCompartmentSize
 
-.. autofunction:: SBMLDiagrams.processSBML.load.getCompartmentFillColor
+.. autofunction:: SBMLDiagrams.load.getCompartmentFillColor
 
-.. autofunction:: SBMLDiagrams.processSBML.load.getCompartmentBorderColor
+.. autofunction:: SBMLDiagrams.load.getCompartmentBorderColor
 
-.. autofunction:: SBMLDiagrams.processSBML.load.getCompartmentBorderWidth
+.. autofunction:: SBMLDiagrams.load.getCompartmentBorderWidth
 
 
     (2) Edit the compartment information.
 
-.. autofunction:: SBMLDiagrams.processSBML.load.setCompartmentPosition
+.. autofunction:: SBMLDiagrams.load.setCompartmentPosition
 
-.. autofunction:: SBMLDiagrams.processSBML.load.setCompartmentSize
+.. autofunction:: SBMLDiagrams.load.setCompartmentSize
 
-.. autofunction:: SBMLDiagrams.processSBML.load.setCompartmentFillColor
+.. autofunction:: SBMLDiagrams.load.setCompartmentFillColor
 
-.. autofunction:: SBMLDiagrams.processSBML.load.setCompartmentBorderColor
+.. autofunction:: SBMLDiagrams.load.setCompartmentBorderColor
 
-.. autofunction:: SBMLDiagrams.processSBML.load.setCompartmentBorderWidth
+.. autofunction:: SBMLDiagrams.load.setCompartmentBorderWidth
 
 
 

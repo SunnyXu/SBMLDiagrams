@@ -4,8 +4,25 @@
 ArbitraryShape
 =================
 
+    (1) Read the information of arbitrary shape.
+
+.. autofunction:: SBMLDiagrams.processSBML.load.getShapeNameList
  
 .. autofunction:: SBMLDiagrams.processSBML.load.getShapePosition
+
+.. autofunction:: SBMLDiagrams.processSBML.load.getShapeSize
+
+    (2) Add or remove an arbitrary shape.
+
+.. autofunction:: SBMLDiagrams.processSBML.load.addRectangle
+
+.. autofunction:: SBMLDiagrams.processSBML.load.addEllipse
+
+.. autofunction:: SBMLDiagrams.processSBML.load.addPolygon
+
+.. autofunction:: SBMLDiagrams.processSBML.load.removeShape
+
+
 
 
 

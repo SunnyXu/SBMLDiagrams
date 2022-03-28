@@ -10,7 +10,7 @@ Welcome to SBMLDiagrams's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   Visualization
+   Network
    Compartment
    Node
    Reaction
