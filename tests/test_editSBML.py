@@ -23,9 +23,14 @@ class TestEditSBML(unittest.TestCase):
     f_test_text = open(TEST_PATH_test_text, 'r')
     sbmlStr_test_text = f_test_text.read()
     f_test_text.close()
+    TEST_PATH_test_shape = os.path.join(TEST_FOLDER, "test_genGlyph.xml")
+    f_test_shape = open(TEST_PATH_test_shape, 'r')
+    sbmlStr_test_shape = f_test_shape.read()
+    f_test_shape.close()
 
     self.df = processSBML._SBMLToDF(sbmlStr_test)
     self.df_text = processSBML._SBMLToDF(sbmlStr_test_text)
+    self.df_shape = processSBML._SBMLToDF(sbmlStr_test_shape)
 
   def testSetCompartment(self):
     # setCompartment one by one
@@ -84,6 +89,9 @@ class TestEditSBML(unittest.TestCase):
     txt_line_width = 1.
     txt_font_size = 12.
     opacity = 1.
+    gradient_linear_info = [[0.0, 0.0], [100.0, 100.0]]
+    gradient_radial_info = [[50.0, 50.0], [50.]]
+    stop_info = [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]]
 
     df_update = editSBML._setFloatingBoundaryNode(self.df, "x_1", floating_node)
     df_update = editSBML._setNodePosition(df_update, "x_1", position)
@@ -95,6 +103,8 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setNodeTextPosition(df_update, "x_1", txt_position)
     df_update = editSBML._setNodeTextSize(df_update, "x_1", txt_size)
     df_update = editSBML._setNodeFillColor(df_update, "x_1", fill_color, opacity = opacity)
+    df_update = editSBML._setNodeFillLinearGradient(df_update, "x_0", gradient_linear_info, stop_info)
+    df_update = editSBML._setNodeFillRadialGradient(df_update, "x_0", gradient_radial_info, stop_info)
     df_update = editSBML._setNodeBorderColor(df_update, "x_1", border_color, opacity = opacity)
     df_update = editSBML._setNodeBorderWidth(df_update, "x_1", border_width)
     df_update = editSBML._setNodeTextFontColor(df_update, "x_1", txt_font_color, opacity = opacity)
@@ -112,6 +122,8 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[1].iloc[0]["txt_size"] == txt_size)
     self.assertTrue(df_update[1].iloc[0]["fill_color"][0:-1] == fill_color)
     self.assertTrue(df_update[1].iloc[0]["fill_color"][3] == int(opacity*255/1.))
+    self.assertTrue(df_update[1].iloc[1]["fill_color"] == 
+    ['radialGradient', [[50.0, 50.0], [50.0]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]]])
     self.assertTrue(df_update[1].iloc[0]["border_color"][0:-1] == border_color)
     self.assertTrue(df_update[1].iloc[0]["border_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[1].iloc[0]["border_width"] == border_width)
@@ -150,6 +162,10 @@ class TestEditSBML(unittest.TestCase):
       editSBML._setNodeTextSize(df_update, "XX", txt_size)
     with self.assertRaises(Exception):
       editSBML._setNodeFillColor(df_update, "XX", fill_color, opacity = opacity)
+    with self.assertRaises(Exception):
+      editSBML._setNodeFillLinearGradient(df_update, "XX", gradient_linear_info, stop_info)
+    with self.assertRaises(Exception):
+      editSBML._setNodeFillRadialGradient(df_update, "XX", gradient_radial_info, stop_info)
     with self.assertRaises(Exception):
       editSBML._setNodeBorderColor(df_update, "XX", border_color, opacity = opacity)
     with self.assertRaises(Exception):
@@ -317,6 +333,60 @@ class TestEditSBML(unittest.TestCase):
 
     with self.assertRaises(Exception):
       editSBML._removeText(df_text_update, "text")
+
+  def testArbitraryShape1(self):
+    # set arbitrary shape one by one
+    if IGNORE_TEST:
+      return
+
+    shape_name = "self_rectangle"
+    position = [400,200]
+    size = [100,100]
+    fill_color = "red" 
+    fill_opacity = 0.5
+    border_color = "blue"
+    border_opacity = 1.
+    border_width = 3.
+
+    df_shape_update = editSBML._addRectangle(self.df_shape, shape_name, position, size,
+    fill_color, fill_opacity, border_color, border_opacity, border_width)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SHAPENAME] == shape_name)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.POSITION] == position)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SIZE] == size)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.BORDERWIDTH] == border_width)
+
+    df_shape_update = editSBML._removeShape(df_shape_update, "shape_name")
+    self.assertTrue(len(df_shape_update[4]) == 1)
+
+    with self.assertRaises(Exception):
+      editSBML._removeShape(df_shape_update, "shape")
+
+  def testArbitraryShape2(self):
+    # set arbitrary shape one by one
+    if IGNORE_TEST:
+      return
+
+    position = [400,200]
+    size = [100,100]
+
+    df_shape_update = editSBML._addEllipse(self.df_shape, 'self_ellipse', position, size)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SHAPETYPE] == 'ellipse')
+
+  
+  def testArbitraryShape3(self):
+    # set arbitrary shape one by one
+    if IGNORE_TEST:
+      return
+
+    position = [400,200]
+    size = [100,100]
+    shape_info = [[0,0],[100,0],[0,100]]
+
+    df_shape_update = editSBML._addPolygon(self.df_shape, 'self_polygon', shape_info, 
+    position, size)
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SHAPETYPE] == 'polygon')
+    self.assertTrue(df_shape_update[4].iloc[1][processSBML.SHAPEINFO] == shape_info)
+
 
   # def testText(self):
   #   # set text one by one
