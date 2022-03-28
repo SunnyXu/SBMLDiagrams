@@ -4,7 +4,9 @@
 Compartment
 =============
 
-    (1) Read the compartment information.
+----------------------------------
+Read the compartment information.
+----------------------------------
 
 .. autofunction:: SBMLDiagrams.load.getCompartmentIdList
  
@@ -18,8 +20,9 @@ Compartment
 
 .. autofunction:: SBMLDiagrams.load.getCompartmentBorderWidth
 
-
-    (2) Edit the compartment information.
+----------------------------------
+Edit the compartment information.
+----------------------------------
 
 .. autofunction:: SBMLDiagrams.load.setCompartmentPosition
 

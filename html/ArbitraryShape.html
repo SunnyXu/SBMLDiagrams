@@ -89,7 +89,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Node.html">Node</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Reaction.html">Reaction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ArbitraryText.html">ArbitraryText</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ArbitraryShape</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ArbitraryShape</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#read-the-information-of-arbitrary-shape">Read the information of arbitrary shape.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-or-remove-an-arbitrary-shape">Add or remove an arbitrary shape.</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="Colors.html">Colors</a></li>
 </ul>
 
@@ -158,11 +162,8 @@
             
   <div class="section" id="arbitraryshape">
 <span id="id1"></span><h1>ArbitraryShape<a class="headerlink" href="#arbitraryshape" title="Permalink to this headline">¶</a></h1>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>Read the information of arbitrary shape.</p></li>
-</ol>
-</div></blockquote>
+<div class="section" id="read-the-information-of-arbitrary-shape">
+<h2>Read the information of arbitrary shape.<a class="headerlink" href="#read-the-information-of-arbitrary-shape" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="SBMLDiagrams.processSBML.load.getShapeNameList">
 <code class="sig-prename descclassname">SBMLDiagrams.processSBML.load.</code><code class="sig-name descname">getShapeNameList</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.getShapeNameList" title="Permalink to this definition">¶</a></dt>
@@ -198,11 +199,11 @@
 <p>shape_size: list-1*2 matrix-size of the rectangle [width, height].</p>
 </dd>
 </dl>
-<ol class="arabic simple" start="2">
-<li><p>Add or remove an arbitrary shape.</p></li>
-</ol>
 </dd></dl>
 
+</div>
+<div class="section" id="add-or-remove-an-arbitrary-shape">
+<h2>Add or remove an arbitrary shape.<a class="headerlink" href="#add-or-remove-an-arbitrary-shape" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
 <dt id="SBMLDiagrams.processSBML.load.addRectangle">
 <code class="sig-prename descclassname">SBMLDiagrams.processSBML.load.</code><code class="sig-name descname">addRectangle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">self</span></em>, <em class="sig-param"><span class="n">shape_name</span></em>, <em class="sig-param"><span class="n">position</span></em>, <em class="sig-param"><span class="n">size</span></em>, <em class="sig-param"><span class="n">fill_color</span><span class="o">=</span><span class="default_value">[255, 255, 255]</span></em>, <em class="sig-param"><span class="n">fill_opacity</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">border_color</span><span class="o">=</span><span class="default_value">[0, 0, 0]</span></em>, <em class="sig-param"><span class="n">border_opacity</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">border_width</span><span class="o">=</span><span class="default_value">2.0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.processSBML.load.addRectangle" title="Permalink to this definition">¶</a></dt>
@@ -269,6 +270,7 @@ corner of the node text.</p>
 </dl>
 </dd></dl>
 
+</div>
 </div>
 
 

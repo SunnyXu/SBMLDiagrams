@@ -3,8 +3,9 @@
 
 Reaction
 =============
-
-    (1) Read the reaction information. 
+-------------------------------
+Read the reaction information. 
+-------------------------------
 
 .. autofunction:: SBMLDiagrams.load.getReactionIdList
 
@@ -20,8 +21,9 @@ Reaction
 
 .. autofunction:: SBMLDiagrams.load.getReactionDash
 
-
-    (2) Edit the reaction information.
+--------------------------------
+Edit the reaction information.
+--------------------------------
 
 .. autofunction:: SBMLDiagrams.load.setReactionCenterPosition
 

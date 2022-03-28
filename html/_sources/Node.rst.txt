@@ -4,7 +4,9 @@
 Node
 =============
 
-    (1) Read the node information.
+----------------------------
+Read the node information.
+----------------------------
 
 .. autofunction:: SBMLDiagrams.load.getNodeIdList
 
@@ -32,7 +34,9 @@ Node
 
 .. autofunction:: SBMLDiagrams.load.getNodeTextFontSize
 
-    (2) Edit the node information.
+----------------------------
+Edit the node information.
+----------------------------
 
 .. autofunction:: SBMLDiagrams.load.setFloatingBoundaryNode
 
