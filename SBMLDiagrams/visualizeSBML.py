@@ -29,6 +29,14 @@ import json
 
 
 def loadJsonColor(filename):
+    """
+
+    Args:
+        filename: input json file name
+
+    Returns: dictionary with key the style name and value its corresponding Style object
+
+    """
     file = open(filename)
     data = json.load(file)
     res = {}
