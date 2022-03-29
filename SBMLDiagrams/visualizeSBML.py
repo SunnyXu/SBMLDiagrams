@@ -30,11 +30,13 @@ import json
 
 def loadJsonColor(filename):
     """
+    Load the color style information from a JSON file.
 
     Args:
-        filename: input json file name
+        filename: str-input json file name.
 
-    Returns: dictionary with key the style name and value its corresponding Style object
+    Returns: 
+        res: dictionary with the key of style name and the value with its corresponding style object.
 
     """
     file = open(filename)
@@ -60,6 +62,7 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
             horizontal_offset = 15, vertical_offset = 9, text_color = (0, 0, 0, 200), savePngs = False, showImage = False,
             user_reaction_line_color = None):
     """
+    Animate to an mp4 file.
 
     Args:
         start: start point for the simulation.
