@@ -273,6 +273,45 @@ excluding the compartment with the id of _compartment_default_.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt id="SBMLDiagrams.animate">
+<code class="sig-prename descclassname">SBMLDiagrams.</code><code class="sig-name descname">animate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">start</span></em>, <em class="sig-param"><span class="n">end</span></em>, <em class="sig-param"><span class="n">points</span></em>, <em class="sig-param"><span class="n">r</span></em>, <em class="sig-param"><span class="n">thick_changing_rate</span></em>, <em class="sig-param"><span class="n">sbmlStr</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">frame_per_second</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">show_digit</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">bar_dimension</span><span class="o">=</span><span class="default_value">10, 50</span></em>, <em class="sig-param"><span class="n">numDigit</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">folderName</span><span class="o">=</span><span class="default_value">'animation'</span></em>, <em class="sig-param"><span class="n">outputName</span><span class="o">=</span><span class="default_value">'output'</span></em>, <em class="sig-param"><span class="n">horizontal_offset</span><span class="o">=</span><span class="default_value">15</span></em>, <em class="sig-param"><span class="n">vertical_offset</span><span class="o">=</span><span class="default_value">9</span></em>, <em class="sig-param"><span class="n">text_color</span><span class="o">=</span><span class="default_value">0, 0, 0, 200</span></em>, <em class="sig-param"><span class="n">savePngs</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">showImage</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">user_reaction_line_color</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.animate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Animate to an mp4 file.</p>
+<dl>
+<dt>Args:</dt><dd><p>start: start point for the simulation.</p>
+<p>end: end point for the simulation.</p>
+<p>points: total points for the simulation.</p>
+<p>r: tellurium loada object.</p>
+<p>thick_changing_rate: thickness for the arrow, smaller means thinner.</p>
+<p>sbmlStr: sbml layout information if any.</p>
+<p>frame_per_second: number of frames per second of the ouput video.</p>
+<p>show_digit: if show digits.</p>
+<p>bar_dimension: width and height of the bar.</p>
+<p>numDigit: number of digits displayed.</p>
+<p>folderName: output folder name.</p>
+<p>outputName: ouput video name.</p>
+<p>horizontal_offset:  horizontal_offset of the bar from the node.</p>
+<p>vertical_offset: vertical offset of text from the node.</p>
+<p>text_color: color for the text.</p>
+<p>savePngs: if save all the pngs used for video generation.</p>
+<p>showImage: if display all the generated pngs in console.</p>
+<p>user_reaction_line_color: user defined reaction line color.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="SBMLDiagrams.loadJsonColor">
+<code class="sig-prename descclassname">SBMLDiagrams.</code><code class="sig-name descname">loadJsonColor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#SBMLDiagrams.loadJsonColor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the color style information from a JSON file.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>filename: str-input json file name.</p>
+</dd>
+<dt>Returns: </dt><dd><p>res: dictionary with the key of style name and the value with its corresponding style object.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 
