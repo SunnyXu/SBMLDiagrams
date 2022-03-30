@@ -36,6 +36,7 @@ def loadJsonColor(filename):
         filename: input json file name
 
     Returns: dictionary with key the style name and value its corresponding Style object
+    Note that the color style named default couldn't be changed
 
     """
     file = open(filename)
