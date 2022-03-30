@@ -16,3 +16,6 @@ df.draw(output_fileName="load_json_style/simplicity-color")
 
 df.setColorStyle(newStyle = colors["default"])
 df.draw(output_fileName="load_json_style/default-color")
+
+df.setColorStyle(newStyle = colors["skyblue"])
+df.draw(output_fileName="load_json_style/skyblue-color")
