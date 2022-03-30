@@ -28,12 +28,12 @@ from IPython.display import Video
 import json
 
 
-def loadJsonColor(filename):
+def loadColorStyle(filename):
     """
     Load the color style information from a JSON file.
 
     Args:
-        filename: str-input json file name.
+        filename: str-input json file name. Refer to the example in "Tutorial".
 
     Returns: 
         res: dictionary with the key of style name and the value with its corresponding style object.
