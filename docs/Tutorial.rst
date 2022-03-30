@@ -89,6 +89,7 @@ Tutorial
    df.setColorStyle(newStyle = colors["default"])
    df.draw(output_fileName="load_json_style/default-color")
 
+
 The file style.json:
 
 .. code-block:: python
