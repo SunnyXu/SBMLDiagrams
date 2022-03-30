@@ -31,7 +31,7 @@ import json
 def loadColorStyle(filename):
     """
     Load the color style information from a JSON file.
-
+    Note that the color style named default couldn't be changed.
     Args:
         filename: str-input json file name. Refer to the example in "Tutorial".
 
