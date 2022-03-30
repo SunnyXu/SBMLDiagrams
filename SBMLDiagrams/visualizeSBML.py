@@ -3,7 +3,6 @@
 # https://github.com/SunnyXu/SBMLDiagrams
 
 """
-Created on Mon Aug 23 13:25:34 2021
 @author: Jin Xu and Jessie Jiang
 """
 
@@ -29,14 +28,16 @@ from IPython.display import Video
 import json
 
 
-def loadJsonColor(filename):
+def loadColorStyle(filename):
     """
+    Load the color style information from a JSON file.
+    Note that the color style named default couldn't be changed
 
     Args:
-        filename: input json file name
+        filename: str-input json file name. Refer to the example in "Tutorial".
 
-    Returns: dictionary with key the style name and value its corresponding Style object
-    Note that the color style named default couldn't be changed
+    Returns:
+        res: dictionary with the key of style name and the value with its corresponding style object.
 
     """
     file = open(filename)
@@ -57,51 +58,49 @@ def loadJsonColor(filename):
     return res
         
 
-
 def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_per_second = 10, show_digit = True,
             bar_dimension = (10,50), numDigit = 4, folderName = 'animation', outputName="output",
             horizontal_offset = 15, vertical_offset = 9, text_color = (0, 0, 0, 200), savePngs = False, showImage = False,
             user_reaction_line_color = None):
     """
+    Animate to an mp4 file.
 
     Args:
-        start: start point for the simulation
+        start: start point for the simulation.
 
-        end: end point for the simulation
+        end: end point for the simulation.
 
-        points: total points for the simulation
+        points: total points for the simulation.
 
-        r: tellurium loada object
+        r: tellurium loada object.
 
-        thick_changing_rate: thickness for the arrow, smaller means thinner
+        thick_changing_rate: thickness for the arrow, smaller means thinner.
 
-        sbmlStr: sbml layout information if any
+        sbmlStr: sbml layout information if any.
 
-        frame_per_second: number of frames per second of the ouput video
+        frame_per_second: number of frames per second of the ouput video.
 
-        show_digit: if show digits
+        show_digit: if show digits.
 
-        bar_dimension: width and height of the bar
+        bar_dimension: width and height of the bar.
 
-        numDigit: number of digits displayed
+        numDigit: number of digits displayed.
 
-        folderName: output folder name
+        folderName: output folder name.
 
-        outputName: ouput video name
+        outputName: ouput video name.
 
-        horizontal_offset:  horizontal_offset of the bar from the node
+        horizontal_offset:  horizontal_offset of the bar from the node.
 
-        vertical_offset: vertical offset of text from the node
+        vertical_offset: vertical offset of text from the node.
 
-        text_color: color for the text
+        text_color: color for the text.
 
-        savePngs: if save all the pngs used for video generation
+        savePngs: if save all the pngs used for video generation.
 
-        showImage: if display all the generated pngs in console
+        showImage: if display all the generated pngs in console.
 
-        user_reaction_line_color: user defined reaction line color
-
-    Returns:
+        user_reaction_line_color: user defined reaction line color.
 
     """
     if not sbmlStr:
@@ -226,10 +225,10 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
 
     Video(outputName + ".mp4")
 
-def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat = 'PNG', \
+def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
-    showBezierHandles = False, showReactionIds = False, newStyle = styleSBML.Style(),\
-    showImage = True, save = True, showReversible = False, longText = 'auto-font'): 
+    showBezierHandles = False, showReactionIds = False, showReversible = False, longText = 'auto-font',\
+    newStyle = styleSBML.Style(), drawArrow = True, showImage = True, save = True):
     #df_text = DataFrame(columns = processSBML.COLUMN_NAME_df_text), #dataframe-arbitrary text
 
     """
@@ -237,8 +236,6 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
     Args:  
         sbmlStr: str-the string of the input sbml file.
-
-        drawArrow: bool-draw arrow or not
 
         setImageSize: list-1*2 matrix-size of the rectangle [width, height].
 
@@ -261,16 +258,18 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
 
         showReactionIds: bool-show the reaction ids (True) or not (False as default).
 
-        newStyle: color style class.
-
-        showImage: whether to display the image inside console.
-
-        save: whether to save the png.
-
         showReversible: bool-show reversible reactions or not.
 
         longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
         node; 'ellipsis' will show '....' if the text is too long to show in the node
+
+        newStyle: color style class.
+
+        drawArrow: bool-draw arrow or not
+
+        showImage: whether to display the image inside console.
+
+        save: whether to save the png.
 
     Returns:
         The visualization info object containing the drawing information of the plot
@@ -315,25 +314,33 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
         allNodes_dim_dict = defaultdict(list)
         floatingNodes_pos_dict = defaultdict(list)
         floatingNodes_dim_dict = defaultdict(list)
-        shapeIdx = 1
-        shape_name = ''
-        shape_type = ''
-        shape_info = []
         textGlyph_id_list = []
         text_content_list = []
         text_position_list = []
         text_dimension_list = []
+        gen_id_list = []
+        gen_position_list = []
+        gen_dimension_list = []
 
         #set the default values without render info:
         comp_border_width = 2.0
         spec_border_width = 2.0
+        shapeIdx = 1
+        shape_name = ''
+        shape_type = ''
+        shape_info = []
         reaction_line_width = 3.0
         reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5]
         reaction_dash = []
         text_content = ''
         text_line_color = [0, 0, 0, 255]
         text_line_width = 1.
-        text_font_size = 12.    
+        text_font_size = 12.
+        gen_fill_color = [255, 255, 255, 255]
+        gen_border_color = [0, 0, 0, 255]
+        gen_border_width = 2.
+        gen_shape_type = ''
+        gen_shape_info = []
         edges = []
         id_to_name = defaultdict(lambda:"")
         name_to_id = defaultdict(lambda:"")
@@ -357,7 +364,8 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     numCompGlyphs = layout.getNumCompartmentGlyphs()
                     numSpecGlyphs = layout.getNumSpeciesGlyphs()
                     numReactionGlyphs = layout.getNumReactionGlyphs()
-                    numTextGlyphs = layout.getNumTextGlyphs() 
+                    numTextGlyphs = layout.getNumTextGlyphs()
+                    numGenGlyphs = layout.getNumGeneralGlyphs()
                     for i in range(numCompGlyphs):
                         compGlyph = layout.getCompartmentGlyph(i)
                         temp_id = compGlyph.getCompartmentId()
@@ -557,14 +565,33 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 text_position_list.append([])
                                 text_dimension_list.append([])
 
+                    #arbitrary shape
+                    for i in range(numGenGlyphs):
+                        genGlyph = layout.getGeneralGlyph(i)
+                        temp_id = genGlyph.getId()
+                        gen_id_list.append(temp_id)
+                        try:
+                            shape_boundingbox = genGlyph.getBoundingBox()
+                            shape_pos_x = shape_boundingbox.getX()
+                            shape_pos_y = shape_boundingbox.getY()
+                            shape_dim_w = shape_boundingbox.getWidth()
+                            shape_dim_h = shape_boundingbox.getHeight()
+                            gen_position_list.append([shape_pos_x,shape_pos_y])
+                            gen_dimension_list.append([shape_dim_w,shape_dim_h])
+                        except:
+                            gen_position_list.append([])
+                            gen_dimension_list.append([])
+
                     rPlugin = layout.getPlugin("render")
                     if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
                         info = rPlugin.getRenderInformation(0)
                         color_list = []
+                        gradient_list = []
                         comp_render = []
                         spec_render = []
                         rxn_render = []
                         text_render = []
+                        gen_render = []
                         arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                         id_arrowHeadSize = []
                         for j in range(0, info.getNumLineEndings()):
@@ -590,6 +617,30 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                         for  j in range ( 0, info.getNumColorDefinitions()):
                             color = info.getColorDefinition(j)
                             color_list.append([color.getId(),color.createValueString()])
+                        #print(info.getNumGradientDefinitions())
+                        for j in range(0, info.getNumGradientDefinitions()):
+                            gradient = info.getGradientDefinition(j)
+                            grad_type = gradient.getElementName()
+                            if grad_type == "linearGradient":
+                                id = gradient.getId()
+                                grad_start = [gradient.getXPoint1().getRelativeValue(),gradient.getYPoint1().getRelativeValue()]
+                                grad_end = [gradient.getXPoint2().getRelativeValue(),gradient.getYPoint2().getRelativeValue()]
+                                grad_info = [grad_start,grad_end]
+                            elif grad_type == "radialGradient":
+                                id = gradient.getId()
+                                grad_center = [gradient.getCenterX().getRelativeValue(),gradient.getCenterY().getRelativeValue()]
+                                grad_radius = [gradient.getRadius().getRelativeValue()]
+                                grad_info = [grad_center,grad_radius]
+                            stop_info = []
+                            for k in range(0,gradient.getNumGradientStops()):
+                                stop = gradient.getGradientStop(k)
+                                offset = stop.getOffset().getRelativeValue()
+                                stop_color_name = stop.getStopColor()
+                                for kk in range(len(color_list)):
+                                    if color_list[kk][0] == stop_color_name:
+                                        stop_color = hex_to_rgb(color_list[kk][1])
+                                stop_info.append([offset,stop_color])
+                            gradient_list.append([id,grad_type,grad_info,stop_info])
 
                         for j in range (0, info.getNumStyles()):
                             style = info.getStyle(j)
@@ -615,6 +666,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(hex_to_rgb(color_list[k][1]))
+                                spec_fill_color = []
+                                for k in range(len(gradient_list)):
+                                    if gradient_list[k][0] == group.getFill():
+                                        spec_fill_color = gradient_list[k][1:]
+
                                 spec_border_width = group.getStrokeWidth()
                                 #name_list = []
                                 shape_type = ''
@@ -671,9 +727,14 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                 shape_name = "rightTriangle"
 
 
-                                spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
-                                spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
+                                if spec_fill_color != []:
+                                   spec_render.append([idList,spec_fill_color,color_style.getSpecBorderColor(),
+                                   spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
+                                else:
+                                    spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
+                                    spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
                                 
+
                             elif 'REACTIONGLYPH' in typeList:
                                 if group.isSetEndHead():
                                     temp_id = group.getEndHead()
@@ -701,7 +762,28 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 text_font_size = float(group.getFontSize().getCoordinate())
                                 text_render.append([idList,color_style.getTextLineColor(),
 								text_line_width, text_font_size])
-        #try: 
+
+                            elif 'GENERALGLYPH' in typeList:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == group.getFill():
+                                        gen_fill_color = hex_to_rgb(color_list[k][1])
+                                    if color_list[k][0] == group.getStroke():
+                                        gen_border_color = hex_to_rgb(color_list[k][1])
+                                gen_border_width = group.getStrokeWidth()
+                                gen_shape_type = ''
+                                gen_shape_info = []
+                                element = group.getElement(0)
+                                if element != None:
+                                    gen_shape_type = element.getElementName()
+                                    if gen_shape_type == "polygon":
+                                        NumRenderpoints = element.getListOfElements().getNumRenderPoints()
+                                        for num in range(NumRenderpoints):
+                                            point_x = element.getListOfElements().get(num).getX().getRelativeValue()
+                                            point_y = element.getListOfElements().get(num).getY().getRelativeValue()
+                                            gen_shape_info.append([point_x,point_y])
+                                gen_render.append([idList, gen_fill_color, gen_border_color,
+                                gen_border_width, gen_shape_type, gen_shape_info])
+        #try:
             model = simplesbml.loadSBMLStr(sbmlStr)
             numFloatingNodes  = model.getNumFloatingSpecies()
             FloatingNodes_ids = model.getListOfFloatingSpecies()
@@ -716,8 +798,7 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
             for i in range(numComps):
                 comp_node_list[i] = []
             #if there is layout info:
-            if len(spec_id_list) != 0 or len(textGlyph_id_list) != 0:
-            #if len(spec_id_list) != 0:
+            if len(spec_id_list) != 0 or len(textGlyph_id_list) != 0 or len(gen_id_list) != 0:
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
                     vol= model.getCompartmentVolume(i)
@@ -904,13 +985,17 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                     (spec_text_position_list[i][1]-topLeftCorner[1])*scale]
                     text_dimension = [spec_text_dimension_list[i][0]*scale,
                     spec_text_dimension_list[i][1]*scale]
+                    gradient_fill_color = []
                     for j in range(numFloatingNodes):
                         if temp_id == FloatingNodes_ids[j]:
                             if temp_id not in id_list:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style.getStyleName():
-                                            color_style.setSpecFillColor(spec_render[k][1])
+                                        if type(spec_render[k][1][0]) == str:
+                                            gradient_fill_color = spec_render[k][1]
+                                        else:
+                                            if not color_style.getStyleName():
+                                                color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
@@ -928,10 +1013,16 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 floatingNodes_dim_dict[temp_id] = dimension
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
-                                drawNetwork.addNode(canvas, 'floating', '', position, dimension,
-                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
-                                                    complex_shape = complexShape)
+                                if gradient_fill_color == []:
+                                    drawNetwork.addNode(canvas, 'floating', '', position, dimension,
+                                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape = complexShape)
+                                else:
+                                    drawNetwork.addNode(canvas, 'floating', '', position, dimension,
+                                                        color_style.getSpecBorderColor(), gradient_fill_color,
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, 
@@ -940,8 +1031,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style.getStyleName():
-                                            color_style.setSpecFillColor(spec_render[k][1])
+                                        if type(spec_render[k][1][0]) == str:
+                                            gradient_fill_color = spec_render[k][1]
+                                        else:
+                                            if not color_style.getStyleName():
+                                                color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
@@ -959,10 +1053,16 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                 floatingNodes_dim_dict[temp_id] = dimension
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
-                                drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
-                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
-                                                    complex_shape=complexShape)
+                                if gradient_fill_color == []:
+                                    drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
+                                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
+                                else:
+                                    drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
+                                                        color_style.getSpecBorderColor(), gradient_fill_color,
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
 													fontSize = text_font_size*scale, 
@@ -973,8 +1073,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             if temp_id not in id_list:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style.getStyleName():
-                                            color_style.setSpecFillColor(spec_render[k][1])
+                                        if type(spec_render[k][1][0]) == str:
+                                            gradient_fill_color = spec_render[k][1]
+                                        else:
+                                            if not color_style.getStyleName():
+                                                color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
@@ -988,10 +1091,16 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
-                                drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
-                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
-                                                    complex_shape=complexShape)
+                                if gradient_fill_color == []:
+                                    drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
+                                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
+                                else:
+                                    drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
+                                                        color_style.getSpecBorderColor(), gradient_fill_color,
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
@@ -1002,8 +1111,11 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                             else:
                                 for k in range(len(spec_render)):
                                     if temp_id == spec_render[k][0]:
-                                        if not color_style.getStyleName():
-                                            color_style.setSpecFillColor(spec_render[k][1])
+                                        if type(spec_render[k][1][0]) == str:
+                                            gradient_fill_color = spec_render[k][1]
+                                        else:
+                                            if not color_style.getStyleName():
+                                                color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
                                         spec_border_width = spec_render[k][3]
@@ -1017,8 +1129,14 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
-                                drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
-                                                    color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                if gradient_fill_color == []:
+                                    drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
+                                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
+                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        complex_shape=complexShape)
+                                else:
+                                    drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
+                                                    color_style.getSpecBorderColor(), gradient_fill_color,
                                                     spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                     complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
@@ -1029,28 +1147,63 @@ def _draw(sbmlStr, drawArrow = True, setImageSize = '', scale = 1., fileFormat =
                                                     longText = longText)
                                 id_list.append(temp_id)
 
+                #arbitrary shape
+                if len(gen_id_list) > 0:
+                    for i in range(len(gen_id_list)):
+                        genGlyph = layout.getGeneralGlyph(gen_id_list[i])
+                        genGlyph_id = gen_id_list[i]
+                        shape_position = gen_position_list[i]
+                        shape_dimension = gen_dimension_list[i]
+                        for k in range(len(gen_render)):
+                            if genGlyph_id == gen_render[k][0]:
+                                shape_fill_color = gen_render[k][1]
+                                shape_border_color = gen_render[k][2]
+                                shape_border_width = gen_render[k][3]
+                                shape_type = gen_render[k][4]
+                                shape_info = gen_render[k][5]
+                        shape_position = [(shape_position[0]-topLeftCorner[0])*scale,
+                        (shape_position[1]-topLeftCorner[1])*scale]
+                        shape_dimension = [shape_dimension[0]*scale,shape_dimension[1]*scale]
+                        shape_border_width = shape_border_width*scale
+
+                        [x, y] = shape_position
+                        [width, height] = shape_dimension
+                        fill = skia.Color(shape_fill_color[0], shape_fill_color[1],
+                        shape_fill_color[2], shape_fill_color[3])
+                        outline = skia.Color(shape_border_color[0], shape_border_color[1],
+                        shape_border_color[2], shape_border_color[3])
+                        linewidth = shape_border_width
+                        if shape_type == 'rectangle':
+                            drawNetwork._drawRoundedRectangle(canvas, x, y, width, height, outline, fill, linewidth)
+                        elif shape_type == 'ellipse':
+                            drawNetwork._drawEllipse (canvas, x, y, width, height, outline, fill, linewidth)
+                        elif shape_type == 'polygon':
+                            pts = []
+                            for ii in range(len(shape_info)):
+                                pts.append([x+width*shape_info[ii][0]/100.,y+height*shape_info[ii][1]/100.])
+                            drawNetwork._drawPolygon (canvas, pts, outline, fill, linewidth)
+
                 #arbitrary text
                 for i in range(len(textGlyph_id_list)):
                     textGlyph = layout.getTextGlyph(textGlyph_id_list[i])
-                    if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
-                        #if there is no original text id set
-                        textGlyph_id = textGlyph_id_list[i]
-                        text_content = text_content_list[i]
-                        text_position = text_position_list[i]
-                        text_dimension = text_dimension_list[i]
-                        for k in range(len(text_render)):
-                            if text_content == text_render[k][0]:
-                                text_line_color = text_render[k][1]
-                                text_line_width = text_render[k][2]
-                                text_font_size = text_render[k][3]
+                    #if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                    textGlyph_id = textGlyph_id_list[i]
+                    text_content = text_content_list[i]
+                    text_position = text_position_list[i]
+                    text_dimension = text_dimension_list[i]
+                    for k in range(len(text_render)):
+                        if text_content == text_render[k][0]:
+                            text_line_color = text_render[k][1]
+                            text_line_width = text_render[k][2]
+                            text_font_size = text_render[k][3]
 
-                        text_position = [(text_position[0]-topLeftCorner[0])*scale,
-                        (text_position[1]-topLeftCorner[1])*scale]
-                        text_dimension = [text_dimension[0]*scale,text_dimension[1]*scale]
-                        text_line_width = text_line_width*scale
-                        text_font_size = text_font_size*scale 
-                        drawNetwork.addText(canvas, text_content, text_position, text_dimension,
-                        text_line_color, text_line_width, text_font_size)  
+                    text_position = [(text_position[0]-topLeftCorner[0])*scale,
+                    (text_position[1]-topLeftCorner[1])*scale]
+                    text_dimension = [text_dimension[0]*scale,text_dimension[1]*scale]
+                    text_line_width = text_line_width*scale
+                    text_font_size = text_font_size*scale
+                    drawNetwork.addText(canvas, text_content, text_position, text_dimension,
+                    text_line_color, text_line_width, text_font_size)
 
 
             else: # there is no layout information, assign position randomly and size as default
@@ -1262,7 +1415,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
     Returns:
         position: list-[position_x, position_y], top left-hand corner of the network(s).
         It is calculated by the minimum positions of compartments, nodes, centroid and handle 
-        positions of reactions and aribitrary text, 
+        positions of reactions, aribitrary text, arbitrary shape,
         excluding the compartment with the id of _compartment_default_.
     
     """    
@@ -1279,6 +1432,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
     df = processSBML.load(sbmlStr)
     txt_content = df.getTextContentList()
     numTexts = len(txt_content)
+    shape_name = df.getShapeNameList()
+    numShapes = len(shape_name)
 
     if numFloatingNodes > 0 :
         position = df.getNodePosition(FloatingNodes_ids[0])[0]
@@ -1290,6 +1445,9 @@ def _getNetworkTopLeftCorner(sbmlStr):
     #     position = [position_list[0][0], position_list[0][1]-size[1]]
     if numTexts > 0:
         position_list = df.getTextPosition(txt_content[0])
+        position = position_list[0]
+    if numShapes > 0:
+        position_list = df.getShapePosition(shape_name[0])
         position = position_list[0]
     for i in range(numFloatingNodes):
         node_temp_position = df.getNodePosition(FloatingNodes_ids[i])
@@ -1356,6 +1514,14 @@ def _getNetworkTopLeftCorner(sbmlStr):
         if text_position[1] < position[1]:
             position[1] = text_position[1]
 
+    for i in range(numShapes):
+        shape_position_list = df.getShapePosition(shape_name[i])
+        shape_position = shape_position_list[0]
+        if shape_position[0] < position[0]:
+            position[0] = shape_position[0]
+        if shape_position[1] < position[1]:
+            position[1] = shape_position[1]
+
     return position
 
 def _getNetworkBottomRightCorner(sbmlStr):
@@ -1368,7 +1534,7 @@ def _getNetworkBottomRightCorner(sbmlStr):
     Returns:
         position: list-[position_x, position_y],bottom right-hand corner of the network(s).
         It is calculated by the maximum right down corner positions of positions of compartments, 
-        nodes, centroid and handle positions of reactions and aribitrary text, 
+        nodes, centroid and handle positions of reactions, aribitrary text, arbitrary shape,
         excluding the compartment with the id of _compartment_default_.
     
     
@@ -1387,6 +1553,10 @@ def _getNetworkBottomRightCorner(sbmlStr):
     txt_content = df.getTextContentList()
     numTexts = len(txt_content)
 
+    df = processSBML.load(sbmlStr)
+    shape_name = df.getShapeNameList()
+    numShapes = len(shape_name)
+
     if numFloatingNodes > 0:
         position_list = df.getNodePosition(FloatingNodes_ids[0])
         size = df.getNodeSize(FloatingNodes_ids[0])[0]
@@ -1403,6 +1573,9 @@ def _getNetworkBottomRightCorner(sbmlStr):
         position_list = df.getTextPosition(txt_content[0])
         size = df.getTextSize(txt_content[0])[0]
         position = [position_list[0][0]+size[0],position_list[0][1]+size[1]]
+    if numShapes > 0:
+        position_list = df.getShapePosition(shape_name[0])
+        position = position_list[0]
 
     for i in range(numFloatingNodes):
         node_temp_position_list = df.getNodePosition(FloatingNodes_ids[i])
@@ -1486,6 +1659,16 @@ def _getNetworkBottomRightCorner(sbmlStr):
         if text_position[1] > position[1]:
             position[1] = text_position[1]
 
+    for i in range(numShapes):
+        shape_position_list = df.getShapePosition(shape_name[i])
+        shape_size = df.getShapeSize(shape_name[i])[0]
+        shape_position = [shape_position_list[0][0] + shape_size[0],
+                        shape_position_list[0][1] + shape_size[1]]
+        if shape_position[0] > position[0]:
+            position[0] = shape_position[0]
+        if shape_position[1] > position[1]:
+            position[1] = shape_position[1]
+
     return position
 
 def _getNetworkSize(sbmlStr):
@@ -1526,11 +1709,14 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
     #filename = "test_textGlyph.xml"
-    #filename = "output.xml"
+    filename = "output.xml"
 
     #filename = "putida_gb_newgenes.xml"
     #filename = "testbigmodel.xml" #sbml with errors
 
+    #filename = 'test_genGlyph.xml'
+    #filename = "test_gradientLinear.xml"
+    #filename = "test_gradientRadial.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()

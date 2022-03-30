@@ -1,8 +1,7 @@
-from SBMLDiagrams import visualizeSBML
-import tellurium as te
 import SBMLDiagrams
+import tellurium as te
 
-colors = visualizeSBML.loadJsonColor("style.json")
+colors = SBMLDiagrams.loadColorStyle("style.json")
 r = te.loada('''
     A -> B; k1*A
     B -> C; k2*B

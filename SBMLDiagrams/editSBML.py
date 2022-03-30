@@ -69,7 +69,7 @@ def _setCompartmentPosition(df, id, position):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"position"] = position
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
 
     return df_temp
 
@@ -95,7 +95,7 @@ def _setCompartmentSize(df, id, size):
         raise Exception("This is not a valid id.") 
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"size"] = size
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
 
     return df_temp
 
@@ -124,7 +124,7 @@ def _setCompartmentFillColor(df, id, fill_color, opacity):
     fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"fill_color"] = fill_color
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
 
     return df_temp
 
@@ -154,7 +154,7 @@ def _setCompartmentBorderColor(df, id, border_color, opacity):
     border_color = _color_to_rgb(border_color, opacity)
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"border_color"] = border_color
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
 
     return df_temp
 
@@ -180,7 +180,7 @@ def _setCompartmentBorderWidth(df, id, border_width):
         raise Exception("This is not a valid id.")  
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"border_width"] = border_width  
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
 
     return df_temp
 
@@ -206,7 +206,7 @@ def _setFloatingBoundaryNode(df, id, floating_node):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"floating_node"] = floating_node
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -232,7 +232,7 @@ def _setNodePosition(df, id, position):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"position"] = position
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -258,7 +258,7 @@ def _setNodeSize(df, id, size):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"size"] = size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -379,7 +379,7 @@ def _setNodeShape(df, id, shape):
         df_NodeData_temp.at[idx_list[i],"shape_name"] = shape_name
         df_NodeData_temp.at[idx_list[i],"shape_type"] = shape_type
         df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -428,7 +428,7 @@ def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info):
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
         df_NodeData_temp.at[idx_list[i],"shape_type"] = 'polygon'
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -477,7 +477,7 @@ def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info):
 #     for i in range(len(idx_list)):
 #         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
 #         df_NodeData_temp.at[idx_list[i],"shape_type"] = 'ellipse'
-#     df_temp = (df[0], df_NodeData_temp, df[2])
+#     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
 #     return df_temp
 
@@ -503,7 +503,7 @@ def _setNodeTextPosition(df, id, txt_position):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -551,7 +551,7 @@ def _setNodeTextPositionCenter(df, id):
 
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -580,7 +580,7 @@ def _setNodeTextPositionLeftCenter(df, id):
         txt_position = [node_position[0]-node_size[0], node_position[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -609,7 +609,7 @@ def _setNodeTextPositionRightCenter(df, id):
         txt_position = [node_position[0]+node_size[0], node_position[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -638,7 +638,7 @@ def _setNodeTextPositionUpperCenter(df, id):
         txt_position = [node_position[0], node_position[1]-node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -667,7 +667,7 @@ def _setNodeTextPositionLowerCenter(df, id):
         txt_position = [node_position[0], node_position[1]+node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -696,7 +696,7 @@ def _setNodeTextPositionUpperLeft(df, id):
         txt_position = [node_position[0]-node_size[0], node_position[1]-node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -725,7 +725,7 @@ def _setNodeTextPositionUpperRight(df, id):
         txt_position = [node_position[0]+node_size[0], node_position[1]-node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -754,7 +754,7 @@ def _setNodeTextPositionLowerLeft(df, id):
         txt_position = [node_position[0]-node_size[0], node_position[1]+node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -783,7 +783,7 @@ def _setNodeTextPositionLowerRight(df, id):
         txt_position = [node_position[0]+node_size[0], node_position[1]+node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -809,7 +809,7 @@ def _setNodeTextSize(df, id, txt_size):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -839,9 +839,134 @@ def _setNodeFillColor(df, id, fill_color, opacity):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
+
+def _setNodeFillLinearGradient(df, id, gradient_info, stop_info):
+    """
+    Set the node fill linear gradient.
+
+    Args:  
+        id: str-node id.
+
+        gradient_info: list - [[x1,y1],[x2,y2]], where x,y are floating numbers from 0 to 100.
+        x represents the percentage of width, and y represents the percentage of height.
+
+        stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
+        where x is floating number from 0 to 100.
+
+    """
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    #check the gradient_info is in the correct format:
+    gradient_info_flag = True
+    stop_info_flag = True
+    if isinstance(gradient_info, list) and len(gradient_info) == 2:
+        for ii in range(len(gradient_info)):
+            if isinstance(gradient_info[ii], list) and len(gradient_info[ii]) == 2:
+                if all(isinstance(float(item), float) for item in gradient_info[ii]):
+                    pass
+                else:
+                    gradient_info_flag = False
+                    raise Exception("This is not a valid gradient info.")
+            else:
+                gradient_info_flag = False
+                raise Exception("This is not a valid gradient info.")               
+    else:
+        gradient_info_flag = False
+        raise Exception("This is not a valid gradient info.")
+
+    if isinstance(stop_info, list) and len(stop_info) >= 2:
+        for ii in range(len(stop_info)):
+            if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
+                if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
+                    pass
+                else:
+                    stop_info_flag = False
+                    raise Exception("This is not a valid stop info.")
+            else:
+                stop_info_flag = False
+                raise Exception("This is not a valid stop info.")               
+    else:
+        stop_info_flag = False
+        raise Exception("This is not a valid stop info.")
+
+    if gradient_info_flag == True and stop_info_flag == True:
+        fill_color = ['linearGradient', gradient_info, stop_info]
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+        df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
+        return df_temp
+
+def _setNodeFillRadialGradient(df, id, gradient_info, stop_info):
+    """
+    Set the node fill radial gradient.
+
+    Args:  
+        id: str-node id.
+
+        gradient_info: list - [[x1,y1],[r]], where x,y,r are floating numbers from 0 to 100.
+        x represents the center with percentage of width and height; r represents the radius.
+
+        stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
+        where x is floating number from 0 to 100.
+
+    """
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    #check the gradient_info is in the correct format:
+    gradient_info_flag = True
+    stop_info_flag = True
+    if isinstance(gradient_info, list) and len(gradient_info) == 2:
+        if isinstance(gradient_info[0], list) and len(gradient_info[0]) == 2:
+            if all(isinstance(float(item), float) for item in gradient_info[0]):
+                pass
+            else:
+                gradient_info_flag = False
+                raise Exception("This is not a valid gradient info.")
+        else:
+            gradient_info_flag = False
+            raise Exception("This is not a valid gradient info.")   
+        if isinstance(gradient_info[1], list) and len(gradient_info[1]) == 1:
+            if type(gradient_info[1][0]) == float:
+                pass
+            else:
+                gradient_info_flag = False
+                raise Exception("This is not a valid gradient info.")
+        else:
+            gradient_info_flag = False
+            raise Exception("This is not a valid gradient info.")            
+    else:
+        gradient_info_flag = False
+        raise Exception("This is not a valid gradient info.")
+
+    if isinstance(stop_info, list) and len(stop_info) >= 2:
+        for ii in range(len(stop_info)):
+            if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
+                if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
+                    pass
+                else:
+                    stop_info_flag = False
+                    raise Exception("This is not a valid stop info.")
+            else:
+                stop_info_flag = False
+                raise Exception("This is not a valid stop info.")               
+    else:
+        stop_info_flag = False
+        raise Exception("This is not a valid stop info.")
+
+    if gradient_info_flag == True and stop_info_flag == True:
+        fill_color = ['radialGradient', gradient_info, stop_info]
+        for i in range(len(idx_list)):
+            df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+        df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
+
+        return df_temp
 
 def _setNodeBorderColor(df, id, border_color, opacity):
 
@@ -868,7 +993,7 @@ def _setNodeBorderColor(df, id, border_color, opacity):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"border_color"] = border_color
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -894,7 +1019,7 @@ def _setNodeBorderWidth(df, id, border_width):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"border_width"] = border_width
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -923,7 +1048,7 @@ def _setNodeTextFontColor(df, id, txt_font_color, opacity):
     txt_font_color = _color_to_rgb(txt_font_color, opacity)
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_font_color"] = txt_font_color
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -949,7 +1074,7 @@ def _setNodeTextLineWidth(df, id, txt_line_width):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -976,7 +1101,7 @@ def _setNodeTextFontSize(df, id, txt_font_size):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_font_size"] = txt_font_size
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
@@ -1002,7 +1127,7 @@ def _setReactionCenterPosition(df, id, position):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"center_pos"] = position
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
     
     return df_temp
 
@@ -1028,7 +1153,7 @@ def _setReactionHandlePositions(df, id, position):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"handles"] = position
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
     
     return df_temp
 
@@ -1057,7 +1182,7 @@ def _setReactionFillColor(df, id, fill_color, opacity):
     fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"fill_color"] = fill_color
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
     
     return df_temp
 
@@ -1083,7 +1208,7 @@ def _setReactionLineThickness(df, id, line_thickness):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"line_thickness"] = line_thickness
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
 
     return df_temp
 
@@ -1109,7 +1234,7 @@ def _setBezierReactionType(df, id, bezier):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"bezier"] = bezier
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
 
     return df_temp
 
@@ -1134,7 +1259,7 @@ def _setReactionArrowHeadSize(df, id, size):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"arrow_head_size"] = size
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
     # df_ReactionData_temp = df[2].copy()
     # for i in range(len(df_ReactionData_temp)):
     #     df_ReactionData_temp.at[i,"arrow_head_size"] = size
@@ -1167,7 +1292,7 @@ def _setReactionDash(df, id, dash):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"rxn_dash"] = dash
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
 
     return df_temp
 
@@ -1245,7 +1370,7 @@ def _setTextPosition(df, txt_str, txt_position):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_position"] = txt_position
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[3])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
 
     return df_temp
 
@@ -1271,7 +1396,7 @@ def _setTextSize(df, txt_str, txt_size):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_size"] = txt_size
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[3])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
 
     return df_temp
 
@@ -1300,7 +1425,7 @@ def _setTextFontColor(df, txt_str, txt_font_color, opacity):
     txt_font_color = _color_to_rgb(txt_font_color, opacity)
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_font_color"] = txt_font_color
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[3])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
 
     return df_temp
 
@@ -1326,7 +1451,7 @@ def _setTextLineWidth(df, txt_str, txt_line_width):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[3])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
 
     return df_temp
 
@@ -1353,7 +1478,7 @@ def _setTextFontSize(df, txt_str, txt_font_size):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_font_size"] = txt_font_size
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[3])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
 
     return df_temp
 
@@ -1394,7 +1519,7 @@ def _addText(df, txt_str, txt_position, txt_size,
         df_TextData_temp = pd.concat([df_TextData_temp,\
             pd.DataFrame(text_row_dct)], ignore_index=True)
 
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[3])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
     return df_temp
 
 
@@ -1411,17 +1536,17 @@ def _removeText(df, txt_str):
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     df_TextData_temp = df_TextData_temp.drop(idx_list)
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[3])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
 
     return df_temp
 
-def _addRectangle(df, shape_name, position, size, fill_color, opacity = 1., border_color = [0,0,0], 
-    border_width = 2.):
+def _addRectangle(df, shape_name, position, size, fill_color=[255,255,255], fill_opacity = 1., border_color = [0,0,0], 
+    border_opacity = 1., border_width = 2.):
     """
     Add a rectangle onto canvas.
 
     Args:  
-        id: str-the name of the rectangle.
+        shape_name: str-the name of the rectangle.
 
         position: list-[position_x, position_y], the coordinate represents the top-left hand 
         corner of the node text.
@@ -1430,24 +1555,27 @@ def _addRectangle(df, shape_name, position, size, fill_color, opacity = 1., bord
 
         fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
-        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+        fill_opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
         border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        border_opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
         border_width: float-node text line width.
         
     """
 
-    fill_color_rgba = _color_to_rgb(fill_color, opacity)
+    fill_color_rgba = _color_to_rgb(fill_color, fill_opacity)
+    border_color_rgba = _color_to_rgb(border_color, border_opacity)
     df_ShapeData_temp = df[4].copy()
     shape_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_ShapeData}
     shape_row_dct[processSBML.SHAPENAME].append(shape_name)
     shape_row_dct[processSBML.POSITION].append(position)
     shape_row_dct[processSBML.SIZE].append(size)
     shape_row_dct[processSBML.FILLCOLOR].append(fill_color_rgba)
-    shape_row_dct[processSBML.BORDERCOLOR].append(border_color)
+    shape_row_dct[processSBML.BORDERCOLOR].append(border_color_rgba)
     shape_row_dct[processSBML.BORDERWIDTH].append(border_width)
-    shape_row_dct[processSBML.SHAPETYPE].append('')
+    shape_row_dct[processSBML.SHAPETYPE].append('rectangle')
     shape_row_dct[processSBML.SHAPEINFO].append([])
     if len(df_ShapeData_temp) == 0:
         df_ShapeData_temp = pd.DataFrame(shape_row_dct)
@@ -1456,4 +1584,117 @@ def _addRectangle(df, shape_name, position, size, fill_color, opacity = 1., bord
             pd.DataFrame(shape_row_dct)], ignore_index=True)
 
     df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp)
+    return df_temp
+
+def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill_opacity = 1., border_color = [0,0,0], 
+    border_opacity = 1., border_width = 2.):
+    """
+    Add an ellipse onto canvas.
+
+    Args:  
+        shape_name: str-the name of the ellipse.
+
+        position: list-[position_x, position_y], the coordinate represents the top-left hand 
+        corner of the node text.
+
+        size: list-1*2 matrix-size of the rectangle [width, height].
+
+        fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        fill_opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+        border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        border_opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+        border_width: float-node text line width.
+        
+    """
+
+    fill_color_rgba = _color_to_rgb(fill_color, fill_opacity)
+    border_color_rgba = _color_to_rgb(border_color, border_opacity)
+    df_ShapeData_temp = df[4].copy()
+    shape_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_ShapeData}
+    shape_row_dct[processSBML.SHAPENAME].append(shape_name)
+    shape_row_dct[processSBML.POSITION].append(position)
+    shape_row_dct[processSBML.SIZE].append(size)
+    shape_row_dct[processSBML.FILLCOLOR].append(fill_color_rgba)
+    shape_row_dct[processSBML.BORDERCOLOR].append(border_color_rgba)
+    shape_row_dct[processSBML.BORDERWIDTH].append(border_width)
+    shape_row_dct[processSBML.SHAPETYPE].append('ellipse')
+    shape_row_dct[processSBML.SHAPEINFO].append([])
+    if len(df_ShapeData_temp) == 0:
+        df_ShapeData_temp = pd.DataFrame(shape_row_dct)
+    else:
+        df_ShapeData_temp = pd.concat([df_ShapeData_temp,\
+            pd.DataFrame(shape_row_dct)], ignore_index=True)
+
+    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp)
+    return df_temp
+
+def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,255], fill_opacity = 1., 
+    border_color = [0,0,0], border_opacity = 1., border_width = 2.):
+    """
+    Add an polygon onto canvas.
+
+    Args:  
+        shape_name: str-the name of the polygon.
+        
+        shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
+        x represents the percentage of width, and y represents the percentage of height.
+
+        position: list-[position_x, position_y], the coordinate represents the top-left hand 
+        corner of the node text.
+
+        size: list-1*2 matrix-size of the rectangle [width, height].
+
+        fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        fill_opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+        border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        border_opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+        border_width: float-node text line width.
+        
+    """
+
+    fill_color_rgba = _color_to_rgb(fill_color, fill_opacity)
+    border_color_rgba = _color_to_rgb(border_color, border_opacity)
+    df_ShapeData_temp = df[4].copy()
+    shape_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_ShapeData}
+    shape_row_dct[processSBML.SHAPENAME].append(shape_name)
+    shape_row_dct[processSBML.POSITION].append(position)
+    shape_row_dct[processSBML.SIZE].append(size)
+    shape_row_dct[processSBML.FILLCOLOR].append(fill_color_rgba)
+    shape_row_dct[processSBML.BORDERCOLOR].append(border_color_rgba)
+    shape_row_dct[processSBML.BORDERWIDTH].append(border_width)
+    shape_row_dct[processSBML.SHAPETYPE].append('polygon')
+    shape_row_dct[processSBML.SHAPEINFO].append(shape_info)
+    if len(df_ShapeData_temp) == 0:
+        df_ShapeData_temp = pd.DataFrame(shape_row_dct)
+    else:
+        df_ShapeData_temp = pd.concat([df_ShapeData_temp,\
+            pd.DataFrame(shape_row_dct)], ignore_index=True)
+
+    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp)
+    return df_temp
+
+
+def _removeShape(df, shape_name_str):
+    """
+    Remove the arbitray shape.
+
+    Args:  
+        shape_name_str: str-the shape name.
+        
+    """
+    df_ShapeData_temp = df[4].copy()
+    idx_list = df[4].index[df[4]["shape_name"] == shape_name_str].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    df_ShapeData_temp = df_ShapeData_temp.drop(idx_list)
+    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp)
+
     return df_temp
