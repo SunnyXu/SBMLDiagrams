@@ -30,16 +30,16 @@ class Style:
             process_border_color: progress bar border color
         '''
         self.styleName = styleName
-        self.comp_fill_color = None
-        self.comp_border_color = None
-        self.spec_fill_color = None
-        self.spec_border_color = None
-        self.reaction_line_color = None
-        self.text_line_color = None
+        self.comp_fill_color = comp_fill_color
+        self.comp_border_color = comp_border_color
+        self.spec_fill_color = spec_fill_color
+        self.spec_border_color = spec_border_color
+        self.reaction_line_color = reaction_line_color
+        self.text_line_color = text_line_color
 
-        self.process_fill_color = None
-        self.full_fill_color = None
-        self.process_border_color = None
+        self.process_fill_color = process_fill_color
+        self.full_fill_color = full_fill_color
+        self.process_border_color = process_border_color
 
         self.image_size = None
         self.node_dimension = None
@@ -64,20 +64,6 @@ class Style:
             self.full_fill_color = (91, 176, 253, 200)
             self.process_border_color = (255, 204, 153, 200)
 
-        elif styleName == "simplicity":
-            self.comp_fill_color = (255, 255, 255, 255) # white
-            self.comp_border_color = (255, 255, 255, 255)
-            self.spec_fill_color = (255, 255, 255, 255)
-            self.spec_border_color = (0, 0, 0, 255) # black
-            self.reaction_line_color = (0, 0, 0, 255)
-            self.text_line_color = (0, 0, 0, 255)
-
-            self.process_fill_color = (255, 108, 9, 200)
-            self.full_fill_color = (91, 176, 253, 200)
-            self.process_border_color = (255, 204, 153, 200)
-
-            self.image_size = [1000, 1000]
-            self.node_dimension = [40, 60]
 
     def getStyleName(self):
         '''
