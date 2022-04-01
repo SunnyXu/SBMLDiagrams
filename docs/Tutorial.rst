@@ -31,9 +31,8 @@ Tutorial
    dirname = "path//to"
    filename = "SBML_file.xml"
 
-   f = open(os.path.join(dirname, filename), 'r')
-   sbmlStr = f.read()
-   f.close()
+   with open(os.path.join(dirname, filename), 'r', encoding="utf8") as f:
+        sbmlStr = f.read()      
 
    df = SBMLDiagrams.load(sbmlStr)
 
