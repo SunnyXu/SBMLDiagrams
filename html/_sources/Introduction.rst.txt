@@ -47,7 +47,8 @@ with different fill colors and border colors.
 .. image:: Figures/node_grid.png
   :width: 400
 
-4) An example with long text contents.
+4) An example with long text contents. 
+   Its animation is also available at https://www.youtube.com/watch?v=15WFw_YXwFA.
 
 .. image:: Figures/Jana_WolfGlycolysis.png
   :width: 400

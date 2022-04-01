@@ -240,25 +240,13 @@
 <span class="n">df</span><span class="o">.</span><span class="n">setColorStyle</span><span class="p">(</span><span class="n">newStyle</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="s2">&quot;simplicity&quot;</span><span class="p">])</span>
 <span class="n">df</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">output_fileName</span><span class="o">=</span><span class="s2">&quot;load_json_style/simplicity-color&quot;</span><span class="p">)</span>
 
-<span class="n">df</span><span class="o">.</span><span class="n">setColorStyle</span><span class="p">(</span><span class="n">newStyle</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">])</span>
-<span class="n">df</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">output_fileName</span><span class="o">=</span><span class="s2">&quot;load_json_style/default-color&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">setColorStyle</span><span class="p">(</span><span class="n">newStyle</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="s2">&quot;skyblue&quot;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">output_fileName</span><span class="o">=</span><span class="s2">&quot;load_json_style/skyblue-color&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The file style.json:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="s2">&quot;colorStyle&quot;</span><span class="p">:</span> <span class="p">[</span>
-   <span class="p">{</span>
-      <span class="s2">&quot;style_name&quot;</span><span class="p">:</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;compartment_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 255, 255, 255&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;compartment_border_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 255, 255, 255&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;species_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 204, 153, 200&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;species_border_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 108, 9, 255&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;reaction_line_color&quot;</span><span class="p">:</span> <span class="s2">&quot;91, 176, 253, 255&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;font_color&quot;</span><span class="p">:</span> <span class="s2">&quot;0, 0, 0, 255&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;progress_bar_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 108, 9, 200&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;progress_bar_full_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;91, 176, 253, 200&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;progress_bar_border_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 204, 153, 200&quot;</span>
-   <span class="p">},</span>
    <span class="p">{</span>
       <span class="s2">&quot;style_name&quot;</span><span class="p">:</span> <span class="s2">&quot;simplicity&quot;</span><span class="p">,</span>
       <span class="s2">&quot;compartment_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 255, 255, 255&quot;</span><span class="p">,</span>
@@ -266,6 +254,19 @@
       <span class="s2">&quot;species_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 255, 255, 255&quot;</span><span class="p">,</span>
       <span class="s2">&quot;species_border_color&quot;</span><span class="p">:</span> <span class="s2">&quot;0, 0, 0, 255&quot;</span><span class="p">,</span>
       <span class="s2">&quot;reaction_line_color&quot;</span><span class="p">:</span> <span class="s2">&quot;0, 0, 0, 255&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;font_color&quot;</span><span class="p">:</span> <span class="s2">&quot;0, 0, 0, 255&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;progress_bar_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 108, 9, 200&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;progress_bar_full_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;91, 176, 253, 200&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;progress_bar_border_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 204, 153, 200&quot;</span>
+   <span class="p">},</span>
+
+   <span class="p">{</span>
+      <span class="s2">&quot;style_name&quot;</span><span class="p">:</span> <span class="s2">&quot;skyblue&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;compartment_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;3, 219, 252, 255&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;compartment_border_color&quot;</span><span class="p">:</span> <span class="s2">&quot;3, 219, 252, 255&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;species_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;23, 107, 252, 255&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;species_border_color&quot;</span><span class="p">:</span> <span class="s2">&quot;119, 3, 252, 255&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;reaction_line_color&quot;</span><span class="p">:</span> <span class="s2">&quot;3, 252, 157, 255&quot;</span><span class="p">,</span>
       <span class="s2">&quot;font_color&quot;</span><span class="p">:</span> <span class="s2">&quot;0, 0, 0, 255&quot;</span><span class="p">,</span>
       <span class="s2">&quot;progress_bar_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;255, 108, 9, 200&quot;</span><span class="p">,</span>
       <span class="s2">&quot;progress_bar_full_fill_color&quot;</span><span class="p">:</span> <span class="s2">&quot;91, 176, 253, 200&quot;</span><span class="p">,</span>
