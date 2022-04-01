@@ -93,21 +93,8 @@ Tutorial
 The file style.json:
 
 .. code-block:: python
-
    {
    "colorStyle": [
-      {
-         "style_name": "default",
-         "compartment_fill_color": "255, 255, 255, 255",
-         "compartment_border_color": "255, 255, 255, 255",
-         "species_fill_color": "255, 204, 153, 200",
-         "species_border_color": "255, 108, 9, 255",
-         "reaction_line_color": "91, 176, 253, 255",
-         "font_color": "0, 0, 0, 255",
-         "progress_bar_fill_color": "255, 108, 9, 200",
-         "progress_bar_full_fill_color": "91, 176, 253, 200",
-         "progress_bar_border_color": "255, 204, 153, 200"
-      },
       {
          "style_name": "simplicity",
          "compartment_fill_color": "255, 255, 255, 255",
