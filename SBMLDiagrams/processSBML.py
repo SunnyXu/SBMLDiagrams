@@ -2026,7 +2026,7 @@ class load:
 
         """
         self.df = editSBML._setCompartmentPosition(self.df, id, position)
-        return self.df
+        #return self.df
     
     def setCompartmentSize(self, id, size):
         """
@@ -2038,7 +2038,7 @@ class load:
             size: list-1*2 matrix-size of the rectangle [width, height].
         """
         self.df = editSBML._setCompartmentSize(self.df, id, size)
-        return self.df
+        #return self.df
 
     def setCompartmentFillColor(self, id, fill_color, opacity = 1.):
         """
@@ -2052,7 +2052,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
         self.df = editSBML._setCompartmentFillColor(self.df, id, fill_color, opacity)
-        return self.df
+        #return self.df
 
     def setCompartmentBorderColor(self, id, border_color, opacity = 1.):       
         """
@@ -2067,7 +2067,7 @@ class load:
 
         """
         self.df = editSBML._setCompartmentBorderColor(self.df, id, border_color, opacity)
-        return self.df
+        #return self.df
 
     def setCompartmentBorderWidth(self, id, border_width):
         """
@@ -2079,7 +2079,7 @@ class load:
             border_width: float-compartment border line width.
         """
         self.df = editSBML._setCompartmentBorderWidth(self.df, id, border_width)
-        return self.df
+        #return self.df
 
     def setFloatingBoundaryNode(self, id, floating_node):
         """
@@ -2091,7 +2091,7 @@ class load:
             floating_node: bool-floating node (True) or not (False).
         """
         self.df = editSBML._setFloatingBoundaryNode(self.df, id, floating_node)
-        return self.df
+        #return self.df
 
     def setNodePosition(self, id, position):
         """
@@ -2104,7 +2104,7 @@ class load:
             corner of the node.
         """
         self.df = editSBML._setNodePosition(self.df, id, position)
-        return self.df
+        #return self.df
 
     def setNodeAndTextPosition(self, id, position):
         """
@@ -2118,7 +2118,7 @@ class load:
         """
         self.df = editSBML._setNodePosition(self.df, id, position)
         self.df = editSBML._setNodeTextPosition(self.df, id, position)
-        return self.df
+        #return self.df
 
     def setNodeSize(self, id, size):
         """
@@ -2130,7 +2130,7 @@ class load:
             size: list-1*2 matrix-size of the rectangle [width, height].
         """
         self.df = editSBML._setNodeSize(self.df, id, size)
-        return self.df
+        #return self.df
 
     def setNodeAndTextSize(self, id, size):
         """
@@ -2143,7 +2143,7 @@ class load:
         """
         self.df = editSBML._setNodeSize(self.df, id, size)
         self.df = editSBML._setNodeTextSize(self.df, id, size)
-        return self.df
+        #return self.df
 
     def setNodeShape(self, id, shape):
         """
@@ -2164,7 +2164,7 @@ class load:
             
         """
         self.df = editSBML._setNodeShape(self.df, id, shape)
-        return self.df
+        #return self.df
 
     def setNodeArbitraryPolygonShape(self, id, shape_name, shape_info):
         """
@@ -2180,7 +2180,7 @@ class load:
             
         """
         self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info)
-        return self.df
+        #return self.df
 
     # def _setNodeArbitraryEllipseShape(self, id, shape_name, shape_info):
     #     """
@@ -2208,7 +2208,7 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPosition(self.df, id, txt_position)
-        return self.df
+        #return self.df
 
     def setNodeTextPositionCenter(self, id):
         """
@@ -2219,7 +2219,7 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPositionCenter(self.df, id)
-        return self.df
+        #return self.df
 
     def setNodeTextPositionLeftCenter(self, id):
         """
@@ -2230,7 +2230,7 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPositionLeftCenter(self.df, id)
-        return self.df
+        #return self.df
 
     def setNodeTextPositionRightCenter(self, id):
         """
@@ -2241,7 +2241,7 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPositionRightCenter(self.df, id)
-        return self.df
+        #return self.df
 
     def setNodeTextPositionUpperCenter(self, id):
         """
@@ -2252,7 +2252,7 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPositionUpperCenter(self.df, id)
-        return self.df
+        #return self.df
 
     def setNodeTextPositionLowerCenter(self, id):
         """
@@ -2263,7 +2263,7 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPositionLowerCenter(self.df, id)
-        return self.df
+        #return self.df
 
     def setNodeTextPositionUpperLeft(self, id):
         """
@@ -2274,7 +2274,7 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPositionUpperLeft(self.df, id)
-        return self.df
+        #return self.df
     
     def setNodeTextPositionUpperRight(self, id):
         """
@@ -2285,7 +2285,7 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPositionUpperRight(self.df, id)
-        return self.df
+        #return self.df
 
     def setNodeTextPositionLowerLeft(self, id):
         """
@@ -2296,7 +2296,7 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPositionLowerLeft(self.df, id)
-        return self.df
+        #return self.df
 
     def setNodeTextPositionLowerRight(self, id):
         """
@@ -2307,10 +2307,8 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPositionLowerRight(self.df, id)
-        return self.df
+        #return self.df
 
-
-    
     def setNodeTextSize(self, id, txt_size):
         """
         Set the node text size.
@@ -2321,7 +2319,7 @@ class load:
             txt_size: list-1*2 matrix-size of the rectangle [width, height].
         """
         self.df = editSBML._setNodeTextSize(self.df, id, txt_size)
-        return self.df
+        #return self.df
  
     def setNodeFillColor(self, id, fill_color, opacity = 1.):
         """
@@ -2335,7 +2333,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
         self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity)
-        return self.df
+        #return self.df
 
     def setNodeFillLinearGradient(self, id, gradient_info, stop_info):
         """
@@ -2352,7 +2350,7 @@ class load:
 
         """
         self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info)
-        return self.df
+        #return self.df
 
     def setNodeFillRadialGradient(self, id, gradient_info, stop_info):
         """
@@ -2369,7 +2367,7 @@ class load:
 
         """
         self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info)
-        return self.df
+        #return self.df
 
     def setNodeBorderColor(self, id, border_color, opacity = 1.):
         """
@@ -2383,7 +2381,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
         self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity)
-        return self.df
+        #return self.df
 
     def setNodeBorderWidth(self, id, border_width):
         """
@@ -2395,7 +2393,7 @@ class load:
             border_width: float-node border line width.
         """
         self.df = editSBML._setNodeBorderWidth(self.df, id, border_width)
-        return self.df
+        #return self.df
 
     def setNodeTextFontColor(self, id, txt_font_color, opacity = 1.):
         """
@@ -2409,7 +2407,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
         self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity)
-        return self.df
+        #return self.df
 
     def setNodeTextLineWidth(self, id, txt_line_width):
         """
@@ -2421,7 +2419,7 @@ class load:
             txt_line_width: float-node text line width.
         """
         self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width)
-        return self.df
+        #return self.df
 
     def setNodeTextFontSize(self, id, txt_font_size):
         """
@@ -2433,7 +2431,7 @@ class load:
             txt_font_size: float-node text font size.
         """
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size)
-        return self.df
+        #return self.df
 
     def setReactionCenterPosition(self, id, position):
         """
@@ -2445,7 +2443,7 @@ class load:
             position: list-1*2 matrix-[position_x, position_y].
         """
         self.df = editSBML._setReactionCenterPosition(self.df, id, position)
-        return self.df
+        #return self.df
     
 
     def setReactionHandlePositions(self, id, position):
@@ -2459,7 +2457,7 @@ class load:
             product handles].
         """
         self.df = editSBML._setReactionHandlePositions(self.df, id, position)
-        return self.df
+        #return self.df
 
     def setReactionDefaultCenterAndHandlePositions(self, id):
         """
@@ -2528,8 +2526,8 @@ class load:
         # print("handle:", handles)
         self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
         self.df = editSBML._setReactionHandlePositions(self.df, id, handles)
-
-        return self.df
+        
+        #return self.df
 
     def setReactionFillColor(self, id, fill_color, opacity = 1.):
         """
@@ -2543,7 +2541,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
         self.df = editSBML._setReactionFillColor(self.df, id, fill_color, opacity)
-        return self.df
+        #return self.df
 
 
     def setReactionLineThickness(self, id, line_thickness):
@@ -2556,7 +2554,7 @@ class load:
             line_thickness: float-reaction border line width.
         """
         self.df = editSBML._setReactionLineThickness(self.df, id, line_thickness)
-        return self.df
+        #return self.df
 
     def _setBezierReactionType(self, id, bezier = True):
         """
@@ -2568,7 +2566,7 @@ class load:
             bezier: bool-bezier reaction (True as default) or not (False as straightline).
         """
         self.df = editSBML._setBezierReactionType(self.df, id, bezier)
-        return self.df
+        #return self.df
     
     def setReactionArrowHeadSize(self, id, size):
     #def setReactionArrowHeadSize(self, size):
@@ -2579,7 +2577,7 @@ class load:
             size: list-1*2 matrix-size of the rectangle [width, height].
         """
         self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
-        return self.df
+        #return self.df
 
     def setReactionDash(self, id, dash = []):
         """
@@ -2594,7 +2592,7 @@ class load:
             drawing a c-point line followed by a d-point gap.
         """
         self.df = editSBML._setReactionDash(self.df, id, dash)
-        return self.df
+        #return self.df
 
     # def addText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
     #     txt_line_width = 1., txt_font_size = 12.):
@@ -2747,7 +2745,7 @@ class load:
 
         """
         self.df = editSBML._setTextPosition(self.df, txt_str, txt_position)
-        return self.df
+        #return self.df
 
     def setTextSize(self, txt_str, txt_size):
         """
@@ -2759,7 +2757,7 @@ class load:
             txt_size: list-1*2 matrix-size of the rectangle [width, height].
         """
         self.df = editSBML._setTextSize(self.df, txt_str, txt_size)
-        return self.df
+        #return self.df
 
     def setTextFontColor(self, txt_str, txt_font_color, opacity = 1.):
         """
@@ -2773,7 +2771,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         """
         self.df = editSBML._setTextFontColor(self.df, txt_str, txt_font_color, opacity)
-        return self.df
+        #return self.df
 
     def setTextLineWidth(self, txt_str, txt_line_width):
         """
@@ -2785,7 +2783,7 @@ class load:
             txt_line_width: float-node text line width.
         """
         self.df = editSBML._setTextLineWidth(self.df, txt_str, txt_line_width)
-        return self.df
+        #return self.df
 
     def setTextFontSize(self, txt_str, txt_font_size):
         """
@@ -2797,7 +2795,7 @@ class load:
             txt_font_size: float-node text font size.
         """
         self.df = editSBML._setTextFontSize(self.df, txt_str, txt_font_size)
-        return self.df
+        #return self.df
 
     def addText(self, txt_str, txt_position, txt_size, txt_font_color = [0, 0, 0], opacity = 1., 
         txt_line_width = 1., txt_font_size = 12.):
@@ -2825,7 +2823,7 @@ class load:
         txt_size = txt_size, txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
         txt_font_size=txt_font_size) 
         
-        return self.df
+        #return self.df
 
     def removeText(self, txt_str):
         """
@@ -2836,7 +2834,7 @@ class load:
         """
         self.df = editSBML._removeText(self.df, txt_str=txt_str) 
         
-        return self.df
+        #return self.df
 
     def addRectangle(self, shape_name, position, size, fill_color = [255,255,255], fill_opacity = 1., 
         border_color = [0,0,0], border_opacity = 1., border_width = 2.):
@@ -2866,7 +2864,7 @@ class load:
         fill_opacity=fill_opacity, border_color=border_color, border_opacity = border_opacity,
         border_width=border_width) 
         
-        return self.df
+        #return self.df
 
     def addEllipse(self, shape_name, position, size, fill_color = [255,255,255], fill_opacity = 1., 
         border_color = [0,0,0], border_opacity = 1., border_width = 2.):
@@ -2896,7 +2894,7 @@ class load:
         fill_opacity=fill_opacity, border_color=border_color, border_opacity = border_opacity,
         border_width=border_width) 
         
-        return self.df
+        #return self.df
 
     def addPolygon(self, shape_name, shape_info, position, size, fill_color = [255,255,255], 
         fill_opacity = 1., border_color = [0,0,0], border_opacity = 1., border_width = 2.):
@@ -2929,7 +2927,7 @@ class load:
         fill_opacity=fill_opacity, border_color=border_color, border_opacity = border_opacity, 
         border_width=border_width) 
         
-        return self.df
+        #return self.df
 
     def removeShape(self, shape_name_str):
         """
@@ -2940,7 +2938,7 @@ class load:
         """
         self.df = editSBML._removeShape(self.df, shape_name_str = shape_name_str) 
         
-        return self.df
+        #return self.df
 
 
     def getShapePosition(self, shape_name_str):
@@ -3236,13 +3234,13 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
-    filename = "node_grid.xml"
+    #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
@@ -3361,7 +3359,9 @@ if __name__ == '__main__':
     # df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
     # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
-    # df.setNodeBorderWidth("x_1", 2.)
+    print(df.getNodeBorderWidth("x_1"))
+    df.setNodeBorderWidth("x_1", 4.)
+    print(df.getNodeBorderWidth("x_1"))
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
     # df.setNodeTextLineWidth("x_1", 1.)
     # df.setNodeTextFontSize("x_1", 15)
