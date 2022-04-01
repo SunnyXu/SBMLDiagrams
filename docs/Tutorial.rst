@@ -82,10 +82,10 @@ Tutorial
    sbmlStr = r.getSBML()
    df = SBMLDiagrams.load(sbmlStr)
 
-   df.setColorStyle(newStyle = colors["simplicity"])
+   df.setColorStyle(colors["simplicity"])
    df.draw(output_fileName="load_json_style/simplicity-color")
 
-   df.setColorStyle(newStyle = colors["default"])
+   df.setColorStyle(colors["default"])
    df.draw(output_fileName="load_json_style/default-color")
 
 
