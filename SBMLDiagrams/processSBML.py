@@ -3108,20 +3108,15 @@ class load:
             longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
             node; 'ellipsis' will show '....' if the text is too long to show in the node
 
-        Returns:
-            The visualization info object containing the drawing information of the plot.
-        
         """
 
         sbmlStr = self.export()
-        v_info = visualizeSBML._draw(sbmlStr,  setImageSize = setImageSize, 
+        visualizeSBML._draw(sbmlStr,  setImageSize = setImageSize, 
         scale = scale, fileFormat = fileFormat, output_fileName = output_fileName, 
         reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
         showReactionIds = showReactionIds, showReversible = showReversible, longText = longText,
         newStyle = self.color_style)
         #df_text = self.df_text)
-
-        return v_info
 
     def getNetworkTopLeftCorner(self):
         """
@@ -3241,16 +3236,17 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
-    #filename = "node_grid.xml"
+    filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
+    #filename = "Jana_WolfGlycolysis-original.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
     # filename = "test_textGlyph.xml"
@@ -3414,11 +3410,11 @@ if __name__ == '__main__':
     # print(df.getTextContentList())
     # print(df.getCompartmentIdList())
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
     df.draw(output_fileName = 'output')
