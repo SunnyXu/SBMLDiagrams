@@ -16,6 +16,6 @@ df.draw(output_fileName="with-color/default-color")
 df.setColorStyle("simplicity")
 df.draw(output_fileName="with-color/simplicity-color")
 
-df.setColorStyle(None)
+df.setColorStyle("default")
 df.draw(output_fileName="with-color/back-sbml-color")
 
