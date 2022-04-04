@@ -2526,7 +2526,7 @@ class load:
         # print("handle:", handles)
         self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
         self.df = editSBML._setReactionHandlePositions(self.df, id, handles)
-        
+
         #return self.df
 
     def setReactionFillColor(self, id, fill_color, opacity = 1.):
@@ -3075,7 +3075,7 @@ class load:
         for id in reaction_ids:
             self.setReactionDefaultCenterAndHandlePositions(id)
 
-    def draw(self, setImageSize = '', scale = 1., fileFormat = 'PNG', output_fileName = '', 
+    def draw(self, setImageSize = '', scale = 1., output_fileName = '', 
         reactionLineType = 'bezier', showBezierHandles = False, 
         showReactionIds = False, showReversible = False, longText = 'auto-font'):
 
@@ -3088,10 +3088,8 @@ class load:
             scale: float-makes the figure output size = scale * default output size.
             Increasing the scale can make the resolution higher.
 
-            fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
-
             output_fileName: str-filename: '' (default: will not save the file), 
-            or 'fileName' (self-designed file name).
+            or 'fileName.png' (self-designed file name) which has to end up with '.png', '.jpg', or 'pdf'.
 
             reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
             If there is no layout information from the SBML file, all reaction lines will look like
@@ -3110,7 +3108,7 @@ class load:
 
         sbmlStr = self.export()
         visualizeSBML._draw(sbmlStr,  setImageSize = setImageSize, 
-        scale = scale, fileFormat = fileFormat, output_fileName = output_fileName, 
+        scale = scale, output_fileName = output_fileName, 
         reactionLineType = reactionLineType, showBezierHandles = showBezierHandles, 
         showReactionIds = showReactionIds, showReversible = showReversible, longText = longText,
         newStyle = self.color_style)
@@ -3359,9 +3357,9 @@ if __name__ == '__main__':
     # df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
     # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
-    print(df.getNodeBorderWidth("x_1"))
-    df.setNodeBorderWidth("x_1", 4.)
-    print(df.getNodeBorderWidth("x_1"))
+    # print(df.getNodeBorderWidth("x_1"))
+    # df.setNodeBorderWidth("x_1", 4.)
+    # print(df.getNodeBorderWidth("x_1"))
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
     # df.setNodeTextLineWidth("x_1", 1.)
     # df.setNodeTextFontSize("x_1", 15)
@@ -3417,7 +3415,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output')
+    df.draw(output_fileName = 'output.png')
 
     # #SBGN1-complexSpec
     # df.setNodeAndTextPosition("ATP",[100,100])

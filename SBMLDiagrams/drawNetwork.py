@@ -1271,19 +1271,19 @@ def showPlot(surface, save = True, folderName = '', fileName = '', file_format =
         image = surface.makeImageSnapshot()
         if save:
             if file_format == 'PNG':
-                fileName = fileName + '.png'
+                #fileName = fileName + '.png'
                 image.save(fileName, skia.kPNG)
                 if showImage:
                     pil_im = Image.open(fileName)
                     display(pil_im)
             elif file_format == 'JPEG':
-                fileName = fileName + '.jpg'
+                #fileName = fileName + '.jpg'
                 image.save(fileName, skia.kJPEG)
                 if showImage:
                     pil_im = Image.open(fileName)
                     display(pil_im)  
             elif file_format == 'PDF':
-                fileName = fileName + '.png'
+                #fileName = fileName + '.png'
                 image.save(fileName, skia.kPNG)
                 if showImage:
                     pil_im = Image.open(fileName)

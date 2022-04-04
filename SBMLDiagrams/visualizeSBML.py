@@ -225,7 +225,7 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
 
     Video(outputName + ".mp4")
 
-def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
+def _draw(sbmlStr, setImageSize = '', scale = 1.,\
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, showReversible = False, longText = 'auto-font',\
     newStyle = styleSBML.Style(), drawArrow = True, showImage = True, save = True): 
@@ -242,10 +242,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
         scale: float-makes the figure output size = scale * default output size.
         Increasing the scale can make the resolution higher.
 
-        fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
-
         output_fileName: str-filename: '' (default: will not save the file), 
-        or 'fileName' (self-designed file name).
+        or 'fileName.png' (self-designed file name) which has to end up with '.png', '.jpg', or 'pdf'.
         
         complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' 
         or 'tetramer'.
@@ -1367,6 +1365,17 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
         
         return floatingNodes_pos_dict, floatingNodes_dim_dict, allNodes_pos_dict, allNodes_dim_dict, edges, arrow_info, name_to_id
     
+    if output_fileName != '':
+        if '.png' in output_fileName:
+            fileFormat = 'PNG'
+        elif '.jpg' in output_fileName:
+            fileFormat = 'JPEG' 
+        elif '.pdf' in output_fileName:
+            fileFormat = 'PDF' 
+        else:
+            raise Exception("Please enter an output fileName ending with .png/.jpg/.pdf.")
+    else:
+        fileFormat = 'PNG'
 
     baseImageArray = []
     
@@ -1382,13 +1391,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
         except:
             pass
 
-    if fileFormat == "PDF" and output_fileName != '':
+    if fileFormat == "PDF" and output_fileName.replace('.pdf', '') != '':
         # if output_fileName == '':
         #     random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
         #     fileName = os.path.join(os.getcwd(), random_string)
         #     fileNamepdf = fileName + '.pdf'
         #     stream = skia.FILEWStream(fileNamepdf)
-        fileName = os.path.join(os.getcwd(), output_fileName)
+        fileName = os.path.join(os.getcwd(), output_fileName.replace('.pdf', ''))
         fileNamepdf = fileName + '.pdf'
         stream = skia.FILEWStream(fileNamepdf)
         fileNamepng = fileName + '.png' #display the file in drawNetwork
@@ -1694,7 +1703,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml"
+    filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1709,7 +1718,7 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
     #filename = "test_textGlyph.xml"
-    filename = "output.xml"
+    #filename = "output.xml"
 
     #filename = "putida_gb_newgenes.xml"
     #filename = "testbigmodel.xml" #sbml with errors
@@ -1727,6 +1736,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output')
+        _draw(sbmlStr,output_fileName='')
 
 
