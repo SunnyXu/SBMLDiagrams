@@ -491,6 +491,36 @@
               <render:colorDefinition render:id="reaction_fill_color_reaction_2" render:value="#817bff"/>
               <render:colorDefinition render:id="reaction_fill_color_reaction_3" render:value="#f5ba85"/>
             </render:listOfColorDefinitions>
+            <render:listOfLineEndings>
+              <render:lineEnding render:id="reaction_arrow_head_reaction_0">
+                <layout:boundingBox layout:id="bb_reaction_0">
+                  <layout:position layout:x="0" layout:y="0"/>
+                  <layout:dimensions layout:width="12" layout:height="15"/>
+                </layout:boundingBox>
+                <render:g/>
+              </render:lineEnding>
+              <render:lineEnding render:id="reaction_arrow_head_reaction_1">
+                <layout:boundingBox layout:id="bb_reaction_1">
+                  <layout:position layout:x="0" layout:y="0"/>
+                  <layout:dimensions layout:width="12" layout:height="15"/>
+                </layout:boundingBox>
+                <render:g/>
+              </render:lineEnding>
+              <render:lineEnding render:id="reaction_arrow_head_reaction_2">
+                <layout:boundingBox layout:id="bb_reaction_2">
+                  <layout:position layout:x="0" layout:y="0"/>
+                  <layout:dimensions layout:width="12" layout:height="15"/>
+                </layout:boundingBox>
+                <render:g/>
+              </render:lineEnding>
+              <render:lineEnding render:id="reaction_arrow_head_reaction_3">
+                <layout:boundingBox layout:id="bb_reaction_3">
+                  <layout:position layout:x="0" layout:y="0"/>
+                  <layout:dimensions layout:width="12" layout:height="15"/>
+                </layout:boundingBox>
+                <render:g/>
+              </render:lineEnding>
+            </render:listOfLineEndings>
             <render:listOfStyles>
               <render:style render:id="compStyle__compartment_default_" render:typeList="COMPARTMENTGLYPH" render:idList="_compartment_default_">
                 <render:g render:stroke="comp_border_color__compartment_default_" render:stroke-width="2" render:fill="comp_fill_color__compartment_default_">
@@ -594,7 +624,7 @@
                 </render:g>
               </render:style>
               <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_5">
-                <render:g render:stroke="text_line_color_x_5" render:stroke-width="1" render:font-size="11"/>
+                <render:g render:stroke="text_line_color_x_5" render:stroke-width="1" render:font-size="10"/>
               </render:style>
               <render:style render:id="specStyle_x_6" render:typeList="SPECIESGLYPH" render:idList="x_6">
                 <render:g render:stroke="spec_border_color_x_6" render:stroke-width="2" render:fill="spec_fill_color_x_6">
@@ -616,19 +646,19 @@
                 </render:g>
               </render:style>
               <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_5">
-                <render:g render:stroke="text_line_color_x_5" render:stroke-width="1" render:font-size="11"/>
+                <render:g render:stroke="text_line_color_x_5" render:stroke-width="1" render:font-size="10"/>
               </render:style>
               <render:style render:id="reactionStyle_reaction_0" render:typeList="REACTIONGLYPH SPECIESREFERENCEGLYPH" render:idList="reaction_0">
-                <render:g render:stroke="reaction_fill_color_reaction_0" render:stroke-width="3"/>
+                <render:g render:stroke="reaction_fill_color_reaction_0" render:stroke-width="3" render:endHead="reaction_arrow_head_reaction_0"/>
               </render:style>
               <render:style render:id="reactionStyle_reaction_1" render:typeList="REACTIONGLYPH SPECIESREFERENCEGLYPH" render:idList="reaction_1">
-                <render:g render:stroke="reaction_fill_color_reaction_1" render:stroke-width="3"/>
+                <render:g render:stroke="reaction_fill_color_reaction_1" render:stroke-width="3" render:endHead="reaction_arrow_head_reaction_1"/>
               </render:style>
               <render:style render:id="reactionStyle_reaction_2" render:typeList="REACTIONGLYPH SPECIESREFERENCEGLYPH" render:idList="reaction_2">
-                <render:g render:stroke="reaction_fill_color_reaction_2" render:stroke-width="3"/>
+                <render:g render:stroke="reaction_fill_color_reaction_2" render:stroke-width="3" render:endHead="reaction_arrow_head_reaction_2"/>
               </render:style>
               <render:style render:id="reactionStyle_reaction_3" render:typeList="REACTIONGLYPH SPECIESREFERENCEGLYPH" render:idList="reaction_3">
-                <render:g render:stroke="reaction_fill_color_reaction_3" render:stroke-width="3"/>
+                <render:g render:stroke="reaction_fill_color_reaction_3" render:stroke-width="3" render:endHead="reaction_arrow_head_reaction_3"/>
               </render:style>
             </render:listOfStyles>
           </render:renderInformation>
