@@ -31,9 +31,8 @@ Tutorial
    dirname = "path//to"
    filename = "SBML_file.xml"
 
-   f = open(os.path.join(dirname, filename), 'r')
-   sbmlStr = f.read()
-   f.close()
+   with open(os.path.join(dirname, filename), 'r', encoding="utf8") as f:
+        sbmlStr = f.read()      
 
    df = SBMLDiagrams.load(sbmlStr)
 
@@ -84,10 +83,10 @@ Tutorial
    df = SBMLDiagrams.load(sbmlStr)
 
    df.setColorStyle(newStyle = colors["simplicity"])
-   df.draw(output_fileName="load_json_style/simplicity-color")
+   df.draw(output_fileName="load_json_style/simplicity-color.png")
 
    df.setColorStyle(newStyle = colors["skyblue"])
-   df.draw(output_fileName="load_json_style/skyblue-color")
+   df.draw(output_fileName="load_json_style/skyblue-color.png")
 
 
 The file style.json:

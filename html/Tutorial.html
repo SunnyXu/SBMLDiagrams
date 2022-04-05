@@ -185,9 +185,8 @@
 <span class="n">dirname</span> <span class="o">=</span> <span class="s2">&quot;path//to&quot;</span>
 <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;SBML_file.xml&quot;</span>
 
-<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
-<span class="n">sbmlStr</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
-<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+     <span class="n">sbmlStr</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">SBMLDiagrams</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span>
 
@@ -238,10 +237,10 @@
 <span class="n">df</span> <span class="o">=</span> <span class="n">SBMLDiagrams</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">sbmlStr</span><span class="p">)</span>
 
 <span class="n">df</span><span class="o">.</span><span class="n">setColorStyle</span><span class="p">(</span><span class="n">newStyle</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="s2">&quot;simplicity&quot;</span><span class="p">])</span>
-<span class="n">df</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">output_fileName</span><span class="o">=</span><span class="s2">&quot;load_json_style/simplicity-color&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">output_fileName</span><span class="o">=</span><span class="s2">&quot;load_json_style/simplicity-color.png&quot;</span><span class="p">)</span>
 
 <span class="n">df</span><span class="o">.</span><span class="n">setColorStyle</span><span class="p">(</span><span class="n">newStyle</span> <span class="o">=</span> <span class="n">colors</span><span class="p">[</span><span class="s2">&quot;skyblue&quot;</span><span class="p">])</span>
-<span class="n">df</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">output_fileName</span><span class="o">=</span><span class="s2">&quot;load_json_style/skyblue-color&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">output_fileName</span><span class="o">=</span><span class="s2">&quot;load_json_style/skyblue-color.png&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The file style.json:</p>
