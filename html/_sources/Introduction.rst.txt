@@ -48,7 +48,7 @@ with different fill colors and border colors.
   :width: 400
 
 4) An example with long text contents. 
-   Its animation is also available at https://www.youtube.com/watch?v=15WFw_YXwFA.
+   Its animation is also available at https://youtu.be/3pFvLbtRBnQ.
 
 .. image:: Figures/Jana_WolfGlycolysis.png
   :width: 400
