@@ -25,6 +25,6 @@ Its animation is also available at https://youtu.be/3pFvLbtRBnQ.
 Please see more figure examples in the documentation.
 
 ## Documentation
-Please see the documentation at https://sunnyXu.github.io/SBMLDiagrams/ for details.
+Please see the documentation at https://sys-bio.github.io/SBMLDiagrams/ for details.
 
 
