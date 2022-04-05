@@ -1369,21 +1369,25 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
     if output_fileName != '':
         if '.png' in output_fileName:
             fileFormat = 'PNG'
+            fileName = output_fileName.replace('.png', '')
         elif '.jpg' in output_fileName:
             fileFormat = 'JPEG' 
+            fileName = output_fileName.replace('.jpg', '')
         elif '.pdf' in output_fileName:
-            fileFormat = 'PDF' 
+            fileFormat = 'PDF'
+            fileName = output_fileName.replace('.pdf', '')
         else:
             raise Exception("Please enter an output fileName ending with .png/.jpg/.pdf.")
     else:
         fileFormat = 'PNG'
+        fileName = ''
 
     baseImageArray = []
     
     surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
     canvas = surface.getCanvas()
     pos_dict, dim_dict, all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
-    baseImageArray = drawNetwork.showPlot(surface,save=save,fileName = output_fileName, file_format = fileFormat, showImage=showImage)
+    baseImageArray = drawNetwork.showPlot(surface, save=save, fileName = fileName, file_format = fileFormat, showImage=showImage)
     
     if output_fileName == '':
         tmpfileName = "temp.png" #display the file in drawNetwork
@@ -1410,10 +1414,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
             with document.page(int(imageSize[0]), int(imageSize[1])) as canvas:
                 pos_dict, dim_dict,  all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
         
-        return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
-
-    elif fileFormat == 'PNG' or fileFormat == 'JPEG':
-        return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
+    return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
 
 def _getNetworkTopLeftCorner(sbmlStr):
     """

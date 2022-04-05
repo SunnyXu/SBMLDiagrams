@@ -3233,7 +3233,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3269,7 +3269,7 @@ if __name__ == '__main__':
     #filename = "Sauro_test_sbml_files/linearchain.xml"
 
     #filename = "Coyote/branch1.xml"
-    filename = "Coyote/branch2.xml"
+    #filename = "Coyote/branch2.xml"
     #filename = "Coyote/cycle1.xml"
     #filename = "Coyote/test.xml"
 
@@ -3338,7 +3338,7 @@ if __name__ == '__main__':
 
     # df.setFloatingBoundaryNode("x_1", True)
     # df.setNodePosition("x_1", [100.0, 100.0])
-    # df.setNodeTextPosition("x_1", [100.0, 100.0])
+    # df.setNodeTextPosition("x_3", [568.0, 229.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
     # df.setNodeShape("x_0",0)
@@ -3368,7 +3368,8 @@ if __name__ == '__main__':
     # print(df.getNodeBorderWidth("x_1"))
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
     # df.setNodeTextLineWidth("x_1", 1.)
-    # df.setNodeTextFontSize("x_1", 15)
+    # print(df.getNodeTextFontSize("x_5"))
+    # df.setNodeTextFontSize("x_5", 10)
 
     # df.setReactionFillColor("r_0", [91, 176, 253])
     # df.setReactionFillColor("r_0", [0, 0, 0])
@@ -3414,11 +3415,11 @@ if __name__ == '__main__':
     # print(df.getTextContentList())
     # print(df.getCompartmentIdList())
 
-    sbmlStr_layout_render = df.export()
+    # sbmlStr_layout_render = df.export()
 
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
     df.draw(output_fileName = 'output.png')
