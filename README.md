@@ -21,7 +21,7 @@ Here is a figure example visualized by SBMLDiagrams below:
 
 <img src="https://github.com/SunnyXu/SBMLDiagrams/blob/main/docs/Figures/Jana_WolfGlycolysis.png" width="350" height="450">
 
-Its animation is also available at https://www.youtube.com/watch?v=15WFw_YXwFA. 
+Its animation is also available at https://youtu.be/3pFvLbtRBnQ. 
 Please see more figure examples in the documentation.
 
 ## Documentation
