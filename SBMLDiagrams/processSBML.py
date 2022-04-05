@@ -1050,7 +1050,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     center_handle = reaction_center_handle_list[i]
                     handles = [center_handle]
                     handles.extend(src_handle)
-                    handles.extend(dst_handle)   
+                    handles.extend(dst_handle) 
+                    #print("process:", handles) 
                     ReactionData_row_dct = {k:[] for k in COLUMN_NAME_df_ReactionData}
                     ReactionData_row_dct[NETIDX].append(netIdx)
                     ReactionData_row_dct[IDX].append(i)
@@ -3232,7 +3233,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3266,6 +3267,11 @@ if __name__ == '__main__':
     #filename = "Sauro_test_sbml_files/cycle1-1.xml"
     #filename = "Sauro_test_sbml_files/cycle2-1.xml"
     #filename = "Sauro_test_sbml_files/linearchain.xml"
+
+    #filename = "Coyote/branch1.xml"
+    filename = "Coyote/branch2.xml"
+    #filename = "Coyote/cycle1.xml"
+    #filename = "Coyote/test.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -3408,11 +3414,11 @@ if __name__ == '__main__':
     # print(df.getTextContentList())
     # print(df.getCompartmentIdList())
 
-    # sbmlStr_layout_render = df.export()
+    sbmlStr_layout_render = df.export()
 
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
     df.draw(output_fileName = 'output.png')

@@ -908,9 +908,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     try: 
                         center_position = reaction_center_list[i]
                         center_handle = reaction_center_handle_list[i]
-                        handles = [center_position]
+                        handles = [center_handle]
                         handles.extend(src_handle)
                         handles.extend(dst_handle)
+                        #print("visualize:",handles)
                         center_position = [(center_position[0]-topLeftCorner[0])*scale, 
                         (center_position[1]-topLeftCorner[1])*scale]
                         for j in range(len(handles)):
@@ -1703,7 +1704,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
+    #filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1726,6 +1727,7 @@ if __name__ == '__main__':
     #filename = 'test_genGlyph.xml'
     #filename = "test_gradientLinear.xml"
     #filename = "test_gradientRadial.xml"
+    filename = "Coyote/test.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -1736,6 +1738,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='')
+        _draw(sbmlStr,output_fileName='output.png')
 
 
