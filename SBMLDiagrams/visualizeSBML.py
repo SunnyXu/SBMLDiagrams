@@ -43,18 +43,31 @@ def loadColorStyle(filename):
     file = open(filename)
     data = json.load(file)
     res = {}
-    for d in data["colorStyle"]:
-        new_style = styleSBML.Style(d["style_name"],
-                                      eval(d["compartment_fill_color"]),
-                                      eval(d["compartment_border_color"]),
-                                      eval(d["species_fill_color"]),
-                                      eval(d["species_border_color"]),
-                                      eval(d["reaction_line_color"]),
-                                      eval(d["font_color"]),
-                                      eval(d["progress_bar_fill_color"]),
-                                      eval(d["progress_bar_full_fill_color"]),
-                                      eval(d["progress_bar_border_color"]))
-        res[d["style_name"]] = new_style
+    if "colorStyle" in data:
+        for d in data["colorStyle"]:
+            new_style = styleSBML.Style(d['style_name'],
+                                        tuple(d['compartment_fill_color']),
+                                        tuple(d['compartment_border_color']),
+                                        tuple(d['species_fill_color']),
+                                        tuple(d['species_border_color']),
+                                        tuple(d['reaction_line_color']),
+                                        tuple(d['font_color']),
+                                        tuple(d['progress_bar_fill_color']),
+                                        tuple(d['progress_bar_full_fill_color']),
+                                        tuple(d['progress_bar_border_color']))
+            res[d['style_name']] = new_style
+    else:
+        new_style = styleSBML.Style(data['style_name'],
+                                    tuple(data['compartment_fill_color']),
+                                    tuple(data['compartment_border_color']),
+                                    tuple(data['species_fill_color']),
+                                    tuple(data['species_border_color']),
+                                    tuple(data['reaction_line_color']),
+                                    tuple(data['font_color']),
+                                    tuple(data['progress_bar_fill_color']),
+                                    tuple(data['progress_bar_full_fill_color']),
+                                    tuple(data['progress_bar_border_color']))
+        res[data['style_name']] = new_style
     return res
         
 

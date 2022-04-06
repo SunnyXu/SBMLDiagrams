@@ -20,7 +20,7 @@ from SBMLDiagrams import styleSBML
 import simplesbml
 import networkx as nx
 from collections import defaultdict
-from SBMLDiagrams import visualizeInfo
+import json
 
 #create datafames for NodeData, ReactionData, CompartmentData:
 # Column names
@@ -2995,20 +2995,18 @@ class load:
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
 
-    def setColorStyle(self, styleName = None, newStyle = None):
+    def setColorStyle(self, style):
         """
         Set the color style.
 
         Args:
-            styleName: the style name.
-
-            newStyle: the user customized style class.
+            style: can be either the "default" string or a new color class
 
         """
-        if newStyle:
-            self.color_style = newStyle
+        if style == "default":
+            self.color_style = styleSBML.Style(style_name="default")
         else:
-            self.color_style = styleSBML.Style(styleName)
+            self.color_style = style
 
     def getColorStyle(self):
         """
@@ -3019,6 +3017,19 @@ class load:
 
         """
         return self.color_style
+
+    def getColorStyleJson(self, filename = None):
+        """
+        Get the current color style in json format and save to a json file if need
+
+        Returns:
+            The current color style. in json format
+        """
+        if filename:
+            out_file = open(filename, "w")
+            json.dump(self.color_style.__dict__, out_file, indent=6)
+        return json.dumps(self.color_style.__dict__)
+
 
     def autolayout(self, layout="spectral"):
         """
