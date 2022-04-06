@@ -1362,7 +1362,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 temp_id = Rxns_ids[i]
                 reaction = model_layout.getReaction(temp_id)
                 rxn_rev = reaction.getReversible()
-                kinetics = model.getRateLaw(i)
+                try: 
+                    kinetics = model.getRateLaw(i)
+                except:
+                    kinetics = ""
                 rct_num = model.getNumReactants(i)
                 prd_num = model.getNumProducts(i)
                 mod_num = model.getNumModifiers(temp_id)
@@ -3233,7 +3236,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3272,6 +3275,9 @@ if __name__ == '__main__':
     #filename = "Coyote/branch2.xml"
     #filename = "Coyote/cycle1.xml"
     #filename = "Coyote/test.xml"
+
+    #filename = "putida_sbml.xml"
+    filename = "putida_gb_newgenes.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()

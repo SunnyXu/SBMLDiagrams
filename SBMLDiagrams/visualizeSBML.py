@@ -1728,7 +1728,10 @@ if __name__ == '__main__':
     #filename = 'test_genGlyph.xml'
     #filename = "test_gradientLinear.xml"
     #filename = "test_gradientRadial.xml"
-    filename = "Coyote/test.xml"
+    #filename = "Coyote/test.xml"
+
+    filename = "putida_sbml.xml"
+    #filename = "putida_gb_newgenes.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
