@@ -24,7 +24,8 @@ from collections import defaultdict
 import numpy as np
 import cv2
 import shutil
-from IPython.display import Video
+from IPython.core.display import Video 
+#colab requires Ipython.core.display instead of Ipython.display
 import json
 
 
@@ -1718,7 +1719,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml"
+    filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1743,7 +1744,7 @@ if __name__ == '__main__':
     #filename = "test_gradientRadial.xml"
     #filename = "Coyote/test.xml"
 
-    filename = "putida_sbml.xml"
+    #filename = "putida_sbml.xml"
     #filename = "putida_gb_newgenes.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')

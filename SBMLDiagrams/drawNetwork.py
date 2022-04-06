@@ -9,8 +9,9 @@ Created on Fri Jul 16 09:57:30 2021
 
 import math
 import random, string, os
-from PIL import Image               # to load images
-from IPython.display import display
+from PIL import Image  # to load images
+from IPython.core.display import display
+#colab requires Ipython.core.display instead of Ipython.display
 import skia
 from SBMLDiagrams import styleSBML
 
