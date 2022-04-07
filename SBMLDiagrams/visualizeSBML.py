@@ -24,26 +24,51 @@ from collections import defaultdict
 import numpy as np
 import cv2
 import shutil
-from IPython.display import Video
+from IPython.core.display import Video 
+#colab requires Ipython.core.display instead of Ipython.display
 import json
 
 
-def loadJsonColor(filename):
+def loadColorStyle(filename):
+    """
+    Load the color style information from a JSON file. 
+    Note that the color style named default couldn't be changed.
+    
+    Args:
+        filename: str-input json file name. Refer to the example in "Tutorial".
+
+    Returns: 
+        res: dictionary with the key of style name and the value with its corresponding style object.
+
+    """
     file = open(filename)
     data = json.load(file)
     res = {}
-    for d in data["colorStyle"]:
-        new_style = styleSBML.Style(d["style_name"],
-                                      eval(d["compartment_fill_color"]),
-                                      eval(d["compartment_border_color"]),
-                                      eval(d["species_fill_color"]),
-                                      eval(d["species_border_color"]),
-                                      eval(d["reaction_line_color"]),
-                                      eval(d["font_color"]),
-                                      eval(d["progress_bar_fill_color"]),
-                                      eval(d["progress_bar_full_fill_color"]),
-                                      eval(d["progress_bar_border_color"]))
-        res[d["style_name"]] = new_style
+    if "colorStyle" in data:
+        for d in data["colorStyle"]:
+            new_style = styleSBML.Style(d['style_name'],
+                                        tuple(d['compartment_fill_color']),
+                                        tuple(d['compartment_border_color']),
+                                        tuple(d['species_fill_color']),
+                                        tuple(d['species_border_color']),
+                                        tuple(d['reaction_line_color']),
+                                        tuple(d['font_color']),
+                                        tuple(d['progress_bar_fill_color']),
+                                        tuple(d['progress_bar_full_fill_color']),
+                                        tuple(d['progress_bar_border_color']))
+            res[d['style_name']] = new_style
+    else:
+        new_style = styleSBML.Style(data['style_name'],
+                                    tuple(data['compartment_fill_color']),
+                                    tuple(data['compartment_border_color']),
+                                    tuple(data['species_fill_color']),
+                                    tuple(data['species_border_color']),
+                                    tuple(data['reaction_line_color']),
+                                    tuple(data['font_color']),
+                                    tuple(data['progress_bar_fill_color']),
+                                    tuple(data['progress_bar_full_fill_color']),
+                                    tuple(data['progress_bar_border_color']))
+        res[data['style_name']] = new_style
     return res
         
 
@@ -52,6 +77,7 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
             horizontal_offset = 15, vertical_offset = 9, text_color = (0, 0, 0, 200), savePngs = False, showImage = False,
             user_reaction_line_color = None):
     """
+    Animate to an mp4 file.
 
     Args:
         start: start point for the simulation.
@@ -213,7 +239,7 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
 
     Video(outputName + ".mp4")
 
-def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
+def _draw(sbmlStr, setImageSize = '', scale = 1.,\
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, showReversible = False, longText = 'auto-font',\
     newStyle = styleSBML.Style(), drawArrow = True, showImage = True, save = True): 
@@ -230,10 +256,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
         scale: float-makes the figure output size = scale * default output size.
         Increasing the scale can make the resolution higher.
 
-        fileFormat: str-output file type: 'PNG' (default), 'JPEG' or 'PDF'.
-
         output_fileName: str-filename: '' (default: will not save the file), 
-        or 'fileName' (self-designed file name).
+        or 'fileName.png' (self-designed file name) which has to end up with '.png', '.jpg', or 'pdf'.
         
         complexShape: str-type of complex shapes: '' (default) or 'monomer' or 'dimer' or 'trimer' 
         or 'tetramer'.
@@ -898,9 +922,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
                     try: 
                         center_position = reaction_center_list[i]
                         center_handle = reaction_center_handle_list[i]
-                        handles = [center_position]
+                        handles = [center_handle]
                         handles.extend(src_handle)
                         handles.extend(dst_handle)
+                        #print("visualize:",handles)
                         center_position = [(center_position[0]-topLeftCorner[0])*scale, 
                         (center_position[1]-topLeftCorner[1])*scale]
                         for j in range(len(handles)):
@@ -1355,13 +1380,28 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
         
         return floatingNodes_pos_dict, floatingNodes_dim_dict, allNodes_pos_dict, allNodes_dim_dict, edges, arrow_info, name_to_id
     
+    if output_fileName != '':
+        if '.png' in output_fileName:
+            fileFormat = 'PNG'
+            fileName = output_fileName.replace('.png', '')
+        elif '.jpg' in output_fileName:
+            fileFormat = 'JPEG' 
+            fileName = output_fileName.replace('.jpg', '')
+        elif '.pdf' in output_fileName:
+            fileFormat = 'PDF'
+            fileName = output_fileName.replace('.pdf', '')
+        else:
+            raise Exception("Please enter an output fileName ending with .png/.jpg/.pdf.")
+    else:
+        fileFormat = 'PNG'
+        fileName = ''
 
     baseImageArray = []
     
     surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
     canvas = surface.getCanvas()
     pos_dict, dim_dict, all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
-    baseImageArray = drawNetwork.showPlot(surface,save=save,fileName = output_fileName, file_format = fileFormat, showImage=showImage)
+    baseImageArray = drawNetwork.showPlot(surface, save=save, fileName = fileName, file_format = fileFormat, showImage=showImage)
     
     if output_fileName == '':
         tmpfileName = "temp.png" #display the file in drawNetwork
@@ -1370,13 +1410,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
         except:
             pass
 
-    if fileFormat == "PDF" and output_fileName != '':
+    if fileFormat == "PDF" and output_fileName.replace('.pdf', '') != '':
         # if output_fileName == '':
         #     random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
         #     fileName = os.path.join(os.getcwd(), random_string)
         #     fileNamepdf = fileName + '.pdf'
         #     stream = skia.FILEWStream(fileNamepdf)
-        fileName = os.path.join(os.getcwd(), output_fileName)
+        fileName = os.path.join(os.getcwd(), output_fileName.replace('.pdf', ''))
         fileNamepdf = fileName + '.pdf'
         stream = skia.FILEWStream(fileNamepdf)
         fileNamepng = fileName + '.png' #display the file in drawNetwork
@@ -1388,10 +1428,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1., fileFormat = 'PNG', \
             with document.page(int(imageSize[0]), int(imageSize[1])) as canvas:
                 pos_dict, dim_dict,  all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
         
-        return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
-
-    elif fileFormat == 'PNG' or fileFormat == 'JPEG':
-        return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
+    return visualizeInfo.visualizeInfo(baseImageArray, pos_dict, dim_dict, all_pos_dict, all_dim_dict, color_style, edges, arrow_info, name_to_id)
 
 def _getNetworkTopLeftCorner(sbmlStr):
     """
@@ -1682,7 +1719,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml"
+    filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1697,7 +1734,7 @@ if __name__ == '__main__':
     #filename = "E_coli_Millard2016.xml"
     #filename = "test_arrows.xml"
     #filename = "test_textGlyph.xml"
-    filename = "output.xml"
+    #filename = "output.xml"
 
     #filename = "putida_gb_newgenes.xml"
     #filename = "testbigmodel.xml" #sbml with errors
@@ -1705,6 +1742,10 @@ if __name__ == '__main__':
     #filename = 'test_genGlyph.xml'
     #filename = "test_gradientLinear.xml"
     #filename = "test_gradientRadial.xml"
+    #filename = "Coyote/test.xml"
+
+    #filename = "putida_sbml.xml"
+    #filename = "putida_gb_newgenes.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -1715,6 +1756,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output')
+        _draw(sbmlStr,output_fileName='output.png')
 
 

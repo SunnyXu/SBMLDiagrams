@@ -1,8 +1,7 @@
-from SBMLDiagrams import visualizeSBML
-import tellurium as te
 import SBMLDiagrams
+import tellurium as te
 
-colors = visualizeSBML.loadJsonColor("style.json")
+colors = SBMLDiagrams.loadColorStyle("style.json")
 r = te.loada('''
     A -> B; k1*A
     B -> C; k2*B
@@ -12,8 +11,14 @@ r = te.loada('''
 sbmlStr = r.getSBML()
 df = SBMLDiagrams.load(sbmlStr)
 
-df.setColorStyle(newStyle = colors["simplicity"])
-df.draw(output_fileName="load_json_style/simplicity-color")
+df.setColorStyle("default")
+df.draw(output_fileName="load_json_style/default-color-before.png")
 
-df.setColorStyle(newStyle = colors["default"])
-df.draw(output_fileName="load_json_style/default-color")
+df.setColorStyle(colors["simplicity"])
+df.draw(output_fileName="load_json_style/simplicity-color.png")
+
+df.setColorStyle(colors["skyblue"])
+df.draw(output_fileName="load_json_style/skyblue-color.png")
+
+df.setColorStyle("default")
+df.draw(output_fileName="load_json_style/default-color-after.png")

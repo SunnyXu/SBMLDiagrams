@@ -222,7 +222,7 @@
           </layout:textGlyph>
           <layout:textGlyph layout:id="TextG_x_3_idx_3" layout:originOfText="SpecG_x_3_idx_3" layout:graphicalObject="SpecG_x_3_idx_3">
             <layout:boundingBox layout:id="bb_spec_text_x_3_idx_3">
-              <layout:position layout:x="588" layout:y="229"/>
+              <layout:position layout:x="568" layout:y="229"/>
               <layout:dimensions layout:width="39" layout:height="39"/>
             </layout:boundingBox>
           </layout:textGlyph>
@@ -256,6 +256,22 @@
               <render:colorDefinition render:id="reaction_fill_color_reaction_0" render:value="#86f4aa"/>
               <render:colorDefinition render:id="reaction_fill_color_reaction_1" render:value="#817bff"/>
             </render:listOfColorDefinitions>
+            <render:listOfLineEndings>
+              <render:lineEnding render:id="reaction_arrow_head_reaction_0">
+                <layout:boundingBox layout:id="bb_reaction_0">
+                  <layout:position layout:x="0" layout:y="0"/>
+                  <layout:dimensions layout:width="12" layout:height="15"/>
+                </layout:boundingBox>
+                <render:g/>
+              </render:lineEnding>
+              <render:lineEnding render:id="reaction_arrow_head_reaction_1">
+                <layout:boundingBox layout:id="bb_reaction_1">
+                  <layout:position layout:x="0" layout:y="0"/>
+                  <layout:dimensions layout:width="12" layout:height="15"/>
+                </layout:boundingBox>
+                <render:g/>
+              </render:lineEnding>
+            </render:listOfLineEndings>
             <render:listOfStyles>
               <render:style render:id="compStyle__compartment_default_" render:typeList="COMPARTMENTGLYPH" render:idList="_compartment_default_">
                 <render:g render:stroke="comp_border_color__compartment_default_" render:stroke-width="2" render:fill="comp_fill_color__compartment_default_">
@@ -288,7 +304,7 @@
               </render:style>
               <render:style render:id="specStyle_x_3" render:typeList="SPECIESGLYPH" render:idList="x_3">
                 <render:g render:stroke="spec_border_color_x_3" render:stroke-width="2" render:fill="spec_fill_color_x_3">
-                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="100%"/>
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
                 </render:g>
               </render:style>
               <render:style render:id="textStyle" render:typeList="TEXTGLYPH" render:idList="x_3">
@@ -303,10 +319,10 @@
                 <render:g render:stroke="text_line_color_x_1" render:stroke-width="1" render:font-size="11"/>
               </render:style>
               <render:style render:id="reactionStyle_reaction_0" render:typeList="REACTIONGLYPH SPECIESREFERENCEGLYPH" render:idList="reaction_0">
-                <render:g render:stroke="reaction_fill_color_reaction_0" render:stroke-width="3"/>
+                <render:g render:stroke="reaction_fill_color_reaction_0" render:stroke-width="3" render:endHead="reaction_arrow_head_reaction_0"/>
               </render:style>
               <render:style render:id="reactionStyle_reaction_1" render:typeList="REACTIONGLYPH SPECIESREFERENCEGLYPH" render:idList="reaction_1">
-                <render:g render:stroke="reaction_fill_color_reaction_1" render:stroke-width="3"/>
+                <render:g render:stroke="reaction_fill_color_reaction_1" render:stroke-width="3" render:endHead="reaction_arrow_head_reaction_1"/>
               </render:style>
             </render:listOfStyles>
           </render:renderInformation>

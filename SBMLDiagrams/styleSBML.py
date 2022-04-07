@@ -5,79 +5,66 @@ class Style:
     '''
     class describing the style for the ploting and drawing
     '''
-    def __init__(self, styleName=None,
-                 comp_fill_color=None,
-                 comp_border_color=None,
-                 spec_fill_color=None,
-                 spec_border_color=None,
+    def __init__(self, style_name=None,
+                 compartment_fill_color=None,
+                 compartment_border_color=None,
+                 species_fill_color=None,
+                 species_border_color=None,
                  reaction_line_color=None,
-                 text_line_color=None,
-                 process_fill_color=None,
-                 full_fill_color=None,
-                 process_border_color=None):
+                 font_color=None,
+                 progress_bar_fill_color=None,
+                 progress_bar_full_fill_color=None,
+                 progress_bar_border_color=None):
         '''
 
         Args:
-            styleName: name for the style
-            comp_fill_color: compartment filled color
-            comp_border_color: compartment border color
-            spec_fill_color: species nodes filled color
-            spec_border_color: species nodes border color
+            style_name: name for the style
+            compartment_fill_color: compartment filled color
+            compartment_border_color: compartment border color
+            species_fill_color: species nodes filled color
+            species_border_color: species nodes border color
             reaction_line_color: reaction line color
-            text_line_color: font color
-            process_fill_color: progress bar filled color
-            full_fill_color: progress bar full filled color
-            process_border_color: progress bar border color
+            font_color: font color
+            progress_bar_fill_color: progress bar filled color
+            progress_bar_full_fill_color: progress bar full filled color
+            progress_bar_border_color: progress bar border color
         '''
-        self.styleName = styleName
-        self.comp_fill_color = None
-        self.comp_border_color = None
-        self.spec_fill_color = None
-        self.spec_border_color = None
-        self.reaction_line_color = None
-        self.text_line_color = None
+        self.style_name = style_name
+        self.compartment_fill_color = compartment_fill_color
+        self.compartment_border_color = compartment_border_color
+        self.species_fill_color = species_fill_color
+        self.species_border_color = species_border_color
+        self.reaction_line_color = reaction_line_color
+        self.font_color = font_color
 
-        self.process_fill_color = None
-        self.full_fill_color = None
-        self.process_border_color = None
+        self.progress_bar_fill_color = progress_bar_fill_color
+        self.progress_bar_full_fill_color = progress_bar_full_fill_color
+        self.progress_bar_border_color = progress_bar_border_color
 
         self.image_size = None
         self.node_dimension = None
 
-        if styleName == 'default':
+        if style_name == 'default':
+            self.style_name = 'default'
             # for compartment's color
-            self.comp_fill_color = (255, 255, 255, 255)
-            self.comp_border_color = (255, 255, 255, 255)
+            self.compartment_fill_color = (255, 255, 255, 255)
+            self.compartment_border_color = (255, 255, 255, 255)
 
             # for node's color
-            self.spec_fill_color = (255, 204, 153, 200)
-            self.spec_border_color = (255, 108, 9, 255)
+            self.species_fill_color = (255, 204, 153, 200)
+            self.species_border_color = (255, 108, 9, 255)
             self.reaction_line_color = (91, 176, 253, 255)
-            self.text_line_color = (0, 0, 0, 255)
+            self.font_color = (0, 0, 0, 255)
 
             # for node's dimension
             self.node_dimension = [40,60]
             self.image_size = [1000,1000]
 
             # for progress bar's color
-            self.process_fill_color = (255, 108, 9, 200)
-            self.full_fill_color = (91, 176, 253, 200)
-            self.process_border_color = (255, 204, 153, 200)
+            self.progress_bar_fill_color = (255, 108, 9, 200)
+            self.progress_bar_full_fill_color = (91, 176, 253, 200)
+            self.progress_bar_border_color = (255, 204, 153, 200)
 
-        elif styleName == "simplicity":
-            self.comp_fill_color = (255, 255, 255, 255) # white
-            self.comp_border_color = (255, 255, 255, 255)
-            self.spec_fill_color = (255, 255, 255, 255)
-            self.spec_border_color = (0, 0, 0, 255) # black
-            self.reaction_line_color = (0, 0, 0, 255)
-            self.text_line_color = (0, 0, 0, 255)
-
-            self.process_fill_color = (255, 108, 9, 200)
-            self.full_fill_color = (91, 176, 253, 200)
-            self.process_border_color = (255, 204, 153, 200)
-
-            self.image_size = [1000, 1000]
-            self.node_dimension = [40, 60]
 
     def getStyleName(self):
         '''
@@ -85,17 +72,17 @@ class Style:
         Returns: the style name
 
         '''
-        return self.styleName
+        return self.style_name
 
-    def setStyleName(self, styleName):
+    def setStyleName(self, style_name):
         '''
         set the style name
 
         Args:
-            styleName:
+            style_name:
 
         '''
-        self.styleName = styleName
+        self.style_name = style_name
 
     def getImageSize(self):
         '''
@@ -139,7 +126,7 @@ class Style:
         Returns: the progress bar filled color or the default progress bar filled color
 
         '''
-        return self.process_fill_color if self.process_fill_color else (255, 108, 9, 200)
+        return self.progress_bar_fill_color if self.progress_bar_fill_color else (255, 108, 9, 200)
 
     def getProcessBorderColor(self):
         '''
@@ -147,7 +134,7 @@ class Style:
         Returns: the progress bar border color or the default the progress bar border
 
         '''
-        return self.process_border_color if self.process_border_color else (255, 204, 153, 200)
+        return self.progress_bar_border_color if self.progress_bar_border_color else (255, 204, 153, 200)
 
     def getFullFillColor(self):
         '''
@@ -155,7 +142,7 @@ class Style:
         Returns: progress bar full filled color or the default progress bar full filled color
 
         '''
-        return self.full_fill_color if self.full_fill_color else (91, 176, 253, 200)
+        return self.progress_bar_full_fill_color if self.progress_bar_full_fill_color else (91, 176, 253, 200)
 
     def getCompFillColor(self):
         '''
@@ -163,7 +150,7 @@ class Style:
         Returns: compartment filled color or the default compartment filled color
 
         '''
-        return self.comp_fill_color if self.comp_fill_color else (255, 255, 255, 255)
+        return self.compartment_fill_color if self.compartment_fill_color else (255, 255, 255, 255)
         
     def getCompBorderColor(self):
         '''
@@ -171,7 +158,7 @@ class Style:
         Returns: compartment border color or the default compartment border color
 
         '''
-        return self.comp_border_color if self.comp_border_color else (255, 255, 255, 255)
+        return self.compartment_border_color if self.compartment_border_color else (255, 255, 255, 255)
         
     def getSpecFillColor(self):
         '''
@@ -179,7 +166,7 @@ class Style:
         Returns: species nodes filled color or the default species nodes filled color
 
         '''
-        return self.spec_fill_color if self.spec_fill_color else (255, 204, 153, 200)
+        return self.species_fill_color if self.species_fill_color else (255, 204, 153, 200)
         
     def getSpecBorderColor(self):
         '''
@@ -187,7 +174,7 @@ class Style:
         Returns: species nodes border color or the default species nodes border color
 
         '''
-        return self.spec_border_color if self.spec_border_color else (255, 108, 9, 255)
+        return self.species_border_color if self.species_border_color else (255, 108, 9, 255)
         
     def getReactionLineColor(self):
         '''
@@ -203,7 +190,7 @@ class Style:
         Returns: font color or the default font color
 
         '''
-        return self.text_line_color if self.text_line_color else (0, 0, 0, 255)
+        return self.font_color if self.font_color else (0, 0, 0, 255)
 
     def setCompFillColor(self, color):
         '''
@@ -213,7 +200,7 @@ class Style:
             color: color
 
         '''
-        self.comp_fill_color = color
+        self.compartment_fill_color = color
 
     def setCompBorderColor(self, color):
         '''
@@ -223,7 +210,7 @@ class Style:
             color: color
 
         '''
-        self.comp_border_color = color
+        self.compartment_border_color = color
 
     def setSpecFillColor(self, color):
         '''
@@ -233,7 +220,7 @@ class Style:
             color: color
 
         '''
-        self.spec_fill_color = color
+        self.species_fill_color = color
 
     def setSpecBorderColor(self, color):
         '''
@@ -243,7 +230,7 @@ class Style:
             color: color
 
         '''
-        self.spec_border_color = color
+        self.species_border_color = color
 
     def setReactionLineColor(self, color):
         '''
@@ -263,7 +250,7 @@ class Style:
             color:
 
         '''
-        self.text_line_color = color
+        self.font_color = color
 
 
 

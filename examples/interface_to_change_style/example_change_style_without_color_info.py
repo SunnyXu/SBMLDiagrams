@@ -9,7 +9,4 @@ r = te.loada('''
 
 sbmlStr = r.getSBML()
 df = SBMLDiagrams.load(sbmlStr)
-df.draw(output_fileName="without-color/default-color")
-
-df.setColorStyle("simplicity")
-df.draw(output_fileName="without-color/simplicity")
+df.draw(output_fileName="without-color/default-color.png")

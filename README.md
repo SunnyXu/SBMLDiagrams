@@ -8,7 +8,8 @@ SBMLDiagrams is a Python package to visualize networks embedded in SBML Level 3 
 
 We also have an interface of SBMLDiagrams to NetworkX to exploit the variety of layout algorithms as well as SBbadger which is a tool for generating realistic but random biochemical networks. 
 
-Note that the API is currently undergoing rapid changes to make the package easier to use.
+Note that the API is currently undergoing rapid changes to make the package easier to use. If you are
+using any of the code, please cite the PYPI web page (https://pypi.org/project/SBMLDiagrams/). Thanks. 
 
 ## Installation
 
@@ -16,13 +17,14 @@ Note that the API is currently undergoing rapid changes to make the package easi
 
 ## A Figure Example
 
-Here is a figure example visualized by SBMLDiagrams:
+Here is a figure example visualized by SBMLDiagrams below:
 
 <img src="https://github.com/SunnyXu/SBMLDiagrams/blob/main/docs/Figures/Jana_WolfGlycolysis.png" width="350" height="450">
 
+Its animation is also available at https://youtu.be/3pFvLbtRBnQ. 
 Please see more figure examples in the documentation.
 
 ## Documentation
-Please see the documentation at https://sunnyXu.github.io/SBMLDiagrams/ for details.
+Please see the documentation at https://sys-bio.github.io/SBMLDiagrams/ for details.
 
 

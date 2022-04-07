@@ -85,9 +85,7 @@ end
 sbmlStr = r.getSBML()
 df = SBMLDiagrams.load(sbmlStr)
 df.autolayout(layout="spectral")
-df.setColorStyle("simplicity")
-df.draw(output_fileName="simplicity-spectral")
+df.draw(output_fileName="spectral.png")
 
 df.autolayout(layout="spring")
-df.setColorStyle("default")
-df.draw(output_fileName="simplicity-spring")
+df.draw(output_fileName="spring.png")

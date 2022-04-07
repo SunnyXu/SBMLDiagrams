@@ -1,5 +1,6 @@
-from SBMLDiagrams.visualizeSBML import *
+import SBMLDiagrams
 import tellurium as te
+import os
 r = te.loada('''
 //Created by libAntimony v2.5
 model *Jana_WolfGlycolysis()
@@ -82,4 +83,4 @@ model *Jana_WolfGlycolysis()
 end
 ''')
 DIR = os.path.dirname(os.path.abspath(__file__))
-animate(0,30, 50, r, 0.5, outputName="ouput2")
+SBMLDiagrams.animate(0,30, 50, r, 0.5, outputName="ouput2")

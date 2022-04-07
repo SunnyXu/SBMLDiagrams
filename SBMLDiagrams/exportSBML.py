@@ -597,6 +597,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                         handles.append([handles_pre[i], handles_pre[i+1]])
                 else:
                     handles = handles_list_pre
+                #print("export:", handles)
                 center_value = [float(center_pos[0]),float(center_pos[1])]
             except:
                 center_value = center_position
@@ -651,7 +652,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 cb.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
                 handle1 = handles[0]
                 handle2 = handles[rct_num+1+j]
-                cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle2[1]))
+                cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle1[1]))
                 cb.setBasePoint2(libsbml.Point(layoutns, handle2[0], handle2[1]))
                 
 
