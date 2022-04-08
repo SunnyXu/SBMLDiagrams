@@ -12,9 +12,9 @@ sbmlStr = r.getSBML()
 df = SBMLDiagrams.load(sbmlStr)
 
 df.setColorStyle(colors["skyblue"])
-df.draw(output_fileName="load_new_json_style/skyblue-color-before.png")
+df.draw(output_fileName="load_out_json_style/skyblue-color-before.png")
 df.getColorStyleJson("skyblue.json")
 
 new_colors = SBMLDiagrams.loadColorStyle("skyblue.json")
 df.setColorStyle(new_colors["skyblue"])
-df.draw(output_fileName="load_new_json_style/skyblue-color-after.png")
+df.draw(output_fileName="load_out_json_style/skyblue-color-after.png")

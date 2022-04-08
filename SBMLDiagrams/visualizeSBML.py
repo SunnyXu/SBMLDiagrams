@@ -46,29 +46,35 @@ def loadColorStyle(filename):
     res = {}
     if "colorStyle" in data:
         for d in data["colorStyle"]:
-            new_style = styleSBML.Style(d['style_name'],
-                                        tuple(d['compartment_fill_color']),
-                                        tuple(d['compartment_border_color']),
-                                        tuple(d['species_fill_color']),
-                                        tuple(d['species_border_color']),
-                                        tuple(d['reaction_line_color']),
-                                        tuple(d['font_color']),
-                                        tuple(d['progress_bar_fill_color']),
-                                        tuple(d['progress_bar_full_fill_color']),
-                                        tuple(d['progress_bar_border_color']))
-            res[d['style_name']] = new_style
+            new_style = styleSBML.Style(d.get('style_name'),
+                                        tuple(d.get('compartment_fill_color')),
+                                        tuple(d.get('compartment_border_color')),
+                                        tuple(d.get('species_fill_color')),
+                                        tuple(d.get('species_border_color')),
+                                        tuple(d.get('reaction_line_color')),
+                                        tuple(d.get('font_color')),
+                                        tuple(d.get('progress_bar_fill_color')),
+                                        tuple(d.get('progress_bar_full_fill_color')),
+                                        tuple(d.get('progress_bar_border_color')),
+                                        d.get('reaction_line_width'),
+                                        d.get('species_border_width'),
+                                        d.get('compartment_border_width'))
+            res[d.get('style_name')] = new_style
     else:
-        new_style = styleSBML.Style(data['style_name'],
-                                    tuple(data['compartment_fill_color']),
-                                    tuple(data['compartment_border_color']),
-                                    tuple(data['species_fill_color']),
-                                    tuple(data['species_border_color']),
-                                    tuple(data['reaction_line_color']),
-                                    tuple(data['font_color']),
-                                    tuple(data['progress_bar_fill_color']),
-                                    tuple(data['progress_bar_full_fill_color']),
-                                    tuple(data['progress_bar_border_color']))
-        res[data['style_name']] = new_style
+        new_style = styleSBML.Style(data.get('style_name'),
+                                    tuple(data.get('compartment_fill_color')),
+                                    tuple(data.get('compartment_border_color')),
+                                    tuple(data.get('species_fill_color')),
+                                    tuple(data.get('species_border_color')),
+                                    tuple(data.get('reaction_line_color')),
+                                    tuple(data.get('font_color')),
+                                    tuple(data.get('progress_bar_fill_color')),
+                                    tuple(data.get('progress_bar_full_fill_color')),
+                                    tuple(data.get('progress_bar_border_color')),
+                                    data.get('reaction_line_width'),
+                                    data.get('species_border_width'),
+                                    data.get('compartment_border_width'))
+        res[data.get('style_name')] = new_style
     return res
         
 
@@ -667,9 +673,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
                                             color_style.setCompBorderColor(hex_to_rgb(color_list[k][1]))
-                                comp_border_width = group.getStrokeWidth()
+                                if not color_style.getStyleName():
+                                    color_style.setCompBorderWidth(group.getStrokeWidth())
                                 comp_render.append([idList, color_style.getCompFillColor(),
-                                                    color_style.getCompBorderColor(),comp_border_width])
+                                                    color_style.getCompBorderColor(),color_style.getCompBorderWidth()])
                             elif 'SPECIESGLYPH' in typeList:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
@@ -741,10 +748,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 
                                 if spec_fill_color != []:
                                    spec_render.append([idList,spec_fill_color,color_style.getSpecBorderColor(),
-                                   spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
+                                   color_style.getSpecBorderWidth(),shapeIdx,shape_name,shape_type,shapeInfo])
                                 else:
                                     spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
-                                    spec_border_width,shapeIdx,shape_name,shape_type,shapeInfo])
+                                    color_style.getSpecBorderWidth(),shapeIdx,shape_name,shape_type,shapeInfo])
                                 
                                 
                             elif 'REACTIONGLYPH' in typeList:
@@ -831,10 +838,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             if temp_id == comp_render[j][0]:
                                 if not color_style.getStyleName():
                                     color_style.setCompFillColor(comp_render[j][1])
-                                if not color_style.getStyleName():
                                     color_style.setCompBorderColor(comp_render[j][2])
-                                comp_border_width = comp_render[j][3]
-                    
+                                    color_style.setCompBorderWidth(comp_render[j][3])
+
                     else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
                         dimension = imageSize
@@ -845,7 +851,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         #color_style.setCompFillColor((255, 255, 255, 255)
                     drawNetwork.addCompartment(canvas, position, dimension,
                                             color_style.getCompBorderColor(), color_style.getCompFillColor(),
-                                                comp_border_width*scale)
+                                                color_style.getCompBorderWidth()*scale)
                 #add reactions before adding nodes to help with the line positions
                 numSpec_in_reaction = len(spec_specGlyph_id_list)
                 for i in range (numReactionGlyphs):
@@ -934,7 +940,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         if drawArrow:
                             drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
                                 center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                                color_style.getReactionLineColor(), reaction_line_width*scale,
+                                color_style.getReactionLineColor(), color_style.getReactionLineWidth()*scale,
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
@@ -942,7 +948,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
-                             color_style.getReactionLineColor(), reaction_line_width * scale, reactionLineType,
+                             color_style.getReactionLineColor(), color_style.getReactionLineWidth() * scale, reactionLineType,
                              showBezierHandles, showReactionIds,
                              [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale],
                              scale, reaction_dash, rxn_rev, showReversible])
@@ -970,7 +976,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         if drawArrow:
                             drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
                                 center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                                color_style.getReactionLineColor(), reaction_line_width*scale,
+                                color_style.getReactionLineColor(), color_style.getReactionLineWidth()*scale,
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
@@ -978,7 +984,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
-                             color_style.getReactionLineColor(), reaction_line_width * scale, reactionLineType,
+                             color_style.getReactionLineColor(), color_style.getReactionLineWidth() * scale, reactionLineType,
                              showBezierHandles, showReactionIds,
                              [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale],
                              scale, reaction_dash, rxn_rev, showReversible])
@@ -1011,7 +1017,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                 color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
-                                        spec_border_width = spec_render[k][3]
+                                            color_style.setSpecBorderWidth(spec_render[k][3])
                                         shapeIdx = spec_render[k][4]
                                         shape_name = spec_render[k][5]
                                         shape_type = spec_render[k][6]
@@ -1029,12 +1035,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 if gradient_fill_color == []:
                                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape = complexShape)
                                 else:
                                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                         color_style.getSpecBorderColor(), gradient_fill_color,
-                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape = complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
@@ -1051,7 +1057,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                 color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
-                                        spec_border_width = spec_render[k][3]
+                                            color_style.setSpecBorderWidth(spec_render[k][3])
                                         shapeIdx = spec_render[k][4]
                                         shape_name = spec_render[k][5]
                                         shape_type = spec_render[k][6]
@@ -1069,12 +1075,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 if gradient_fill_color == []:
                                     drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape=complexShape)
                                 else:
                                     drawNetwork.addNode(canvas, 'floating', 'alias', position, dimension,
                                                         color_style.getSpecBorderColor(), gradient_fill_color,
-                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape=complexShape)
                                 drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
@@ -1093,7 +1099,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                 color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
-                                        spec_border_width = spec_render[k][3]
+                                            color_style.setSpecBorderWidth(spec_render[k][3])
                                         shapeIdx = spec_render[k][4]
                                         shape_name = spec_render[k][5]
                                         shape_type = spec_render[k][6]
@@ -1107,12 +1113,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 if gradient_fill_color == []:
                                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape=complexShape)
                                 else:
                                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                         color_style.getSpecBorderColor(), gradient_fill_color,
-                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
@@ -1131,7 +1137,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                 color_style.setSpecFillColor(spec_render[k][1])
                                         if not color_style.getStyleName():
                                             color_style.setSpecBorderColor(spec_render[k][2])
-                                        spec_border_width = spec_render[k][3]
+                                            color_style.setSpecBorderWidth(spec_render[k][3])
                                         shapeIdx = spec_render[k][4]
                                         shape_name = spec_render[k][5]
                                         shape_type = spec_render[k][6]
@@ -1145,12 +1151,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 if gradient_fill_color == []:
                                     drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
-                                                        spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                        color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape=complexShape)
                                 else:
                                     drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                     color_style.getSpecBorderColor(), gradient_fill_color,
-                                                    spec_border_width*scale, shapeIdx, shape_name, shape_type, shape_info,
+                                                    color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                     complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
@@ -1229,7 +1235,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     position = [0,0]
                     drawNetwork.addCompartment(canvas, position, dimension,
                                                 color_style.getCompBorderColor(), color_style.getCompFillColor(),
-                                               comp_border_width*scale)
+                                               color_style.getCompBorderWidth()*scale)
                 spec_id_list = [] 
                 spec_dimension_list = []
                 spec_position_list = []
@@ -1311,7 +1317,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     if drawArrow:
                         drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
-                            color_style.getReactionLineColor(), reaction_line_width*scale,
+                            color_style.getReactionLineColor(), color_style.getReactionLineWidth()*scale,
                             reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                             show_reaction_ids = showReactionIds,
                             reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
@@ -1319,7 +1325,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     arrow_info.append(
                         [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                          dst_dimension, mod_dimension,
-                         color_style.getReactionLineColor(), reaction_line_width * scale, reactionLineType,
+                         color_style.getReactionLineColor(), color_style.getReactionLineWidth() * scale, reactionLineType,
                          showBezierHandles, showReactionIds,
                          [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale],
                          scale, reaction_dash, rxn_rev, showReversible])
@@ -1333,7 +1339,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
                     color_style.setNodeDimension(dimension)
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
-                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
+                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), color_style.getSpecBorderWidth()*scale,
                                         shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
                     drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
                     text_line_width*scale, fontSize = text_font_size*scale, 
@@ -1350,7 +1356,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             (spec_position_list[k][1]-topLeftCorner[1])*scale]
                             dimension = [spec_dimension_list[k][0]*scale,spec_dimension_list[k][1]*scale]
                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
-                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), spec_border_width*scale,
+                                        color_style.getSpecBorderColor(), color_style.getSpecFillColor(), color_style.getSpecBorderWidth()*scale,
                                         shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
                     allNodes_pos_dict[temp_id] = position
                     allNodes_dim_dict[temp_id] = dimension
