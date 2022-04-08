@@ -83,4 +83,4 @@ model *Jana_WolfGlycolysis()
 end
 ''')
 DIR = os.path.dirname(os.path.abspath(__file__))
-SBMLDiagrams.animate(0,30, 50, r, 0.5, outputName="ouput2")
+SBMLDiagrams.animate(0,30,10, r, 0.5, outputName="ouput2")

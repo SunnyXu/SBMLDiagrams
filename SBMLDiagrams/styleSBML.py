@@ -14,7 +14,10 @@ class Style:
                  font_color=None,
                  progress_bar_fill_color=None,
                  progress_bar_full_fill_color=None,
-                 progress_bar_border_color=None):
+                 progress_bar_border_color=None,
+                 reaction_line_width=None,
+                 species_border_width=None,
+                 compartment_border_width=None):
         '''
 
         Args:
@@ -41,8 +44,12 @@ class Style:
         self.progress_bar_full_fill_color = progress_bar_full_fill_color
         self.progress_bar_border_color = progress_bar_border_color
 
-        self.image_size = None
-        self.node_dimension = None
+        self.image_size = [1000,1000]
+        self.node_dimension = [40,60]
+
+        self.reaction_line_width = reaction_line_width
+        self.species_border_width = species_border_width
+        self.compartment_border_width = compartment_border_width
 
         if style_name == 'default':
             self.style_name = 'default'
@@ -65,6 +72,67 @@ class Style:
             self.progress_bar_full_fill_color = (91, 176, 253, 200)
             self.progress_bar_border_color = (255, 204, 153, 200)
 
+            # width
+            self.reaction_line_width = 3.0
+            self.species_border_width = 2.0
+            self.compartment_border_width = 2.0
+
+    def getCompBorderWidth(self):
+        """
+
+        Returns: the compartment border width
+
+        """
+        return self.compartment_border_width if self.compartment_border_width else 2.0
+
+    def setCompBorderWidth(self, width):
+        """
+
+        Args:
+            width: border width
+
+        Returns:
+
+        """
+        self.compartment_border_width = width
+
+    def getReactionLineWidth(self):
+        """
+
+        Returns: the reaction line width
+
+        """
+        return self.reaction_line_width if self.reaction_line_width else 3.0
+
+    def setReactionLineWidth(self, width):
+        """
+
+        Args:
+            width: the reaction line width
+
+        Returns:
+
+        """
+        self.reaction_line_width = width
+
+    def getSpecBorderWidth(self):
+        """
+
+        Returns: the species border width
+
+        """
+        return self.species_border_width if self.species_border_width else 2.0
+
+    def setSpecBorderWidth(self, width):
+        """
+
+        Args:
+            width: the species border width
+
+        Returns:
+
+        """
+        self.species_border_width = width
 
     def getStyleName(self):
         '''
@@ -79,7 +147,7 @@ class Style:
         set the style name
 
         Args:
-            style_name:
+            style_name: the style name
 
         '''
         self.style_name = style_name
