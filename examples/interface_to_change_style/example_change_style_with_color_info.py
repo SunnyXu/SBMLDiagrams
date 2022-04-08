@@ -13,6 +13,4 @@ df.draw(output_fileName="with-color/sbml-color.png")
 df.setColorStyle("default")
 df.draw(output_fileName="with-color/default-color.png")
 
-df.setColorStyle(None)
-df.draw(output_fileName="with-color/back-sbml-color.png")
 
