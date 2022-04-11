@@ -3033,17 +3033,18 @@ class load:
 
     def autolayout(self, layout="spring"):
         """
-        Autolayout the node positions using the networkX library.
+        Autolayout the node positions using networkX library.
 
         Args:
-            layout: (string) the name of the layout algorithm from the networkX. These can  include:
+
+            layout: str-the name of the layout algorithm from the networkX, including
 
             spectral: positioning the nodes using the eigenvectors of the graph Laplacian.
 
             spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm.
-
+            
             random: positioning nodes randomly.
-
+            
             circular: positioning nodes on a circle.
 
         """
