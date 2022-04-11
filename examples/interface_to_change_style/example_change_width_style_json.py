@@ -1,7 +1,7 @@
 import SBMLDiagrams
 import tellurium as te
 
-colors = SBMLDiagrams.loadColorStyle("width.json")
+colors = SBMLDiagrams.loadColorStyle("style.json")
 r = te.loada('''
     A -> B; k1*A
     B -> C; k2*B
