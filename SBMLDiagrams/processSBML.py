@@ -3031,16 +3031,16 @@ class load:
         return json.dumps(self.color_style.__dict__)
 
 
-    def autolayout(self, layout="spectral"):
+    def autolayout(self, layout="spring"):
         """
-        Autolayout the node positions using networkX library.
+        Autolayout the node positions using the networkX library.
 
         Args:
-            layout: str-the layout name from the networkX.
+            layout: (string) the name of the layout algorithm from the networkX. These can  include:
 
-            spectral(default): positioning the nodes using the eigenvectors of the graph Laplacian.
+            spectral: positioning the nodes using the eigenvectors of the graph Laplacian.
 
-            spring: positioning nodes using Fruchterman-Reingold force-directed algorithm.
+            spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm.
 
             random: positioning nodes randomly.
 
