@@ -3036,14 +3036,15 @@ class load:
         Autolayout the node positions using networkX library.
 
         Args:
-            layout: str-the layout name from the networkX.
 
-            spectral(default): positioning the nodes using the eigenvectors of the graph Laplacian.
+            layout: str-the name of the layout algorithm from the networkX, including
 
-            spring: positioning nodes using Fruchterman-Reingold force-directed algorithm.
+            spectral: positioning the nodes using the eigenvectors of the graph Laplacian.
 
+            spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm.
+            
             random: positioning nodes randomly.
-
+            
             circular: positioning nodes on a circle.
 
         """
@@ -3256,7 +3257,7 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
 
-    #filename = "Jana_WolfGlycolysis.xml"
+    filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
@@ -3288,7 +3289,7 @@ if __name__ == '__main__':
     #filename = "Coyote/test.xml"
 
     #filename = "putida_sbml.xml"
-    filename = "putida_gb_newgenes.xml"
+    #filename = "putida_gb_newgenes.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -3441,89 +3442,4 @@ if __name__ == '__main__':
     # df.draw(reactionLineType='bezier', scale = 2.)
     df.draw(output_fileName = 'output.png')
 
-    # #SBGN1-complexSpec
-    # df.setNodeAndTextPosition("ATP",[100,100])
-    # df.setNodeAndTextPosition("myosin",[50,200])
-    # df.setNodeAndTextPosition("myosinATP",[300,120])
-    # df.setNodeShape("ATP","ellipse")
-    # df.setNodeAndTextSize("ATP",[50,50])
-    # df.setNodeAndTextSize("myosinATP",[70,100])
-    # df.setNodeArbitraryPolygonShape("myosinATP","myosinATP-polygon", [[12.5,0],[87.5,0],[100,12.5],[100,87.5],
-    # [87.5,100],[12.5,100],[0,87.5],[0,12.5]])
-    # df.setReactionDefaultCenterAndHandlePositions('J1')
-    # df.addRectangle("myosinATP_ATP", [305,130], [60,40])
-    # df.addEllipse("myosinATP_myosin", [315,175], [40,40])
-    # df.addText("myosin", [305,130], [60,40])
-    # df.addText("ATP", [315,175], [40,40])
-    # #print(df.getReactionCenterPosition("J1"))
-    # #print(df.getReactionFillColor("J1"))
-    # df.addEllipse("left_small_circle", [176.0, 166.], [10,10], 
-    # fill_color=[91, 176, 253], border_color = [91,176,253])
-    # df.addEllipse("right_small_circle", [216.0, 166.], [10,10], 
-    # fill_color=[91, 176, 253], border_color = [91,176,253])
-    # df.addEllipse("middle_big_circle", [191.0, 160.], [20,20], 
-    # fill_color=[91, 176, 253], border_color = [91,176,253])
 
-    # #SBGN2-modifier:
-    # df.setNodeAndTextPosition("ADH1",[215,110])
-    # df.setNodeAndTextPosition("Ethanol",[50,200])
-    # df.setNodeAndTextPosition("NAD",[50,300])
-    # df.setNodeAndTextPosition("Ethanal",[300,200])
-    # df.setNodeAndTextPosition("H",[300,300])
-    # df.setNodeAndTextPosition("NADH",[400,250])
-    # df.setNodeShape("Ethanol","ellipse")
-    # df.setNodeShape("NAD","ellipse")
-    # df.setNodeShape("Ethanal","ellipse")
-    # df.setNodeShape("H","ellipse")
-    # df.setNodeShape("NADH","ellipse")
-    # df.setNodeAndTextSize("Ethanol",[50,50])
-    # df.setNodeAndTextSize("NAD",[50,50])
-    # df.setNodeAndTextSize("Ethanal",[50,50])
-    # df.setNodeAndTextSize("H",[50,50])
-    # df.setNodeAndTextSize("NADH",[50,50])
-    # df.setReactionDefaultCenterAndHandlePositions('J0')
-    # #print(df.getReactionCenterPosition("J0"))  
-    # df.addRectangle("centroid_sqaure", [235.0, 265.0], [20,20], 
-    # fill_color=[91, 176, 253], border_color = [91,176,253])
-    # df.setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
-    #  [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
-    # df.setNodeBorderColor("ADH1", "black")
-
-    # # # # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output')
-
-    # sbmlStr_layout_render = df.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
-       
-
-    # if len(sbmlStr_layout_render) == 0:
-    #     print("empty sbml")
-    # else:
-    #     visualizeSBML._draw(sbmlStr_layout_render, fileFormat='PNG')
-
-
-    # la.setNodeAndTextPosition('S1', [200, 200])
-    # la.setNodeAndTextPosition('S2', [300, 300])
-    # la.setNodeAndTextPosition('S3', [400, 200])
-    # la.setNodeAndTextPosition('S4', [500, 200])
-    # la.setNodeAndTextPosition('S5', [600, 200])
-    # la.setNodeTextPosition('S1', [200, 180])
-    # la.setNodeShape('S1', 2)
-    # la.setNodeSize('S1', [10, 10])
-    # la.setNodeTextFontSize('S2', 20)
-    # la.setNodeShape('S2', 0)
-    # la.setReactionDefaultCenterAndHandlePositions('J1')
-    # la.setReactionDefaultCenterAndHandlePositions('J2')
-    # la.setReactionDefaultCenterAndHandlePositions('J3')
-    # la.setReactionDash("J1", [5,5])
-    # la.setReactionCenterPosition("J3",[550,150])
-    # la.setReactionHandlePositions("J3", [[600,150],[530,160],[600,120]])
-
-    # la.draw(showReversible=True,output_fileName = 'output')
-
-    # sbmlStr_layout_render = la.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
