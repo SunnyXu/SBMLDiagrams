@@ -3031,23 +3031,29 @@ class load:
         return json.dumps(self.color_style.__dict__)
 
 
-    def autolayout(self, layout="spectral"):
+    def autolayout(self, layout="spectral", scale=200, iterations=100):
+
         """
         Autolayout the node positions using networkX library.
 
         Args:
 
-            layout: str-the name of the layout algorithm from the networkX, including
+            layout: str-the layout name from networkX, including
 
-            spectral: positioning the nodes using the eigenvectors of the graph Laplacian.
+                spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
 
-            spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm.
+                spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm;
             
-            random: positioning nodes randomly.
+                random: positioning nodes randomly.
             
-            circular: positioning nodes on a circle.
+                circular: positioning nodes on a circle.
+
+            scale: float-the scale factor for positions. 
+            
+            iterations: int-maximum number of iterations taken.             
 
         """
+
         sbmlStr = self.export()
         v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyle=self.color_style)
         edges = v_info.edges
@@ -3059,7 +3065,8 @@ class load:
         reaction_ids = model.getListOfReactionIds()
 
         width, height = self.color_style.getImageSize()
-        scale = max(width, height) // 2
+        if scale == None:
+            scale = max(width, height) // 2
         center = [width // 2, height // 2]
 
         for node in nodes:
@@ -3075,11 +3082,11 @@ class load:
         if layout == "spectral":
             pos = nx.spectral_layout(graph, scale=scale, center=center)
         elif layout == "spring":
-            pos = nx.spring_layout(graph, scale=scale, center=center)
+            pos = nx.spring_layout(graph, scale=scale, center=center, k=1, iterations=iterations)
         elif layout == "random":
             pos = nx.random_layout(graph, center=center)
         elif layout == "circular":
-            pos = nx.circular_layout(graph, scale=scale, center=center)
+            pos = nx.circular_layout(graph, scale=scale, center=center, iterations=iterations)
         else:
             raise Exception("no such layout")
 
@@ -3090,6 +3097,7 @@ class load:
 
         for id in reaction_ids:
             self.setReactionDefaultCenterAndHandlePositions(id)
+
 
     def draw(self, setImageSize = '', scale = 1., output_fileName = '', 
         reactionLineType = 'bezier', showBezierHandles = False, 
