@@ -584,7 +584,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     handles_list_pre = df_ReactionData.iloc[i]['handles']
                 #from excel sheet
                 handles_pre = []
-                handles = []
+                handles_update = []
                 if type(handles_list_pre[0]) is str:
                     for i in range(len(handles_list_pre)):
                         temp = handles_list_pre[i]
@@ -594,13 +594,18 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                             temp_update = temp.replace(']', '')
                         handles_pre.append(float(temp_update))
                     for i in range(0,len(handles_pre),2):
-                        handles.append([handles_pre[i], handles_pre[i+1]])
+                        handles_update.append([handles_pre[i], handles_pre[i+1]])
                 else:
-                    handles = handles_list_pre
+                    handles_update = handles_list_pre
                 #print("export:", handles)
                 center_value = [float(center_pos[0]),float(center_pos[1])]
             except:
                 center_value = center_position
+
+            if len(handles_update) < 3: #if handles information is invalid
+                center_value = center_position
+            else:
+                handles = handles_update
 
             reactionCurve = reactionGlyph.getCurve()
             ls = reactionCurve.createLineSegment()
@@ -620,8 +625,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 speciesReferenceCurve = speciesReferenceGlyph.getCurve()
                 cb = speciesReferenceCurve.createCubicBezier()
                 cb.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
-                handle1 = handles[0]
-                handle2 = handles[j+1]
+                try: 
+                    handle1 = handles_update[0]
+                    handle2 = handles_update[j+1]
+                except:
+                    handle1 = handles[0]
+                    handle2 = handles[rct_num+1+j]
                 cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle1[1]))
                 cb.setBasePoint2(libsbml.Point(layoutns, handle2[0], handle2[1]))
 
@@ -650,8 +659,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 speciesReferenceCurve = speciesReferenceGlyph.getCurve()
                 cb = speciesReferenceCurve.createCubicBezier()
                 cb.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
-                handle1 = handles[0]
-                handle2 = handles[rct_num+1+j]
+                try:
+                    handle1 = handles_update[0]
+                    handle2 = handles_update[rct_num+1+j]
+                except:
+                    handle1 = handles[0]
+                    handle2 = handles[rct_num+1+j]
                 cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle1[1]))
                 cb.setBasePoint2(libsbml.Point(layoutns, handle2[0], handle2[1]))
                 

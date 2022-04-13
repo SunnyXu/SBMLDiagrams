@@ -442,7 +442,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
                             #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
                                                 
-                            curve = specRefGlyph.getCurve()                             
+                            curve = specRefGlyph.getCurve()  
+                            center_handle = []
+                            spec_handle = []                            
                             for segment in curve.getListOfCurveSegments():
                                     # print(segment.getStart().getXOffset())
                                     # print(segment.getStart().getYOffset())
@@ -1725,7 +1727,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml"
+    #filename = "test.xml"
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
@@ -1752,6 +1754,8 @@ if __name__ == '__main__':
 
     #filename = "putida_sbml.xml"
     #filename = "putida_gb_newgenes.xml"
+
+    filename = "bart2.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
