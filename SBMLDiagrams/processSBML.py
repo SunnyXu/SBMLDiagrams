@@ -17,10 +17,12 @@ from SBMLDiagrams import exportSBML
 from SBMLDiagrams import editSBML
 from SBMLDiagrams import visualizeSBML
 from SBMLDiagrams import styleSBML
+from SBMLDiagrams import point
 import simplesbml
 import networkx as nx
 from collections import defaultdict
 import json
+
 
 #create datafames for NodeData, ReactionData, CompartmentData:
 # Column names
@@ -295,22 +297,20 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
                         #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
                                             
-                        curve = specRefGlyph.getCurve()
-                        center_handle = []
-                        spec_handle = []                             
+                        curve = specRefGlyph.getCurve()                             
                         for segment in curve.getListOfCurveSegments():
-                            # print(segment.getStart().getXOffset())
-                            # print(segment.getStart().getYOffset())
-                            # print(segment.getEnd().getXOffset())
-                            # print(segment.getEnd().getYOffset())
-                            try:
-                                center_handle = [segment.getBasePoint1().getXOffset(), 
-                                            segment.getBasePoint1().getYOffset()]                                
-                                spec_handle = [segment.getBasePoint2().getXOffset(),
-                                        segment.getBasePoint2().getYOffset()]
-                            except:
-                                center_handle = []
-                                spec_handle = []
+                                # print(segment.getStart().getXOffset())
+                                # print(segment.getStart().getYOffset())
+                                # print(segment.getEnd().getXOffset())
+                                # print(segment.getEnd().getYOffset())
+                                try:
+                                    center_handle = [segment.getBasePoint1().getXOffset(), 
+                                                segment.getBasePoint1().getYOffset()]                                
+                                    spec_handle = [segment.getBasePoint2().getXOffset(),
+                                            segment.getBasePoint2().getYOffset()]
+                                except:
+                                    center_handle = []
+                                    spec_handle = []
 
                         role = specRefGlyph.getRoleString()
                         specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -958,7 +958,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             else:
                                 df_NodeData = pd.concat([df_NodeData,\
                                     pd.DataFrame(NodeData_row_dct)], ignore_index=True)
-            
+    
             for i in range (numReactionGlyphs):
                 src_idx_list = []
                 src_position = []
@@ -991,95 +991,55 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 #         if temp_specGlyph_id == specGlyph_id_list[k]:
                 #             dst_position.append(spec_position_list[k])
                 #             dst_dimension.append(spec_dimension_list[k])
+
+                for j in range(rct_num):
+                    temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
+                    for k in range(len(node_idx_specGlyphid_list)):
+                        if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
+                            src_idx_list.append(node_idx_specGlyphid_list[k][0])
+                    for k in range(numSpec_in_reaction):
+                        if temp_specGlyph_id == specGlyph_id_list[k]:
+                            src_position.append(spec_position_list[k])
+                            src_dimension.append(spec_dimension_list[k])
+                    src_handle.append(rct_specGlyph_handle_list[i][j][1])
+                src_idx_list_corr = []
+                [src_idx_list_corr.append(x) for x in src_idx_list if x not in src_idx_list_corr]
                 
-                if rct_num != 0 and prd_num != 0:
-                    for j in range(rct_num):
-                        temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
+                for j in range(prd_num):
+                    temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
+                    for k in range(len(node_idx_specGlyphid_list)):
+                        if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
+                            dst_idx_list.append(node_idx_specGlyphid_list[k][0])
+                    for k in range(numSpec_in_reaction):
+                        if temp_specGlyph_id == specGlyph_id_list[k]:
+                            dst_position.append(spec_position_list[k])
+                            dst_dimension.append(spec_dimension_list[k])
+                    dst_handle.append(prd_specGlyph_handle_list[i][j][1])
+                dst_idx_list_corr = []
+                [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
+
+                for j in range(mod_num):
+                    if len(mod_specGlyph_list[i]) != 0:
+                        temp_specGlyph_id = mod_specGlyph_list[i][j]
                         for k in range(len(node_idx_specGlyphid_list)):
                             if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
-                                src_idx_list.append(node_idx_specGlyphid_list[k][0])
-                        for k in range(numSpec_in_reaction):
-                            if temp_specGlyph_id == specGlyph_id_list[k]:
-                                src_position.append(spec_position_list[k])
-                                src_dimension.append(spec_dimension_list[k])
-                        src_handle.append(rct_specGlyph_handle_list[i][j][1])
-                    src_idx_list_corr = []
-                    [src_idx_list_corr.append(x) for x in src_idx_list if x not in src_idx_list_corr]
-
-                    for j in range(prd_num):
-                        temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
-                        for k in range(len(node_idx_specGlyphid_list)):
-                            if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
-                                dst_idx_list.append(node_idx_specGlyphid_list[k][0])
-                        for k in range(numSpec_in_reaction):
-                            if temp_specGlyph_id == specGlyph_id_list[k]:
-                                dst_position.append(spec_position_list[k])
-                                dst_dimension.append(spec_dimension_list[k])
-                        dst_handle.append(prd_specGlyph_handle_list[i][j][1])
-                    dst_idx_list_corr = []
-                    [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
-
-                    for j in range(mod_num):
-                        if len(mod_specGlyph_list[i]) != 0:
-                            temp_specGlyph_id = mod_specGlyph_list[i][j]
-                            for k in range(len(node_idx_specGlyphid_list)):
-                                if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
-                                    mod_idx_list.append(node_idx_specGlyphid_list[k][0])
-                            for k in range(numSpec_in_reaction):
-                                if temp_specGlyph_id == specGlyph_id_list[k]:
-                                    mod_position.append(spec_position_list[k])
-                                    mod_dimension.append(spec_dimension_list[k])
-                        else:
-                            for k in range(len(spec_specGlyph_id_list)):
-                                if reaction_mod_list[i][j] == spec_specGlyph_id_list[k][0]:
-                                    temp_specGlyph_id = spec_specGlyph_id_list[k][1]
-                            for k in range(len(node_idx_specGlyphid_list)):
-                                if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
-                                    mod_idx_list.append(node_idx_specGlyphid_list[k][0])
-                            for k in range(numSpec_in_reaction):
-                                if temp_specGlyph_id == specGlyph_id_list[k]:
-                                    mod_position.append(spec_position_list[k])
-                                    mod_dimension.append(spec_dimension_list[k])
-
-                else:
-                    src_idx_list = []
-                    dst_idx_list = []
-                    mod_idx_list = []
-                    rct_num = model.getNumReactants(i)
-                    prd_num = model.getNumProducts(i)
-                    mod_num = model.getNumModifiers(temp_id)
-             
-                    for j in range(rct_num):
-                        rct_id = model.getReactant(temp_id,j)
-                        for k in range(len(spec_specGlyph_id_list)):
-                            if spec_specGlyph_id_list[k][0] == rct_id:
-                                tempGlyph_id = spec_specGlyph_id_list[k][1]
-                        for k in range(len(node_idx_specGlyphid_list)):
-                            if node_idx_specGlyphid_list[k][1] == tempGlyph_id:
-                                src_idx_list.append(node_idx_specGlyphid_list[k][0])
-                    src_idx_list_corr = []
-                    [src_idx_list_corr.append(x) for x in src_idx_list if x not in src_idx_list_corr]
-
-                    for j in range(prd_num):
-                        prd_id = model.getProduct(temp_id,j)
-                        for k in range(len(spec_specGlyph_id_list)):
-                            if spec_specGlyph_id_list[k][0] == prd_id:
-                                tempGlyph_id = spec_specGlyph_id_list[k][1]
-                        for k in range(len(node_idx_specGlyphid_list)):
-                            if node_idx_specGlyphid_list[k][1] == tempGlyph_id:
-                                dst_idx_list.append(node_idx_specGlyphid_list[k][0]) 
-                    dst_idx_list_corr = []
-                    [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
-
-                    modifiers = model.getListOfModifiers(temp_id)
-                    for j in range(mod_num):
-                        mod_id = modifiers[j]
-                        for k in range(len(spec_specGlyph_id_list)):
-                            if spec_specGlyph_id_list[k][0] == mod_id:
-                                tempGlyph_id = spec_specGlyph_id_list[k][1]
-                        for k in range(len(node_idx_specGlyphid_list)):
-                            if node_idx_specGlyphid_list[k][1] == tempGlyph_id:
                                 mod_idx_list.append(node_idx_specGlyphid_list[k][0])
+                        for k in range(numSpec_in_reaction):
+                            if temp_specGlyph_id == specGlyph_id_list[k]:
+                                mod_position.append(spec_position_list[k])
+                                mod_dimension.append(spec_dimension_list[k])
+                    else:
+                        for k in range(len(spec_specGlyph_id_list)):
+                            if reaction_mod_list[i][j] == spec_specGlyph_id_list[k][0]:
+                                temp_specGlyph_id = spec_specGlyph_id_list[k][1]
+                        for k in range(len(node_idx_specGlyphid_list)):
+                            if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
+                                mod_idx_list.append(node_idx_specGlyphid_list[k][0])
+                        for k in range(numSpec_in_reaction):
+                            if temp_specGlyph_id == specGlyph_id_list[k]:
+                                mod_position.append(spec_position_list[k])
+                                mod_dimension.append(spec_dimension_list[k])
+
 
                 for j in range(len(rxn_render)):
                     if temp_id == rxn_render[j][0]:
@@ -1520,6 +1480,13 @@ class load:
 
     def __init__(self, sbmlstr):
 
+        # self.sbmlstr = sbmlstr
+        # self.df = _SBMLToDF(self.sbmlstr)
+        # self.color_style = styleSBML.Style()
+        # self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
+        # if self.df == None:
+        #    sys.exit("There is no valid information to process.")
+
         if os.path.isfile(sbmlstr):
             with open(sbmlstr) as f:
                 self.sbmlstr = f.read()
@@ -1659,7 +1626,7 @@ class load:
 
         return floating_node_list
 
-
+   
     def getNodePosition(self, id):
         """
         Get the position of a node with its certain node id.
@@ -1699,6 +1666,29 @@ class load:
             size_list.append(self.df[1].iloc[idx_list[i]]["size"])
 
         return size_list
+    
+    def getNodeCenter(self, id, alias=0):
+        """
+        Get the center point of a node with given id
+
+        Args: 
+            id: str the id of the Node.
+
+        Returns:
+           Return a Point object with x and y coordinates of teh center of thenode
+            
+            Example:
+                p = sd.getNodeCenter ('ATP')
+                print (p.x, p.y)
+        """   
+        if not (id in self.getNodeIdList()):
+            raise Exception("No such node found in model: " + id)
+            
+        p = self.getNodePosition(id) 
+        size = self.getNodeSize(id)
+        cx = p[alias][0] + size[alias][0]/2
+        cy = p[alias][1] + size[alias][1]/2
+        return point.Point (cx, cy)    
 
     def getNodeShape(self, id):
         """
@@ -3066,29 +3056,26 @@ class load:
         return json.dumps(self.color_style.__dict__)
 
 
-    def autolayout(self, layout="spectral", scale=200, iterations=100):
-
+    def autolayout(self, layout="spring", scale=200, iterations=100):
         """
         Autolayout the node positions using networkX library.
 
-        Args:
+        Parameters:
+            layout (string): The layout name from networkX.
 
-            layout: str-the layout name from networkX, including
+               spectral: positioning the nodes using the eigenvectors of the graph Laplacian.
 
-                spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
+               spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm.
 
-                spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm;
+               random: positioning nodes randomly.
+
+               circular: positioning nodes on a circle.
             
-                random: positioning nodes randomly.
-            
-                circular: positioning nodes on a circle.
-
-            scale: float-the scale factor for positions. 
-            
-            iterations: int-maximum number of iterations taken.             
+            scale (number): Scale factor for positions. 
+               
+            iterations (integer): Maximum number of iterations taken             
 
         """
-
         sbmlStr = self.export()
         v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyle=self.color_style)
         edges = v_info.edges
@@ -3101,7 +3088,7 @@ class load:
 
         width, height = self.color_style.getImageSize()
         if scale == None:
-            scale = max(width, height) // 2
+           scale = max(width, height) // 2
         center = [width // 2, height // 2]
 
         for node in nodes:
@@ -3132,7 +3119,6 @@ class load:
 
         for id in reaction_ids:
             self.setReactionDefaultCenterAndHandlePositions(id)
-
 
     def draw(self, setImageSize = '', scale = 1., output_fileName = '', 
         reactionLineType = 'bezier', showBezierHandles = False, 
@@ -3300,7 +3286,7 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
 
-    #filename = "Jana_WolfGlycolysis.xml"
+    filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml"
     #filename = "output.xml"
     #filename = "Sauro1.xml"
@@ -3333,9 +3319,6 @@ if __name__ == '__main__':
 
     #filename = "putida_sbml.xml"
     #filename = "putida_gb_newgenes.xml"
-
-    filename = "bart2.xml"
-    #filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -3485,7 +3468,92 @@ if __name__ == '__main__':
     # f.write(sbmlStr_layout_render)
     # f.close()
 
-    #df.draw(reactionLineType='bezier', scale = 2.)
+    # df.draw(reactionLineType='bezier', scale = 2.)
     df.draw(output_fileName = 'output.png')
 
+    # #SBGN1-complexSpec
+    # df.setNodeAndTextPosition("ATP",[100,100])
+    # df.setNodeAndTextPosition("myosin",[50,200])
+    # df.setNodeAndTextPosition("myosinATP",[300,120])
+    # df.setNodeShape("ATP","ellipse")
+    # df.setNodeAndTextSize("ATP",[50,50])
+    # df.setNodeAndTextSize("myosinATP",[70,100])
+    # df.setNodeArbitraryPolygonShape("myosinATP","myosinATP-polygon", [[12.5,0],[87.5,0],[100,12.5],[100,87.5],
+    # [87.5,100],[12.5,100],[0,87.5],[0,12.5]])
+    # df.setReactionDefaultCenterAndHandlePositions('J1')
+    # df.addRectangle("myosinATP_ATP", [305,130], [60,40])
+    # df.addEllipse("myosinATP_myosin", [315,175], [40,40])
+    # df.addText("myosin", [305,130], [60,40])
+    # df.addText("ATP", [315,175], [40,40])
+    # #print(df.getReactionCenterPosition("J1"))
+    # #print(df.getReactionFillColor("J1"))
+    # df.addEllipse("left_small_circle", [176.0, 166.], [10,10], 
+    # fill_color=[91, 176, 253], border_color = [91,176,253])
+    # df.addEllipse("right_small_circle", [216.0, 166.], [10,10], 
+    # fill_color=[91, 176, 253], border_color = [91,176,253])
+    # df.addEllipse("middle_big_circle", [191.0, 160.], [20,20], 
+    # fill_color=[91, 176, 253], border_color = [91,176,253])
 
+    # #SBGN2-modifier:
+    # df.setNodeAndTextPosition("ADH1",[215,110])
+    # df.setNodeAndTextPosition("Ethanol",[50,200])
+    # df.setNodeAndTextPosition("NAD",[50,300])
+    # df.setNodeAndTextPosition("Ethanal",[300,200])
+    # df.setNodeAndTextPosition("H",[300,300])
+    # df.setNodeAndTextPosition("NADH",[400,250])
+    # df.setNodeShape("Ethanol","ellipse")
+    # df.setNodeShape("NAD","ellipse")
+    # df.setNodeShape("Ethanal","ellipse")
+    # df.setNodeShape("H","ellipse")
+    # df.setNodeShape("NADH","ellipse")
+    # df.setNodeAndTextSize("Ethanol",[50,50])
+    # df.setNodeAndTextSize("NAD",[50,50])
+    # df.setNodeAndTextSize("Ethanal",[50,50])
+    # df.setNodeAndTextSize("H",[50,50])
+    # df.setNodeAndTextSize("NADH",[50,50])
+    # df.setReactionDefaultCenterAndHandlePositions('J0')
+    # #print(df.getReactionCenterPosition("J0"))  
+    # df.addRectangle("centroid_sqaure", [235.0, 265.0], [20,20], 
+    # fill_color=[91, 176, 253], border_color = [91,176,253])
+    # df.setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
+    #  [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
+    # df.setNodeBorderColor("ADH1", "black")
+
+    # # # # df.draw(reactionLineType='bezier', scale = 2.)
+    # df.draw(output_fileName = 'output')
+
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
+       
+
+    # if len(sbmlStr_layout_render) == 0:
+    #     print("empty sbml")
+    # else:
+    #     visualizeSBML._draw(sbmlStr_layout_render, fileFormat='PNG')
+
+
+    # la.setNodeAndTextPosition('S1', [200, 200])
+    # la.setNodeAndTextPosition('S2', [300, 300])
+    # la.setNodeAndTextPosition('S3', [400, 200])
+    # la.setNodeAndTextPosition('S4', [500, 200])
+    # la.setNodeAndTextPosition('S5', [600, 200])
+    # la.setNodeTextPosition('S1', [200, 180])
+    # la.setNodeShape('S1', 2)
+    # la.setNodeSize('S1', [10, 10])
+    # la.setNodeTextFontSize('S2', 20)
+    # la.setNodeShape('S2', 0)
+    # la.setReactionDefaultCenterAndHandlePositions('J1')
+    # la.setReactionDefaultCenterAndHandlePositions('J2')
+    # la.setReactionDefaultCenterAndHandlePositions('J3')
+    # la.setReactionDash("J1", [5,5])
+    # la.setReactionCenterPosition("J3",[550,150])
+    # la.setReactionHandlePositions("J3", [[600,150],[530,160],[600,120]])
+
+    # la.draw(showReversible=True,output_fileName = 'output')
+
+    # sbmlStr_layout_render = la.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
