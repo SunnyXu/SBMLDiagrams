@@ -968,6 +968,7 @@ class TestImportSBML(unittest.TestCase):
       return  
     self.assertTrue(self.df.isFloatingNode("x_1")[0] == True)
     self.assertTrue(self.df.getNodePosition("x_1")[0] == [413.0, 216.0])
+    self.assertTrue(self.df.getNodeCenter("x_1").x == 438.0)
     self.assertTrue(self.df.getNodeSize("x_1")[0] == [50.0, 30.0])
     self.assertTrue(self.df.getNodeShape("x_1")[0] == 
     ('rectangle', [[413.0, 216.0], [463.0, 216.0], [463.0, 246.0], [413.0, 246.0]]))
