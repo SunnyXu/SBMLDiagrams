@@ -1668,7 +1668,7 @@ class load:
         return floating_node_list
 
 
-    def getNodePosition(self, id):
+    def getNodePosition(self, id, alias = 0):
         """
         Get the position of a node with its certain node id.
 
@@ -1676,17 +1676,18 @@ class load:
             id: str-the id of the Node.
 
         Returns:
-            position_list: list of position.
+            position: a Point object with attributes x and y representing
+            the x/y position of the top/left-hand corner of the bounding box.
 
-            position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+            Example: p = sd.getNodePosition ('ATP').
+            print ('x = ', p.x, 'y = ', p.y).            
+
         """
 
-        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
-        position_list =[] 
-        for i in range(len(idx_list)):
-            position_list.append(self.df[1].iloc[idx_list[i]]["position"])
+        p = visualizeSBML._getNodePosition(self.df, id)
+        position = point.Point (p[alias][0], p[alias][1])
+        return position
 
-        return position_list
 
     def getNodeCenter(self, id, alias = 0):
         """
@@ -1696,8 +1697,8 @@ class load:
             id: str-the id of the Node.
 
         Returns:
-           Return a Point object with x and y coordinates of the center of the node.
-            
+            position-a Point object with x and y coordinates of the center of the node.
+           
             Example:
                 p = sd.getNodeCenter ('ATP')
                 print (p.x, p.y)
@@ -1705,15 +1706,16 @@ class load:
         if not (id in self.getNodeIdList()):
             raise Exception("No such node found in model: " + id)
             
-        p = self.getNodePosition(id) 
-        size = self.getNodeSize(id)
+        p = visualizeSBML._getNodePosition(self.df, id) 
+        size = visualizeSBML._getNodeSize(self.df, id)
         cx = p[alias][0] + size[alias][0]/2
         cy = p[alias][1] + size[alias][1]/2
+        position = point.Point(cx, cy) 
 
-        return point.Point(cx, cy) 
+        return position
         
 
-    def getNodeSize(self, id):
+    def getNodeSize(self, id, alias = 0):
         """
         Get the size of a node with its certain node id.
 
@@ -1721,16 +1723,18 @@ class load:
             id: str-the id of the node.
 
         Returns:
-            size_list: list of size.
+            size: a Point object with attributes x and y representing
+            the width and height of the node
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            Example: p = sd.getNodeSize ('ATP')
+            print ('Width = ', p.x, 'Height = ', p.y)
+
         """
-        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
-        size_list =[] 
-        for i in range(len(idx_list)):
-            size_list.append(self.df[1].iloc[idx_list[i]]["size"])
 
-        return size_list
+        p = visualizeSBML._getNodeSize (self.df, id)
+        size = point.Point (p[alias][0], p[alias][1])
+        return size
+
 
     def getNodeShape(self, id):
         """
@@ -3404,7 +3408,7 @@ if __name__ == '__main__':
     # print(df.getNodePosition("x_1"))
     # print(df.getNodePosition("x_0"))
     # print(df.getNodeSize("x_0"))
-    # print(df.getNodeCenter("x_0").y)
+    # print(df.getNodeCenter("x_0"))
     # print(df.getNodeShape("x_0"))
     # print(df.getNodeTextPosition("x_1"))
     # print(df.getNodeTextSize("x_1"))
@@ -3436,7 +3440,7 @@ if __name__ == '__main__':
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
     # df.setFloatingBoundaryNode("x_1", True)
-    # df.setNodePosition("x_1", [100.0, 100.0])
+    # df.setNodePosition("x_0", [100.0, 100.0])
     # df.setNodeTextPosition("x_3", [568.0, 229.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
@@ -3463,7 +3467,7 @@ if __name__ == '__main__':
     # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # print(df.getNodeBorderWidth("x_1"))
-    # df.setNodeBorderWidth("x_1", 4.)
+    # df.setNodeBorderWidth("x_0", 0.)
     # print(df.getNodeBorderWidth("x_1"))
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
     # df.setNodeTextLineWidth("x_1", 1.)

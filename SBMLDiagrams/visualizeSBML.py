@@ -1469,15 +1469,16 @@ def _getNetworkTopLeftCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
+    _df = processSBML._SBMLToDF(sbmlStr)
     txt_content = df.getTextContentList()
     numTexts = len(txt_content)
     shape_name = df.getShapeNameList()
     numShapes = len(shape_name)
 
     if numFloatingNodes > 0 :
-        position = df.getNodePosition(FloatingNodes_ids[0])[0]
+        position = _getNodePosition(_df, FloatingNodes_ids[0])[0]
     if numBoundaryNodes > 0:
-        position = df.getNodePosition(BoundaryNodes_ids[0])[0]
+        position = _getNodePosition(_df, BoundaryNodes_ids[0])[0]
     # if numTexts > 0:
     #     position_list = df.getTextPosition(txt_content[0])
     #     size = df.getTextSize(txt_content[0])[0]
@@ -1489,7 +1490,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
         position_list = df.getShapePosition(shape_name[0])
         position = position_list[0]
     for i in range(numFloatingNodes):
-        node_temp_position = df.getNodePosition(FloatingNodes_ids[i])
+        node_temp_position = _getNodePosition(_df, FloatingNodes_ids[i])
         text_temp_position = df.getNodeTextPosition(FloatingNodes_ids[i])
         for j in range(len(node_temp_position)):
             if node_temp_position[j][0] < position[0]:
@@ -1501,7 +1502,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
             if text_temp_position[j][1] < position[1]:
                 position[1] = text_temp_position[j][1]
     for i in range(numBoundaryNodes):
-        node_temp_position = df.getNodePosition(BoundaryNodes_ids[i])
+        node_temp_position = _getNodePosition(_df, BoundaryNodes_ids[i])
         text_temp_position = df.getNodeTextPosition(BoundaryNodes_ids[i])
         for j in range(len(node_temp_position)):
             if node_temp_position[j][0] < position[0]:
@@ -1589,20 +1590,20 @@ def _getNetworkBottomRightCorner(sbmlStr):
     Rxns_ids  = model.getListOfReactionIds()
 
     df = processSBML.load(sbmlStr)
+    _df = processSBML._SBMLToDF(sbmlStr)
     txt_content = df.getTextContentList()
     numTexts = len(txt_content)
 
-    df = processSBML.load(sbmlStr)
     shape_name = df.getShapeNameList()
     numShapes = len(shape_name)
 
     if numFloatingNodes > 0:
-        position_list = df.getNodePosition(FloatingNodes_ids[0])
-        size = df.getNodeSize(FloatingNodes_ids[0])[0]
+        position_list = _getNodePosition(_df, FloatingNodes_ids[0])
+        size = _getNodeSize(_df, FloatingNodes_ids[0])[0]
         position = [position_list[0][0]+size[0], position_list[0][1]+size[1]]
     if numBoundaryNodes > 0:
-        position_list = df.getNodePosition(BoundaryNodes_ids[0])
-        size = df.getNodeSize(BoundaryNodes_ids[0])[0]
+        position_list = _getNodePosition(_df, BoundaryNodes_ids[0])
+        size = _getNodeSize(_df, BoundaryNodes_ids[0])[0]
         position = [position_list[0][0]+size[0], position_list[0][1]+size[1]]
     # if numTexts > 0:
     #     position_list = df.getTextPosition(txt_content[0])
@@ -1617,10 +1618,10 @@ def _getNetworkBottomRightCorner(sbmlStr):
         position = position_list[0]
 
     for i in range(numFloatingNodes):
-        node_temp_position_list = df.getNodePosition(FloatingNodes_ids[i])
+        node_temp_position_list = _getNodePosition(_df, FloatingNodes_ids[i])
         text_temp_position_list = df.getNodeTextPosition(FloatingNodes_ids[i])
         for j in range(len(node_temp_position_list)):
-            node_temp_size = df.getNodeSize(FloatingNodes_ids[i])
+            node_temp_size = _getNodeSize(_df, FloatingNodes_ids[i])
             text_temp_size = df.getNodeTextSize(FloatingNodes_ids[i])
             node_temp_position = [node_temp_position_list[j][0]+node_temp_size[j][0], 
             node_temp_position_list[j][1]+node_temp_size[j][1]]
@@ -1635,10 +1636,10 @@ def _getNetworkBottomRightCorner(sbmlStr):
             if text_temp_position[1] > position[1]:
                 position[1] = text_temp_position[1]
     for i in range(numBoundaryNodes):
-        node_temp_position_list = df.getNodePosition(BoundaryNodes_ids[i])
+        node_temp_position_list = _getNodePosition(_df, BoundaryNodes_ids[i])
         text_temp_position_list = df.getNodeTextPosition(BoundaryNodes_ids[i])
         for j in range(len(node_temp_position_list)):
-            node_temp_size = df.getNodeSize(BoundaryNodes_ids[i])
+            node_temp_size = _getNodeSize(_df, BoundaryNodes_ids[i])
             text_temp_size = df.getNodeTextSize(BoundaryNodes_ids[i])
             node_temp_position = [node_temp_position_list[j][0]+node_temp_size[j][0], 
             node_temp_position_list[j][1]+node_temp_size[j][1]]
@@ -1727,6 +1728,52 @@ def _getNetworkSize(sbmlStr):
     int(position_bottomRight[1]-position_topLeft[1])]
 
     return size
+
+
+def _getNodePosition(df, id):
+    """
+    Get the position of a node with its certain node id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the Node.
+
+    Returns:
+        position_list: list of position.
+
+        position: list-[position_x, position_y]-top left-hand corner of the rectangle.           
+
+    """
+
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    position_list =[] 
+    for i in range(len(idx_list)):
+        position_list.append(df[1].iloc[idx_list[i]]["position"])
+
+    return position_list
+
+def _getNodeSize(df, id):
+    """
+    Get the size of a node with its certain node id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the node.
+
+    Returns:
+        size_list: list of size.
+
+        size: list-1*2 matrix-size of the rectangle [width, height].
+
+    """
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    size_list =[] 
+    for i in range(len(idx_list)):
+        size_list.append(df[1].iloc[idx_list[i]]["size"])
+
+    return size_list
 
 
 if __name__ == '__main__':

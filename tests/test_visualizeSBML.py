@@ -33,7 +33,9 @@ class TestEditSBML(unittest.TestCase):
     self.sbmlStr_test_genGlyph = f_test_genGlyph.read()
     f_test_genGlyph.close()
 
-  def test(self):
+    self._df = processSBML._SBMLToDF(self.sbmlStr_test)
+
+  def testNetwork(self):
     # Test the functions related to network positions and size
 
     if IGNORE_TEST:
@@ -51,6 +53,15 @@ class TestEditSBML(unittest.TestCase):
     #text from test_genGlyph.xml
     self.assertTrue(visualizeSBML._getNetworkTopLeftCorner(self.sbmlStr_test_genGlyph) == [177.0, 107.0])
     self.assertTrue(visualizeSBML._getNetworkBottomRightCorner(self.sbmlStr_test_genGlyph) == [227.0, 137.0])
+
+  def testGetNode(self):
+    # Test the functions related to get node
+
+    if IGNORE_TEST:
+      return
+
+    self.assertTrue(visualizeSBML._getNodePosition(self._df, "x_1")[0] == [413.0, 216.0])
+    self.assertTrue(visualizeSBML._getNodeSize(self._df, "x_1")[0] == [50.0, 30.0])
 
 
   # def plotInvalidStr(self):

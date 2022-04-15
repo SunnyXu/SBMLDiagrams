@@ -967,9 +967,11 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return  
     self.assertTrue(self.df.isFloatingNode("x_1")[0] == True)
-    self.assertTrue(self.df.getNodePosition("x_1")[0] == [413.0, 216.0])
+    #self.assertTrue(self.df.getNodePosition("x_1")[0] == [413.0, 216.0])
+    self.assertTrue(self.df.getNodePosition("x_1").x == 413)
     self.assertTrue(self.df.getNodeCenter("x_1").x == 438.0)
-    self.assertTrue(self.df.getNodeSize("x_1")[0] == [50.0, 30.0])
+    #self.assertTrue(self.df.getNodeSize("x_1")[0] == [50.0, 30.0])
+    self.assertTrue(self.df.getNodeSize("x_1").x == 50.0)
     self.assertTrue(self.df.getNodeShape("x_1")[0] == 
     ('rectangle', [[413.0, 216.0], [463.0, 216.0], [463.0, 246.0], [413.0, 246.0]]))
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == [413.0, 216.0])
@@ -1078,8 +1080,10 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodeTextFontSize("x_1", txt_font_size)
 
     self.assertTrue(self.df.isFloatingNode("x_1")[0] == floating_node)
-    self.assertTrue(self.df.getNodePosition("x_1")[0] == position)
-    self.assertTrue(self.df.getNodeSize("x_1")[0] == size)
+    #self.assertTrue(self.df.getNodePosition("x_1")[0] == position)
+    self.assertTrue(self.df.getNodePosition("x_1").x == position[0])
+    #self.assertTrue(self.df.getNodeSize("x_1")[0] == size)
+    self.assertTrue(self.df.getNodeSize("x_1").x == size[0])
     self.assertTrue(self.df.getNodeShape("x_1")[0][0] == shape)
     self.assertTrue(self.df.getNodeShape("x_0")[0][0] == shape_name)
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == txt_position)
@@ -1097,11 +1101,13 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeTextFontSize("x_1")[0] == txt_font_size)
 
     self.df.setNodeAndTextPosition("x_1", position_txt_position)
-    self.assertTrue(self.df.getNodePosition("x_1")[0] == position_txt_position)
+    #self.assertTrue(self.df.getNodePosition("x_1")[0] == position_txt_position)
+    self.assertTrue(self.df.getNodePosition("x_1").x == position_txt_position[0])
     self.assertTrue(self.df.getNodeTextPosition("x_1")[0] == position_txt_position)
 
     self.df.setNodeAndTextSize("x_1", size_txt_size)
-    self.assertTrue(self.df.getNodeSize("x_1")[0] == size_txt_size)
+    #self.assertTrue(self.df.getNodeSize("x_1")[0] == size_txt_size)
+    self.assertTrue(self.df.getNodeSize("x_1").x == size_txt_size[0])
     self.assertTrue(self.df.getNodeTextSize("x_1")[0] == size_txt_size)
 
   def testSetNodeTextPosition(self):
