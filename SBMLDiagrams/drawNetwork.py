@@ -620,7 +620,9 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
     [width, height] = dimension
     outline = skia.Color(comp_border_color[0], comp_border_color[1], comp_border_color[2], comp_border_color[3])
     fill = skia.Color(comp_fill_color[0], comp_fill_color[1], comp_fill_color[2], comp_fill_color[3])
-    linewidth = comp_border_width    
+    linewidth = comp_border_width  
+    if linewidth == 0:
+        outline = fill  
     # _drawRectangle (canvas, x, y, width, height, 
     #               outline=outline, fill = fill, linewidth=linewidth)
     _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth)
@@ -675,6 +677,8 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
     else:
         fill = skia.Color(spec_fill_color[0], spec_fill_color[1], spec_fill_color[2], spec_fill_color[3])
     linewidth = spec_border_width  
+    if linewidth == 0:
+        outline = fill
     if floating_boundary_node == 'boundary':
         linewidth = 2*linewidth
     if complex_shape == '':

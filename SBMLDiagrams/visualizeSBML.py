@@ -675,8 +675,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
                                             color_style.setCompBorderColor(hex_to_rgb(color_list[k][1]))
+
+                                comp_border_width = group.getStrokeWidth()
                                 if not color_style.getStyleName():
-                                    color_style.setCompBorderWidth(group.getStrokeWidth())
+                                    color_style.setCompBorderWidth(comp_border_width)
                                 comp_render.append([idList, color_style.getCompFillColor(),
                                                     color_style.getCompBorderColor(),color_style.getCompBorderWidth()])
                             elif 'SPECIESGLYPH' in typeList:
@@ -693,6 +695,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         spec_fill_color = gradient_list[k][1:]
                                 
                                 spec_border_width = group.getStrokeWidth()
+                                if not color_style.getStyleName():
+                                    color_style.setSpecBorderWidth(spec_border_width)
+                                
                                 #name_list = []
                                 shape_type = ''
                                 #print(group.getNumElements())# There is only one element
@@ -1035,6 +1040,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
                                 if gradient_fill_color == []:
+                                    #print(color_style.getSpecBorderWidth())
                                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                         color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
