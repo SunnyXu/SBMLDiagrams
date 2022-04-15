@@ -67,6 +67,8 @@ def _setCompartmentPosition(df, id, position):
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(position) != list:
+        raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"position"] = position
     df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
@@ -93,6 +95,8 @@ def _setCompartmentSize(df, id, size):
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.") 
+    if type(size) != list:
+        raise Exception("Please enter a valid size type.")
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"size"] = size
     df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
@@ -230,6 +234,8 @@ def _setNodePosition(df, id, position):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(position) != list:
+        raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"position"] = position
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
@@ -256,6 +262,8 @@ def _setNodeSize(df, id, size):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(size) != list:
+        raise Exception("Please enter a valid size type.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"size"] = size
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
@@ -501,6 +509,8 @@ def _setNodeTextPosition(df, id, txt_position):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(txt_position) != list:
+        raise Exception("Please enter a valid text position type.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
@@ -807,6 +817,8 @@ def _setNodeTextSize(df, id, txt_size):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(txt_size) != list:
+        raise Exception("Please enter a valid text size type.")
     for i in range(len(idx_list)):
         df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
@@ -1125,6 +1137,8 @@ def _setReactionCenterPosition(df, id, position):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(position) != list:
+        raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"center_pos"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1151,6 +1165,8 @@ def _setReactionHandlePositions(df, id, position):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(position) != list:
+        raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"handles"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1290,6 +1306,8 @@ def _setReactionDash(df, id, dash):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(dash) != list:
+        raise Exception("Please enter a valid dash type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"rxn_dash"] = dash
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1368,6 +1386,8 @@ def _setTextPosition(df, txt_str, txt_position):
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(txt_position) != list:
+        raise Exception("Please enter a valid text position type.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_position"] = txt_position
     df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
@@ -1394,6 +1414,8 @@ def _setTextSize(df, txt_str, txt_size):
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(txt_size) != list:
+        raise Exception("Please enter a valid text size type.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_size"] = txt_size
     df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
