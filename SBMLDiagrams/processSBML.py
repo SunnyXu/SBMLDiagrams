@@ -1656,7 +1656,7 @@ class load:
             id: str-the id of the Node.
 
         Returns:
-            floating_node_list: list of floating_node.
+            floating_node_list: list-list of floating_node.
 
             floating_node: bool-floating node (True) or not (False).
         """
@@ -1674,6 +1674,8 @@ class load:
 
         Args: 
             id: str-the id of the Node.
+
+            alias: list-the alias node index.
 
         Returns:
             position: a Point object with attributes x and y representing
@@ -1695,6 +1697,8 @@ class load:
 
         Args: 
             id: str-the id of the Node.
+
+            alias: int-alias node index.
 
         Returns:
             position-a Point object with x and y coordinates of the center of the node.
@@ -1721,6 +1725,8 @@ class load:
 
         Args: 
             id: str-the id of the node.
+
+            alias: int-alias node index.
 
         Returns:
             size: a Point object with attributes x and y representing
