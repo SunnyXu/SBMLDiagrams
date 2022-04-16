@@ -2162,7 +2162,7 @@ class load:
         self.df = editSBML._setCompartmentBorderWidth(self.df, id, border_width)
         #return self.df
 
-    def setFloatingBoundaryNode(self, id, floating_node):
+    def setFloatingBoundaryNode(self, id, floating_node, alias = 0):
         """
         Set a node to be floating node (True) or boundary node (False).
 
@@ -2170,11 +2170,13 @@ class load:
             id: str-node id.
 
             floating_node: bool-floating node (True) or not (False).
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setFloatingBoundaryNode(self.df, id, floating_node)
+        self.df = editSBML._setFloatingBoundaryNode(self.df, id, floating_node, alias=alias)
         #return self.df
 
-    def setNodePosition(self, id, position):
+    def setNodePosition(self, id, position, alias = 0):
         """
         Set the x,y coordinates of the node position.
 
@@ -2183,11 +2185,13 @@ class load:
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node.
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodePosition(self.df, id, position)
+        self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
         #return self.df
 
-    def setNodeAndTextPosition(self, id, position):
+    def setNodeAndTextPosition(self, id, position, alias = 0):
         """
         Set the x,y coordinates of the node and node text position if there are consistent.
 
@@ -2196,12 +2200,14 @@ class load:
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node and node text position.
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodePosition(self.df, id, position)
-        self.df = editSBML._setNodeTextPosition(self.df, id, position)
+        self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
+        self.df = editSBML._setNodeTextPosition(self.df, id, position, alias=alias)
         #return self.df
 
-    def setNodeSize(self, id, size):
+    def setNodeSize(self, id, size, alias = 0):
         """
         Set the node size.
 
@@ -2209,11 +2215,13 @@ class load:
             id: str-node id.
 
             size: list-1*2 matrix-size of the rectangle [width, height].
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodeSize(self.df, id, size)
+        self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
         #return self.df
 
-    def setNodeAndTextSize(self, id, size):
+    def setNodeAndTextSize(self, id, size, alias = 0):
         """
         Set the node and node text size if there are consistent.
 
@@ -2221,12 +2229,14 @@ class load:
             id: str-node id.
 
             size: list-1*2 matrix-size of the rectangle [width, height].
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodeSize(self.df, id, size)
-        self.df = editSBML._setNodeTextSize(self.df, id, size)
+        self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
+        self.df = editSBML._setNodeTextSize(self.df, id, size, alias=alias)
         #return self.df
 
-    def setNodeShape(self, id, shape):
+    def setNodeShape(self, id, shape, alias = 0):
         """
         Set the node shape by shape index or name string.
 
@@ -2242,12 +2252,14 @@ class load:
             str-
                 "text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
                 "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
+
+            alias: int-alias node index.
             
         """
-        self.df = editSBML._setNodeShape(self.df, id, shape)
+        self.df = editSBML._setNodeShape(self.df, id, shape, alias=alias)
         #return self.df
 
-    def setNodeArbitraryPolygonShape(self, id, shape_name, shape_info):
+    def setNodeArbitraryPolygonShape(self, id, shape_name, shape_info, alias = 0):
         """
         Set an arbitrary polygon shape to a node by shape name and shape info.
 
@@ -2258,9 +2270,11 @@ class load:
 
             shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
+
+            alias: alias node index
             
         """
-        self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info)
+        self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info, alias=alias)
         #return self.df
 
     # def _setNodeArbitraryEllipseShape(self, id, shape_name, shape_info):
@@ -2277,7 +2291,7 @@ class load:
     #     self.df = editSBML._setNodeArbitraryEllipseShape(self.df, id, shape_name, shape_info)
     #     return self.df
 
-    def setNodeTextPosition(self, id, txt_position):
+    def setNodeTextPosition(self, id, txt_position, alias = 0):
         """
         Set the x,y coordinates of the node text position.
 
@@ -2287,110 +2301,130 @@ class load:
             txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node text.
 
+            alias: alias node index.
+
         """
-        self.df = editSBML._setNodeTextPosition(self.df, id, txt_position)
+        self.df = editSBML._setNodeTextPosition(self.df, id, txt_position, alias=alias)
         #return self.df
 
-    def setNodeTextPositionCenter(self, id):
+    def setNodeTextPositionCenter(self, id, alias = 0):
         """
         Set the node text position as the center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index.
+
         """
-        self.df = editSBML._setNodeTextPositionCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionLeftCenter(self, id):
+    def setNodeTextPositionLeftCenter(self, id, alias = 0):
         """
         Set the node text position as the left center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: alias node index.
+
         """
-        self.df = editSBML._setNodeTextPositionLeftCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionLeftCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionRightCenter(self, id):
+    def setNodeTextPositionRightCenter(self, id, alias = 0):
         """
         Set the node text position as the right center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int- alias node index.
+
         """
-        self.df = editSBML._setNodeTextPositionRightCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionRightCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionUpperCenter(self, id):
+    def setNodeTextPositionUpperCenter(self, id, alias = 0):
         """
         Set the node text position as the upper center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: alias node index.
+
         """
-        self.df = editSBML._setNodeTextPositionUpperCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionUpperCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionLowerCenter(self, id):
+    def setNodeTextPositionLowerCenter(self, id, alias = 0):
         """
         Set the node text position as the lower center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index.
+
         """
-        self.df = editSBML._setNodeTextPositionLowerCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionLowerCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionUpperLeft(self, id):
+    def setNodeTextPositionUpperLeft(self, id, alias = 0):
         """
         Set the node text position as the upper left of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index.
+
         """
-        self.df = editSBML._setNodeTextPositionUpperLeft(self.df, id)
+        self.df = editSBML._setNodeTextPositionUpperLeft(self.df, id, alias=alias)
         #return self.df
     
-    def setNodeTextPositionUpperRight(self, id):
+    def setNodeTextPositionUpperRight(self, id, alias = 0):
         """
         Set the node text position as the upper right of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index.
+
         """
-        self.df = editSBML._setNodeTextPositionUpperRight(self.df, id)
+        self.df = editSBML._setNodeTextPositionUpperRight(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionLowerLeft(self, id):
+    def setNodeTextPositionLowerLeft(self, id, alias = 0):
         """
         Set the node text position as the lower left of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index.
+
         """
-        self.df = editSBML._setNodeTextPositionLowerLeft(self.df, id)
+        self.df = editSBML._setNodeTextPositionLowerLeft(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionLowerRight(self, id):
+    def setNodeTextPositionLowerRight(self, id, alias = 0):
         """
         Set the node text position as the lower right of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index.
+
         """
-        self.df = editSBML._setNodeTextPositionLowerRight(self.df, id)
+        self.df = editSBML._setNodeTextPositionLowerRight(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextSize(self, id, txt_size):
+    def setNodeTextSize(self, id, txt_size, alias = 0):
         """
         Set the node text size.
 
@@ -2398,11 +2432,13 @@ class load:
             id: str-node id.
 
             txt_size: list-1*2 matrix-size of the rectangle [width, height].
+
+            alias: alias node index.
         """
-        self.df = editSBML._setNodeTextSize(self.df, id, txt_size)
+        self.df = editSBML._setNodeTextSize(self.df, id, txt_size, alias=alias)
         #return self.df
  
-    def setNodeFillColor(self, id, fill_color, opacity = 1.):
+    def setNodeFillColor(self, id, fill_color, opacity = 1., alias = 0):
         """
         Set the node fill color.
 
@@ -2412,11 +2448,13 @@ class load:
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity)
+        self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity, alias=alias)
         #return self.df
 
-    def setNodeFillLinearGradient(self, id, gradient_info, stop_info):
+    def setNodeFillLinearGradient(self, id, gradient_info, stop_info, alias = 0):
         """
         Set the node fill linear gradient.
 
@@ -2426,14 +2464,16 @@ class load:
             gradient_info: list - [[x1,y1],[x2,y2]], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
+            stop_info: list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
 
+            alias: int-alias node index.
+
         """
-        self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info)
+        self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info, alias=alias)
         #return self.df
 
-    def setNodeFillRadialGradient(self, id, gradient_info, stop_info):
+    def setNodeFillRadialGradient(self, id, gradient_info, stop_info, alias = 0):
         """
         Set the node fill radial gradient.
 
@@ -2446,11 +2486,13 @@ class load:
             stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
 
+            alias: alias node index.
+
         """
-        self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info)
+        self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info, alias=alias)
         #return self.df
 
-    def setNodeBorderColor(self, id, border_color, opacity = 1.):
+    def setNodeBorderColor(self, id, border_color, opacity = 1., alias = 0):
         """
         Set the node border color.
 
@@ -2460,11 +2502,13 @@ class load:
             border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity)
+        self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity, alias=alias)
         #return self.df
 
-    def setNodeBorderWidth(self, id, border_width):
+    def setNodeBorderWidth(self, id, border_width, alias = 0):
         """
         Set the node border width.
 
@@ -2472,11 +2516,13 @@ class load:
             id: str-node id.
 
             border_width: float-node border line width.
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodeBorderWidth(self.df, id, border_width)
+        self.df = editSBML._setNodeBorderWidth(self.df, id, border_width, alias=alias)
         #return self.df
 
-    def setNodeTextFontColor(self, id, txt_font_color, opacity = 1.):
+    def setNodeTextFontColor(self, id, txt_font_color, opacity = 1., alias = 0):
         """
         Set the node text font color.
 
@@ -2486,11 +2532,13 @@ class load:
             txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity)
+        self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity, alias=alias)
         #return self.df
 
-    def setNodeTextLineWidth(self, id, txt_line_width):
+    def setNodeTextLineWidth(self, id, txt_line_width, alias = 0):
         """
         Set the node text line width.
 
@@ -2498,11 +2546,13 @@ class load:
             id: str-node id.
 
             txt_line_width: float-node text line width.
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width)
+        self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width, alias=alias)
         #return self.df
 
-    def setNodeTextFontSize(self, id, txt_font_size):
+    def setNodeTextFontSize(self, id, txt_font_size, alias = 0):
         """
         Set the node text font size.
 
@@ -2510,8 +2560,10 @@ class load:
             id: str-node id.
 
             txt_font_size: float-node text font size.
+
+            alias: int-alias node index.
         """
-        self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size)
+        self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
         #return self.df
 
     def setReactionCenterPosition(self, id, position):
