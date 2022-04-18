@@ -1398,6 +1398,8 @@ def _setReactionArrowHeadSize(df, id, size):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(size) != list:
+        raise Exception("Please enter a valid size type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"arrow_head_size"] = size
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
