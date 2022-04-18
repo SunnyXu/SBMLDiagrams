@@ -1091,7 +1091,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 try: 
                     center_position = reaction_center_list[i]
                     center_handle = reaction_center_handle_list[i]
-                    handles = [center_handle]
+                    if center_handle != []:
+                        handles = [center_handle]
+                    else:
+                        handles = [center_position]
                     handles.extend(src_handle)
                     handles.extend(dst_handle) 
                     #print("process:", handles) 
@@ -3474,7 +3477,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3484,10 +3487,10 @@ if __name__ == '__main__':
     #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
-    #filename = "Jana_WolfGlycolysis-original.xml"
+    filename = "Jana_WolfGlycolysis-original.xml" #text not work
     #filename = "output.xml"
     #filename = "Sauro1.xml"
-    # filename = "test_textGlyph.xml"
+    #filename = "test_textGlyph.xml"
     #node shape:
     #filename = "rectangle.xml"
     #filename = "triangle.xml"
@@ -3672,6 +3675,31 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png')
 
+    # def createCircleNode (la, id, alias=0):
+    #     #get center and size of the node
+    #     center = la.getNodeCenter(id)[alias]
+
+    #     # Change the node size and corectly adjust for the new position
+    #     la.setNodeSize(id, [18, 18])
+    #     la.setNodePosition(id, [center.x-9, center.y-9])
+
+    #     # get the new position and size
+    #     p = la.getNodePosition(id)[alias]     
+    #     size = la.getNodeSize(id)[alias]
+
+    #     # Position thetrext just outside the node
+    #     q = [p.x + 1.2*size.x, p.y-5]
+
+    #     la.setNodeTextPosition(id, q)
+    #     la.setNodeShape(id, 'ellipse')
+    #     la.setNodeBorderWidth (id, 0)  # <- this doesn't work
+    #     la.setNodeBorderColor(id, '#FFFFFF')
+
+    # sp = la.getNodeIdList()
+    # for s in sp:
+    #     createCircleNode(la, s)
+
+    # la.draw(setImageSize=[500,500], output_fileName = 'output.png')
 

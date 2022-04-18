@@ -566,6 +566,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             center_position = [center_x, center_y]
  
             handles = [center_position] #here should be center_handle_position but it is unknown
+            
             for j in range(rct_num):
                 src_handle_x = .5*(center_position[0] + float(src_position[0]) + .5*float(src_dimension[0]))
                 src_handle_y = .5*(center_position[1] + float(src_position[1]) + .5*float(src_dimension[1]))
@@ -585,6 +586,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 #from excel sheet
                 handles_pre = []
                 handles_update = []
+
                 if type(handles_list_pre[0]) is str:
                     for i in range(len(handles_list_pre)):
                         temp = handles_list_pre[i]
@@ -601,8 +603,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 center_value = [float(center_pos[0]),float(center_pos[1])]
             except:
                 center_value = center_position
-
-            if len(handles_update) < 3: #if handles information is invalid
+                
+            if len(handles_update) < 3: # if updated handles info is invalid
                 center_value = center_position
             else:
                 handles = handles_update
@@ -625,12 +627,14 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 speciesReferenceCurve = speciesReferenceGlyph.getCurve()
                 cb = speciesReferenceCurve.createCubicBezier()
                 cb.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
+
                 try: 
                     handle1 = handles_update[0]
                     handle2 = handles_update[j+1]
                 except:
                     handle1 = handles[0]
-                    handle2 = handles[rct_num+1+j]
+                    handle2 = handles[j+1]
+
                 cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle1[1]))
                 cb.setBasePoint2(libsbml.Point(layoutns, handle2[0], handle2[1]))
 
