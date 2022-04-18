@@ -3257,21 +3257,20 @@ class load:
         """
         Autolayout the node positions using networkX library.
 
-        Args:
+    
+        layout: str-the layout name from networkX, including
 
-            layout: str-the layout name from networkX, including
+            spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
 
-                spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
+            spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm;
+        
+            random: positioning nodes randomly.
+        
+            circular: positioning nodes on a circle.
 
-                spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm;
-            
-                random: positioning nodes randomly.
-            
-                circular: positioning nodes on a circle.
-
-            scale: float-the scale factor for positions. 
-            
-            iterations: int-maximum number of iterations taken.             
+        scale: float-the scale factor for positions. 
+        
+        iterations: int-maximum number of iterations taken.             
 
         """
 
@@ -3314,6 +3313,7 @@ class load:
         for n, p in pos.items():
             if layout == "random":
                 p *= scale
+            p = p.tolist()
             self.setNodeAndTextPosition(n, p)
 
         for id in reaction_ids:
@@ -3487,7 +3487,7 @@ if __name__ == '__main__':
     #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
-    filename = "Jana_WolfGlycolysis-original.xml" #text not work
+    #filename = "Jana_WolfGlycolysis-original.xml" 
     #filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
@@ -3522,7 +3522,7 @@ if __name__ == '__main__':
 
     #filename = "bart2.xml"
     #filename = "bart_arccenter.xml"
-    # filename = "bart_spRefBezier.xml"
+    filename = "bart_spRefBezier.xml"
     #filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -3675,7 +3675,7 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png', longText='ellipsis')
 
     # def createCircleNode (la, id, alias=0):
     #     #get center and size of the node
