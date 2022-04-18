@@ -2120,14 +2120,19 @@ class load:
         Returns:
             arrow_head_size_list: list of arrow_head_size.
 
-            arrow_head_size: list-1*2 matrix-size of the rectangle [width, height].
+            arrow_head_size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+            Example: p = sd.getReactionArrowHeadSize('reaction_id')[0]
+            print ('Width = ', p.x, 'Height = ', p.y)
         """
-        arrow_head_size_list =[]
+        arrow_head_size_pre = []
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         for i in range(len(idx_list)):
-            arrow_head_size_list.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"]) 
-        # arrow_head_size_list.append(self.df[2].iloc[0]["arrow_head_size"])
-
+            arrow_head_size_pre.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"]) 
+        arrow_head_size_list =[]
+        for i in range(len(arrow_head_size_pre)):
+            arrow_head_size_list.append(point.Point(arrow_head_size_pre[i][0],arrow_head_size_pre[i][1]))
         return arrow_head_size_list
 
     def getReactionDash(self, id):
@@ -2833,14 +2838,22 @@ class load:
 
         Returns:
             position_list: list of position.
+            
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
 
-            position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+            Example: p = sd.getTextPosition('text_content')[0].
+            print ('x = ', p.x, 'y = ', p.y).            
+
         """
 
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
-        position_list =[] 
-        for i in range(len(idx_list)):
-            position_list.append(self.df[3].iloc[idx_list[i]]["txt_position"])
+        p = visualizeSBML._getTextPosition(self.df, txt_str)
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            position = point.Point (p[alias][0], p[alias][1])
+            position_list.append(position)
+
         return position_list
 
     def getTextSize(self, txt_str):
@@ -2853,13 +2866,20 @@ class load:
         Returns:
             txt_size_list: list of txt_size.
 
-            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+            txt_size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+            Example: p = sd.getTextSize('text_content')[0]
+            print ('Width = ', p.x, 'Height = ', p.y)
+
         """
 
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
-        txt_size_list =[] 
-        for i in range(len(idx_list)):
-            txt_size_list.append(self.df[3].iloc[idx_list[i]]["txt_size"])
+        p = visualizeSBML._getTextSize (self.df, txt_str)
+        num_alias = len(p)
+        txt_size_list = []
+        for alias in range(num_alias):
+            txt_size = point.Point (p[alias][0], p[alias][1])
+            txt_size_list.append(txt_size)
         return txt_size_list
 
     def getTextFontColor(self, txt_str):
@@ -3141,13 +3161,19 @@ class load:
         Returns:
             position_list: list of position.
 
-            position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+            Example: p = sd.getShapePosition('shape_name')[0].
+            print ('x = ', p.x, 'y = ', p.y).            
         """
 
-        idx_list = self.df[4].index[self.df[4]["shape_name"] == shape_name_str].tolist()
-        position_list =[] 
-        for i in range(len(idx_list)):
-            position_list.append(self.df[4].iloc[idx_list[i]]["position"])
+        p = visualizeSBML._getShapePosition(self.df, shape_name_str)
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            position = point.Point (p[alias][0], p[alias][1])
+            position_list.append(position)
         return position_list
 
     def getShapeSize(self, shape_name_str):
@@ -3160,13 +3186,19 @@ class load:
         Returns:
             shape_size_list: list of shape_size.
 
-            shape_size: list-1*2 matrix-size of the rectangle [width, height].
+            shape_size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+            Example: p = sd.getShapeSize('shape_name')[0]
+            print ('Width = ', p.x, 'Height = ', p.y)
         """
 
-        idx_list = self.df[4].index[self.df[4]["shape_name"] == shape_name_str].tolist()
-        shape_size_list =[] 
-        for i in range(len(idx_list)):
-            shape_size_list.append(self.df[4].iloc[idx_list[i]]["size"])
+        p = visualizeSBML._getShapeSize (self.df, shape_name_str)
+        num_alias = len(p)
+        shape_size_list = []
+        for alias in range(num_alias):
+            shape_size = point.Point (p[alias][0], p[alias][1])
+            shape_size_list.append(shape_size)
         return shape_size_list
 
 
@@ -3534,8 +3566,8 @@ if __name__ == '__main__':
     # print(df.getNodeTextLineWidth("x_1"))
     # print(df.getNodeTextFontSize("x_1"))
 
-    print("center_position:", df.getReactionCenterPosition("r_0"))
-    print("handle_position:", df.getReactionHandlePositions("r_0"))
+    # print("center_position:", df.getReactionCenterPosition("r_0"))
+    # print("handle_position:", df.getReactionHandlePositions("r_0"))
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df._isBezierReactionType("r_0"))

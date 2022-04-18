@@ -1480,14 +1480,14 @@ def _getNetworkTopLeftCorner(sbmlStr):
     if numBoundaryNodes > 0:
         position = _getNodePosition(_df, BoundaryNodes_ids[0])[0]
     # if numTexts > 0:
-    #     position_list = df.getTextPosition(txt_content[0])
-    #     size = df.getTextSize(txt_content[0])[0]
+    #     position_list = _getTextPosition(_df, txt_content[0])
+    #     size = _getTextSize(_df, txt_content[0])[0]
     #     position = [position_list[0][0], position_list[0][1]-size[1]]
     if numTexts > 0:
-        position_list = df.getTextPosition(txt_content[0])
+        position_list = _getTextPosition(_df, txt_content[0])
         position = position_list[0]
     if numShapes > 0:
-        position_list = df.getShapePosition(shape_name[0])
+        position_list = _getShapePosition(_df, shape_name[0])
         position = position_list[0]
     for i in range(numFloatingNodes):
         node_temp_position = _getNodePosition(_df, FloatingNodes_ids[i])
@@ -1538,8 +1538,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[1] = handle_positions[j][1]
 
     # for i in range(numTexts):
-    #     text_position_list = df.getTextPosition(txt_content[i])
-    #     text_size = df.getTextSize(txt_content[i])[0]
+    #     text_position_list = _getTextPosition(_df, txt_content[i])
+    #     text_size = _getTextSize(_df, txt_content[i])[0]
     #     text_position = [text_position_list[0][0],text_position_list[0][1]-text_size[1]] 
     #     if text_position[0] < position[0]:
     #         position[0] = text_position[0]
@@ -1547,7 +1547,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
     #         position[1] = text_position[1]
 
     for i in range(numTexts):
-        text_position_list = df.getTextPosition(txt_content[i])
+        text_position_list = _getTextPosition(_df, txt_content[i])
         text_position = text_position_list[0]
         if text_position[0] < position[0]:
             position[0] = text_position[0]
@@ -1555,7 +1555,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
             position[1] = text_position[1]
 
     for i in range(numShapes):
-        shape_position_list = df.getShapePosition(shape_name[i])
+        shape_position_list = _getShapePosition(_df, shape_name[i])
         shape_position = shape_position_list[0]
         if shape_position[0] < position[0]:
             position[0] = shape_position[0]
@@ -1606,15 +1606,15 @@ def _getNetworkBottomRightCorner(sbmlStr):
         size = _getNodeSize(_df, BoundaryNodes_ids[0])[0]
         position = [position_list[0][0]+size[0], position_list[0][1]+size[1]]
     # if numTexts > 0:
-    #     position_list = df.getTextPosition(txt_content[0])
-    #     size = df.getTextSize(txt_content[0])[0]
+    #     position_list = _getTextPosition(_df, txt_content[0])
+    #     size = _getTextSize(_df, txt_content[0])[0]
     #     position = [position_list[0][0]+size[0],position_list[0][1]]
     if numTexts > 0:
-        position_list = df.getTextPosition(txt_content[0])
-        size = df.getTextSize(txt_content[0])[0]
+        position_list = _getTextPosition(_df, txt_content[0])
+        size = _getTextSize(_df, txt_content[0])[0]
         position = [position_list[0][0]+size[0],position_list[0][1]+size[1]]
     if numShapes > 0:
-        position_list = df.getShapePosition(shape_name[0])
+        position_list = _getShapePosition(_df, shape_name[0])
         position = position_list[0]
 
     for i in range(numFloatingNodes):
@@ -1681,8 +1681,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[1] = handle_positions[j][1]
 
     # for i in range(numTexts):
-    #     text_position_list = df.getTextPosition(txt_content[i])
-    #     text_size = df.getTextSize(txt_content[i])[0]
+    #     text_position_list = _getTextPosition(_df, txt_content[i])
+    #     text_size = _getTextSize(_df, txt_content[i])[0]
     #     text_position = [text_position_list[0][0] + text_size[0],text_position_list[0][1]] 
     #     if text_position[0] > position[0]:
     #         position[0] = text_position[0]
@@ -1690,8 +1690,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
     #         position[1] = text_position[1]
 
     for i in range(numTexts):
-        text_position_list = df.getTextPosition(txt_content[i])
-        text_size = df.getTextSize(txt_content[i])[0]
+        text_position_list = _getTextPosition(_df, txt_content[i])
+        text_size = _getTextSize(_df, txt_content[i])[0]
         text_position = [text_position_list[0][0] + text_size[0],
                         text_position_list[0][1] + text_size[1]] 
         if text_position[0] > position[0]:
@@ -1700,8 +1700,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
             position[1] = text_position[1]
 
     for i in range(numShapes):
-        shape_position_list = df.getShapePosition(shape_name[i])
-        shape_size = df.getShapeSize(shape_name[i])[0]
+        shape_position_list = _getShapePosition(_df, shape_name[i])
+        shape_size = _getShapeSize(_df, shape_name[i])[0]
         shape_position = [shape_position_list[0][0] + shape_size[0],
                         shape_position_list[0][1] + shape_size[1]] 
         if shape_position[0] > position[0]:
@@ -1903,6 +1903,91 @@ def _getReactionHandlePositions(df, id):
         handle_positions_list.append(df[2].iloc[idx_list[i]]["handles"])
 
     return handle_positions_list
+
+
+def _getTextPosition(df, txt_str):
+    """
+    Get the arbitrary text position with its content.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+    
+        txt_str: str-the content of the text.
+
+    Returns:
+        position_list: list of position.
+
+        position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+    """
+
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    position_list =[] 
+    for i in range(len(idx_list)):
+        position_list.append(df[3].iloc[idx_list[i]]["txt_position"])
+    return position_list
+
+def _getTextSize(df, txt_str):
+    """
+    Get the arbitrary text size with its text content.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+    
+        txt_str: str-the text content.
+
+    Returns:
+        txt_size_list: list of txt_size.
+
+        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+    """
+
+    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    txt_size_list =[] 
+    for i in range(len(idx_list)):
+        txt_size_list.append(df[3].iloc[idx_list[i]]["txt_size"])
+    return txt_size_list
+
+def _getShapePosition(df, shape_name_str):
+    """
+    Get the arbitrary shape position with its shape name.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+    
+        shape_name_str: str-the shape name of the arbitrary shape.
+
+    Returns:
+        position_list: list of position.
+
+        position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+    """
+
+    idx_list = df[4].index[df[4]["shape_name"] == shape_name_str].tolist()
+    position_list =[] 
+    for i in range(len(idx_list)):
+        position_list.append(df[4].iloc[idx_list[i]]["position"])
+    return position_list
+
+def _getShapeSize(df, shape_name_str):
+    """
+    Get the arbitrary shape size with its shape name.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+    
+        shape_name_str: str-the shape name.
+
+    Returns:
+        shape_size_list: list of shape_size.
+
+        shape_size: list-1*2 matrix-size of the rectangle [width, height].
+    """
+
+    idx_list = df[4].index[df[4]["shape_name"] == shape_name_str].tolist()
+    shape_size_list =[] 
+    for i in range(len(idx_list)):
+        shape_size_list.append(df[4].iloc[idx_list[i]]["size"])
+    return shape_size_list
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))

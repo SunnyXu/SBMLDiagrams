@@ -1000,7 +1000,7 @@ class TestImportSBML(unittest.TestCase):
       [[91, 176, 253, 255], '', '#5BB0FDFF'])
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == 3.)
     self.assertTrue(self.df._isBezierReactionType("r_0")[0] == True)
-    self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0] == [12., 15.])
+    self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0].x == [12., 15.][0])
     self.assertTrue(self.df.getReactionDash("r_0")[0] == [])
 
   def testSetCompartment(self):
@@ -1168,7 +1168,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getReactionLineThickness("r_0")[0] == line_thickness)
     self.assertTrue(self.df._isBezierReactionType("r_0")[0] == bezier)
-    self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0] == arrowHeadSize)
+    self.assertTrue(self.df.getReactionArrowHeadSize("r_0")[0].x == arrowHeadSize[0])
     self.assertTrue(self.df.getReactionDash("r_0")[0] == rxn_dash)
   
   def testSetReactionDefaultCenterAndHandlePositions(self):
@@ -1198,8 +1198,8 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return  
 
-    self.assertTrue(self.df_text.getTextPosition("text_content1")[0] == [92.0, 26.0])
-    self.assertTrue(self.df_text.getTextSize("text_content1")[0] == [228.0, 24.0])
+    self.assertTrue(self.df_text.getTextPosition("text_content1")[0].x == [92.0, 26.0][0])
+    self.assertTrue(self.df_text.getTextSize("text_content1")[0].x == [228.0, 24.0][0])
     self.assertTrue(self.df_text.getTextFontColor("text_content1")[0] == [[0, 0, 0, 255], 'Black', '#000000FF'])
     self.assertTrue(self.df_text.getTextLineWidth("text_content2")[0] == 1.)
     self.assertTrue(self.df_text.getTextFontSize("text_content2")[0] == 11.)
@@ -1223,8 +1223,8 @@ class TestImportSBML(unittest.TestCase):
     self.df_text.setTextLineWidth("text_content2", text_line_width)
     self.df_text.setTextFontSize("text_content2", text_font_size)
 
-    self.assertTrue(self.df_text.getTextPosition("text_content1")[0] == text_position)
-    self.assertTrue(self.df_text.getTextSize("text_content1")[0] == text_size)
+    self.assertTrue(self.df_text.getTextPosition("text_content1")[0].x == text_position[0])
+    self.assertTrue(self.df_text.getTextSize("text_content1")[0].x == text_size[0])
     self.assertTrue(self.df_text.getTextFontColor("text_content1")[0][0] == [5, 0, 0, 255])
     self.assertTrue(self.df_text.getTextLineWidth("text_content2")[0] == text_line_width)
     self.assertTrue(self.df_text.getTextFontSize("text_content2")[0] == text_font_size)
@@ -1256,8 +1256,8 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return  
 
-    self.assertTrue(self.df_shape.getShapePosition("shape_name")[0] == [177., 107.])
-    self.assertTrue(self.df_shape.getShapeSize("shape_name")[0] == [50., 30.])
+    self.assertTrue(self.df_shape.getShapePosition("shape_name")[0].x == [177., 107.][0])
+    self.assertTrue(self.df_shape.getShapeSize("shape_name")[0].x == [50., 30.][0])
 
 
   def testArbitraryShape(self):

@@ -34,6 +34,9 @@ class TestEditSBML(unittest.TestCase):
     f_test_genGlyph.close()
 
     self._df = processSBML._SBMLToDF(self.sbmlStr_test)
+    self._df_text = processSBML._SBMLToDF(self.sbmlStr_test_textGlyph)
+    self._df_shape = processSBML._SBMLToDF(self.sbmlStr_test_genGlyph)
+
 
   def testNetwork(self):
     # Test the functions related to network positions and size
@@ -70,6 +73,11 @@ class TestEditSBML(unittest.TestCase):
       [334.0, 231.0])
     self.assertTrue(visualizeSBML._getReactionHandlePositions(self._df, "r_0")[0] == \
       [[386.0, 231.0], [386.0, 231.0], [386.0, 231.0]])
+
+    self.assertTrue(visualizeSBML._getTextPosition(self._df_text, "text_content1")[0] == [92.0, 26.0])
+    self.assertTrue(visualizeSBML._getTextSize(self._df_text, "text_content1")[0] == [228.0, 24.0])
+    self.assertTrue(visualizeSBML._getShapePosition(self._df_shape, "shape_name")[0] == [177., 107.])
+    self.assertTrue(visualizeSBML._getShapeSize(self._df_shape, "shape_name")[0] == [50., 30.])
 
   # def plotInvalidStr(self):
   #   # system exit if plot an invalid string
