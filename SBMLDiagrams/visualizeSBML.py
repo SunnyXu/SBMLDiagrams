@@ -1491,7 +1491,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
         position = position_list[0]
     for i in range(numFloatingNodes):
         node_temp_position = _getNodePosition(_df, FloatingNodes_ids[i])
-        text_temp_position = df.getNodeTextPosition(FloatingNodes_ids[i])
+        text_temp_position = _getNodeTextPosition(_df, FloatingNodes_ids[i])
         for j in range(len(node_temp_position)):
             if node_temp_position[j][0] < position[0]:
                 position[0] = node_temp_position[j][0]
@@ -1503,7 +1503,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[1] = text_temp_position[j][1]
     for i in range(numBoundaryNodes):
         node_temp_position = _getNodePosition(_df, BoundaryNodes_ids[i])
-        text_temp_position = df.getNodeTextPosition(BoundaryNodes_ids[i])
+        text_temp_position = _getNodeTextPosition(_df, BoundaryNodes_ids[i])
         for j in range(len(node_temp_position)):
             if node_temp_position[j][0] < position[0]:
                 position[0] = node_temp_position[j][0]
@@ -1519,14 +1519,14 @@ def _getNetworkTopLeftCorner(sbmlStr):
             comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])[0]
             if comp_temp_fill_color[0] != [255,255,255,255] or \
                 comp_temp_border_color[0] != [255,255,255,255]:
-                comp_temp_position = df.getCompartmentPosition(Comps_ids[i])[0]
+                comp_temp_position = _getCompartmentPosition(_df, Comps_ids[i])[0]
                 if comp_temp_position[0] < position[0]:
                     position[0] = comp_temp_position[0]
                 if comp_temp_position[1] < position[1]:
                     position[1] = comp_temp_position[1]
     for i in range(numRxns):
-        center_position = df.getReactionCenterPosition(Rxns_ids[i])[0]
-        handle_positions = df.getReactionHandlePositions(Rxns_ids[i])[0]
+        center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
+        handle_positions = _getReactionHandlePositions(_df, Rxns_ids[i])[0]
         if center_position[0] < position[0]:
             position[0] = center_position[0]
         if center_position[1] < position[1]:
@@ -1619,10 +1619,10 @@ def _getNetworkBottomRightCorner(sbmlStr):
 
     for i in range(numFloatingNodes):
         node_temp_position_list = _getNodePosition(_df, FloatingNodes_ids[i])
-        text_temp_position_list = df.getNodeTextPosition(FloatingNodes_ids[i])
+        text_temp_position_list = _getNodeTextPosition(_df, FloatingNodes_ids[i])
         for j in range(len(node_temp_position_list)):
             node_temp_size = _getNodeSize(_df, FloatingNodes_ids[i])
-            text_temp_size = df.getNodeTextSize(FloatingNodes_ids[i])
+            text_temp_size = _getNodeTextSize(_df, FloatingNodes_ids[i])
             node_temp_position = [node_temp_position_list[j][0]+node_temp_size[j][0], 
             node_temp_position_list[j][1]+node_temp_size[j][1]]
             text_temp_position = [text_temp_position_list[j][0]+text_temp_size[j][0], 
@@ -1637,10 +1637,10 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[1] = text_temp_position[1]
     for i in range(numBoundaryNodes):
         node_temp_position_list = _getNodePosition(_df, BoundaryNodes_ids[i])
-        text_temp_position_list = df.getNodeTextPosition(BoundaryNodes_ids[i])
+        text_temp_position_list = _getNodeTextPosition(_df, BoundaryNodes_ids[i])
         for j in range(len(node_temp_position_list)):
             node_temp_size = _getNodeSize(_df, BoundaryNodes_ids[i])
-            text_temp_size = df.getNodeTextSize(BoundaryNodes_ids[i])
+            text_temp_size = _getNodeTextSize(_df, BoundaryNodes_ids[i])
             node_temp_position = [node_temp_position_list[j][0]+node_temp_size[j][0], 
             node_temp_position_list[j][1]+node_temp_size[j][1]]
             text_temp_position = [text_temp_position_list[j][0]+text_temp_size[j][0], 
@@ -1659,8 +1659,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
             comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])[0]
             if comp_temp_fill_color[0] != [255,255,255,255] or \
             comp_temp_border_color[0] != [255,255,255,255]:
-                comp_temp_size = df.getCompartmentSize(Comps_ids[i])[0]
-                comp_temp_position_list = df.getCompartmentPosition(Comps_ids[i])
+                comp_temp_size = _getCompartmentSize(_df, Comps_ids[i])[0]
+                comp_temp_position_list = _getCompartmentPosition(_df, Comps_ids[i])
                 comp_temp_position = [comp_temp_position_list[0][0]+comp_temp_size[0],
                 comp_temp_position_list[0][1]+comp_temp_size[1]]
                 if comp_temp_position[0] > position[0]:
@@ -1668,8 +1668,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 if comp_temp_position[1] > position[1]:
                     position[1] = comp_temp_position[1]
     for i in range(numRxns):
-        center_position = df.getReactionCenterPosition(Rxns_ids[i])[0]
-        handle_positions = df.getReactionHandlePositions(Rxns_ids[i])[0]
+        center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
+        handle_positions = _getReactionHandlePositions(_df, Rxns_ids[i])[0]
         if center_position[0] > position[0]:
             position[0] = center_position[0]
         if center_position[1] > position[1]:
@@ -1729,6 +1729,50 @@ def _getNetworkSize(sbmlStr):
 
     return size
 
+def _getCompartmentPosition(df, id):
+    """
+    Get the position of a compartment with its certain compartment id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the compartment.
+
+    Returns:
+        position_list: list of position.
+
+        position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
+    """
+
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    position_list =[] 
+    for i in range(len(idx_list)):
+        position_list.append(df[0].iloc[idx_list[i]]["position"])
+
+    return position_list
+
+def _getCompartmentSize(df, id):
+    """
+    Get the size of a compartment with its certain compartment id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the compartment.
+
+    Returns:
+        size_list: list of size.
+
+        size: list-1*2 matrix-size of the rectangle [width, height].
+    """
+
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    size_list =[] 
+    for i in range(len(idx_list)):
+        size_list.append(df[0].iloc[idx_list[i]]["size"])
+
+    return size_list
+
 
 def _getNodePosition(df, id):
     """
@@ -1775,6 +1819,90 @@ def _getNodeSize(df, id):
 
     return size_list
 
+def _getNodeTextPosition(df, id):
+        """
+        Get the text position of a node with its certain node id.
+
+        Args: 
+            df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+            id: str-the id of node.
+
+        Returns:
+            txt_position_list: list of txt_position.
+
+            txt_position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+        """
+        idx_list = df[1].index[df[1]["id"] == id].tolist()
+        txt_position_list =[] 
+        for i in range(len(idx_list)):
+            txt_position_list.append(df[1].iloc[idx_list[i]]["txt_position"])
+
+        return txt_position_list
+
+def _getNodeTextSize(df, id):
+    """
+    Get the text size of a node with its certain node id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the node.
+
+    Returns:
+        txt_size_list: list of txt_size.
+
+        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+    """
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    txt_size_list =[] 
+    for i in range(len(idx_list)):
+        txt_size_list.append(df[1].iloc[idx_list[i]]["txt_size"])
+
+    return txt_size_list
+
+def _getReactionCenterPosition(df, id):
+    """
+    Get the center position of a reaction with its certain reaction id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the reaction.
+
+    Returns:
+        line_center_position_list: list of center_position.
+
+        center_position:  list-1*2 matrix: position of the center.
+    """
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    center_position_list =[] 
+    for i in range(len(idx_list)):
+        center_position_list.append(df[2].iloc[idx_list[i]]["center_pos"])
+
+    return center_position_list
+
+def _getReactionHandlePositions(df, id):
+    """
+    Get the handle positions of a reaction with its certain reaction id.
+
+    Args:
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+    
+        id: str-the id of the reaction.
+
+    Returns:
+        line_handle_positions_list: list of handle_positions.
+
+        handle_positions: list-position of the handles: 
+        [center handle, reactant handles, product handles].
+    """
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    handle_positions_list =[] 
+    for i in range(len(idx_list)):
+        handle_positions_list.append(df[2].iloc[idx_list[i]]["handles"])
+
+    return handle_positions_list
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))

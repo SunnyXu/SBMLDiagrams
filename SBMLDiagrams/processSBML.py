@@ -1552,13 +1552,20 @@ class load:
         Returns:
             position_list: list of position.
 
-            position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.  
+
+            Example: p = sd.getCompartmentPosition('compartment_id')[0].
+            print ('x = ', p.x, 'y = ', p.y).          
+
         """
 
-        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
-        position_list =[] 
-        for i in range(len(idx_list)):
-            position_list.append(self.df[0].iloc[idx_list[i]]["position"])
+        p = visualizeSBML._getCompartmentPosition(self.df, id)
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            position = point.Point (p[alias][0], p[alias][1])
+            position_list.append(position)
 
         return position_list
 
@@ -1572,14 +1579,20 @@ class load:
         Returns:
             size_list: list of size.
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+            Example: p = sd.getCompartmentSize('compartment_id')[0]
+            print ('Width = ', p.x, 'Height = ', p.y)
+
         """
 
-        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
-        size_list =[] 
-        for i in range(len(idx_list)):
-            size_list.append(self.df[0].iloc[idx_list[i]]["size"])
-
+        p = visualizeSBML._getCompartmentSize (self.df, id)
+        num_alias = len(p)
+        size_list = []
+        for alias in range(num_alias):
+            size = point.Point (p[alias][0], p[alias][1])
+            size_list.append(size)
         return size_list
 
     def getCompartmentFillColor(self, id):
@@ -1668,78 +1681,89 @@ class load:
         return floating_node_list
 
 
-    def getNodePosition(self, id, alias = 0):
+    def getNodePosition(self, id):
         """
         Get the position of a node with its certain node id.
 
         Args: 
             id: str-the id of the Node.
 
-            alias: list-the alias node index.
-
         Returns:
-            position: a Point object with attributes x and y representing
-            the x/y position of the top/left-hand corner of the bounding box.
+            position-list: list-list of position.
 
-            Example: p = sd.getNodePosition ('ATP').
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+            Example: p = sd.getNodePosition('ATP')[0].
             print ('x = ', p.x, 'y = ', p.y).            
 
         """
 
         p = visualizeSBML._getNodePosition(self.df, id)
-        position = point.Point (p[alias][0], p[alias][1])
-        return position
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            position = point.Point (p[alias][0], p[alias][1])
+            position_list.append(position)
+        return position_list
 
 
-    def getNodeCenter(self, id, alias = 0):
+    def getNodeCenter(self, id):
         """
         Get the center point of a node with given id.
 
         Args: 
             id: str-the id of the Node.
 
-            alias: int-alias node index.
-
         Returns:
+            position_list: list-list of position.
+
             position-a Point object with x and y coordinates of the center of the node.
            
             Example:
-                p = sd.getNodeCenter ('ATP')
-                print (p.x, p.y)
+                p = sd.getNodeCenter('ATP')[0]
+                print(p.x, p.y)
         """   
         if not (id in self.getNodeIdList()):
             raise Exception("No such node found in model: " + id)
             
         p = visualizeSBML._getNodePosition(self.df, id) 
         size = visualizeSBML._getNodeSize(self.df, id)
-        cx = p[alias][0] + size[alias][0]/2
-        cy = p[alias][1] + size[alias][1]/2
-        position = point.Point(cx, cy) 
-
-        return position
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            cx = p[alias][0] + size[alias][0]/2
+            cy = p[alias][1] + size[alias][1]/2
+            position = point.Point(cx, cy) 
+            position_list.append(position)
+        return position_list
         
 
-    def getNodeSize(self, id, alias = 0):
+    def getNodeSize(self, id):
         """
         Get the size of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
 
-            alias: int-alias node index.
-
         Returns:
-            size: a Point object with attributes x and y representing
-            the width and height of the node
+            size_list: list-list of size.
 
-            Example: p = sd.getNodeSize ('ATP')
+            size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+            Example: p = sd.getNodeSize('ATP')[0]
             print ('Width = ', p.x, 'Height = ', p.y)
 
         """
 
         p = visualizeSBML._getNodeSize (self.df, id)
-        size = point.Point (p[alias][0], p[alias][1])
-        return size
+        num_alias = len(p)
+        size_list = []
+        for alias in range(num_alias):
+            size = point.Point (p[alias][0], p[alias][1])
+            size_list.append(size)
+        return size_list
 
 
     def getNodeShape(self, id):
@@ -1792,12 +1816,20 @@ class load:
         Returns:
             txt_position_list: list of txt_position.
 
-            txt_position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+            txt_position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+            Example: p = sd.getNodeTextPosition('ATP')[0].
+            print ('x = ', p.x, 'y = ', p.y).            
+
         """
-        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
-        txt_position_list =[] 
-        for i in range(len(idx_list)):
-            txt_position_list.append(self.df[1].iloc[idx_list[i]]["txt_position"])
+
+        p = visualizeSBML._getNodeTextPosition(self.df, id)
+        num_alias = len(p)
+        txt_position_list = []
+        for alias in range(num_alias):
+            txt_position = point.Point (p[alias][0], p[alias][1])
+            txt_position_list.append(txt_position)
 
         return txt_position_list
 
@@ -1812,12 +1844,20 @@ class load:
         Returns:
             txt_size_list: list of txt_size.
 
-            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+            size: a Point object with attributes x and y representing
+            the width and height of the node
+
+            Example: p = sd.getNodeTextSize('ATP')[0]
+            print ('Width = ', p.x, 'Height = ', p.y)          
+
         """
-        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
-        txt_size_list =[] 
-        for i in range(len(idx_list)):
-            txt_size_list.append(self.df[1].iloc[idx_list[i]]["txt_size"])
+
+        p = visualizeSBML._getNodeTextSize(self.df, id)
+        num_alias = len(p)
+        txt_size_list = []
+        for alias in range(num_alias):
+            txt_size = point.Point (p[alias][0], p[alias][1])
+            txt_size_list.append(txt_size)
 
         return txt_size_list
 
@@ -1964,12 +2004,20 @@ class load:
         Returns:
             line_center_position_list: list of center_position.
 
-            center_position:  list-1*2 matrix: position of the center.
+            center_position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box. 
+
+            Example: p = sd.getReactionCenterPosition('reaction_id')[0].
+            print ('x = ', p.x, 'y = ', p.y).          
+
         """
-        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
-        center_position_list =[] 
-        for i in range(len(idx_list)):
-            center_position_list.append(self.df[2].iloc[idx_list[i]]["center_pos"])
+
+        p = visualizeSBML._getReactionCenterPosition(self.df, id)
+        num_alias = len(p)
+        center_position_list = []
+        for alias in range(num_alias):
+            center_position = point.Point (p[alias][0], p[alias][1])
+            center_position_list.append(center_position)
 
         return center_position_list
 
@@ -1985,13 +2033,22 @@ class load:
 
             handle_positions: list-position of the handles: 
             [center handle, reactant handles, product handles].
-        """
-        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
-        handle_positions_list =[] 
-        for i in range(len(idx_list)):
-            handle_positions_list.append(self.df[2].iloc[idx_list[i]]["handles"])
 
-        return handle_positions_list
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.          
+
+        """
+
+        p = visualizeSBML._getReactionHandlePositions(self.df, id)
+        num_alias = len(p)
+        handle_position_list = []
+        for alias in range(num_alias):
+            handle_position = []
+            for i in range(len(p[alias])):
+                handle_position.append(point.Point(p[alias][i][0], p[alias][i][1]))
+            handle_position_list.append(handle_position)
+
+        return handle_position_list
 
     def getReactionFillColor(self, id):
         """
@@ -3385,7 +3442,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3400,7 +3457,7 @@ if __name__ == '__main__':
     #filename = "Sauro1.xml"
     # filename = "test_textGlyph.xml"
     #node shape:
-    filename = "rectangle.xml"
+    #filename = "rectangle.xml"
     #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
@@ -3430,7 +3487,7 @@ if __name__ == '__main__':
 
     #filename = "bart2.xml"
     #filename = "bart_arccenter.xml"
-    #filename = "bart_spRefBezier.xml"
+    # filename = "bart_spRefBezier.xml"
     #filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -3464,12 +3521,12 @@ if __name__ == '__main__':
 
     # print(df.isFloatingNode("x_1"))
     # print(df.getNodePosition("x_1"))
-    # print(df.getNodePosition("x_0"))
-    # print(df.getNodeSize("x_0"))
-    # print(df.getNodeCenter("x_0"))
+    # print(df.getNodePosition("x_0")[0])
+    # print(df.getNodeSize("x_0")[0])
+    # print(df.getNodeCenter("x_0")[0])
     # print(df.getNodeShape("x_0"))
-    # print(df.getNodeTextPosition("x_1"))
-    # print(df.getNodeTextSize("x_1"))
+    # print(df.getNodeTextPosition("x_0")[0])
+    # print(df.getNodeTextSize("x_0"))
     # print(df.getNodeFillColor("Species_1"))
     # print(df.getNodeBorderColor("x_1"))
     # print(df.getNodeBorderWidth("x_1"))
@@ -3477,8 +3534,8 @@ if __name__ == '__main__':
     # print(df.getNodeTextLineWidth("x_1"))
     # print(df.getNodeTextFontSize("x_1"))
 
-    # print("center_position:", df.getReactionCenterPosition("r_0"))
-    # print("handle_position:", df.getReactionHandlePositions("r_0"))
+    print("center_position:", df.getReactionCenterPosition("r_0"))
+    print("handle_position:", df.getReactionHandlePositions("r_0"))
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df._isBezierReactionType("r_0"))
@@ -3582,7 +3639,7 @@ if __name__ == '__main__':
     # f.write(sbmlStr_layout_render)
     # f.close()
 
-    #df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output.png')
+    # df.draw(reactionLineType='bezier', scale = 2.)
+    # df.draw(output_fileName = 'output.png')
 
 

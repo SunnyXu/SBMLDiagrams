@@ -60,9 +60,16 @@ class TestEditSBML(unittest.TestCase):
     if IGNORE_TEST:
       return
 
+    self.assertTrue(visualizeSBML._getCompartmentPosition(self._df, "_compartment_default_")[0] == [0, 0])
+    self.assertTrue(visualizeSBML._getCompartmentSize(self._df, "_compartment_default_")[0] == [1000, 1000])
     self.assertTrue(visualizeSBML._getNodePosition(self._df, "x_1")[0] == [413.0, 216.0])
     self.assertTrue(visualizeSBML._getNodeSize(self._df, "x_1")[0] == [50.0, 30.0])
-
+    self.assertTrue(visualizeSBML._getNodeTextPosition(self._df, "x_1")[0] == [413.0, 216.0])
+    self.assertTrue(visualizeSBML._getNodeTextSize(self._df, "x_1")[0] == [50.0, 30.0])
+    self.assertTrue(visualizeSBML._getReactionCenterPosition(self._df, "r_0")[0] == \
+      [334.0, 231.0])
+    self.assertTrue(visualizeSBML._getReactionHandlePositions(self._df, "r_0")[0] == \
+      [[386.0, 231.0], [386.0, 231.0], [386.0, 231.0]])
 
   # def plotInvalidStr(self):
   #   # system exit if plot an invalid string

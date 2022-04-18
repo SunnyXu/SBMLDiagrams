@@ -14,6 +14,8 @@ Read the node information.
 
 .. autofunction:: SBMLDiagrams.load.getNodePosition
 
+.. autofunction:: SBMLDiagrams.load.getNodeCenter
+
 .. autofunction:: SBMLDiagrams.load.getNodeSize
 
 .. autofunction:: SBMLDiagrams.load.getNodeShape
