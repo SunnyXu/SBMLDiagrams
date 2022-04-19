@@ -856,6 +856,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         #allows users to set the color of the "_compartment_default" as the canvas
                         #color_style.setCompBorderColor((255, 255, 255, 255))
                         #color_style.setCompFillColor((255, 255, 255, 255)
+                   
                     drawNetwork.addCompartment(canvas, position, dimension,
                                             color_style.getCompBorderColor(), color_style.getCompFillColor(),
                                                 color_style.getCompBorderWidth()*scale)
@@ -935,7 +936,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     try: 
                         center_position = reaction_center_list[i]
                         center_handle = reaction_center_handle_list[i]
-                        handles = [center_handle]
+                        if center_handle != []:
+                            handles = [center_handle]
+                        else:
+                            handles = [center_position]
                         handles.extend(src_handle)
                         handles.extend(dst_handle)
                         #print("visualize:",handles)
@@ -1531,6 +1535,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
             position[0] = center_position[0]
         if center_position[1] < position[1]:
             position[1] = center_position[1]
+
         for j in range(len(handle_positions)):
             if handle_positions[j][0] < position[0]:
                 position[0] = handle_positions[j][0]
@@ -2003,6 +2008,7 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
+    filename = "Jana_WolfGlycolysis-original.xml"
     #filename = "BorisEJB.xml"
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
@@ -2021,7 +2027,7 @@ if __name__ == '__main__':
     #filename = "putida_sbml.xml"
     #filename = "putida_gb_newgenes.xml"
 
-    filename = "bart2.xml"
+    #filename = "bart2.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
