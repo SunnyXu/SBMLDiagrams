@@ -47,4 +47,4 @@ df.setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
   [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
 df.setNodeBorderColor("ADH1", "black")
 
-df.draw(output_fileName = 'output-SBGN2.png')
+df.draw(output_fileName = 'output-SBGN2.png', scale = 2)
