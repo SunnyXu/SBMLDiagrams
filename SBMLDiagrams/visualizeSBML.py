@@ -439,12 +439,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         prd_specGlyph_handles_temp_list = [] 
                         mod_specGlyph_temp_list = []
 
+                        center_handle = []
                         for j in range(numSpecRefGlyphs):
                             specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
                             #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
                                                 
                             curve = specRefGlyph.getCurve()  
-                            center_handle = []
                             spec_handle = []                            
                             for segment in curve.getListOfCurveSegments():
                                 line_start_x = segment.getStart().getXOffset()
@@ -456,7 +456,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 try:
                                     if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
                                         #line starts from center
-                                        center_handle = [segment.getBasePoint1().getXOffset(), 
+                                        center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
                                                     segment.getBasePoint1().getYOffset()]                                
                                         spec_handle = [segment.getBasePoint2().getXOffset(),
                                                 segment.getBasePoint2().getYOffset()]
@@ -464,10 +464,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         #line does not start from center
                                         spec_handle = [segment.getBasePoint1().getXOffset(), 
                                                     segment.getBasePoint1().getYOffset()]                                
-                                        center_handle = [segment.getBasePoint2().getXOffset(),
+                                        center_handle_candidate = [segment.getBasePoint2().getXOffset(),
                                                 segment.getBasePoint2().getYOffset()]
                                 except:
-                                    center_handle = []
+                                    center_handle_candidate = []
                                     spec_handle = []
 
                             role = specRefGlyph.getRoleString()
@@ -516,6 +516,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
 
                             if role == "substrate": #it is a rct
                                 #rct_specGlyph_temp_list.append(specGlyph_id)
+                                if center_handle == []:
+                                    center_handle.append(center_handle_candidate)
                                 rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
                             elif role == "product": #it is a prd
                                 #prd_specGlyph_temp_list.append(specGlyph_id)
@@ -525,7 +527,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             
                         #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                         #prd_specGlyph_list.append(prd_specGlyph_temp_list)
-                        reaction_center_handle_list.append(center_handle)
+                        reaction_center_handle_list.append(center_handle[0])
                         rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
                         prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
                         mod_specGlyph_list.append(mod_specGlyph_temp_list)
@@ -2019,7 +2021,7 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
-    filename = "Jana_WolfGlycolysis-original.xml"
+    #filename = "Jana_WolfGlycolysis-original.xml"
     #filename = "BorisEJB.xml"
     #filename = "100nodes.sbml"
     #filename = "E_coli_Millard2016.xml"
@@ -2039,6 +2041,7 @@ if __name__ == '__main__':
     #filename = "putida_gb_newgenes.xml"
 
     #filename = "bart2.xml"
+    filename = "newSBML.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()

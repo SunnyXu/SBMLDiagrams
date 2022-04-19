@@ -1,3 +1,6 @@
+"""
+@author: Herbert Sauro
+"""
 
 import math
 

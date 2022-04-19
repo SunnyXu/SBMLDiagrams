@@ -626,18 +626,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 speciesReferenceGlyph.setRole(libsbml.SPECIES_ROLE_SUBSTRATE)
                 speciesReferenceCurve = speciesReferenceGlyph.getCurve()
                 cb = speciesReferenceCurve.createCubicBezier()
-                cb.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
-
                 try: 
                     handle1 = handles_update[0]
                     handle2 = handles_update[j+1]
                 except:
                     handle1 = handles[0]
                     handle2 = handles[j+1]
-
-                cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle1[1]))
-                cb.setBasePoint2(libsbml.Point(layoutns, handle2[0], handle2[1]))
-
                 try:
                     src_position = list(df_NodeData.iloc[int(rct_list[j])]['position'][1:-1].split(","))
                     src_dimension = list(df_NodeData.iloc[int(rct_list[j])]['size'][1:-1].split(",")) 
@@ -648,7 +642,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 pos_y = float(src_position[1])
                 width = float(src_dimension[0])
                 height = float(src_dimension[1])
-                cb.setEnd(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y - 0.5*height))
+
+                cb.setStart(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y + 0.5*height))
+                cb.setBasePoint1(libsbml.Point(layoutns, handle2[0], handle2[1]))
+                cb.setBasePoint2(libsbml.Point(layoutns, handle1[0], handle1[1]))
+                cb.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
+
 
             for j in range(prd_num):
                 ref_id = "SpecRef_" + reaction_id + "_prd" + str(j)
@@ -664,14 +663,14 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 cb = speciesReferenceCurve.createCubicBezier()
                 cb.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
                 try:
-                    handle1 = handles_update[0]
+                    handle1 = [2.*center_value[0]-handles_update[0][0], 2.*center_value[1]-handles_update[0][1]]
                     handle2 = handles_update[rct_num+1+j]
                 except:
-                    handle1 = handles[0]
+                    handle1 = [2.*center_value[0]-handles[0][0], 2.*center_value[1]-handles[0][1]]
                     handle2 = handles[rct_num+1+j]
                 cb.setBasePoint1(libsbml.Point(layoutns, handle1[0], handle1[1]))
                 cb.setBasePoint2(libsbml.Point(layoutns, handle2[0], handle2[1]))
-                
+            
 
                 try:
                     dst_position = list(df_NodeData.iloc[int(prd_list[j])]['position'][1:-1].split(","))
@@ -684,7 +683,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 pos_y = float(dst_position[1])
                 width = float(dst_dimension[0])
                 height = float(dst_dimension[1])
-                cb.setEnd(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y - 0.5*height))
+                cb.setEnd(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y + 0.5*height))
 
             for j in range(mod_num):
                 ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
