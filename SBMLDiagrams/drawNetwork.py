@@ -1177,7 +1177,17 @@ def addText(canvas, txt_str, position, dimension,
         text_line_width: float-text line width.
 
     """ 
-    
+    if math.isnan(text_line_width):
+        text_line_width = 1.
+    #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
+    fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
+    paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
+    font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
+
+    text = skia.TextBlob.MakeFromString(txt_str, font)
+    twidth = font.measureText(txt_str)
+    #fontSize = font.getSize() 
+    theight = font.getSpacing()
 
     if longText == 'auto-font':
         stop_flag_1 = False
@@ -1202,7 +1212,7 @@ def addText(canvas, txt_str, position, dimension,
                 # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
                 fontSize = fontSize - 1.
             count_while += 1
-            if count_while > 100:
+            if count_while > 20:
                 stop_flag_1 = True
                 position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
                 position_x = position[0] + .5*(dimension[0] - twidth)
@@ -1234,11 +1244,16 @@ def addText(canvas, txt_str, position, dimension,
                 txt_str = txt_str[:txt_str_len] + '....'
 
             count_while += 1
-            if count_while > 100:
+            if count_while > 20:
                 stop_flag_1 = True
                 position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
                 position_x = position[0] + .5*(dimension[0] - twidth)
                 position_y = position[1] + .5*(dimension[1] - theight)
+
+    else:
+        position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
+        position_x = position[0] + .5*(dimension[0] - twidth)
+        position_y = position[1] + .5*(dimension[1] - theight)
 
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 
