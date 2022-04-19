@@ -472,10 +472,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="235.25" layout:y="84.5"/>
-                      <layout:end layout:x="166.5" layout:y="73"/>
-                      <layout:basePoint1 layout:x="212.33" layout:y="80.67"/>
-                      <layout:basePoint2 layout:x="200.88" layout:y="78.75"/>
+                      <layout:start layout:x="166.5" layout:y="73"/>
+                      <layout:end layout:x="235.25" layout:y="84.5"/>
+                      <layout:basePoint1 layout:x="200.88" layout:y="78.75"/>
+                      <layout:basePoint2 layout:x="212.33" layout:y="80.67"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -486,7 +486,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="235.25" layout:y="84.5"/>
                       <layout:end layout:x="304" layout:y="96"/>
-                      <layout:basePoint1 layout:x="212.33" layout:y="80.67"/>
+                      <layout:basePoint1 layout:x="258.17" layout:y="88.33"/>
                       <layout:basePoint2 layout:x="269.62" layout:y="90.25"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -508,10 +508,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="425.125" layout:y="148.25"/>
-                      <layout:end layout:x="304" layout:y="96"/>
-                      <layout:basePoint1 layout:x="418.75" layout:y="117.5"/>
-                      <layout:basePoint2 layout:x="383.06" layout:y="103.12"/>
+                      <layout:start layout:x="304" layout:y="96"/>
+                      <layout:end layout:x="425.125" layout:y="148.25"/>
+                      <layout:basePoint1 layout:x="383.06" layout:y="103.12"/>
+                      <layout:basePoint2 layout:x="418.75" layout:y="117.5"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -520,10 +520,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="425.125" layout:y="148.25"/>
-                      <layout:end layout:x="523" layout:y="91"/>
-                      <layout:basePoint1 layout:x="418.75" layout:y="117.5"/>
-                      <layout:basePoint2 layout:x="450.56" layout:y="100.62"/>
+                      <layout:start layout:x="523" layout:y="91"/>
+                      <layout:end layout:x="425.125" layout:y="148.25"/>
+                      <layout:basePoint1 layout:x="450.56" layout:y="100.62"/>
+                      <layout:basePoint2 layout:x="418.75" layout:y="117.5"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -534,7 +534,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="425.125" layout:y="148.25"/>
                       <layout:end layout:x="365" layout:y="214"/>
-                      <layout:basePoint1 layout:x="418.75" layout:y="117.5"/>
+                      <layout:basePoint1 layout:x="431.5" layout:y="179"/>
                       <layout:basePoint2 layout:x="409.56" layout:y="180.12"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -546,7 +546,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="425.125" layout:y="148.25"/>
                       <layout:end layout:x="520.5" layout:y="184"/>
-                      <layout:basePoint1 layout:x="418.75" layout:y="117.5"/>
+                      <layout:basePoint1 layout:x="431.5" layout:y="179"/>
                       <layout:basePoint2 layout:x="476.31" layout:y="173.12"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -568,10 +568,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="363.25" layout:y="274"/>
-                      <layout:end layout:x="365" layout:y="214"/>
-                      <layout:basePoint1 layout:x="363.83" layout:y="255.33"/>
-                      <layout:basePoint2 layout:x="364.12" layout:y="242"/>
+                      <layout:start layout:x="365" layout:y="214"/>
+                      <layout:end layout:x="363.25" layout:y="274"/>
+                      <layout:basePoint1 layout:x="364.12" layout:y="242"/>
+                      <layout:basePoint2 layout:x="363.83" layout:y="255.33"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -582,7 +582,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="363.25" layout:y="274"/>
                       <layout:end layout:x="361.5" layout:y="326"/>
-                      <layout:basePoint1 layout:x="363.83" layout:y="255.33"/>
+                      <layout:basePoint1 layout:x="362.67" layout:y="292.67"/>
                       <layout:basePoint2 layout:x="362.38" layout:y="298"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -604,10 +604,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="221.25" layout:y="305"/>
-                      <layout:end layout:x="361.5" layout:y="326"/>
-                      <layout:basePoint1 layout:x="256.33" layout:y="296.67"/>
-                      <layout:basePoint2 layout:x="296.88" layout:y="310"/>
+                      <layout:start layout:x="361.5" layout:y="326"/>
+                      <layout:end layout:x="221.25" layout:y="305"/>
+                      <layout:basePoint1 layout:x="296.88" layout:y="310"/>
+                      <layout:basePoint2 layout:x="256.33" layout:y="296.67"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -616,10 +616,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="221.25" layout:y="305"/>
-                      <layout:end layout:x="271.5" layout:y="257"/>
-                      <layout:basePoint1 layout:x="256.33" layout:y="296.67"/>
-                      <layout:basePoint2 layout:x="259.88" layout:y="286"/>
+                      <layout:start layout:x="271.5" layout:y="257"/>
+                      <layout:end layout:x="221.25" layout:y="305"/>
+                      <layout:basePoint1 layout:x="259.88" layout:y="286"/>
+                      <layout:basePoint2 layout:x="256.33" layout:y="296.67"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -630,7 +630,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="221.25" layout:y="305"/>
                       <layout:end layout:x="153" layout:y="259"/>
-                      <layout:basePoint1 layout:x="256.33" layout:y="296.67"/>
+                      <layout:basePoint1 layout:x="186.17" layout:y="313.33"/>
                       <layout:basePoint2 layout:x="172.62" layout:y="295.5"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -642,7 +642,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="221.25" layout:y="305"/>
                       <layout:end layout:x="145" layout:y="362"/>
-                      <layout:basePoint1 layout:x="256.33" layout:y="296.67"/>
+                      <layout:basePoint1 layout:x="186.17" layout:y="313.33"/>
                       <layout:basePoint2 layout:x="174.62" layout:y="324.5"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -664,10 +664,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="363.25" layout:y="390.5"/>
-                      <layout:end layout:x="361.5" layout:y="326"/>
-                      <layout:basePoint1 layout:x="362" layout:y="368"/>
-                      <layout:basePoint2 layout:x="361.88" layout:y="357.25"/>
+                      <layout:start layout:x="361.5" layout:y="326"/>
+                      <layout:end layout:x="363.25" layout:y="390.5"/>
+                      <layout:basePoint1 layout:x="361.88" layout:y="357.25"/>
+                      <layout:basePoint2 layout:x="362" layout:y="368"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -676,10 +676,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="363.25" layout:y="390.5"/>
-                      <layout:end layout:x="491.5" layout:y="363"/>
-                      <layout:basePoint1 layout:x="362" layout:y="368"/>
-                      <layout:basePoint2 layout:x="396.88" layout:y="360.75"/>
+                      <layout:start layout:x="491.5" layout:y="363"/>
+                      <layout:end layout:x="363.25" layout:y="390.5"/>
+                      <layout:basePoint1 layout:x="396.88" layout:y="360.75"/>
+                      <layout:basePoint2 layout:x="362" layout:y="368"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -688,10 +688,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="363.25" layout:y="390.5"/>
-                      <layout:end layout:x="247" layout:y="368"/>
-                      <layout:basePoint1 layout:x="362" layout:y="368"/>
-                      <layout:basePoint2 layout:x="328.62" layout:y="365.25"/>
+                      <layout:start layout:x="247" layout:y="368"/>
+                      <layout:end layout:x="363.25" layout:y="390.5"/>
+                      <layout:basePoint1 layout:x="328.62" layout:y="365.25"/>
+                      <layout:basePoint2 layout:x="362" layout:y="368"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -702,7 +702,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="363.25" layout:y="390.5"/>
                       <layout:end layout:x="500" layout:y="427"/>
-                      <layout:basePoint1 layout:x="362" layout:y="368"/>
+                      <layout:basePoint1 layout:x="364.5" layout:y="413"/>
                       <layout:basePoint2 layout:x="388.12" layout:y="423.75"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -714,7 +714,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="363.25" layout:y="390.5"/>
                       <layout:end layout:x="363" layout:y="450"/>
-                      <layout:basePoint1 layout:x="362" layout:y="368"/>
+                      <layout:basePoint1 layout:x="364.5" layout:y="413"/>
                       <layout:basePoint2 layout:x="365.62" layout:y="420.25"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -726,7 +726,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="363.25" layout:y="390.5"/>
                       <layout:end layout:x="245.5" layout:y="415"/>
-                      <layout:basePoint1 layout:x="362" layout:y="368"/>
+                      <layout:basePoint1 layout:x="364.5" layout:y="413"/>
                       <layout:basePoint2 layout:x="322.38" layout:y="422.75"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -748,10 +748,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="358.25" layout:y="518"/>
-                      <layout:end layout:x="363" layout:y="450"/>
-                      <layout:basePoint1 layout:x="358.17" layout:y="483.33"/>
-                      <layout:basePoint2 layout:x="360.12" layout:y="485.5"/>
+                      <layout:start layout:x="363" layout:y="450"/>
+                      <layout:end layout:x="358.25" layout:y="518"/>
+                      <layout:basePoint1 layout:x="360.12" layout:y="485.5"/>
+                      <layout:basePoint2 layout:x="358.17" layout:y="483.33"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -760,10 +760,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="358.25" layout:y="518"/>
-                      <layout:end layout:x="495.5" layout:y="486"/>
-                      <layout:basePoint1 layout:x="358.17" layout:y="483.33"/>
-                      <layout:basePoint2 layout:x="398.38" layout:y="483"/>
+                      <layout:start layout:x="495.5" layout:y="486"/>
+                      <layout:end layout:x="358.25" layout:y="518"/>
+                      <layout:basePoint1 layout:x="398.38" layout:y="483"/>
+                      <layout:basePoint2 layout:x="358.17" layout:y="483.33"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -774,7 +774,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="358.25" layout:y="518"/>
                       <layout:end layout:x="497" layout:y="555"/>
-                      <layout:basePoint1 layout:x="358.17" layout:y="483.33"/>
+                      <layout:basePoint1 layout:x="358.33" layout:y="552.67"/>
                       <layout:basePoint2 layout:x="398.62" layout:y="550.5"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -786,7 +786,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="358.25" layout:y="518"/>
                       <layout:end layout:x="358.5" layout:y="581"/>
-                      <layout:basePoint1 layout:x="358.17" layout:y="483.33"/>
+                      <layout:basePoint1 layout:x="358.33" layout:y="552.67"/>
                       <layout:basePoint2 layout:x="358.88" layout:y="544"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -808,10 +808,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="359.5" layout:y="622.5"/>
-                      <layout:end layout:x="358.5" layout:y="581"/>
-                      <layout:basePoint1 layout:x="359.17" layout:y="608.67"/>
-                      <layout:basePoint2 layout:x="359" layout:y="601.75"/>
+                      <layout:start layout:x="358.5" layout:y="581"/>
+                      <layout:end layout:x="359.5" layout:y="622.5"/>
+                      <layout:basePoint1 layout:x="359" layout:y="601.75"/>
+                      <layout:basePoint2 layout:x="359.17" layout:y="608.67"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -822,7 +822,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="359.5" layout:y="622.5"/>
                       <layout:end layout:x="360.5" layout:y="664"/>
-                      <layout:basePoint1 layout:x="359.17" layout:y="608.67"/>
+                      <layout:basePoint1 layout:x="359.83" layout:y="636.33"/>
                       <layout:basePoint2 layout:x="360" layout:y="643.25"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -844,10 +844,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="224.125" layout:y="668.5"/>
-                      <layout:end layout:x="360.5" layout:y="664"/>
-                      <layout:basePoint1 layout:x="264.58" layout:y="650"/>
-                      <layout:basePoint2 layout:x="292.31" layout:y="666.25"/>
+                      <layout:start layout:x="360.5" layout:y="664"/>
+                      <layout:end layout:x="224.125" layout:y="668.5"/>
+                      <layout:basePoint1 layout:x="292.31" layout:y="666.25"/>
+                      <layout:basePoint2 layout:x="264.58" layout:y="650"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -856,10 +856,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="224.125" layout:y="668.5"/>
-                      <layout:end layout:x="256.5" layout:y="607"/>
-                      <layout:basePoint1 layout:x="264.58" layout:y="650"/>
-                      <layout:basePoint2 layout:x="254.81" layout:y="636.25"/>
+                      <layout:start layout:x="256.5" layout:y="607"/>
+                      <layout:end layout:x="224.125" layout:y="668.5"/>
+                      <layout:basePoint1 layout:x="254.81" layout:y="636.25"/>
+                      <layout:basePoint2 layout:x="264.58" layout:y="650"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -870,7 +870,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="224.125" layout:y="668.5"/>
                       <layout:end layout:x="130" layout:y="643"/>
-                      <layout:basePoint1 layout:x="264.58" layout:y="650"/>
+                      <layout:basePoint1 layout:x="183.67" layout:y="687"/>
                       <layout:basePoint2 layout:x="181.06" layout:y="673.25"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -882,7 +882,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="224.125" layout:y="668.5"/>
                       <layout:end layout:x="158.5" layout:y="750"/>
-                      <layout:basePoint1 layout:x="264.58" layout:y="650"/>
+                      <layout:basePoint1 layout:x="183.67" layout:y="687"/>
                       <layout:basePoint2 layout:x="176.31" layout:y="703.25"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -904,10 +904,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="422.25" layout:y="699"/>
-                      <layout:end layout:x="360.5" layout:y="664"/>
-                      <layout:basePoint1 layout:x="401.67" layout:y="687.33"/>
-                      <layout:basePoint2 layout:x="391.38" layout:y="681.5"/>
+                      <layout:start layout:x="360.5" layout:y="664"/>
+                      <layout:end layout:x="422.25" layout:y="699"/>
+                      <layout:basePoint1 layout:x="391.38" layout:y="681.5"/>
+                      <layout:basePoint2 layout:x="401.67" layout:y="687.33"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -918,7 +918,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="422.25" layout:y="699"/>
                       <layout:end layout:x="484" layout:y="734"/>
-                      <layout:basePoint1 layout:x="401.67" layout:y="687.33"/>
+                      <layout:basePoint1 layout:x="442.83" layout:y="710.67"/>
                       <layout:basePoint2 layout:x="453.12" layout:y="716.5"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -940,10 +940,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="521.75" layout:y="137.5"/>
-                      <layout:end layout:x="523" layout:y="91"/>
-                      <layout:basePoint1 layout:x="522.17" layout:y="122"/>
-                      <layout:basePoint2 layout:x="522.38" layout:y="114.25"/>
+                      <layout:start layout:x="523" layout:y="91"/>
+                      <layout:end layout:x="521.75" layout:y="137.5"/>
+                      <layout:basePoint1 layout:x="522.38" layout:y="114.25"/>
+                      <layout:basePoint2 layout:x="522.17" layout:y="122"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -954,7 +954,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="521.75" layout:y="137.5"/>
                       <layout:end layout:x="520.5" layout:y="184"/>
-                      <layout:basePoint1 layout:x="522.17" layout:y="122"/>
+                      <layout:basePoint1 layout:x="521.33" layout:y="153"/>
                       <layout:basePoint2 layout:x="521.12" layout:y="160.75"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -976,10 +976,10 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="536" layout:y="761.5"/>
-                      <layout:end layout:x="484" layout:y="734"/>
-                      <layout:basePoint1 layout:x="518.67" layout:y="752.33"/>
-                      <layout:basePoint2 layout:x="510" layout:y="747.75"/>
+                      <layout:start layout:x="484" layout:y="734"/>
+                      <layout:end layout:x="536" layout:y="761.5"/>
+                      <layout:basePoint1 layout:x="510" layout:y="747.75"/>
+                      <layout:basePoint2 layout:x="518.67" layout:y="752.33"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>
@@ -990,7 +990,7 @@
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="536" layout:y="761.5"/>
                       <layout:end layout:x="588" layout:y="789"/>
-                      <layout:basePoint1 layout:x="518.67" layout:y="752.33"/>
+                      <layout:basePoint1 layout:x="553.33" layout:y="770.67"/>
                       <layout:basePoint2 layout:x="562" layout:y="775.25"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>

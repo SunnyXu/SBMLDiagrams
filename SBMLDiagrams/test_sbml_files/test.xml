@@ -16,10 +16,10 @@
     <listOfReactions>
       <reaction id="r_0" reversible="true" fast="false">
         <listOfReactants>
-          <speciesReference id="SpecRef_r_0_rct0" species="x_1" stoichiometry="1" constant="false"/>
+          <speciesReference id="SpecRef_r_0_rct0" species="x_1" constant="false"/>
         </listOfReactants>
         <listOfProducts>
-          <speciesReference id="SpecRef_r_0_prd0" species="x_0" stoichiometry="1" constant="false"/>
+          <speciesReference id="SpecRef_r_0_prd0" species="x_0" constant="false"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -76,8 +76,8 @@
                 <layout:curve>
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
-                      <layout:start layout:x="334" layout:y="231"/>
-                      <layout:end layout:x="438" layout:y="201"/>
+                      <layout:start layout:x="438" layout:y="231"/>
+                      <layout:end layout:x="334" layout:y="231"/>
                       <layout:basePoint1 layout:x="386" layout:y="231"/>
                       <layout:basePoint2 layout:x="386" layout:y="231"/>
                     </layout:curveSegment>
@@ -89,8 +89,8 @@
                   <layout:listOfCurveSegments>
                     <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
                       <layout:start layout:x="334" layout:y="231"/>
-                      <layout:end layout:x="230" layout:y="201"/>
-                      <layout:basePoint1 layout:x="386" layout:y="231"/>
+                      <layout:end layout:x="230" layout:y="231"/>
+                      <layout:basePoint1 layout:x="282" layout:y="231"/>
                       <layout:basePoint2 layout:x="386" layout:y="231"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
@@ -126,15 +126,6 @@
               <render:colorDefinition render:id="text_line_color_x_0" render:value="#000000"/>
               <render:colorDefinition render:id="reaction_fill_color_r_0" render:value="#5bb0fd"/>
             </render:listOfColorDefinitions>
-            <render:listOfLineEndings>
-              <render:lineEnding render:id="reaction_arrow_head_r_0">
-                <layout:boundingBox layout:id="bb_r_0">
-                  <layout:position layout:x="0" layout:y="0"/>
-                  <layout:dimensions layout:width="12" layout:height="15"/>
-                </layout:boundingBox>
-                <render:g/>
-              </render:lineEnding>
-            </render:listOfLineEndings>
             <render:listOfStyles>
               <render:style render:id="compStyle__compartment_default_" render:typeList="COMPARTMENTGLYPH" render:idList="_compartment_default_">
                 <render:g render:stroke="comp_border_color__compartment_default_" render:stroke-width="2" render:fill="comp_fill_color__compartment_default_">
@@ -158,7 +149,7 @@
                 <render:g render:stroke="text_line_color_x_0" render:stroke-width="1" render:font-size="11"/>
               </render:style>
               <render:style render:id="reactionStyle_r_0" render:typeList="REACTIONGLYPH SPECIESREFERENCEGLYPH" render:idList="r_0">
-                <render:g render:stroke="reaction_fill_color_r_0" render:stroke-width="3" render:endHead="reaction_arrow_head_r_0"/>
+                <render:g render:stroke="reaction_fill_color_r_0" render:stroke-width="3"/>
               </render:style>
             </render:listOfStyles>
           </render:renderInformation>
