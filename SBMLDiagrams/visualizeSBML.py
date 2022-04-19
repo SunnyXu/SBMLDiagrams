@@ -414,7 +414,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         for segment in curve.getListOfCurveSegments():
                             center_x = segment.getStart().getXOffset()
                             center_y = segment.getStart().getYOffset()
-                            reaction_center_list.append([center_x, center_y])
+                            center_pt = [center_x, center_y]
+                            reaction_center_list.append(center_pt)
                         reaction_id = reactionGlyph.getReactionId()
                         reaction = model_layout.getReaction(reaction_id)
                         rev = reaction.getReversible()
@@ -446,18 +447,28 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             center_handle = []
                             spec_handle = []                            
                             for segment in curve.getListOfCurveSegments():
-                                    # print(segment.getStart().getXOffset())
-                                    # print(segment.getStart().getYOffset())
-                                    # print(segment.getEnd().getXOffset())
-                                    # print(segment.getEnd().getYOffset())
-                                    try:
+                                line_start_x = segment.getStart().getXOffset()
+                                line_start_y = segment.getStart().getYOffset()
+                                line_end_x = segment.getEnd().getXOffset()
+                                line_end_y = segment.getEnd().getYOffset()
+                                line_start_pt =  [line_start_x, line_start_y]
+                                line_end_pt = [line_end_x, line_end_y]
+                                try:
+                                    if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                                        #line starts from center
                                         center_handle = [segment.getBasePoint1().getXOffset(), 
                                                     segment.getBasePoint1().getYOffset()]                                
                                         spec_handle = [segment.getBasePoint2().getXOffset(),
                                                 segment.getBasePoint2().getYOffset()]
-                                    except:
-                                        center_handle = []
-                                        spec_handle = []
+                                    else:
+                                        #line does not start from center
+                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                    segment.getBasePoint1().getYOffset()]                                
+                                        center_handle = [segment.getBasePoint2().getXOffset(),
+                                                segment.getBasePoint2().getYOffset()]
+                                except:
+                                    center_handle = []
+                                    spec_handle = []
 
                             role = specRefGlyph.getRoleString()
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()

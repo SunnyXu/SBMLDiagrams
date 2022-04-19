@@ -269,7 +269,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     for segment in curve.getListOfCurveSegments():
                         center_x = segment.getStart().getXOffset()
                         center_y = segment.getStart().getYOffset()
-                        reaction_center_list.append([center_x, center_y])
+                        center_pt = [center_x, center_y]
+                        reaction_center_list.append(center_pt)
                     reaction_id = reactionGlyph.getReactionId()
                     reaction_id_list.append(reaction_id)
                     reaction = model_layout.getReaction(reaction_id)
@@ -291,26 +292,35 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     rct_specGlyph_handles_temp_list = []
                     prd_specGlyph_handles_temp_list = [] 
                     mod_specGlyph_temp_list = []
-
+                    
+                    center_handle = []
                     for j in range(numSpecRefGlyphs):
                         specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
-                        #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
-                                            
+                        #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()                   
                         curve = specRefGlyph.getCurve()
-                        center_handle = []
                         spec_handle = []                             
                         for segment in curve.getListOfCurveSegments():
-                            # print(segment.getStart().getXOffset())
-                            # print(segment.getStart().getYOffset())
-                            # print(segment.getEnd().getXOffset())
-                            # print(segment.getEnd().getYOffset())
+                            line_start_x = segment.getStart().getXOffset()
+                            line_start_y = segment.getStart().getYOffset()
+                            line_end_x = segment.getEnd().getXOffset()
+                            line_end_y = segment.getEnd().getYOffset()
+                            line_start_pt =  [line_start_x, line_start_y]
+                            line_end_pt = [line_end_x, line_end_y]
                             try:
-                                center_handle = [segment.getBasePoint1().getXOffset(), 
-                                            segment.getBasePoint1().getYOffset()]                                
-                                spec_handle = [segment.getBasePoint2().getXOffset(),
-                                        segment.getBasePoint2().getYOffset()]
+                                if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                                    #line starts from center
+                                    center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
+                                                segment.getBasePoint1().getYOffset()]                                
+                                    spec_handle = [segment.getBasePoint2().getXOffset(),
+                                            segment.getBasePoint2().getYOffset()]
+                                else:
+                                    #line does not start from center
+                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                segment.getBasePoint1().getYOffset()]                                
+                                    center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                                            segment.getBasePoint2().getYOffset()]
                             except:
-                                center_handle = []
+                                center_handle_candidate = []
                                 spec_handle = []
 
                         role = specRefGlyph.getRoleString()
@@ -363,6 +373,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         if role == "substrate": #it is a rct
                             #rct_specGlyph_temp_list.append(specGlyph_id)
                             rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
+                            if center_handle == []:
+                                center_handle.append(center_handle_candidate)
                         elif role == "product": #it is a prd
                             #prd_specGlyph_temp_list.append(specGlyph_id)
                             prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
@@ -371,10 +383,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         
                     #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                     #prd_specGlyph_list.append(prd_specGlyph_temp_list)
-                    reaction_center_handle_list.append(center_handle)
+                    #
+                    reaction_center_handle_list.append(center_handle[0])
                     rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
                     prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
                     mod_specGlyph_list.append(mod_specGlyph_temp_list)
+
+                # print(reaction_center_handle_list)
+                # print(rct_specGlyph_handle_list)
+                # print(prd_specGlyph_handle_list)
+                # print(mod_specGlyph_list)
 
                 #orphan nodes
                 for i in range(numSpecGlyphs):
@@ -3514,7 +3532,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3560,7 +3578,9 @@ if __name__ == '__main__':
     #filename = "bart2.xml"
     #filename = "bart_arccenter.xml"
     #filename = "bart_spRefBezier.xml"
+    #filename = "newSBML.xml"
     #filename = "output.xml"
+    filename = "Coyote.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -3713,5 +3733,5 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png')
 
