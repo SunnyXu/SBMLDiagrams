@@ -10,6 +10,8 @@ Read the node information.
 
 .. autofunction:: SBMLDiagrams.load.getNodeIdList
 
+.. autofunction:: SBMLDiagrams.load.getNodeAliasNum
+
 .. autofunction:: SBMLDiagrams.load.isFloatingNode
 
 .. autofunction:: SBMLDiagrams.load.getNodePosition

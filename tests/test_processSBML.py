@@ -967,6 +967,7 @@ class TestImportSBML(unittest.TestCase):
 
     if IGNORE_TEST:
       return  
+    self.assertTrue(self.df.getNodeAliasNum("x_1") == 1)
     self.assertTrue(self.df.isFloatingNode("x_1")[0] == True)
     self.assertTrue(self.df.getNodePosition("x_1")[0].x == [413.0, 216.0][0])
     self.assertTrue(self.df.getNodeCenter("x_1")[0].x == 438.0)
