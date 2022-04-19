@@ -1558,8 +1558,10 @@ class load:
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the bounding box.  
 
-            Example: p = sd.getCompartmentPosition('compartment_id')[0].
-            print ('x = ', p.x, 'y = ', p.y).          
+        Examples: 
+            p = sd.getCompartmentPosition('compartment_id')[0]
+
+            print ('x = ', p.x, 'y = ', p.y)         
 
         """
 
@@ -1585,7 +1587,9 @@ class load:
             size: a Point object with attributes x and y representing
             the width and height of the node.
 
-            Example: p = sd.getCompartmentSize('compartment_id')[0]
+        Examples: 
+            p = sd.getCompartmentSize('compartment_id')[0]
+            
             print ('Width = ', p.x, 'Height = ', p.y)
 
         """
@@ -1663,6 +1667,21 @@ class load:
 
         return border_width_list
 
+    def getNodeAliasNum(self, id):
+        """
+        Get the number of alias nodes with its certain node id.
+
+        Args: 
+            id: str-the id of the Node.
+
+        Returns:
+            num_alias: int-the number of alias nodes with the same node id.            
+
+        """
+
+        p = visualizeSBML._getNodePosition(self.df, id)
+        num_alias = len(p)
+        return num_alias
 
     def isFloatingNode(self, id):
         """
@@ -1697,8 +1716,10 @@ class load:
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the bounding box.
 
-            Example: p = sd.getNodePosition('ATP')[0].
-            print ('x = ', p.x, 'y = ', p.y).            
+        Examples: 
+            p = sd.getNodePosition('ATP')[0]
+            
+            print('x = ', p.x, 'y = ', p.y)            
 
         """
 
@@ -1723,9 +1744,11 @@ class load:
 
             position-a Point object with x and y coordinates of the center of the node.
            
-            Example:
-                p = sd.getNodeCenter('ATP')[0]
-                print(p.x, p.y)
+        Examples:
+            p = sd.getNodeCenter('ATP')[0]
+                
+            print(p.x, p.y)
+
         """   
         if not (id in self.getNodeIdList()):
             raise Exception("No such node found in model: " + id)
@@ -1755,7 +1778,9 @@ class load:
             size: a Point object with attributes x and y representing
             the width and height of the node.
 
-            Example: p = sd.getNodeSize('ATP')[0]
+        Examples: 
+            p = sd.getNodeSize('ATP')[0]
+            
             print ('Width = ', p.x, 'Height = ', p.y)
 
         """
@@ -1822,8 +1847,10 @@ class load:
             txt_position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the bounding box.
 
-            Example: p = sd.getNodeTextPosition('ATP')[0].
-            print ('x = ', p.x, 'y = ', p.y).            
+        Examples: 
+            p = sd.getNodeTextPosition('ATP')[0]
+
+            print ('x = ', p.x, 'y = ', p.y)            
 
         """
 
@@ -1850,7 +1877,9 @@ class load:
             size: a Point object with attributes x and y representing
             the width and height of the node
 
-            Example: p = sd.getNodeTextSize('ATP')[0]
+        Examples:
+            p = sd.getNodeTextSize('ATP')[0]
+
             print ('Width = ', p.x, 'Height = ', p.y)          
 
         """
@@ -2010,8 +2039,10 @@ class load:
             center_position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the bounding box. 
 
-            Example: p = sd.getReactionCenterPosition('reaction_id')[0].
-            print ('x = ', p.x, 'y = ', p.y).          
+        Examples: 
+            p = sd.getReactionCenterPosition('reaction_id')[0]
+
+            print ('x = ', p.x, 'y = ', p.y)          
 
         """
 
@@ -2126,8 +2157,11 @@ class load:
             arrow_head_size: a Point object with attributes x and y representing
             the width and height of the node.
 
-            Example: p = sd.getReactionArrowHeadSize('reaction_id')[0]
+        Examples: 
+            p = sd.getReactionArrowHeadSize('reaction_id')[0]
+            
             print ('Width = ', p.x, 'Height = ', p.y)
+
         """
         arrow_head_size_pre = []
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
@@ -2236,7 +2270,7 @@ class load:
 
             floating_node: bool-floating node (True) or not (False).
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setFloatingBoundaryNode(self.df, id, floating_node, alias=alias)
         #return self.df
@@ -2251,7 +2285,7 @@ class load:
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
         #return self.df
@@ -2266,7 +2300,7 @@ class load:
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node and node text position.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
         self.df = editSBML._setNodeTextPosition(self.df, id, position, alias=alias)
@@ -2281,7 +2315,7 @@ class load:
 
             size: list-1*2 matrix-size of the rectangle [width, height].
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
         #return self.df
@@ -2295,7 +2329,7 @@ class load:
 
             size: list-1*2 matrix-size of the rectangle [width, height].
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
         self.df = editSBML._setNodeTextSize(self.df, id, size, alias=alias)
@@ -2318,7 +2352,7 @@ class load:
                 "text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
                 "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
             
         """
         self.df = editSBML._setNodeShape(self.df, id, shape, alias=alias)
@@ -2336,7 +2370,7 @@ class load:
             shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            alias: alias node index
+            alias: alias node index [0, num_alias).
             
         """
         self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info, alias=alias)
@@ -2366,7 +2400,7 @@ class load:
             txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node text.
 
-            alias: alias node index.
+            alias: alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPosition(self.df, id, txt_position, alias=alias)
@@ -2379,7 +2413,7 @@ class load:
         Args:  
             id: str-node id.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPositionCenter(self.df, id, alias=alias)
@@ -2392,7 +2426,7 @@ class load:
         Args:  
             id: str-node id.
 
-            alias: alias node index.
+            alias: alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPositionLeftCenter(self.df, id, alias=alias)
@@ -2405,7 +2439,7 @@ class load:
         Args:  
             id: str-node id.
 
-            alias: int- alias node index.
+            alias: int- alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPositionRightCenter(self.df, id, alias=alias)
@@ -2418,7 +2452,7 @@ class load:
         Args:  
             id: str-node id.
 
-            alias: alias node index.
+            alias: alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPositionUpperCenter(self.df, id, alias=alias)
@@ -2431,7 +2465,7 @@ class load:
         Args:  
             id: str-node id.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPositionLowerCenter(self.df, id, alias=alias)
@@ -2444,7 +2478,7 @@ class load:
         Args:  
             id: str-node id.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPositionUpperLeft(self.df, id, alias=alias)
@@ -2457,7 +2491,7 @@ class load:
         Args:  
             id: str-node id.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPositionUpperRight(self.df, id, alias=alias)
@@ -2470,7 +2504,7 @@ class load:
         Args:  
             id: str-node id.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPositionLowerLeft(self.df, id, alias=alias)
@@ -2483,7 +2517,7 @@ class load:
         Args:  
             id: str-node id.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeTextPositionLowerRight(self.df, id, alias=alias)
@@ -2498,7 +2532,7 @@ class load:
 
             txt_size: list-1*2 matrix-size of the rectangle [width, height].
 
-            alias: alias node index.
+            alias: alias node index [0, num_alias).
         """
         self.df = editSBML._setNodeTextSize(self.df, id, txt_size, alias=alias)
         #return self.df
@@ -2514,7 +2548,7 @@ class load:
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity, alias=alias)
         #return self.df
@@ -2532,7 +2566,7 @@ class load:
             stop_info: list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info, alias=alias)
@@ -2551,7 +2585,7 @@ class load:
             stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
 
-            alias: alias node index.
+            alias: alias node index [0, num_alias).
 
         """
         self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info, alias=alias)
@@ -2568,7 +2602,7 @@ class load:
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity, alias=alias)
         #return self.df
@@ -2582,7 +2616,7 @@ class load:
 
             border_width: float-node border line width.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodeBorderWidth(self.df, id, border_width, alias=alias)
         #return self.df
@@ -2598,7 +2632,7 @@ class load:
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity, alias=alias)
         #return self.df
@@ -2612,7 +2646,7 @@ class load:
 
             txt_line_width: float-node text line width.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width, alias=alias)
         #return self.df
@@ -2626,7 +2660,7 @@ class load:
 
             txt_font_size: float-node text font size.
 
-            alias: int-alias node index.
+            alias: int-alias node index [0, num_alias).
         """
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
         #return self.df
@@ -2845,8 +2879,10 @@ class load:
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the bounding box.
 
-            Example: p = sd.getTextPosition('text_content')[0].
-            print ('x = ', p.x, 'y = ', p.y).            
+        Examples: 
+            p = sd.getTextPosition('text_content')[0]
+            
+            print ('x = ', p.x, 'y = ', p.y)            
 
         """
 
@@ -2872,7 +2908,9 @@ class load:
             txt_size: a Point object with attributes x and y representing
             the width and height of the node.
 
-            Example: p = sd.getTextSize('text_content')[0]
+        Examples: 
+            p = sd.getTextSize('text_content')[0]
+
             print ('Width = ', p.x, 'Height = ', p.y)
 
         """
@@ -3167,8 +3205,11 @@ class load:
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the bounding box.
 
-            Example: p = sd.getShapePosition('shape_name')[0].
-            print ('x = ', p.x, 'y = ', p.y).            
+        Examples: 
+            p = sd.getShapePosition('shape_name')[0]
+
+            print ('x = ', p.x, 'y = ', p.y)
+
         """
 
         p = visualizeSBML._getShapePosition(self.df, shape_name_str)
@@ -3192,7 +3233,9 @@ class load:
             shape_size: a Point object with attributes x and y representing
             the width and height of the node.
 
-            Example: p = sd.getShapeSize('shape_name')[0]
+        Examples: 
+            p = sd.getShapeSize('shape_name')[0]
+
             print ('Width = ', p.x, 'Height = ', p.y)
         """
 
@@ -3211,7 +3254,6 @@ class load:
 
         Returns:
             SBMLStr_layout_render: str-the string of the output sbml file. 
-        
         """
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
@@ -3222,7 +3264,6 @@ class load:
 
         Args:
             style: can be either the "default" string or a new color class
-
         """
         if style == "default":
             self.color_style = styleSBML.Style(style_name="default")
@@ -3235,7 +3276,6 @@ class load:
 
         Returns: 
             The current color style.
-
         """
         return self.color_style
 
@@ -3271,7 +3311,6 @@ class load:
         scale: float-the scale factor for positions. 
         
         iterations: int-maximum number of iterations taken.             
-
         """
 
         sbmlStr = self.export()
@@ -3348,7 +3387,6 @@ class load:
 
             longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
             node; 'ellipsis' will show '....' if the text is too long to show in the node
-
         """
 
         sbmlStr = self.export()
@@ -3381,7 +3419,6 @@ class load:
             position: list-[position_x, position_y],bottom right-hand corner of the network(s).
             It is calculated by the maximum right down corner positions of compartments and nodes, 
             excluding the compartment with the id of _compartment_default_.
-        
         """
         sbmlStr = self.export()
         position  = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)
@@ -3477,7 +3514,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3522,7 +3559,7 @@ if __name__ == '__main__':
 
     #filename = "bart2.xml"
     #filename = "bart_arccenter.xml"
-    filename = "bart_spRefBezier.xml"
+    #filename = "bart_spRefBezier.xml"
     #filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
@@ -3589,6 +3626,7 @@ if __name__ == '__main__':
     # df.setCompartmentBorderColor('_compartment_default_', [255, 255, 255])
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
+    # df.getNodeAliasNum("ATP")
     # df.setFloatingBoundaryNode("x_1", True)
     # df.setNodePosition("x_0", [100.0, 100.0])
     # df.setNodeTextPosition("x_3", [568.0, 229.0])
@@ -3675,31 +3713,5 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output.png', longText='ellipsis')
-
-    # def createCircleNode (la, id, alias=0):
-    #     #get center and size of the node
-    #     center = la.getNodeCenter(id)[alias]
-
-    #     # Change the node size and corectly adjust for the new position
-    #     la.setNodeSize(id, [18, 18])
-    #     la.setNodePosition(id, [center.x-9, center.y-9])
-
-    #     # get the new position and size
-    #     p = la.getNodePosition(id)[alias]     
-    #     size = la.getNodeSize(id)[alias]
-
-    #     # Position thetrext just outside the node
-    #     q = [p.x + 1.2*size.x, p.y-5]
-
-    #     la.setNodeTextPosition(id, q)
-    #     la.setNodeShape(id, 'ellipse')
-    #     la.setNodeBorderWidth (id, 0)  # <- this doesn't work
-    #     la.setNodeBorderColor(id, '#FFFFFF')
-
-    # sp = la.getNodeIdList()
-    # for s in sp:
-    #     createCircleNode(la, s)
-
-    # la.draw(setImageSize=[500,500], output_fileName = 'output.png')
+    # df.draw(output_fileName = 'output.png')
 
