@@ -1135,7 +1135,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 lineColor, linewidth)
     #draw modifiers:
     modifier_lineColor = skia.Color(128, 0, 128)
-    modifier_linewidth = 2
+    modifier_linewidth = 2*scale
     mod_num = len(mod_position)
     for i in range(mod_num):
         mod_start_virtual_x = .5*mod_dimension[i][0] + mod_position[i][0]
