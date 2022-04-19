@@ -53,4 +53,4 @@ sp = la.getNodeIdList()
 for s in sp:
     createCircleNode(la, s)
 
-la.draw(setImageSize=[300,500], output_fileName = 'output.png')
+la.draw(output_fileName = 'output.png')
