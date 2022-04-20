@@ -44,4 +44,4 @@ fill_color=[91, 176, 253], border_color = [91,176,253])
 df.addEllipse("middle_big_circle", [191.0, 160.], [20,20], 
 fill_color=[91, 176, 253], border_color = [91,176,253])
 
-df.draw(output_fileName = 'output-SBGN1.png')
+df.draw(output_fileName = 'output-SBGN1.png', scale = 2)

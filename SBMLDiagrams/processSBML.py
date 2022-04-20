@@ -17,6 +17,7 @@ from SBMLDiagrams import exportSBML
 from SBMLDiagrams import editSBML
 from SBMLDiagrams import visualizeSBML
 from SBMLDiagrams import styleSBML
+from SBMLDiagrams import point
 import simplesbml
 import networkx as nx
 from collections import defaultdict
@@ -268,7 +269,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     for segment in curve.getListOfCurveSegments():
                         center_x = segment.getStart().getXOffset()
                         center_y = segment.getStart().getYOffset()
-                        reaction_center_list.append([center_x, center_y])
+                        center_pt = [center_x, center_y]
+                        reaction_center_list.append(center_pt)
                     reaction_id = reactionGlyph.getReactionId()
                     reaction_id_list.append(reaction_id)
                     reaction = model_layout.getReaction(reaction_id)
@@ -290,25 +292,36 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     rct_specGlyph_handles_temp_list = []
                     prd_specGlyph_handles_temp_list = [] 
                     mod_specGlyph_temp_list = []
-
+                    
+                    center_handle = []
                     for j in range(numSpecRefGlyphs):
                         specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
-                        #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
-                                            
-                        curve = specRefGlyph.getCurve()                             
+                        #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()                   
+                        curve = specRefGlyph.getCurve()
+                        spec_handle = []                             
                         for segment in curve.getListOfCurveSegments():
-                                # print(segment.getStart().getXOffset())
-                                # print(segment.getStart().getYOffset())
-                                # print(segment.getEnd().getXOffset())
-                                # print(segment.getEnd().getYOffset())
-                                try:
-                                    center_handle = [segment.getBasePoint1().getXOffset(), 
+                            line_start_x = segment.getStart().getXOffset()
+                            line_start_y = segment.getStart().getYOffset()
+                            line_end_x = segment.getEnd().getXOffset()
+                            line_end_y = segment.getEnd().getYOffset()
+                            line_start_pt =  [line_start_x, line_start_y]
+                            line_end_pt = [line_end_x, line_end_y]
+                            try:
+                                if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                                    #line starts from center
+                                    center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
                                                 segment.getBasePoint1().getYOffset()]                                
                                     spec_handle = [segment.getBasePoint2().getXOffset(),
                                             segment.getBasePoint2().getYOffset()]
-                                except:
-                                    center_handle = []
-                                    spec_handle = []
+                                else:
+                                    #line does not start from center
+                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                segment.getBasePoint1().getYOffset()]                                
+                                    center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                                            segment.getBasePoint2().getYOffset()]
+                            except:
+                                center_handle_candidate = []
+                                spec_handle = []
 
                         role = specRefGlyph.getRoleString()
                         specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -360,6 +373,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         if role == "substrate": #it is a rct
                             #rct_specGlyph_temp_list.append(specGlyph_id)
                             rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
+                            if center_handle == []:
+                                center_handle.append(center_handle_candidate)
                         elif role == "product": #it is a prd
                             #prd_specGlyph_temp_list.append(specGlyph_id)
                             prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
@@ -368,10 +383,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         
                     #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                     #prd_specGlyph_list.append(prd_specGlyph_temp_list)
-                    reaction_center_handle_list.append(center_handle)
+                    #
+                    reaction_center_handle_list.append(center_handle[0])
                     rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
                     prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
                     mod_specGlyph_list.append(mod_specGlyph_temp_list)
+
+                # print(reaction_center_handle_list)
+                # print(rct_specGlyph_handle_list)
+                # print(prd_specGlyph_handle_list)
+                # print(mod_specGlyph_list)
 
                 #orphan nodes
                 for i in range(numSpecGlyphs):
@@ -622,6 +643,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if color_list[k][0] == group.getStroke():
                                     text_line_color = hex_to_rgb(color_list[k][1])
                             text_line_width = group.getStrokeWidth()
+                            if math.isnan(text_line_width):
+                                text_line_width = 1.
                             text_font_size = float(group.getFontSize().getCoordinate())
                             text_render.append([idList,text_line_color,text_line_width,
 							text_font_size])
@@ -956,7 +979,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             else:
                                 df_NodeData = pd.concat([df_NodeData,\
                                     pd.DataFrame(NodeData_row_dct)], ignore_index=True)
-    
+            
             for i in range (numReactionGlyphs):
                 src_idx_list = []
                 src_position = []
@@ -989,55 +1012,95 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 #         if temp_specGlyph_id == specGlyph_id_list[k]:
                 #             dst_position.append(spec_position_list[k])
                 #             dst_dimension.append(spec_dimension_list[k])
-
-                for j in range(rct_num):
-                    temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
-                    for k in range(len(node_idx_specGlyphid_list)):
-                        if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
-                            src_idx_list.append(node_idx_specGlyphid_list[k][0])
-                    for k in range(numSpec_in_reaction):
-                        if temp_specGlyph_id == specGlyph_id_list[k]:
-                            src_position.append(spec_position_list[k])
-                            src_dimension.append(spec_dimension_list[k])
-                    src_handle.append(rct_specGlyph_handle_list[i][j][1])
-                src_idx_list_corr = []
-                [src_idx_list_corr.append(x) for x in src_idx_list if x not in src_idx_list_corr]
                 
-                for j in range(prd_num):
-                    temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
-                    for k in range(len(node_idx_specGlyphid_list)):
-                        if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
-                            dst_idx_list.append(node_idx_specGlyphid_list[k][0])
-                    for k in range(numSpec_in_reaction):
-                        if temp_specGlyph_id == specGlyph_id_list[k]:
-                            dst_position.append(spec_position_list[k])
-                            dst_dimension.append(spec_dimension_list[k])
-                    dst_handle.append(prd_specGlyph_handle_list[i][j][1])
-                dst_idx_list_corr = []
-                [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
-
-                for j in range(mod_num):
-                    if len(mod_specGlyph_list[i]) != 0:
-                        temp_specGlyph_id = mod_specGlyph_list[i][j]
+                if rct_num != 0 and prd_num != 0:
+                    for j in range(rct_num):
+                        temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
                         for k in range(len(node_idx_specGlyphid_list)):
                             if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
-                                mod_idx_list.append(node_idx_specGlyphid_list[k][0])
+                                src_idx_list.append(node_idx_specGlyphid_list[k][0])
                         for k in range(numSpec_in_reaction):
                             if temp_specGlyph_id == specGlyph_id_list[k]:
-                                mod_position.append(spec_position_list[k])
-                                mod_dimension.append(spec_dimension_list[k])
-                    else:
+                                src_position.append(spec_position_list[k])
+                                src_dimension.append(spec_dimension_list[k])
+                        src_handle.append(rct_specGlyph_handle_list[i][j][1])
+                    src_idx_list_corr = []
+                    [src_idx_list_corr.append(x) for x in src_idx_list if x not in src_idx_list_corr]
+
+                    for j in range(prd_num):
+                        temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
+                        for k in range(len(node_idx_specGlyphid_list)):
+                            if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
+                                dst_idx_list.append(node_idx_specGlyphid_list[k][0])
+                        for k in range(numSpec_in_reaction):
+                            if temp_specGlyph_id == specGlyph_id_list[k]:
+                                dst_position.append(spec_position_list[k])
+                                dst_dimension.append(spec_dimension_list[k])
+                        dst_handle.append(prd_specGlyph_handle_list[i][j][1])
+                    dst_idx_list_corr = []
+                    [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
+
+                    for j in range(mod_num):
+                        if len(mod_specGlyph_list[i]) != 0:
+                            temp_specGlyph_id = mod_specGlyph_list[i][j]
+                            for k in range(len(node_idx_specGlyphid_list)):
+                                if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
+                                    mod_idx_list.append(node_idx_specGlyphid_list[k][0])
+                            for k in range(numSpec_in_reaction):
+                                if temp_specGlyph_id == specGlyph_id_list[k]:
+                                    mod_position.append(spec_position_list[k])
+                                    mod_dimension.append(spec_dimension_list[k])
+                        else:
+                            for k in range(len(spec_specGlyph_id_list)):
+                                if reaction_mod_list[i][j] == spec_specGlyph_id_list[k][0]:
+                                    temp_specGlyph_id = spec_specGlyph_id_list[k][1]
+                            for k in range(len(node_idx_specGlyphid_list)):
+                                if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
+                                    mod_idx_list.append(node_idx_specGlyphid_list[k][0])
+                            for k in range(numSpec_in_reaction):
+                                if temp_specGlyph_id == specGlyph_id_list[k]:
+                                    mod_position.append(spec_position_list[k])
+                                    mod_dimension.append(spec_dimension_list[k])
+
+                else:
+                    src_idx_list = []
+                    dst_idx_list = []
+                    mod_idx_list = []
+                    rct_num = model.getNumReactants(i)
+                    prd_num = model.getNumProducts(i)
+                    mod_num = model.getNumModifiers(temp_id)
+             
+                    for j in range(rct_num):
+                        rct_id = model.getReactant(temp_id,j)
                         for k in range(len(spec_specGlyph_id_list)):
-                            if reaction_mod_list[i][j] == spec_specGlyph_id_list[k][0]:
-                                temp_specGlyph_id = spec_specGlyph_id_list[k][1]
+                            if spec_specGlyph_id_list[k][0] == rct_id:
+                                tempGlyph_id = spec_specGlyph_id_list[k][1]
                         for k in range(len(node_idx_specGlyphid_list)):
-                            if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
-                                mod_idx_list.append(node_idx_specGlyphid_list[k][0])
-                        for k in range(numSpec_in_reaction):
-                            if temp_specGlyph_id == specGlyph_id_list[k]:
-                                mod_position.append(spec_position_list[k])
-                                mod_dimension.append(spec_dimension_list[k])
+                            if node_idx_specGlyphid_list[k][1] == tempGlyph_id:
+                                src_idx_list.append(node_idx_specGlyphid_list[k][0])
+                    src_idx_list_corr = []
+                    [src_idx_list_corr.append(x) for x in src_idx_list if x not in src_idx_list_corr]
 
+                    for j in range(prd_num):
+                        prd_id = model.getProduct(temp_id,j)
+                        for k in range(len(spec_specGlyph_id_list)):
+                            if spec_specGlyph_id_list[k][0] == prd_id:
+                                tempGlyph_id = spec_specGlyph_id_list[k][1]
+                        for k in range(len(node_idx_specGlyphid_list)):
+                            if node_idx_specGlyphid_list[k][1] == tempGlyph_id:
+                                dst_idx_list.append(node_idx_specGlyphid_list[k][0]) 
+                    dst_idx_list_corr = []
+                    [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
+
+                    modifiers = model.getListOfModifiers(temp_id)
+                    for j in range(mod_num):
+                        mod_id = modifiers[j]
+                        for k in range(len(spec_specGlyph_id_list)):
+                            if spec_specGlyph_id_list[k][0] == mod_id:
+                                tempGlyph_id = spec_specGlyph_id_list[k][1]
+                        for k in range(len(node_idx_specGlyphid_list)):
+                            if node_idx_specGlyphid_list[k][1] == tempGlyph_id:
+                                mod_idx_list.append(node_idx_specGlyphid_list[k][0])
 
                 for j in range(len(rxn_render)):
                     if temp_id == rxn_render[j][0]:
@@ -1048,7 +1111,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 try: 
                     center_position = reaction_center_list[i]
                     center_handle = reaction_center_handle_list[i]
-                    handles = [center_handle]
+                    if center_handle != []:
+                        handles = [center_handle]
+                    else:
+                        handles = [center_position]
                     handles.extend(src_handle)
                     handles.extend(dst_handle) 
                     #print("process:", handles) 
@@ -1509,13 +1575,22 @@ class load:
         Returns:
             position_list: list of position.
 
-            position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.  
+
+        Examples: 
+            p = sd.getCompartmentPosition('compartment_id')[0]
+
+            print ('x = ', p.x, 'y = ', p.y)         
+
         """
 
-        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
-        position_list =[] 
-        for i in range(len(idx_list)):
-            position_list.append(self.df[0].iloc[idx_list[i]]["position"])
+        p = visualizeSBML._getCompartmentPosition(self.df, id)
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            position = point.Point (p[alias][0], p[alias][1])
+            position_list.append(position)
 
         return position_list
 
@@ -1529,14 +1604,22 @@ class load:
         Returns:
             size_list: list of size.
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+        Examples: 
+            p = sd.getCompartmentSize('compartment_id')[0]
+            
+            print ('Width = ', p.x, 'Height = ', p.y)
+
         """
 
-        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
-        size_list =[] 
-        for i in range(len(idx_list)):
-            size_list.append(self.df[0].iloc[idx_list[i]]["size"])
-
+        p = visualizeSBML._getCompartmentSize (self.df, id)
+        num_alias = len(p)
+        size_list = []
+        for alias in range(num_alias):
+            size = point.Point (p[alias][0], p[alias][1])
+            size_list.append(size)
         return size_list
 
     def getCompartmentFillColor(self, id):
@@ -1604,6 +1687,21 @@ class load:
 
         return border_width_list
 
+    def getNodeAliasNum(self, id):
+        """
+        Get the number of alias nodes with its certain node id.
+
+        Args: 
+            id: str-the id of the Node.
+
+        Returns:
+            num_alias: int-the number of alias nodes with the same node id.            
+
+        """
+
+        p = visualizeSBML._getNodePosition(self.df, id)
+        num_alias = len(p)
+        return num_alias
 
     def isFloatingNode(self, id):
         """
@@ -1613,7 +1711,7 @@ class load:
             id: str-the id of the Node.
 
         Returns:
-            floating_node_list: list of floating_node.
+            floating_node_list: list-list of floating_node.
 
             floating_node: bool-floating node (True) or not (False).
         """
@@ -1633,16 +1731,57 @@ class load:
             id: str-the id of the Node.
 
         Returns:
-            position_list: list of position.
+            position-list: list-list of position.
 
-            position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+        Examples: 
+            p = sd.getNodePosition('ATP')[0]
+            
+            print('x = ', p.x, 'y = ', p.y)            
+
         """
 
-        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
-        position_list =[] 
-        for i in range(len(idx_list)):
-            position_list.append(self.df[1].iloc[idx_list[i]]["position"])
+        p = visualizeSBML._getNodePosition(self.df, id)
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            position = point.Point (p[alias][0], p[alias][1])
+            position_list.append(position)
+        return position_list
 
+
+    def getNodeCenter(self, id):
+        """
+        Get the center point of a node with given id.
+
+        Args: 
+            id: str-the id of the Node.
+
+        Returns:
+            position_list: list-list of position.
+
+            position-a Point object with x and y coordinates of the center of the node.
+           
+        Examples:
+            p = sd.getNodeCenter('ATP')[0]
+                
+            print(p.x, p.y)
+
+        """   
+        if not (id in self.getNodeIdList()):
+            raise Exception("No such node found in model: " + id)
+            
+        p = visualizeSBML._getNodePosition(self.df, id) 
+        size = visualizeSBML._getNodeSize(self.df, id)
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            cx = p[alias][0] + size[alias][0]/2
+            cy = p[alias][1] + size[alias][1]/2
+            position = point.Point(cx, cy) 
+            position_list.append(position)
         return position_list
         
 
@@ -1654,16 +1793,26 @@ class load:
             id: str-the id of the node.
 
         Returns:
-            size_list: list of size.
+            size_list: list-list of size.
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+        Examples: 
+            p = sd.getNodeSize('ATP')[0]
+            
+            print ('Width = ', p.x, 'Height = ', p.y)
+
         """
-        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
-        size_list =[] 
-        for i in range(len(idx_list)):
-            size_list.append(self.df[1].iloc[idx_list[i]]["size"])
 
+        p = visualizeSBML._getNodeSize (self.df, id)
+        num_alias = len(p)
+        size_list = []
+        for alias in range(num_alias):
+            size = point.Point (p[alias][0], p[alias][1])
+            size_list.append(size)
         return size_list
+
 
     def getNodeShape(self, id):
         """
@@ -1715,12 +1864,22 @@ class load:
         Returns:
             txt_position_list: list of txt_position.
 
-            txt_position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+            txt_position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+        Examples: 
+            p = sd.getNodeTextPosition('ATP')[0]
+
+            print ('x = ', p.x, 'y = ', p.y)            
+
         """
-        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
-        txt_position_list =[] 
-        for i in range(len(idx_list)):
-            txt_position_list.append(self.df[1].iloc[idx_list[i]]["txt_position"])
+
+        p = visualizeSBML._getNodeTextPosition(self.df, id)
+        num_alias = len(p)
+        txt_position_list = []
+        for alias in range(num_alias):
+            txt_position = point.Point (p[alias][0], p[alias][1])
+            txt_position_list.append(txt_position)
 
         return txt_position_list
 
@@ -1735,12 +1894,22 @@ class load:
         Returns:
             txt_size_list: list of txt_size.
 
-            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+            size: a Point object with attributes x and y representing
+            the width and height of the node
+
+        Examples:
+            p = sd.getNodeTextSize('ATP')[0]
+
+            print ('Width = ', p.x, 'Height = ', p.y)          
+
         """
-        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
-        txt_size_list =[] 
-        for i in range(len(idx_list)):
-            txt_size_list.append(self.df[1].iloc[idx_list[i]]["txt_size"])
+
+        p = visualizeSBML._getNodeTextSize(self.df, id)
+        num_alias = len(p)
+        txt_size_list = []
+        for alias in range(num_alias):
+            txt_size = point.Point (p[alias][0], p[alias][1])
+            txt_size_list.append(txt_size)
 
         return txt_size_list
 
@@ -1887,12 +2056,22 @@ class load:
         Returns:
             line_center_position_list: list of center_position.
 
-            center_position:  list-1*2 matrix: position of the center.
+            center_position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box. 
+
+        Examples: 
+            p = sd.getReactionCenterPosition('reaction_id')[0]
+
+            print ('x = ', p.x, 'y = ', p.y)          
+
         """
-        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
-        center_position_list =[] 
-        for i in range(len(idx_list)):
-            center_position_list.append(self.df[2].iloc[idx_list[i]]["center_pos"])
+
+        p = visualizeSBML._getReactionCenterPosition(self.df, id)
+        num_alias = len(p)
+        center_position_list = []
+        for alias in range(num_alias):
+            center_position = point.Point (p[alias][0], p[alias][1])
+            center_position_list.append(center_position)
 
         return center_position_list
 
@@ -1908,13 +2087,22 @@ class load:
 
             handle_positions: list-position of the handles: 
             [center handle, reactant handles, product handles].
-        """
-        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
-        handle_positions_list =[] 
-        for i in range(len(idx_list)):
-            handle_positions_list.append(self.df[2].iloc[idx_list[i]]["handles"])
 
-        return handle_positions_list
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.          
+
+        """
+
+        p = visualizeSBML._getReactionHandlePositions(self.df, id)
+        num_alias = len(p)
+        handle_position_list = []
+        for alias in range(num_alias):
+            handle_position = []
+            for i in range(len(p[alias])):
+                handle_position.append(point.Point(p[alias][i][0], p[alias][i][1]))
+            handle_position_list.append(handle_position)
+
+        return handle_position_list
 
     def getReactionFillColor(self, id):
         """
@@ -1986,14 +2174,22 @@ class load:
         Returns:
             arrow_head_size_list: list of arrow_head_size.
 
-            arrow_head_size: list-1*2 matrix-size of the rectangle [width, height].
+            arrow_head_size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+        Examples: 
+            p = sd.getReactionArrowHeadSize('reaction_id')[0]
+            
+            print ('Width = ', p.x, 'Height = ', p.y)
+
         """
-        arrow_head_size_list =[]
+        arrow_head_size_pre = []
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         for i in range(len(idx_list)):
-            arrow_head_size_list.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"]) 
-        # arrow_head_size_list.append(self.df[2].iloc[0]["arrow_head_size"])
-
+            arrow_head_size_pre.append(self.df[2].iloc[idx_list[i]]["arrow_head_size"]) 
+        arrow_head_size_list =[]
+        for i in range(len(arrow_head_size_pre)):
+            arrow_head_size_list.append(point.Point(arrow_head_size_pre[i][0],arrow_head_size_pre[i][1]))
         return arrow_head_size_list
 
     def getReactionDash(self, id):
@@ -2085,7 +2281,7 @@ class load:
         self.df = editSBML._setCompartmentBorderWidth(self.df, id, border_width)
         #return self.df
 
-    def setFloatingBoundaryNode(self, id, floating_node):
+    def setFloatingBoundaryNode(self, id, floating_node, alias = 0):
         """
         Set a node to be floating node (True) or boundary node (False).
 
@@ -2093,11 +2289,13 @@ class load:
             id: str-node id.
 
             floating_node: bool-floating node (True) or not (False).
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setFloatingBoundaryNode(self.df, id, floating_node)
+        self.df = editSBML._setFloatingBoundaryNode(self.df, id, floating_node, alias=alias)
         #return self.df
 
-    def setNodePosition(self, id, position):
+    def setNodePosition(self, id, position, alias = 0):
         """
         Set the x,y coordinates of the node position.
 
@@ -2106,11 +2304,13 @@ class load:
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node.
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodePosition(self.df, id, position)
+        self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
         #return self.df
 
-    def setNodeAndTextPosition(self, id, position):
+    def setNodeAndTextPosition(self, id, position, alias = 0):
         """
         Set the x,y coordinates of the node and node text position if there are consistent.
 
@@ -2119,12 +2319,14 @@ class load:
 
             position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node and node text position.
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodePosition(self.df, id, position)
-        self.df = editSBML._setNodeTextPosition(self.df, id, position)
+        self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
+        self.df = editSBML._setNodeTextPosition(self.df, id, position, alias=alias)
         #return self.df
 
-    def setNodeSize(self, id, size):
+    def setNodeSize(self, id, size, alias = 0):
         """
         Set the node size.
 
@@ -2132,11 +2334,13 @@ class load:
             id: str-node id.
 
             size: list-1*2 matrix-size of the rectangle [width, height].
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodeSize(self.df, id, size)
+        self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
         #return self.df
 
-    def setNodeAndTextSize(self, id, size):
+    def setNodeAndTextSize(self, id, size, alias = 0):
         """
         Set the node and node text size if there are consistent.
 
@@ -2144,12 +2348,14 @@ class load:
             id: str-node id.
 
             size: list-1*2 matrix-size of the rectangle [width, height].
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodeSize(self.df, id, size)
-        self.df = editSBML._setNodeTextSize(self.df, id, size)
+        self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
+        self.df = editSBML._setNodeTextSize(self.df, id, size, alias=alias)
         #return self.df
 
-    def setNodeShape(self, id, shape):
+    def setNodeShape(self, id, shape, alias = 0):
         """
         Set the node shape by shape index or name string.
 
@@ -2165,12 +2371,14 @@ class load:
             str-
                 "text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
                 "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
+
+            alias: int-alias node index [0, num_alias).
             
         """
-        self.df = editSBML._setNodeShape(self.df, id, shape)
+        self.df = editSBML._setNodeShape(self.df, id, shape, alias=alias)
         #return self.df
 
-    def setNodeArbitraryPolygonShape(self, id, shape_name, shape_info):
+    def setNodeArbitraryPolygonShape(self, id, shape_name, shape_info, alias = 0):
         """
         Set an arbitrary polygon shape to a node by shape name and shape info.
 
@@ -2181,9 +2389,11 @@ class load:
 
             shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
+
+            alias: alias node index [0, num_alias).
             
         """
-        self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info)
+        self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info, alias=alias)
         #return self.df
 
     # def _setNodeArbitraryEllipseShape(self, id, shape_name, shape_info):
@@ -2200,7 +2410,7 @@ class load:
     #     self.df = editSBML._setNodeArbitraryEllipseShape(self.df, id, shape_name, shape_info)
     #     return self.df
 
-    def setNodeTextPosition(self, id, txt_position):
+    def setNodeTextPosition(self, id, txt_position, alias = 0):
         """
         Set the x,y coordinates of the node text position.
 
@@ -2210,110 +2420,130 @@ class load:
             txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
             corner of the node text.
 
+            alias: alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPosition(self.df, id, txt_position)
+        self.df = editSBML._setNodeTextPosition(self.df, id, txt_position, alias=alias)
         #return self.df
 
-    def setNodeTextPositionCenter(self, id):
+    def setNodeTextPositionCenter(self, id, alias = 0):
         """
         Set the node text position as the center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPositionCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionLeftCenter(self, id):
+    def setNodeTextPositionLeftCenter(self, id, alias = 0):
         """
         Set the node text position as the left center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPositionLeftCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionLeftCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionRightCenter(self, id):
+    def setNodeTextPositionRightCenter(self, id, alias = 0):
         """
         Set the node text position as the right center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int- alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPositionRightCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionRightCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionUpperCenter(self, id):
+    def setNodeTextPositionUpperCenter(self, id, alias = 0):
         """
         Set the node text position as the upper center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPositionUpperCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionUpperCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionLowerCenter(self, id):
+    def setNodeTextPositionLowerCenter(self, id, alias = 0):
         """
         Set the node text position as the lower center of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPositionLowerCenter(self.df, id)
+        self.df = editSBML._setNodeTextPositionLowerCenter(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionUpperLeft(self, id):
+    def setNodeTextPositionUpperLeft(self, id, alias = 0):
         """
         Set the node text position as the upper left of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPositionUpperLeft(self.df, id)
+        self.df = editSBML._setNodeTextPositionUpperLeft(self.df, id, alias=alias)
         #return self.df
     
-    def setNodeTextPositionUpperRight(self, id):
+    def setNodeTextPositionUpperRight(self, id, alias = 0):
         """
         Set the node text position as the upper right of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPositionUpperRight(self.df, id)
+        self.df = editSBML._setNodeTextPositionUpperRight(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionLowerLeft(self, id):
+    def setNodeTextPositionLowerLeft(self, id, alias = 0):
         """
         Set the node text position as the lower left of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPositionLowerLeft(self.df, id)
+        self.df = editSBML._setNodeTextPositionLowerLeft(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextPositionLowerRight(self, id):
+    def setNodeTextPositionLowerRight(self, id, alias = 0):
         """
         Set the node text position as the lower right of the node.
 
         Args:  
             id: str-node id.
 
+            alias: int-alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeTextPositionLowerRight(self.df, id)
+        self.df = editSBML._setNodeTextPositionLowerRight(self.df, id, alias=alias)
         #return self.df
 
-    def setNodeTextSize(self, id, txt_size):
+    def setNodeTextSize(self, id, txt_size, alias = 0):
         """
         Set the node text size.
 
@@ -2321,11 +2551,13 @@ class load:
             id: str-node id.
 
             txt_size: list-1*2 matrix-size of the rectangle [width, height].
+
+            alias: alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodeTextSize(self.df, id, txt_size)
+        self.df = editSBML._setNodeTextSize(self.df, id, txt_size, alias=alias)
         #return self.df
  
-    def setNodeFillColor(self, id, fill_color, opacity = 1.):
+    def setNodeFillColor(self, id, fill_color, opacity = 1., alias = 0):
         """
         Set the node fill color.
 
@@ -2335,11 +2567,13 @@ class load:
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity)
+        self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity, alias=alias)
         #return self.df
 
-    def setNodeFillLinearGradient(self, id, gradient_info, stop_info):
+    def setNodeFillLinearGradient(self, id, gradient_info, stop_info, alias = 0):
         """
         Set the node fill linear gradient.
 
@@ -2349,14 +2583,16 @@ class load:
             gradient_info: list - [[x1,y1],[x2,y2]], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
+            stop_info: list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
 
+            alias: int-alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info)
+        self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info, alias=alias)
         #return self.df
 
-    def setNodeFillRadialGradient(self, id, gradient_info, stop_info):
+    def setNodeFillRadialGradient(self, id, gradient_info, stop_info, alias = 0):
         """
         Set the node fill radial gradient.
 
@@ -2369,11 +2605,13 @@ class load:
             stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
 
+            alias: alias node index [0, num_alias).
+
         """
-        self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info)
+        self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info, alias=alias)
         #return self.df
 
-    def setNodeBorderColor(self, id, border_color, opacity = 1.):
+    def setNodeBorderColor(self, id, border_color, opacity = 1., alias = 0):
         """
         Set the node border color.
 
@@ -2383,11 +2621,13 @@ class load:
             border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity)
+        self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity, alias=alias)
         #return self.df
 
-    def setNodeBorderWidth(self, id, border_width):
+    def setNodeBorderWidth(self, id, border_width, alias = 0):
         """
         Set the node border width.
 
@@ -2395,11 +2635,13 @@ class load:
             id: str-node id.
 
             border_width: float-node border line width.
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodeBorderWidth(self.df, id, border_width)
+        self.df = editSBML._setNodeBorderWidth(self.df, id, border_width, alias=alias)
         #return self.df
 
-    def setNodeTextFontColor(self, id, txt_font_color, opacity = 1.):
+    def setNodeTextFontColor(self, id, txt_font_color, opacity = 1., alias = 0):
         """
         Set the node text font color.
 
@@ -2409,11 +2651,13 @@ class load:
             txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity)
+        self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity, alias=alias)
         #return self.df
 
-    def setNodeTextLineWidth(self, id, txt_line_width):
+    def setNodeTextLineWidth(self, id, txt_line_width, alias = 0):
         """
         Set the node text line width.
 
@@ -2421,11 +2665,13 @@ class load:
             id: str-node id.
 
             txt_line_width: float-node text line width.
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width)
+        self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width, alias=alias)
         #return self.df
 
-    def setNodeTextFontSize(self, id, txt_font_size):
+    def setNodeTextFontSize(self, id, txt_font_size, alias = 0):
         """
         Set the node text font size.
 
@@ -2433,8 +2679,10 @@ class load:
             id: str-node id.
 
             txt_font_size: float-node text font size.
+
+            alias: int-alias node index [0, num_alias).
         """
-        self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size)
+        self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
         #return self.df
 
     def setReactionCenterPosition(self, id, position):
@@ -2647,14 +2895,24 @@ class load:
 
         Returns:
             position_list: list of position.
+            
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
 
-            position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+        Examples: 
+            p = sd.getTextPosition('text_content')[0]
+            
+            print ('x = ', p.x, 'y = ', p.y)            
+
         """
 
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
-        position_list =[] 
-        for i in range(len(idx_list)):
-            position_list.append(self.df[3].iloc[idx_list[i]]["txt_position"])
+        p = visualizeSBML._getTextPosition(self.df, txt_str)
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            position = point.Point (p[alias][0], p[alias][1])
+            position_list.append(position)
+
         return position_list
 
     def getTextSize(self, txt_str):
@@ -2667,13 +2925,22 @@ class load:
         Returns:
             txt_size_list: list of txt_size.
 
-            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+            txt_size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+        Examples: 
+            p = sd.getTextSize('text_content')[0]
+
+            print ('Width = ', p.x, 'Height = ', p.y)
+
         """
 
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
-        txt_size_list =[] 
-        for i in range(len(idx_list)):
-            txt_size_list.append(self.df[3].iloc[idx_list[i]]["txt_size"])
+        p = visualizeSBML._getTextSize (self.df, txt_str)
+        num_alias = len(p)
+        txt_size_list = []
+        for alias in range(num_alias):
+            txt_size = point.Point (p[alias][0], p[alias][1])
+            txt_size_list.append(txt_size)
         return txt_size_list
 
     def getTextFontColor(self, txt_str):
@@ -2955,13 +3222,22 @@ class load:
         Returns:
             position_list: list of position.
 
-            position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+        Examples: 
+            p = sd.getShapePosition('shape_name')[0]
+
+            print ('x = ', p.x, 'y = ', p.y)
+
         """
 
-        idx_list = self.df[4].index[self.df[4]["shape_name"] == shape_name_str].tolist()
-        position_list =[] 
-        for i in range(len(idx_list)):
-            position_list.append(self.df[4].iloc[idx_list[i]]["position"])
+        p = visualizeSBML._getShapePosition(self.df, shape_name_str)
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            position = point.Point (p[alias][0], p[alias][1])
+            position_list.append(position)
         return position_list
 
     def getShapeSize(self, shape_name_str):
@@ -2974,13 +3250,21 @@ class load:
         Returns:
             shape_size_list: list of shape_size.
 
-            shape_size: list-1*2 matrix-size of the rectangle [width, height].
+            shape_size: a Point object with attributes x and y representing
+            the width and height of the node.
+
+        Examples: 
+            p = sd.getShapeSize('shape_name')[0]
+
+            print ('Width = ', p.x, 'Height = ', p.y)
         """
 
-        idx_list = self.df[4].index[self.df[4]["shape_name"] == shape_name_str].tolist()
-        shape_size_list =[] 
-        for i in range(len(idx_list)):
-            shape_size_list.append(self.df[4].iloc[idx_list[i]]["size"])
+        p = visualizeSBML._getShapeSize (self.df, shape_name_str)
+        num_alias = len(p)
+        shape_size_list = []
+        for alias in range(num_alias):
+            shape_size = point.Point (p[alias][0], p[alias][1])
+            shape_size_list.append(shape_size)
         return shape_size_list
 
 
@@ -2990,7 +3274,6 @@ class load:
 
         Returns:
             SBMLStr_layout_render: str-the string of the output sbml file. 
-        
         """
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
@@ -3001,7 +3284,6 @@ class load:
 
         Args:
             style: can be either the "default" string or a new color class
-
         """
         if style == "default":
             self.color_style = styleSBML.Style(style_name="default")
@@ -3014,7 +3296,6 @@ class load:
 
         Returns: 
             The current color style.
-
         """
         return self.color_style
 
@@ -3031,23 +3312,27 @@ class load:
         return json.dumps(self.color_style.__dict__)
 
 
-    def autolayout(self, layout="spring"):
+    def autolayout(self, layout="spectral", scale=200, iterations=100):
+
         """
         Autolayout the node positions using networkX library.
 
-        Args:
+    
+        layout: str-the layout name from networkX, including
 
-            layout: str-the name of the layout algorithm from the networkX, including
+            spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
 
-            spectral: positioning the nodes using the eigenvectors of the graph Laplacian.
-
-            spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm.
-            
+            spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm;
+        
             random: positioning nodes randomly.
-            
+        
             circular: positioning nodes on a circle.
 
+        scale: float-the scale factor for positions. 
+        
+        iterations: int-maximum number of iterations taken.             
         """
+
         sbmlStr = self.export()
         v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyle=self.color_style)
         edges = v_info.edges
@@ -3059,7 +3344,8 @@ class load:
         reaction_ids = model.getListOfReactionIds()
 
         width, height = self.color_style.getImageSize()
-        scale = max(width, height) // 2
+        if scale == None:
+            scale = max(width, height) // 2
         center = [width // 2, height // 2]
 
         for node in nodes:
@@ -3075,21 +3361,23 @@ class load:
         if layout == "spectral":
             pos = nx.spectral_layout(graph, scale=scale, center=center)
         elif layout == "spring":
-            pos = nx.spring_layout(graph, scale=scale, center=center)
+            pos = nx.spring_layout(graph, scale=scale, center=center, k=1, iterations=iterations)
         elif layout == "random":
             pos = nx.random_layout(graph, center=center)
         elif layout == "circular":
-            pos = nx.circular_layout(graph, scale=scale, center=center)
+            pos = nx.circular_layout(graph, scale=scale, center=center, iterations=iterations)
         else:
             raise Exception("no such layout")
 
         for n, p in pos.items():
             if layout == "random":
                 p *= scale
+            p = p.tolist()
             self.setNodeAndTextPosition(n, p)
 
         for id in reaction_ids:
             self.setReactionDefaultCenterAndHandlePositions(id)
+
 
     def draw(self, setImageSize = '', scale = 1., output_fileName = '', 
         reactionLineType = 'bezier', showBezierHandles = False, 
@@ -3119,7 +3407,6 @@ class load:
 
             longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
             node; 'ellipsis' will show '....' if the text is too long to show in the node
-
         """
 
         sbmlStr = self.export()
@@ -3152,7 +3439,6 @@ class load:
             position: list-[position_x, position_y],bottom right-hand corner of the network(s).
             It is calculated by the maximum right down corner positions of compartments and nodes, 
             excluding the compartment with the id of _compartment_default_.
-        
         """
         sbmlStr = self.export()
         position  = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)
@@ -3248,7 +3534,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3257,11 +3543,11 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
 
-    filename = "Jana_WolfGlycolysis.xml"
-    #filename = "Jana_WolfGlycolysis-original.xml"
+    #filename = "Jana_WolfGlycolysis.xml"
+    #filename = "Jana_WolfGlycolysis-original.xml" 
     #filename = "output.xml"
     #filename = "Sauro1.xml"
-    # filename = "test_textGlyph.xml"
+    #filename = "test_textGlyph.xml"
     #node shape:
     #filename = "rectangle.xml"
     #filename = "triangle.xml"
@@ -3291,23 +3577,30 @@ if __name__ == '__main__':
     #filename = "putida_sbml.xml"
     #filename = "putida_gb_newgenes.xml"
 
+    #filename = "bart2.xml"
+    #filename = "bart_arccenter.xml"
+    #filename = "bart_spRefBezier.xml"
+    #filename = "newSBML.xml"
+    #filename = "output.xml"
+    #filename = "Coyote.xml"
+
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('output.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # try:
-    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # except:
-    #     print("did not return shapeData")
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('output.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    try:
+        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    except:
+        print("did not return shapeData")
+    writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -3322,11 +3615,12 @@ if __name__ == '__main__':
 
     # print(df.isFloatingNode("x_1"))
     # print(df.getNodePosition("x_1"))
-    # print(df.getNodePosition("x_0"))
-    # print(df.getNodeSize("x_1"))
+    # print(df.getNodePosition("x_0")[0])
+    # print(df.getNodeSize("x_0")[0])
+    # print(df.getNodeCenter("x_0")[0])
     # print(df.getNodeShape("x_0"))
-    # print(df.getNodeTextPosition("x_1"))
-    # print(df.getNodeTextSize("x_1"))
+    # print(df.getNodeTextPosition("x_0")[0])
+    # print(df.getNodeTextSize("x_0"))
     # print(df.getNodeFillColor("Species_1"))
     # print(df.getNodeBorderColor("x_1"))
     # print(df.getNodeBorderWidth("x_1"))
@@ -3354,8 +3648,9 @@ if __name__ == '__main__':
     # df.setCompartmentBorderColor('_compartment_default_', [255, 255, 255])
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
 
+    # df.getNodeAliasNum("ATP")
     # df.setFloatingBoundaryNode("x_1", True)
-    # df.setNodePosition("x_1", [100.0, 100.0])
+    # df.setNodePosition("x_0", [100.0, 100.0])
     # df.setNodeTextPosition("x_3", [568.0, 229.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
@@ -3382,7 +3677,7 @@ if __name__ == '__main__':
     # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # print(df.getNodeBorderWidth("x_1"))
-    # df.setNodeBorderWidth("x_1", 4.)
+    # df.setNodeBorderWidth("x_0", 0.)
     # print(df.getNodeBorderWidth("x_1"))
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
     # df.setNodeTextLineWidth("x_1", 1.)
@@ -3441,5 +3736,4 @@ if __name__ == '__main__':
 
     # df.draw(reactionLineType='bezier', scale = 2.)
     df.draw(output_fileName = 'output.png')
-
 

@@ -83,7 +83,11 @@ class Style:
         Returns: the compartment border width
 
         """
-        return self.compartment_border_width if self.compartment_border_width else 2.0
+        if self.compartment_border_width == 0.0: #makes border with to zero readable
+           return self.compartment_border_width
+        else:
+            return self.compartment_border_width if self.compartment_border_width else 2.0
+        
 
     def setCompBorderWidth(self, width):
         """
@@ -121,7 +125,11 @@ class Style:
         Returns: the species border width
 
         """
-        return self.species_border_width if self.species_border_width else 2.0
+        if self.species_border_width == 0.0: #makes border with to zero possible
+            return self.species_border_width
+        else:
+            return self.species_border_width if self.species_border_width else 2.0
+        
 
     def setSpecBorderWidth(self, width):
         """

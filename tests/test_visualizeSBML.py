@@ -33,7 +33,12 @@ class TestEditSBML(unittest.TestCase):
     self.sbmlStr_test_genGlyph = f_test_genGlyph.read()
     f_test_genGlyph.close()
 
-  def test(self):
+    self._df = processSBML._SBMLToDF(self.sbmlStr_test)
+    self._df_text = processSBML._SBMLToDF(self.sbmlStr_test_textGlyph)
+    self._df_shape = processSBML._SBMLToDF(self.sbmlStr_test_genGlyph)
+
+
+  def testNetwork(self):
     # Test the functions related to network positions and size
 
     if IGNORE_TEST:
@@ -52,6 +57,27 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(visualizeSBML._getNetworkTopLeftCorner(self.sbmlStr_test_genGlyph) == [177.0, 107.0])
     self.assertTrue(visualizeSBML._getNetworkBottomRightCorner(self.sbmlStr_test_genGlyph) == [227.0, 137.0])
 
+  def testGetNode(self):
+    # Test the functions related to get node
+
+    if IGNORE_TEST:
+      return
+
+    self.assertTrue(visualizeSBML._getCompartmentPosition(self._df, "_compartment_default_")[0] == [0, 0])
+    self.assertTrue(visualizeSBML._getCompartmentSize(self._df, "_compartment_default_")[0] == [1000, 1000])
+    self.assertTrue(visualizeSBML._getNodePosition(self._df, "x_1")[0] == [413.0, 216.0])
+    self.assertTrue(visualizeSBML._getNodeSize(self._df, "x_1")[0] == [50.0, 30.0])
+    self.assertTrue(visualizeSBML._getNodeTextPosition(self._df, "x_1")[0] == [413.0, 216.0])
+    self.assertTrue(visualizeSBML._getNodeTextSize(self._df, "x_1")[0] == [50.0, 30.0])
+    self.assertTrue(visualizeSBML._getReactionCenterPosition(self._df, "r_0")[0] == \
+      [334.0, 231.0])
+    self.assertTrue(visualizeSBML._getReactionHandlePositions(self._df, "r_0")[0] == \
+      [[386.0, 231.0], [386.0, 231.0], [386.0, 231.0]])
+
+    self.assertTrue(visualizeSBML._getTextPosition(self._df_text, "text_content1")[0] == [92.0, 26.0])
+    self.assertTrue(visualizeSBML._getTextSize(self._df_text, "text_content1")[0] == [228.0, 24.0])
+    self.assertTrue(visualizeSBML._getShapePosition(self._df_shape, "shape_name")[0] == [177., 107.])
+    self.assertTrue(visualizeSBML._getShapeSize(self._df_shape, "shape_name")[0] == [50., 30.])
 
   # def plotInvalidStr(self):
   #   # system exit if plot an invalid string

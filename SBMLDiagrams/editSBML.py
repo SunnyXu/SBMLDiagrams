@@ -67,6 +67,8 @@ def _setCompartmentPosition(df, id, position):
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(position) != list:
+        raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"position"] = position
     df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
@@ -93,6 +95,8 @@ def _setCompartmentSize(df, id, size):
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.") 
+    if type(size) != list:
+        raise Exception("Please enter a valid size type.")
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"size"] = size
     df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
@@ -184,7 +188,7 @@ def _setCompartmentBorderWidth(df, id, border_width):
 
     return df_temp
 
-def _setFloatingBoundaryNode(df, id, floating_node):
+def _setFloatingBoundaryNode(df, id, floating_node, alias = 0):
 
     """
     Set a node to be floating node (True) or boundary node (False).
@@ -196,6 +200,8 @@ def _setFloatingBoundaryNode(df, id, floating_node):
 
         floating_node: bool-floating node (True) or not (False).
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -204,13 +210,18 @@ def _setFloatingBoundaryNode(df, id, floating_node):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"floating_node"] = floating_node
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"floating_node"] = floating_node
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"floating_node"] = floating_node
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+    
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodePosition(df, id, position):
+def _setNodePosition(df, id, position, alias = 0):
 
     """
     Set the x,y coordinates of the node position.
@@ -222,6 +233,8 @@ def _setNodePosition(df, id, position):
 
         position: list-[position_x, position_y], the coordinate represents the top-left hand corner of the node. 
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -230,13 +243,19 @@ def _setNodePosition(df, id, position):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"position"] = position
+    if type(position) != list:
+        raise Exception("Please enter a valid position type.")
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"position"] = position
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"position"] = position
+    else:
+        raise Exception("Alias index is beyond number of alias.")
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeSize(df, id, size):
+def _setNodeSize(df, id, size, alias = 0):
 
     """
     Set the node size.
@@ -248,6 +267,8 @@ def _setNodeSize(df, id, size):
 
         size: list-1*2 matrix-size of the rectangle [width, height].
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -256,13 +277,20 @@ def _setNodeSize(df, id, size):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"size"] = size
+    if type(size) != list:
+        raise Exception("Please enter a valid size type.")
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"size"] = size
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"size"] = size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeShape(df, id, shape):
+def _setNodeShape(df, id, shape, alias = 0):
 
     """
     Set the node shape by shape index or name string.
@@ -277,6 +305,8 @@ def _setNodeShape(df, id, shape):
             6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
         str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
             "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
+
+        alias: int-alias node index.
             
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -374,27 +404,40 @@ def _setNodeShape(df, id, shape):
             raise Exception("This is not a valid node shape information.")
     else:
         raise Exception("This is not a valid node shape information.")
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
+    #     df_NodeData_temp.at[idx_list[i],"shape_name"] = shape_name
+    #     df_NodeData_temp.at[idx_list[i],"shape_type"] = shape_type
+    #     df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
+    
+    if alias < len(idx_list) and alias >= 0:
+        i = alias
         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
         df_NodeData_temp.at[idx_list[i],"shape_name"] = shape_name
         df_NodeData_temp.at[idx_list[i],"shape_type"] = shape_type
         df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info):
+def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info, alias = 0):
 
     """
-        Set an arbitrary polygon shape to a node by shape name and shape info.
+    Set an arbitrary polygon shape to a node by shape name and shape info.
 
-        Args:  
-            id: str-node id.
+    Args:  
+        id: str-node id.
 
-            shape_name: str-name of the arbitrary polygon shape.
+        shape_name: str-name of the arbitrary polygon shape.
 
-            shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.        
-            x represents the percentage of width, and y represents the percentage of height.
+        shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.        
+        x represents the percentage of width, and y represents the percentage of height.
+
+        alias: int-alias node index.
+
     """
     shape_idx = -2 #arbitrary polygon
     df_NodeData_temp = df[1].copy()
@@ -425,9 +468,17 @@ def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info):
     if shape_info_flag == True:
         for i in range(len(idx_list)):
             df_NodeData_temp.at[idx_list[i],"shape_info"] = shape_info
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
+    #     df_NodeData_temp.at[idx_list[i],"shape_type"] = 'polygon'
+    
+    if alias < len(idx_list) and alias >= 0:  
+        i = alias 
         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
         df_NodeData_temp.at[idx_list[i],"shape_type"] = 'polygon'
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
@@ -481,7 +532,7 @@ def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info):
 
 #     return df_temp
 
-def _setNodeTextPosition(df, id, txt_position):
+def _setNodeTextPosition(df, id, txt_position, alias = 0):
 
     """
     Set the x,y coordinates of the node text position.
@@ -493,6 +544,8 @@ def _setNodeTextPosition(df, id, txt_position):
 
         txt_position: [position_x, position_y], the coordinate represents the top-left hand corner of the node text.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -501,13 +554,20 @@ def _setNodeTextPosition(df, id, txt_position):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    if type(txt_position) != list:
+        raise Exception("Please enter a valid text position type.")
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"txt_position"] = txt_position
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextPositionCenter(df, id):
+def _setNodeTextPositionCenter(df, id, alias = 0):
 
     """
     Set the node text position as the center of the node.
@@ -517,6 +577,8 @@ def _setNodeTextPositionCenter(df, id):
 
         id: str-node id.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -526,36 +588,47 @@ def _setNodeTextPositionCenter(df, id):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        # txt_str = df_NodeData_temp.at[idx_list[i],"id"]
+    # for i in range(len(idx_list)):
+    #     # txt_str = df_NodeData_temp.at[idx_list[i],"id"]
+    #     node_position = df_NodeData_temp.at[idx_list[i],"position"]
+    #     node_size = df_NodeData_temp.at[idx_list[i],"size"]
+    #     #shape_type = df_NodeData_temp.at[idx_list[i],"shape_type"]
+    #     txt_position = node_position
+    #     txt_size = node_size
+    #     # if shape_type == "polygon":
+    #     #     vertex = []
+    #     #     shape_info = df_NodeData_temp.at[idx_list[i],"shape_info"]
+    #     #     for j in range(len(shape_info)):
+    #     #         vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
+    #     #         vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
+    #     #         vertex.append([vertex_x,vertex_y])
+    #     #     def centroid(vertexes):
+    #     #         _x_list = [vertex [0] for vertex in vertexes]
+    #     #         _y_list = [vertex [1] for vertex in vertexes]
+    #     #         _len = len(vertexes)
+    #     #         _x = sum(_x_list) / _len
+    #     #         _y = sum(_y_list) / _len
+    #     #         return[_x, _y]         
+    #     #     centroid_pos = centroid(vertex)
+
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
+    if alias < len(idx_list) and alias >= 0:
+        i = alias
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
-        shape_type = df_NodeData_temp.at[idx_list[i],"shape_type"]
         txt_position = node_position
         txt_size = node_size
-        # if shape_type == "polygon":
-        #     vertex = []
-        #     shape_info = df_NodeData_temp.at[idx_list[i],"shape_info"]
-        #     for j in range(len(shape_info)):
-        #         vertex_x = node_position[0]+node_size[0]*shape_info[j][0]/100.
-        #         vertex_y = node_position[1]+node_size[1]*shape_info[j][1]/100.
-        #         vertex.append([vertex_x,vertex_y])
-        #     def centroid(vertexes):
-        #         _x_list = [vertex [0] for vertex in vertexes]
-        #         _y_list = [vertex [1] for vertex in vertexes]
-        #         _len = len(vertexes)
-        #         _x = sum(_x_list) / _len
-        #         _y = sum(_y_list) / _len
-        #         return[_x, _y]         
-        #     centroid_pos = centroid(vertex)
-
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextPositionLeftCenter(df, id):
+def _setNodeTextPositionLeftCenter(df, id, alias = 0):
 
     """
     Set the node text position as the left center of the node.
@@ -565,6 +638,8 @@ def _setNodeTextPositionLeftCenter(df, id):
 
         id: str-node id.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -574,17 +649,27 @@ def _setNodeTextPositionLeftCenter(df, id):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     node_position = df_NodeData_temp.at[idx_list[i],"position"]
+    #     node_size = df_NodeData_temp.at[idx_list[i],"size"]
+    #     txt_position = [node_position[0]-node_size[0], node_position[1]]
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    if alias < len(idx_list) and alias >= 0:  
+        i = alias
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
         txt_position = [node_position[0]-node_size[0], node_position[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextPositionRightCenter(df, id):
+def _setNodeTextPositionRightCenter(df, id, alias = 0):
 
     """
     Set the node text position as the right center of the node.
@@ -594,6 +679,8 @@ def _setNodeTextPositionRightCenter(df, id):
 
         id: str-node id.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -601,19 +688,29 @@ def _setNodeTextPositionRightCenter(df, id):
 
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
-    if len(idx_list) == 0:
+    if len(idx_list) == 0 and alias >= 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     node_position = df_NodeData_temp.at[idx_list[i],"position"]
+    #     node_size = df_NodeData_temp.at[idx_list[i],"size"]
+    #     txt_position = [node_position[0]+node_size[0], node_position[1]]
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    if alias < len(idx_list) and alias >= 0:   
+        i = alias
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
         txt_position = [node_position[0]+node_size[0], node_position[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextPositionUpperCenter(df, id):
+def _setNodeTextPositionUpperCenter(df, id, alias = 0):
 
     """
     Set the node text position as the upper center of the node.
@@ -623,6 +720,8 @@ def _setNodeTextPositionUpperCenter(df, id):
 
         id: str-node id.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -630,19 +729,29 @@ def _setNodeTextPositionUpperCenter(df, id):
 
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
-    if len(idx_list) == 0:
+    if len(idx_list) == 0 and alias >= 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     node_position = df_NodeData_temp.at[idx_list[i],"position"]
+    #     node_size = df_NodeData_temp.at[idx_list[i],"size"]
+    #     txt_position = [node_position[0], node_position[1]-node_size[1]]
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    if alias < len(idx_list) and alias >= 0:    
+        i = alias
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
         txt_position = [node_position[0], node_position[1]-node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextPositionLowerCenter(df, id):
+def _setNodeTextPositionLowerCenter(df, id, alias = 0):
 
     """
     Set the node text position as the lower center of the node.
@@ -652,6 +761,8 @@ def _setNodeTextPositionLowerCenter(df, id):
 
         id: str-node id.
 
+        alias: int-alias node index and alias >= 0.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -661,17 +772,27 @@ def _setNodeTextPositionLowerCenter(df, id):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     node_position = df_NodeData_temp.at[idx_list[i],"position"]
+    #     node_size = df_NodeData_temp.at[idx_list[i],"size"]
+    #     txt_position = [node_position[0], node_position[1]+node_size[1]]
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    if alias < len(idx_list) and alias >= 0:   
+        i = alias
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
         txt_position = [node_position[0], node_position[1]+node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextPositionUpperLeft(df, id):
+def _setNodeTextPositionUpperLeft(df, id, alias = 0):
 
     """
     Set the node text position as the upper left of the node.
@@ -681,6 +802,8 @@ def _setNodeTextPositionUpperLeft(df, id):
 
         id: str-node id.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -690,17 +813,27 @@ def _setNodeTextPositionUpperLeft(df, id):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     node_position = df_NodeData_temp.at[idx_list[i],"position"]
+    #     node_size = df_NodeData_temp.at[idx_list[i],"size"]
+    #     txt_position = [node_position[0]-node_size[0], node_position[1]-node_size[1]]
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    if alias < len(idx_list) and alias >= 0:
+        i = alias
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
         txt_position = [node_position[0]-node_size[0], node_position[1]-node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextPositionUpperRight(df, id):
+def _setNodeTextPositionUpperRight(df, id, alias = 0):
 
     """
     Set the node text position as the upper right of the node.
@@ -710,6 +843,8 @@ def _setNodeTextPositionUpperRight(df, id):
 
         id: str-node id.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -719,17 +854,27 @@ def _setNodeTextPositionUpperRight(df, id):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     node_position = df_NodeData_temp.at[idx_list[i],"position"]
+    #     node_size = df_NodeData_temp.at[idx_list[i],"size"]
+    #     txt_position = [node_position[0]+node_size[0], node_position[1]-node_size[1]]
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    if alias < len(idx_list) and alias >= 0:
+        i = alias
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
         txt_position = [node_position[0]+node_size[0], node_position[1]-node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextPositionLowerLeft(df, id):
+def _setNodeTextPositionLowerLeft(df, id, alias = 0):
 
     """
     Set the node text position as the lower left of the node.
@@ -739,6 +884,8 @@ def _setNodeTextPositionLowerLeft(df, id):
 
         id: str-node id.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -748,17 +895,25 @@ def _setNodeTextPositionLowerLeft(df, id):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     node_position = df_NodeData_temp.at[idx_list[i],"position"]
+    #     node_size = df_NodeData_temp.at[idx_list[i],"size"]
+    #     txt_position = [node_position[0]-node_size[0], node_position[1]+node_size[1]]
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    if alias < len(idx_list) and alias >= 0:
+        i = alias
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
         txt_position = [node_position[0]-node_size[0], node_position[1]+node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
-        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+        df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size     
+    else:
+        raise Exception("Alias index is beyond number of alias.")
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
-
     return df_temp
 
-def _setNodeTextPositionLowerRight(df, id):
+def _setNodeTextPositionLowerRight(df, id, alias = 0):
 
     """
     Set the node text position as the lower right of the node.
@@ -768,6 +923,8 @@ def _setNodeTextPositionLowerRight(df, id):
 
         id: str-node id.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -775,19 +932,29 @@ def _setNodeTextPositionLowerRight(df, id):
 
     df_NodeData_temp = df[1].copy()
     idx_list = df[1].index[df[1]["id"] == id].tolist()
-    if len(idx_list) == 0:
+    if len(idx_list) == 0 and alias >= 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
+    # for i in range(len(idx_list)):
+    #     node_position = df_NodeData_temp.at[idx_list[i],"position"]
+    #     node_size = df_NodeData_temp.at[idx_list[i],"size"]
+    #     txt_position = [node_position[0]+node_size[0], node_position[1]+node_size[1]]
+    #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    if alias < len(idx_list) and alias >= 0:
+        i = alias
         node_position = df_NodeData_temp.at[idx_list[i],"position"]
         node_size = df_NodeData_temp.at[idx_list[i],"size"]
         txt_position = [node_position[0]+node_size[0], node_position[1]+node_size[1]]
         df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextSize(df, id, txt_size):
+def _setNodeTextSize(df, id, txt_size, alias = 0):
 
     """
     Set the node text size.
@@ -799,6 +966,8 @@ def _setNodeTextSize(df, id, txt_size):
 
         txt_size: list-1*2 matrix-size of the rectangle [width, height].
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -807,13 +976,20 @@ def _setNodeTextSize(df, id, txt_size):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
+    if type(txt_size) != list:
+        raise Exception("Please enter a valid text size type.")
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"txt_size"] = txt_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+    
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeFillColor(df, id, fill_color, opacity):
+def _setNodeFillColor(df, id, fill_color, opacity, alias = 0 ):
 
     """
     Set the node fill color.
@@ -827,6 +1003,8 @@ def _setNodeFillColor(df, id, fill_color, opacity):
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -837,13 +1015,18 @@ def _setNodeFillColor(df, id, fill_color, opacity):
     fill_color = _color_to_rgb(fill_color, opacity)
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"fill_color"] = fill_color
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+    
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeFillLinearGradient(df, id, gradient_info, stop_info):
+def _setNodeFillLinearGradient(df, id, gradient_info, stop_info, alias = 0):
     """
     Set the node fill linear gradient.
 
@@ -855,6 +1038,8 @@ def _setNodeFillLinearGradient(df, id, gradient_info, stop_info):
 
         stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
         where x is floating number from 0 to 100.
+
+        alias: int-alias node index.
 
     """
     df_NodeData_temp = df[1].copy()
@@ -896,12 +1081,17 @@ def _setNodeFillLinearGradient(df, id, gradient_info, stop_info):
 
     if gradient_info_flag == True and stop_info_flag == True:
         fill_color = ['linearGradient', gradient_info, stop_info]
-        for i in range(len(idx_list)):
-            df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+        # for i in range(len(idx_list)):
+        #     df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+        if alias < len(idx_list) and alias >= 0:
+            df_NodeData_temp.at[idx_list[alias],"fill_color"] = fill_color
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        
         df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
         return df_temp
 
-def _setNodeFillRadialGradient(df, id, gradient_info, stop_info):
+def _setNodeFillRadialGradient(df, id, gradient_info, stop_info, alias = 0):
     """
     Set the node fill radial gradient.
 
@@ -913,6 +1103,8 @@ def _setNodeFillRadialGradient(df, id, gradient_info, stop_info):
 
         stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
         where x is floating number from 0 to 100.
+
+        alias: int-alias node index.
 
     """
     df_NodeData_temp = df[1].copy()
@@ -962,13 +1154,18 @@ def _setNodeFillRadialGradient(df, id, gradient_info, stop_info):
 
     if gradient_info_flag == True and stop_info_flag == True:
         fill_color = ['radialGradient', gradient_info, stop_info]
-        for i in range(len(idx_list)):
-            df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+        # for i in range(len(idx_list)):
+        #     df_NodeData_temp.at[idx_list[i],"fill_color"] = fill_color
+        if alias < len(idx_list) and alias >= 0:
+            df_NodeData_temp.at[idx_list[alias],"fill_color"] = fill_color
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        
         df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
         return df_temp
 
-def _setNodeBorderColor(df, id, border_color, opacity):
+def _setNodeBorderColor(df, id, border_color, opacity, alias = 0):
 
     """
     Set the node border color.
@@ -982,6 +1179,8 @@ def _setNodeBorderColor(df, id, border_color, opacity):
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -991,13 +1190,18 @@ def _setNodeBorderColor(df, id, border_color, opacity):
     border_color = _color_to_rgb(border_color, opacity)
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"border_color"] = border_color
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"border_color"] = border_color
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"border_color"] = border_color
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+    
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeBorderWidth(df, id, border_width):
+def _setNodeBorderWidth(df, id, border_width, alias = 0):
 
     """
     Set the node border width.
@@ -1009,6 +1213,8 @@ def _setNodeBorderWidth(df, id, border_width):
 
         border_width: float-node border line width.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -1017,13 +1223,18 @@ def _setNodeBorderWidth(df, id, border_width):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"border_width"] = border_width
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"border_width"] = border_width
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"border_width"] = border_width
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+    
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextFontColor(df, id, txt_font_color, opacity):
+def _setNodeTextFontColor(df, id, txt_font_color, opacity, alias = 0):
 
     """
     Set the node text font color.
@@ -1037,6 +1248,8 @@ def _setNodeTextFontColor(df, id, txt_font_color, opacity):
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -1046,13 +1259,18 @@ def _setNodeTextFontColor(df, id, txt_font_color, opacity):
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     txt_font_color = _color_to_rgb(txt_font_color, opacity)
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"txt_font_color"] = txt_font_color
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"txt_font_color"] = txt_font_color
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"txt_font_color"] = txt_font_color
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+    
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
-def _setNodeTextLineWidth(df, id, txt_line_width):
+def _setNodeTextLineWidth(df, id, txt_line_width, alias = 0):
 
     """
     Set the node text line width.
@@ -1064,6 +1282,8 @@ def _setNodeTextLineWidth(df, id, txt_line_width):
 
         txt_line_width: float-node text line width.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -1072,14 +1292,19 @@ def _setNodeTextLineWidth(df, id, txt_line_width):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"txt_line_width"] = txt_line_width
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+   
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
 
 
-def _setNodeTextFontSize(df, id, txt_font_size):
+def _setNodeTextFontSize(df, id, txt_font_size, alias = 0):
 
     """
     Set the node text font size.
@@ -1091,6 +1316,8 @@ def _setNodeTextFontSize(df, id, txt_font_size):
 
         txt_font_size: float-node text font size.
 
+        alias: int-alias node index.
+
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -1099,8 +1326,13 @@ def _setNodeTextFontSize(df, id, txt_font_size):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    for i in range(len(idx_list)):
-        df_NodeData_temp.at[idx_list[i],"txt_font_size"] = txt_font_size
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"txt_font_size"] = txt_font_size
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"txt_font_size"] = txt_font_size
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+    
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp
@@ -1125,6 +1357,8 @@ def _setReactionCenterPosition(df, id, position):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(position) != list:
+        raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"center_pos"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1151,6 +1385,8 @@ def _setReactionHandlePositions(df, id, position):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(position) != list:
+        raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"handles"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1257,6 +1493,8 @@ def _setReactionArrowHeadSize(df, id, size):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(size) != list:
+        raise Exception("Please enter a valid size type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"arrow_head_size"] = size
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1290,6 +1528,8 @@ def _setReactionDash(df, id, dash):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(dash) != list:
+        raise Exception("Please enter a valid dash type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"rxn_dash"] = dash
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1368,6 +1608,8 @@ def _setTextPosition(df, txt_str, txt_position):
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(txt_position) != list:
+        raise Exception("Please enter a valid text position type.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_position"] = txt_position
     df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
@@ -1394,6 +1636,8 @@ def _setTextSize(df, txt_str, txt_size):
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
+    if type(txt_size) != list:
+        raise Exception("Please enter a valid text size type.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_size"] = txt_size
     df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
