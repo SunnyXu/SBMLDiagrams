@@ -1177,8 +1177,6 @@ def addText(canvas, txt_str, position, dimension,
         text_line_width: float-text line width.
 
     """ 
-    if math.isnan(text_line_width):
-        text_line_width = 1.
     #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
     fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
     paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    

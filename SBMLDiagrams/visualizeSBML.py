@@ -798,6 +798,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(hex_to_rgb(color_list[k][1]))
                                 text_line_width = group.getStrokeWidth()
+                                if math.isnan(text_line_width):
+                                    text_line_width = 1.
                                 text_font_size = float(group.getFontSize().getCoordinate())
                                 text_render.append([idList,color_style.getTextLineColor(),
 								text_line_width, text_font_size])
