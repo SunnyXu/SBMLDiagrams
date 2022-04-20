@@ -643,6 +643,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if color_list[k][0] == group.getStroke():
                                     text_line_color = hex_to_rgb(color_list[k][1])
                             text_line_width = group.getStrokeWidth()
+                            if math.isnan(text_line_width):
+                                text_line_width = 1.
                             text_font_size = float(group.getFontSize().getCoordinate())
                             text_render.append([idList,text_line_color,text_line_width,
 							text_font_size])
