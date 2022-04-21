@@ -1414,15 +1414,17 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         return floatingNodes_pos_dict, floatingNodes_dim_dict, allNodes_pos_dict, allNodes_dim_dict, edges, arrow_info, name_to_id
     
     if output_fileName != '':
-        if '.png' in output_fileName:
+        output_fileName_lower = str(output_fileName).lower()
+        if '.png' in output_fileName_lower:
             fileFormat = 'PNG'
-            fileName = output_fileName.replace('.png', '')
-        elif '.jpg' in output_fileName:
+            #fileName = output_fileName.replace('.png', '')
+            fileName = output_fileName[:-4]
+        elif '.jpg' in output_fileName_lower:
             fileFormat = 'JPEG' 
-            fileName = output_fileName.replace('.jpg', '')
-        elif '.pdf' in output_fileName:
+            fileName = output_fileName[:-4]
+        elif '.pdf' in output_fileName_lower:
             fileFormat = 'PDF'
-            fileName = output_fileName.replace('.pdf', '')
+            fileName = output_fileName[:-4]
         else:
             raise Exception("Please enter an output fileName ending with .png/.jpg/.pdf.")
     else:
@@ -1443,13 +1445,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         except:
             pass
 
-    if fileFormat == "PDF" and output_fileName.replace('.pdf', '') != '':
+    if fileFormat == "PDF" and fileName != '':
         # if output_fileName == '':
         #     random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
         #     fileName = os.path.join(os.getcwd(), random_string)
         #     fileNamepdf = fileName + '.pdf'
         #     stream = skia.FILEWStream(fileNamepdf)
-        fileName = os.path.join(os.getcwd(), output_fileName.replace('.pdf', ''))
+        fileName = os.path.join(os.getcwd(), fileName)
         fileNamepdf = fileName + '.pdf'
         stream = skia.FILEWStream(fileNamepdf)
         fileNamepng = fileName + '.png' #display the file in drawNetwork
@@ -2054,6 +2056,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output.png')
+        _draw(sbmlStr,output_fileName='output.pDF')
 
 
