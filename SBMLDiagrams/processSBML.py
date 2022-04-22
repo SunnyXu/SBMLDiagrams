@@ -1576,7 +1576,7 @@ class load:
             position_list: list of position.
 
             position: a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.  
+            the x/y position of the top-left hand corner of the compartment.  
 
         Examples: 
             p = sd.getCompartmentPosition('compartment_id')[0]
@@ -1678,6 +1678,7 @@ class load:
             border_width_list: list of border_width.
 
             border_width: float-compartment border line width.
+
         """
         
         idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
@@ -1714,6 +1715,7 @@ class load:
             floating_node_list: list-list of floating_node.
 
             floating_node: bool-floating node (True) or not (False).
+
         """
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         floating_node_list =[] 
@@ -1734,7 +1736,7 @@ class load:
             position-list: list-list of position.
 
             position: a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the node.
 
         Examples: 
             p = sd.getNodePosition('ATP')[0]
@@ -1780,8 +1782,6 @@ class load:
         for alias in range(num_alias):
             cx = p[alias][0] + size[alias][0]/2
             cy = p[alias][1] + size[alias][1]/2
-            print(cx)
-            print(cy)
             position = point.Point(cx, cy) 
             position_list.append(position)
         return position_list
@@ -1867,7 +1867,7 @@ class load:
             txt_position_list: list of txt_position.
 
             txt_position: a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the node text.
 
         Examples: 
             p = sd.getNodeTextPosition('ATP')[0]
@@ -1958,6 +1958,7 @@ class load:
 
             border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
+
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
@@ -1979,6 +1980,7 @@ class load:
 
         Returns:
             border_width: float-node border line width.
+
         """
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         border_width_list =[] 
@@ -1999,6 +2001,7 @@ class load:
 
             txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
+
         """
 
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
@@ -2021,6 +2024,7 @@ class load:
             txt_line_width_list: list of txt_line_width.
 
             txt_line_width: float-node text line width.
+
         """
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         txt_line_width_list =[] 
@@ -2040,6 +2044,7 @@ class load:
             txt_font_size_list: list of txt_font_size.
 
             txt_font_size: float.
+
         """
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         txt_font_size_list =[] 
@@ -2117,6 +2122,7 @@ class load:
 
             fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
+
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         fill_color_list =[] 
@@ -2138,6 +2144,7 @@ class load:
             line_thickness_list: list of line_thickness.
 
             line_thickness: float-reaction border line width.
+
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         line_thickness_list =[] 
@@ -2157,6 +2164,7 @@ class load:
             bezier_list: list of bezier
 
             bezier: bool-bezier reaction (True) or not (False)
+
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         bezier_list =[] 
@@ -2207,6 +2215,7 @@ class load:
             [a,b] means drawing a a-point line and following a b-point gap and etc;
             [a,b,c,d] means drawing a a-point line and following a b-point gap, and then
             drawing a c-point line followed by a d-point gap.
+
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
         dash_list =[] 
@@ -2232,7 +2241,7 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the compartment.
 
         """
         self.df = editSBML._setCompartmentPosition(self.df, id, position)
@@ -2250,11 +2259,12 @@ class load:
             size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the compartment [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
             the compartment.
+
         """
         self.df = editSBML._setCompartmentSize(self.df, id, size)
         #return self.df
@@ -2269,6 +2279,7 @@ class load:
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
         """
         self.df = editSBML._setCompartmentFillColor(self.df, id, fill_color, opacity)
         #return self.df
@@ -2296,6 +2307,7 @@ class load:
             id: str-compartment id.
 
             border_width: float-compartment border line width.
+
         """
         self.df = editSBML._setCompartmentBorderWidth(self.df, id, border_width)
         #return self.df
@@ -2310,6 +2322,7 @@ class load:
             floating_node: bool-floating node (True) or not (False).
 
             alias: int-alias node index [0, num_alias).
+        
         """
         self.df = editSBML._setFloatingBoundaryNode(self.df, id, floating_node, alias=alias)
         #return self.df
@@ -2328,9 +2341,10 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the node.
 
             alias: int-alias node index [0, num_alias).
+
         """
         self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
         #return self.df
@@ -2345,13 +2359,15 @@ class load:
             position: list/point.Point()-
                 
             list-
-            [position_x, position_y], the coordinate represents the top-left hand corner of the node.
+            [position_x, position_y], the coordinate represents the top-left hand corner of the 
+            node and text.
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the node and text.
 
             alias: int-alias node index [0, num_alias).
+
         """
         self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
         self.df = editSBML._setNodeTextPosition(self.df, id, position, alias=alias)
@@ -2367,13 +2383,14 @@ class load:
             size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the node [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
             the node.
 
             alias: int-alias node index [0, num_alias).
+
         """
         self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
         #return self.df
@@ -2388,13 +2405,14 @@ class load:
             size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the node and text [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
             the node and node text.
 
             alias: int-alias node index [0, num_alias).
+
         """
         self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
         self.df = editSBML._setNodeTextSize(self.df, id, size, alias=alias)
@@ -2470,7 +2488,7 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the node text.
 
             alias: alias node index [0, num_alias).
 
@@ -2605,13 +2623,14 @@ class load:
             txt_size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the node text [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
             the node text.
 
             alias: alias node index [0, num_alias).
+
         """
         self.df = editSBML._setNodeTextSize(self.df, id, txt_size, alias=alias)
         #return self.df
@@ -2628,6 +2647,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
             alias: int-alias node index [0, num_alias).
+
         """
         self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity, alias=alias)
         #return self.df
@@ -2682,6 +2702,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
             alias: int-alias node index [0, num_alias).
+
         """
         self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity, alias=alias)
         #return self.df
@@ -2696,6 +2717,7 @@ class load:
             border_width: float-node border line width.
 
             alias: int-alias node index [0, num_alias).
+
         """
         self.df = editSBML._setNodeBorderWidth(self.df, id, border_width, alias=alias)
         #return self.df
@@ -2712,6 +2734,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
             alias: int-alias node index [0, num_alias).
+        
         """
         self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity, alias=alias)
         #return self.df
@@ -2726,6 +2749,7 @@ class load:
             txt_line_width: float-node text line width.
 
             alias: int-alias node index [0, num_alias).
+        
         """
         self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width, alias=alias)
         #return self.df
@@ -2740,6 +2764,7 @@ class load:
             txt_font_size: float-node text font size.
 
             alias: int-alias node index [0, num_alias).
+        
         """
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
         #return self.df
@@ -2781,6 +2806,7 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing the x/y position.
+        
         """
         self.df = editSBML._setReactionHandlePositions(self.df, id, position)
         #return self.df
@@ -2865,6 +2891,7 @@ class load:
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+        
         """
         self.df = editSBML._setReactionFillColor(self.df, id, fill_color, opacity)
         #return self.df
@@ -2878,6 +2905,7 @@ class load:
             id: str-reaction id.
 
             line_thickness: float-reaction border line width.
+        
         """
         self.df = editSBML._setReactionLineThickness(self.df, id, line_thickness)
         #return self.df
@@ -2890,6 +2918,7 @@ class load:
             id: str-reaction id.
 
             bezier: bool-bezier reaction (True as default) or not (False as straightline).
+        
         """
         self.df = editSBML._setBezierReactionType(self.df, id, bezier)
         #return self.df
@@ -2903,11 +2932,12 @@ class load:
             size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the arrow head [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
             the arrow head.
+        
         """
         self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
         #return self.df
@@ -2923,6 +2953,7 @@ class load:
             [a,b] means drawing a a-point line and following a b-point gap and etc;
             [a,b,c,d] means drawing a a-point line and following a b-point gap, and then 
             drawing a c-point line followed by a d-point gap.
+        
         """
         self.df = editSBML._setReactionDash(self.df, id, dash)
         #return self.df
@@ -2978,7 +3009,7 @@ class load:
             position_list: list of position.
             
             position: a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the text.
 
         Examples: 
             p = sd.getTextPosition('text_content')[0]
@@ -3058,6 +3089,7 @@ class load:
             txt_line_width_list: list of txt_line_width.
 
             txt_line_width: float-node text line width.
+        
         """
         idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
         txt_line_width_list =[] 
@@ -3076,7 +3108,8 @@ class load:
         Returns:
             txt_font_size_list: list of txt_font_size.
 
-            txt_font_size: float.
+            txt_font_size: float-text font size.
+        
         """
         idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
         txt_font_size_list =[] 
@@ -3100,7 +3133,7 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the text.
 
         """
         self.df = editSBML._setTextPosition(self.df, txt_str, txt_position)
@@ -3116,11 +3149,12 @@ class load:
             txt_size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the text [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
             the text.
+        
         """
         self.df = editSBML._setTextSize(self.df, txt_str, txt_size)
         #return self.df
@@ -3135,6 +3169,7 @@ class load:
             txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+        
         """
         self.df = editSBML._setTextFontColor(self.df, txt_str, txt_font_color, opacity)
         #return self.df
@@ -3147,6 +3182,7 @@ class load:
             txt_str: str-the text content.
 
             txt_line_width: float-node text line width.
+        
         """
         self.df = editSBML._setTextLineWidth(self.df, txt_str, txt_line_width)
         #return self.df
@@ -3159,6 +3195,7 @@ class load:
             txt_str: str-the text content.
 
             txt_font_size: float-node text font size.
+        
         """
         self.df = editSBML._setTextFontSize(self.df, txt_str, txt_font_size)
         #return self.df
@@ -3179,12 +3216,12 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the text.
 
             txt_size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the text [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
@@ -3228,16 +3265,16 @@ class load:
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
-            the bounding box.
+            the rectangle.
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the rectangle.
 
             size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the rectangle [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
@@ -3276,12 +3313,12 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the ellipse.
 
             size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the ellipse [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
@@ -3323,12 +3360,12 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the polygon.
 
             size: list/point.Point()-
                 
             list-
-            1*2 matrix-size of the bounding box [width, height].
+            1*2 matrix-size of the polygon [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
@@ -3357,6 +3394,7 @@ class load:
 
         Args:  
             shape_name_str: str-the shape name.
+        
         """
         self.df = editSBML._removeShape(self.df, shape_name_str = shape_name_str) 
         
@@ -3374,7 +3412,7 @@ class load:
             position_list: list of position.
 
             position: a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.
+            the x/y position of the top-left hand corner of the shape.
 
         Examples: 
             p = sd.getShapePosition('shape_name')[0]
@@ -3408,6 +3446,7 @@ class load:
             p = sd.getShapeSize('shape_name')[0]
 
             print ('Width = ', p.x, 'Height = ', p.y)
+        
         """
 
         p = visualizeSBML._getShapeSize (self.df, shape_name_str)
@@ -3425,6 +3464,7 @@ class load:
 
         Returns:
             SBMLStr_layout_render: str-the string of the output sbml file. 
+        
         """
         sbml = exportSBML._DFToSBML(self.df)
         return sbml
@@ -3435,6 +3475,7 @@ class load:
 
         Args:
             style: can be either the "default" string or a new color class
+        
         """
         if style == "default":
             self.color_style = styleSBML.Style(style_name="default")
@@ -3447,6 +3488,7 @@ class load:
 
         Returns: 
             The current color style.
+        
         """
         return self.color_style
 
@@ -3456,6 +3498,7 @@ class load:
 
         Returns:
             The current color style. in json format
+        
         """
         if filename:
             out_file = open(filename, "w")
@@ -3468,7 +3511,6 @@ class load:
         """
         Autolayout the node positions using networkX library.
 
-    
         layout: str-the layout name from networkX, including
 
             spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
@@ -3482,6 +3524,7 @@ class load:
         scale: float-the scale factor for positions. 
         
         iterations: int-maximum number of iterations taken.             
+        
         """
 
         sbmlStr = self.export()
@@ -3538,7 +3581,7 @@ class load:
         Draw to a PNG/JPG/PDF file.
 
         Args: 
-            setImageSize: list-1*2 matrix-size of the bounding box [width, height].
+            setImageSize: list-1*2 matrix-size of the image [width, height].
 
             scale: float-makes the figure output size = scale * default output size.
             Increasing the scale can make the resolution higher.
@@ -3558,6 +3601,7 @@ class load:
 
             longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
             node; 'ellipsis' will show '....' if the text is too long to show in the node
+        
         """
 
         sbmlStr = self.export()
@@ -3572,14 +3616,18 @@ class load:
         """
         Get the top left-hand corner of the network(s) from the SBML string.
 
-        Returns:
-            position: list-[position_x, position_y], top left-hand corner of the network(s).
-            It is calculated by the minimum positions of compartments, nodes, centroid and handle 
-            positions of reactions, excluding the compartment with the id of _compartment_default_.
-        
+        Returns:   
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the network(s).
+        Examples:
+            p = sd.getNetworkTopLeftConer()
+                
+            print(p.x, p.y)
+
         """ 
         sbmlStr = self.export()
         position  = visualizeSBML._getNetworkTopLeftCorner(sbmlStr)
+        position = point.Point(position[0],position[1])
         return position
 
     def getNetworkBottomRightCorner(self):
@@ -3587,12 +3635,18 @@ class load:
         Get the bottom right-hand corner of the network(s) from the SBML string.
 
         Returns:
-            position: list-[position_x, position_y],bottom right-hand corner of the network(s).
-            It is calculated by the maximum right down corner positions of compartments and nodes, 
-            excluding the compartment with the id of _compartment_default_.
+            position: a Point object with attributes x and y representing
+            the x/y position of the bottom-right hand corner of the network(s).
+
+        Examples:
+            p = sd.getNetworkBottomRightConer()
+                
+            print(p.x, p.y)
+    
         """
         sbmlStr = self.export()
         position  = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)
+        position = point.Point(position[0],position[1])
         return position
     
     def getNetworkSize(self):
@@ -3600,23 +3654,30 @@ class load:
         Get the size of the network(s).
 
         Returns:
-            list-1*2 matrix-size of the bounding box [width, height].
+            size: a Point object with attributes x and y representing
+            the width and height of the network(s).
         
+        Examples: 
+            p = sd.getNetworkSize()
+            
+            print ('Width = ', p.x, 'Height = ', p.y)
+
         """ 
         sbmlStr = self.export()
         size  = visualizeSBML._getNetworkSize(sbmlStr)
+        size = point.Point(size[0],size[1])
         return size
 
     def getCompartmentIdList(self):
         """
-        Get the list of node ids.
+        Get the list of compartment ids.
 
         Args:  
 
         Returns:
             id_list-list of ids.
             
-            id-str-node id.
+            id-str-compartment id.
         
         """ 
 
@@ -3670,7 +3731,7 @@ class load:
         Get the list of arbitrary shape names.
 
         Returns:
-            shape_name_list-list of txt_content.
+            shape_name_list-list of shape_name.
             
             shape_name-str-arbitrary shape name.
         

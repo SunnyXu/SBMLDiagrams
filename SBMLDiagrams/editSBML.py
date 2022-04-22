@@ -65,7 +65,7 @@ def _setCompartmentPosition(df, id, position):
 
         point.Point()-
         a Point object with attributes x and y representing
-        the x/y position of the top-left hand corner of the bounding box.
+        the x/y position of the top-left hand corner of the compartment.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -98,7 +98,7 @@ def _setCompartmentSize(df, id, size):
         size: list/point.Point()-
             
         list-
-        1*2 matrix-size of the bounding box [width, height].
+        1*2 matrix-size of the compartment [width, height].
 
         point.Point()-
         a Point object with attributes x and y representing the width and height of 
@@ -219,7 +219,7 @@ def _setFloatingBoundaryNode(df, id, floating_node, alias = 0):
 
         floating_node: bool-floating node (True) or not (False).
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -257,7 +257,7 @@ def _setNodePosition(df, id, position, alias = 0):
 
         point.Point()-
         a Point object with attributes x and y representing
-        the x/y position of the top-left hand corner of the bounding box.
+        the x/y position of the top-left hand corner of the node.
 
         alias: int-alias node index [0, num_alias).
 
@@ -296,7 +296,7 @@ def _setNodeSize(df, id, size, alias = 0):
         size: list/point.Point()-
             
         list-
-        1*2 matrix-size of the bounding box [width, height].
+        1*2 matrix-size of the node [width, height].
 
         point.Point()-
         a Point object with attributes x and y representing the width and height of 
@@ -338,12 +338,13 @@ def _setNodeShape(df, id, shape, alias = 0):
         id: int-node id.
 
         shape: int/str-
+
         int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
             6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
         str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
             "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
             
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -473,7 +474,7 @@ def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info, alias = 0):
         shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.        
         x represents the percentage of width, and y represents the percentage of height.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     """
     shape_idx = -2 #arbitrary polygon
@@ -587,7 +588,7 @@ def _setNodeTextPosition(df, id, txt_position, alias = 0):
 
         point.Point()-
         a Point object with attributes x and y representing
-        the x/y position of the top-left hand corner of the bounding box.
+        the x/y position of the top-left hand corner of the node text.
 
         alias: alias node index [0, num_alias).
 
@@ -624,7 +625,7 @@ def _setNodeTextPositionCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -685,7 +686,7 @@ def _setNodeTextPositionLeftCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -726,7 +727,7 @@ def _setNodeTextPositionRightCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -767,7 +768,7 @@ def _setNodeTextPositionUpperCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -808,7 +809,7 @@ def _setNodeTextPositionLowerCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index and alias >= 0.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -849,7 +850,7 @@ def _setNodeTextPositionUpperLeft(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -890,7 +891,7 @@ def _setNodeTextPositionUpperRight(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -931,7 +932,7 @@ def _setNodeTextPositionLowerLeft(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -970,7 +971,7 @@ def _setNodeTextPositionLowerRight(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1014,7 +1015,7 @@ def _setNodeTextSize(df, id, txt_size, alias = 0):
         txt_size: list/point.Point()-
             
         list-
-        1*2 matrix-size of the bounding box [width, height].
+        1*2 matrix-size of the node text [width, height].
 
         point.Point()-
         a Point object with attributes x and y representing the width and height of 
@@ -1059,7 +1060,7 @@ def _setNodeFillColor(df, id, fill_color, opacity, alias = 0 ):
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1095,7 +1096,7 @@ def _setNodeFillLinearGradient(df, id, gradient_info, stop_info, alias = 0):
         stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
         where x is floating number from 0 to 100.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     """
     df_NodeData_temp = df[1].copy()
@@ -1160,7 +1161,7 @@ def _setNodeFillRadialGradient(df, id, gradient_info, stop_info, alias = 0):
         stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
         where x is floating number from 0 to 100.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     """
     df_NodeData_temp = df[1].copy()
@@ -1235,7 +1236,7 @@ def _setNodeBorderColor(df, id, border_color, opacity, alias = 0):
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1269,7 +1270,7 @@ def _setNodeBorderWidth(df, id, border_width, alias = 0):
 
         border_width: float-node border line width.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1304,7 +1305,7 @@ def _setNodeTextFontColor(df, id, txt_font_color, opacity, alias = 0):
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1338,7 +1339,7 @@ def _setNodeTextLineWidth(df, id, txt_line_width, alias = 0):
 
         txt_line_width: float-node text line width.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1372,7 +1373,7 @@ def _setNodeTextFontSize(df, id, txt_font_size, alias = 0):
 
         txt_font_size: float-node text font size.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1568,7 +1569,7 @@ def _setReactionArrowHeadSize(df, id, size):
         size: list/point.Point()-
             
         list-
-        1*2 matrix-size of the bounding box [width, height].
+        1*2 matrix-size of the arrow head [width, height].
 
         point.Point()-
         a Point object with attributes x and y representing the width and height of 
@@ -1697,7 +1698,7 @@ def _setTextPosition(df, txt_str, txt_position):
 
         point.Point()-
         a Point object with attributes x and y representing
-        the x/y position of the top-left hand corner of the bounding box.
+        the x/y position of the top-left hand corner of the text.
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -1729,7 +1730,7 @@ def _setTextSize(df, txt_str, txt_size):
         txt_size: list/point.Point()-
             
         list-
-        1*2 matrix-size of the bounding box [width, height].
+        1*2 matrix-size of the text [width, height].
 
         point.Point()-
         a Point object with attributes x and y representing the width and height of 
@@ -1851,12 +1852,12 @@ def _addText(df, txt_str, txt_position, txt_size,
 
         point.Point()-
         a Point object with attributes x and y representing
-        the x/y position of the top-left hand corner of the bounding box.
+        the x/y position of the top-left hand corner of the text.
 
         txt_size: list/point.Point()-
             
         list-
-        1*2 matrix-size of the bounding box [width, height].
+        1*2 matrix-size of the text [width, height].
 
         point.Point()-
         a Point object with attributes x and y representing the width and height of 
@@ -1927,16 +1928,16 @@ def _addRectangle(df, shape_name, position, size, fill_color=[255,255,255], fill
             
         list-
         [position_x, position_y], the coordinate represents the top-left hand corner of 
-        the bounding box.
+        the rectangle.
 
         point.Point()-
         a Point object with attributes x and y representing
-        the x/y position of the top-left hand corner of the bounding box.
+        the x/y position of the top-left hand corner of the rectangle.
 
         size: list/point.Point()-
             
         list-
-        1*2 matrix-size of the bounding box [width, height].
+        1*2 matrix-size of the rectangle [width, height].
 
         point.Point()-
         a Point object with attributes x and y representing the width and height of 
@@ -1999,12 +2000,12 @@ def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill
 
         point.Point()-
         a Point object with attributes x and y representing
-        the x/y position of the top-left hand corner of the bounding box.
+        the x/y position of the top-left hand corner of the ellipse.
 
         size: list/point.Point()-
             
         list-
-        1*2 matrix-size of the bounding box [width, height].
+        1*2 matrix-size of the ellipse [width, height].
 
         point.Point()-
         a Point object with attributes x and y representing the width and height of 
@@ -2070,12 +2071,12 @@ def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,
 
         point.Point()-
         a Point object with attributes x and y representing
-        the x/y position of the top-left hand corner of the bounding box.
+        the x/y position of the top-left hand corner of the polygon.
 
         size: list/point.Point()-
             
         list-
-        1*2 matrix-size of the bounding box [width, height].
+        1*2 matrix-size of the polygon [width, height].
 
         point.Point()-
         a Point object with attributes x and y representing the width and height of 
