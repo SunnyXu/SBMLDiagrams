@@ -57,8 +57,15 @@ def _setCompartmentPosition(df, id, position):
 
         id: str-compartment id.
 
-        position: [position_x, position_y], the coordinate represents the top-left hand corner of 
+        position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
         the compartment.
+
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the bounding box.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -68,8 +75,10 @@ def _setCompartmentPosition(df, id, position):
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(position) != list:
+    if type(position) != list and type(position) != type(point.Point()):
         raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"position"] = position
     df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
@@ -86,7 +95,14 @@ def _setCompartmentSize(df, id, size):
 
         id: str-compartment id.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the bounding box [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the compartment.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -96,8 +112,10 @@ def _setCompartmentSize(df, id, size):
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.") 
-    if type(size) != list:
+    if type(size) != list and type(size) != type(point.Point()):
         raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"size"] = size
     df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
@@ -235,14 +253,13 @@ def _setNodePosition(df, id, position, alias = 0):
         position: list/point.Point()-
             
         list-
-        [position_x, position_y], the coordinate represents the top-left hand 
-        corner of the node.
+        [position_x, position_y], the coordinate represents the top-left hand corner of the node.
 
         point.Point()-
         a Point object with attributes x and y representing
         the x/y position of the top-left hand corner of the bounding box.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -276,9 +293,16 @@ def _setNodeSize(df, id, size, alias = 0):
 
         id: str-node id.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the bounding box [width, height].
 
-        alias: int-alias node index.
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the node.
+
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -288,8 +312,10 @@ def _setNodeSize(df, id, size, alias = 0):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(size) != list:
+    if type(size) != list and type(size) != type(point.Point()):
         raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     # for i in range(len(idx_list)):
     #     df_NodeData_temp.at[idx_list[i],"size"] = size
     if alias < len(idx_list) and alias >= 0:
@@ -553,9 +579,17 @@ def _setNodeTextPosition(df, id, txt_position, alias = 0):
 
         id: str-node id.
 
-        txt_position: [position_x, position_y], the coordinate represents the top-left hand corner of the node text.
+        txt_position: list/point.Point()-
+            
+        list-
+        [txt_position_x, txt_position_y], the coordinate represents the top-left hand 
+        corner of the node text.
 
-        alias: int-alias node index.
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the bounding box.
+
+        alias: alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -565,8 +599,10 @@ def _setNodeTextPosition(df, id, txt_position, alias = 0):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(txt_position) != list:
-        raise Exception("Please enter a valid text position type.")
+    if type(txt_position) != list and type(txt_position) != type(point.Point()):
+        raise Exception("Please enter a valid txt_position type.")
+    if type(txt_position) == type(point.Point()):
+        txt_position = [txt_position.x, txt_position.y]
     # for i in range(len(idx_list)):
     #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
     if alias < len(idx_list) and alias >= 0:
@@ -975,9 +1011,16 @@ def _setNodeTextSize(df, id, txt_size, alias = 0):
 
         id: str-node id.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        txt_size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the bounding box [width, height].
 
-        alias: int-alias node index.
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the node text.
+
+        alias: alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -987,8 +1030,10 @@ def _setNodeTextSize(df, id, txt_size, alias = 0):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(txt_size) != list:
-        raise Exception("Please enter a valid text size type.")
+    if type(txt_size) != list and type(txt_size) != type(point.Point()):
+        raise Exception("Please enter a valid txt_size type.")
+    if type(txt_size) == type(point.Point()):
+        txt_size = [txt_size.x, txt_size.y]
     # for i in range(len(idx_list)):
     #     df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
     if alias < len(idx_list) and alias >= 0:
@@ -1358,7 +1403,13 @@ def _setReactionCenterPosition(df, id, position):
 
         id: str-reaction id.
         
-        position: list-1*2 matrix-[position_x, position_y]
+        position: list/point.Point()-
+            
+        list-
+        1*2 matrix-[position_x, position_y].
+
+        point.Point()-
+        a Point object with attributes x and y representing the x/y position.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1368,8 +1419,10 @@ def _setReactionCenterPosition(df, id, position):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(position) != list:
+    if type(position) != list and type(position) != type(point.Point()):
         raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"center_pos"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1386,8 +1439,16 @@ def _setReactionHandlePositions(df, id, position):
 
         id: str-reaction id.
         
-        position: list-position of the handles: [center handle, reactant handles, product handles].
+        position: list-position of the handles: [center handle, reactant handle1, ..., product handle1, ...].
+                        
+        center handle/reactant handle1/product handle1: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand 
+        corner of the node.
 
+        point.Point()-
+        a Point object with attributes x and y representing the x/y position.
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -1398,6 +1459,16 @@ def _setReactionHandlePositions(df, id, position):
         raise Exception("This is not a valid id.")
     if type(position) != list:
         raise Exception("Please enter a valid position type.")
+    else:
+        if all(isinstance(item, list) for item in position):
+            pass
+        elif all(type(item) == type(point.Point()) for item in position):
+            position_to_list = []
+            for item in position:
+                position_to_list.append([item.x,item.y])
+            position = position_to_list
+        else:
+            raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"handles"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1494,7 +1565,14 @@ def _setReactionArrowHeadSize(df, id, size):
     Args:  
         df: DataFrame-initial information.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the bounding box [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the arrow head.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1504,8 +1582,10 @@ def _setReactionArrowHeadSize(df, id, size):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(size) != list:
+    if type(size) != list and type(size) != type(point.Point()):
         raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"arrow_head_size"] = size
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1608,9 +1688,16 @@ def _setTextPosition(df, txt_str, txt_position):
         df: DataFrame-initial information.
 
         txt_str: str-the text content.
+        
+        txt_position: list/point.Point()-
+            
+        list-
+        [txt_position_x, txt_position_y], the coordinate represents the top-left hand corner of 
+        the node text.
 
-        txt_position: [position_x, position_y], the coordinate represents the top-left hand corner of the node text.
-
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the bounding box.
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -1619,8 +1706,10 @@ def _setTextPosition(df, txt_str, txt_position):
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(txt_position) != list:
-        raise Exception("Please enter a valid text position type.")
+    if type(txt_position) != list and type(txt_position) != type(point.Point()):
+        raise Exception("Please enter a valid txt_position type.")
+    if type(txt_position) == type(point.Point()):
+        txt_position = [txt_position.x, txt_position.y]
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_position"] = txt_position
     df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
@@ -1637,7 +1726,14 @@ def _setTextSize(df, txt_str, txt_size):
 
         txt_str: str-the text content.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        txt_size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the bounding box [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the text.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1647,8 +1743,10 @@ def _setTextSize(df, txt_str, txt_size):
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(txt_size) != list:
-        raise Exception("Please enter a valid text size type.")
+    if type(txt_size) != list and type(txt_size) != type(point.Point()):
+        raise Exception("Please enter a valid txt_size type.")
+    if type(txt_size) == type(point.Point()):
+        txt_size = [txt_size.x, txt_size.y]
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_size"] = txt_size
     df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
@@ -1745,10 +1843,24 @@ def _addText(df, txt_str, txt_position, txt_size,
     Args:  
         txt_str: str-the text content.
 
-        txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
-        corner of the node text.
+        txt_position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the text.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the bounding box.
+
+        txt_size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the bounding box [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the text.
 
         txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1759,6 +1871,14 @@ def _addText(df, txt_str, txt_position, txt_size,
         txt_font_size: float-node text font size.
         
     """
+    if type(txt_position) != list and type(txt_position) != type(point.Point()):
+        raise Exception("Please enter a valid txt_position type.")
+    if type(txt_position) == type(point.Point()):
+        txt_position = [txt_position.x, txt_position.y]
+    if type(txt_size) != list and type(txt_size) != type(point.Point()):
+        raise Exception("Please enter a valid txt_size type.")
+    if type(txt_size) == type(point.Point()):
+        txt_size = [txt_size.x, txt_size.y]
     txt_font_color_rgba = _color_to_rgb(txt_font_color, opacity)
     df_TextData_temp = df[3].copy()
     text_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_TextData}
@@ -1803,10 +1923,24 @@ def _addRectangle(df, shape_name, position, size, fill_color=[255,255,255], fill
     Args:  
         shape_name: str-the name of the rectangle.
 
-        position: list-[position_x, position_y], the coordinate represents the top-left hand 
-        corner of the node text.
+        position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the bounding box.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the bounding box.
+
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the bounding box [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the rectangle.
 
         fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1820,6 +1954,14 @@ def _addRectangle(df, shape_name, position, size, fill_color=[255,255,255], fill
         
     """
 
+    if type(position) != list and type(position) != type(point.Point()):
+        raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
+    if type(size) != list and type(size) != type(point.Point()):
+        raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     fill_color_rgba = _color_to_rgb(fill_color, fill_opacity)
     border_color_rgba = _color_to_rgb(border_color, border_opacity)
     df_ShapeData_temp = df[4].copy()
@@ -1849,10 +1991,24 @@ def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill
     Args:  
         shape_name: str-the name of the ellipse.
 
-        position: list-[position_x, position_y], the coordinate represents the top-left hand 
-        corner of the node text.
+        position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the ellipse.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the bounding box.
+
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the bounding box [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the ellipse.
 
         fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1865,7 +2021,15 @@ def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill
         border_width: float-node text line width.
         
     """
-
+    
+    if type(position) != list and type(position) != type(point.Point()):
+        raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
+    if type(size) != list and type(size) != type(point.Point()):
+        raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     fill_color_rgba = _color_to_rgb(fill_color, fill_opacity)
     border_color_rgba = _color_to_rgb(border_color, border_opacity)
     df_ShapeData_temp = df[4].copy()
@@ -1898,10 +2062,24 @@ def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,
         shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
         x represents the percentage of width, and y represents the percentage of height.
 
-        position: list-[position_x, position_y], the coordinate represents the top-left hand 
-        corner of the node text.
+        position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the Polygon.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the bounding box.
+
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the bounding box [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the Polygon.
 
         fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1915,6 +2093,14 @@ def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,
         
     """
 
+    if type(position) != list and type(position) != type(point.Point()):
+        raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
+    if type(size) != list and type(size) != type(point.Point()):
+        raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     fill_color_rgba = _color_to_rgb(fill_color, fill_opacity)
     border_color_rgba = _color_to_rgb(border_color, border_opacity)
     df_ShapeData_temp = df[4].copy()

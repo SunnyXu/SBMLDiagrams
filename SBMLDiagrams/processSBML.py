@@ -1605,7 +1605,7 @@ class load:
             size_list: list of size.
 
             size: a Point object with attributes x and y representing
-            the width and height of the node.
+            the width and height of the compartment.
 
         Examples: 
             p = sd.getCompartmentSize('compartment_id')[0]
@@ -1897,7 +1897,7 @@ class load:
             txt_size_list: list of txt_size.
 
             size: a Point object with attributes x and y representing
-            the width and height of the node
+            the width and height of the node text.
 
         Examples:
             p = sd.getNodeTextSize('ATP')[0]
@@ -2059,7 +2059,7 @@ class load:
             line_center_position_list: list of center_position.
 
             center_position: a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box. 
+            the x/y position. 
 
         Examples: 
             p = sd.getReactionCenterPosition('reaction_id')[0]
@@ -2090,8 +2090,7 @@ class load:
             handle_positions: list-position of the handles: 
             [center handle, reactant handles, product handles].
 
-            position: a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the bounding box.          
+            position: a Point object with attributes x and y representing the x/y position.          
 
         """
 
@@ -2177,7 +2176,7 @@ class load:
             arrow_head_size_list: list of arrow_head_size.
 
             arrow_head_size: a Point object with attributes x and y representing
-            the width and height of the node.
+            the width and height of the arrow head.
 
         Examples: 
             p = sd.getReactionArrowHeadSize('reaction_id')[0]
@@ -2221,10 +2220,19 @@ class load:
         Set the x,y coordinates of the compartment position.
 
         Args:  
+            df: DataFrame-initial information.
+
             id: str-compartment id.
 
-            position: list-[position_x, position_y], the coordinate represents the top-left hand corner 
-            of the compartment.
+            position: list/point.Point()-
+                
+            list-
+            [position_x, position_y], the coordinate represents the top-left hand corner of 
+            the compartment.
+
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
 
         """
         self.df = editSBML._setCompartmentPosition(self.df, id, position)
@@ -2235,9 +2243,18 @@ class load:
         Set the compartment size.
 
         Args:  
+            df: DataFrame-initial information.
+
             id: str-compartment id.
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the compartment.
         """
         self.df = editSBML._setCompartmentSize(self.df, id, size)
         #return self.df
@@ -2305,10 +2322,9 @@ class load:
             id: str-node id.
 
             position: list/point.Point()-
-            
+                
             list-
-            [position_x, position_y], the coordinate represents the top-left hand 
-            corner of the node.
+            [position_x, position_y], the coordinate represents the top-left hand corner of the node.
 
             point.Point()-
             a Point object with attributes x and y representing
@@ -2326,8 +2342,14 @@ class load:
         Args:  
             id: str-node id.
 
-            position: list-[position_x, position_y], the coordinate represents the top-left hand 
-            corner of the node and node text position.
+            position: list/point.Point()-
+                
+            list-
+            [position_x, position_y], the coordinate represents the top-left hand corner of the node.
+
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
 
             alias: int-alias node index [0, num_alias).
         """
@@ -2342,7 +2364,14 @@ class load:
         Args:  
             id: str-node id.
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the node.
 
             alias: int-alias node index [0, num_alias).
         """
@@ -2356,7 +2385,14 @@ class load:
         Args:  
             id: str-node id.
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the node and node text.
 
             alias: int-alias node index [0, num_alias).
         """
@@ -2426,8 +2462,15 @@ class load:
         Args:  
             id: str-node id.
 
-            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            txt_position: list/point.Point()-
+                
+            list-
+            [txt_position_x, txt_position_y], the coordinate represents the top-left hand 
             corner of the node text.
+
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
 
             alias: alias node index [0, num_alias).
 
@@ -2559,7 +2602,14 @@ class load:
         Args:  
             id: str-node id.
 
-            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+            txt_size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the node text.
 
             alias: alias node index [0, num_alias).
         """
@@ -2701,7 +2751,14 @@ class load:
         Args:  
             id: str-reaction id.
             
-            position: list-1*2 matrix-[position_x, position_y].
+            position: list/point.Point()-
+                
+            list-
+            1*2 matrix-[position_x, position_y].
+
+            point.Point()-
+            a Point object with attributes x and y representing the x/y position.
+
         """
         self.df = editSBML._setReactionCenterPosition(self.df, id, position)
         #return self.df
@@ -2714,8 +2771,16 @@ class load:
         Args:  
             id: str-reaction id.
             
-            position: list-position of the handles: [center handle, reactant handles, 
-            product handles].
+            position: list-position of the handles: [center handle, reactant handle1, ..., product handle1, ...].
+                            
+            center handle/reactant handle1/product handle1: list/point.Point()-
+                
+            list-
+            [position_x, position_y], the coordinate represents the top-left hand 
+            corner of the node.
+
+            point.Point()-
+            a Point object with attributes x and y representing the x/y position.
         """
         self.df = editSBML._setReactionHandlePositions(self.df, id, position)
         #return self.df
@@ -2835,7 +2900,14 @@ class load:
         Set the reaction arrow head size with a certain reaction id.
 
         Args:  
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the arrow head.
         """
         self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
         #return self.df
@@ -2935,7 +3007,7 @@ class load:
             txt_size_list: list of txt_size.
 
             txt_size: a Point object with attributes x and y representing
-            the width and height of the node.
+            the width and height of the text.
 
         Examples: 
             p = sd.getTextSize('text_content')[0]
@@ -3020,8 +3092,15 @@ class load:
         Args:  
             txt_str: str-the text content.
 
-            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
-            corner of the node text.
+            txt_position: list/point.Point()-
+                
+            list-
+            [txt_position_x, txt_position_y], the coordinate represents the top-left hand corner of 
+            the node text.
+
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
 
         """
         self.df = editSBML._setTextPosition(self.df, txt_str, txt_position)
@@ -3034,7 +3113,14 @@ class load:
         Args:  
             txt_str: str-the text content.
 
-            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+            txt_size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the text.
         """
         self.df = editSBML._setTextSize(self.df, txt_str, txt_size)
         #return self.df
@@ -3085,10 +3171,24 @@ class load:
         Args:  
             txt_str: str-the text content.
 
-            txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
-            corner of the node text.
+            txt_position: list/point.Point()-
+                
+            list-
+            [position_x, position_y], the coordinate represents the top-left hand corner of 
+            the text.
 
-            txt_size: list-1*2 matrix-size of the rectangle [width, height].
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+            txt_size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the text.
 
             txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -3124,10 +3224,24 @@ class load:
         Args:  
             shape_name: str-the name of the rectangle.
 
-            position: list-[position_x, position_y], the coordinate represents the top-left hand 
-            corner of the node text.
+            position: list/point.Point()-
+                
+            list-
+            [position_x, position_y], the coordinate represents the top-left hand corner of 
+            the bounding box.
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+            size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the rectangle.
 
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -3154,10 +3268,24 @@ class load:
         Args:  
             shape_name: str-the name of the ellipse.
 
-            position: list-[position_x, position_y], the coordinate represents the top-left hand 
-            corner of the node text.
+            position: list/point.Point()-
+                
+            list-
+            [position_x, position_y], the coordinate represents the top-left hand corner of 
+            the ellipse.
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+            size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the ellipse.
 
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -3187,10 +3315,24 @@ class load:
             shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            position: list-[position_x, position_y], the coordinate represents the top-left hand 
-            corner of the node text.
+            position: list/point.Point()-
+                
+            list-
+            [position_x, position_y], the coordinate represents the top-left hand corner of 
+            the Polygon.
 
-            size: list-1*2 matrix-size of the rectangle [width, height].
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
+
+            size: list/point.Point()-
+                
+            list-
+            1*2 matrix-size of the bounding box [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the Polygon.
 
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -3260,7 +3402,7 @@ class load:
             shape_size_list: list of shape_size.
 
             shape_size: a Point object with attributes x and y representing
-            the width and height of the node.
+            the width and height of the shape.
 
         Examples: 
             p = sd.getShapeSize('shape_name')[0]
@@ -3396,7 +3538,7 @@ class load:
         Draw to a PNG/JPG/PDF file.
 
         Args: 
-            setImageSize: list-1*2 matrix-size of the rectangle [width, height].
+            setImageSize: list-1*2 matrix-size of the bounding box [width, height].
 
             scale: float-makes the figure output size = scale * default output size.
             Increasing the scale can make the resolution higher.
@@ -3458,7 +3600,7 @@ class load:
         Get the size of the network(s).
 
         Returns:
-            list-1*2 matrix-size of the rectangle [width, height].
+            list-1*2 matrix-size of the bounding box [width, height].
         
         """ 
         sbmlStr = self.export()
@@ -3663,7 +3805,7 @@ if __name__ == '__main__':
     # df.getNodeAliasNum("ATP")
     # df.setFloatingBoundaryNode("x_1", True)
     # df.setNodePosition("x_0", [100.0, 100.0])
-    df.setNodePosition("x_0", point.Point(100, 100))
+    # df.setNodePosition("x_0", point.Point(100, 100))
     # df.setNodeTextPosition("x_3", [568.0, 229.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
@@ -3707,6 +3849,8 @@ if __name__ == '__main__':
     # df.setReactionCenterPosition("r_1", [449.0, 278.0])
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
     # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
+    # df.setReactionHandlePositions("r_0", [point.Point(334.0, 232.0), 
+    # point.Point(386.0, 231.0), point.Point(282.0, 231.0)])
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # df.setReactionDash("r_0", [6,6])
