@@ -1780,6 +1780,8 @@ class load:
         for alias in range(num_alias):
             cx = p[alias][0] + size[alias][0]/2
             cy = p[alias][1] + size[alias][1]/2
+            print(cx)
+            print(cy)
             position = point.Point(cx, cy) 
             position_list.append(position)
         return position_list
@@ -2302,8 +2304,15 @@ class load:
         Args:  
             id: str-node id.
 
-            position: list-[position_x, position_y], the coordinate represents the top-left hand 
+            position: list/point.Point()-
+            
+            list-
+            [position_x, position_y], the coordinate represents the top-left hand 
             corner of the node.
+
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the bounding box.
 
             alias: int-alias node index [0, num_alias).
         """
@@ -3616,7 +3625,8 @@ if __name__ == '__main__':
     # print(df.getCompartmentBorderWidth("_compartment_default_"))
 
     # print(df.isFloatingNode("x_1"))
-    # print(df.getNodePosition("x_1"))
+    # position = df.getNodePosition("x_1")[0]
+    # print(type(position) == type(point.Point()))
     # print(df.getNodePosition("x_0")[0])
     # print(df.getNodeSize("x_0")[0])
     # print(df.getNodeCenter("x_0")[0])
@@ -3653,6 +3663,7 @@ if __name__ == '__main__':
     # df.getNodeAliasNum("ATP")
     # df.setFloatingBoundaryNode("x_1", True)
     # df.setNodePosition("x_0", [100.0, 100.0])
+    df.setNodePosition("x_0", point.Point(100, 100))
     # df.setNodeTextPosition("x_3", [568.0, 229.0])
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
