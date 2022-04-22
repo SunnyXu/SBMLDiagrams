@@ -1415,14 +1415,14 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
     
     if output_fileName != '':
         output_fileName_lower = str(output_fileName).lower()
-        if '.png' in output_fileName_lower:
+        if '.png' == output_fileName_lower[-4:]:
             fileFormat = 'PNG'
             #fileName = output_fileName.replace('.png', '')
             fileName = output_fileName[:-4]
-        elif '.jpg' in output_fileName_lower:
+        elif '.jpg' == output_fileName_lower[-4:]:
             fileFormat = 'JPEG' 
             fileName = output_fileName[:-4]
-        elif '.pdf' in output_fileName_lower:
+        elif '.pdf' == output_fileName_lower[-4:]:
             fileFormat = 'PDF'
             fileName = output_fileName[:-4]
         else:
