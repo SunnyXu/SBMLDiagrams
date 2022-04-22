@@ -257,7 +257,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
-        setImageSize: list-1*2 matrix-size of the rectangle [width, height].
+        setImageSize: list-1*2 matrix-size of the image [width, height].
 
         scale: float-makes the figure output size = scale * default output size.
         Increasing the scale can make the resolution higher.
@@ -1414,15 +1414,17 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         return floatingNodes_pos_dict, floatingNodes_dim_dict, allNodes_pos_dict, allNodes_dim_dict, edges, arrow_info, name_to_id
     
     if output_fileName != '':
-        if '.png' in output_fileName:
+        output_fileName_lower = str(output_fileName).lower()
+        if '.png' == output_fileName_lower[-4:]:
             fileFormat = 'PNG'
-            fileName = output_fileName.replace('.png', '')
-        elif '.jpg' in output_fileName:
+            #fileName = output_fileName.replace('.png', '')
+            fileName = output_fileName[:-4]
+        elif '.jpg' == output_fileName_lower[-4:]:
             fileFormat = 'JPEG' 
-            fileName = output_fileName.replace('.jpg', '')
-        elif '.pdf' in output_fileName:
+            fileName = output_fileName[:-4]
+        elif '.pdf' == output_fileName_lower[-4:]:
             fileFormat = 'PDF'
-            fileName = output_fileName.replace('.pdf', '')
+            fileName = output_fileName[:-4]
         else:
             raise Exception("Please enter an output fileName ending with .png/.jpg/.pdf.")
     else:
@@ -1443,13 +1445,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         except:
             pass
 
-    if fileFormat == "PDF" and output_fileName.replace('.pdf', '') != '':
+    if fileFormat == "PDF" and fileName != '':
         # if output_fileName == '':
         #     random_string = ''.join(_random.choices(string.ascii_uppercase + string.digits, k=10)) 
         #     fileName = os.path.join(os.getcwd(), random_string)
         #     fileNamepdf = fileName + '.pdf'
         #     stream = skia.FILEWStream(fileNamepdf)
-        fileName = os.path.join(os.getcwd(), output_fileName.replace('.pdf', ''))
+        fileName = os.path.join(os.getcwd(), fileName)
         fileNamepdf = fileName + '.pdf'
         stream = skia.FILEWStream(fileNamepdf)
         fileNamepng = fileName + '.png' #display the file in drawNetwork
@@ -1739,7 +1741,7 @@ def _getNetworkSize(sbmlStr):
         sbmlStr: str-the string of the input sbml file.
 
     Returns:
-        list-1*2 matrix-size of the rectangle [width, height].
+        list-1*2 matrix-size of the network size [width, height].
     
     """ 
     position_topLeft = _getNetworkTopLeftCorner(sbmlStr)
@@ -1761,7 +1763,7 @@ def _getCompartmentPosition(df, id):
     Returns:
         position_list: list of position.
 
-        position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
+        position: list-1*2 matrix-top left-hand corner of the compartment [position_x, position_y].
     """
 
     idx_list = df[0].index[df[0]["id"] == id].tolist()
@@ -1783,7 +1785,7 @@ def _getCompartmentSize(df, id):
     Returns:
         size_list: list of size.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list-1*2 matrix-size of the compartment [width, height].
     """
 
     idx_list = df[0].index[df[0]["id"] == id].tolist()
@@ -1806,7 +1808,7 @@ def _getNodePosition(df, id):
     Returns:
         position_list: list of position.
 
-        position: list-[position_x, position_y]-top left-hand corner of the rectangle.           
+        position: list-[position_x, position_y]-top left-hand corner of the node.           
 
     """
 
@@ -1829,7 +1831,7 @@ def _getNodeSize(df, id):
     Returns:
         size_list: list of size.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list-1*2 matrix-size of the node [width, height].
 
     """
     idx_list = df[1].index[df[1]["id"] == id].tolist()
@@ -1851,7 +1853,7 @@ def _getNodeTextPosition(df, id):
         Returns:
             txt_position_list: list of txt_position.
 
-            txt_position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+            txt_position: list-[position_x, position_y]-top left-hand corner of the node text.
         """
         idx_list = df[1].index[df[1]["id"] == id].tolist()
         txt_position_list =[] 
@@ -1872,7 +1874,7 @@ def _getNodeTextSize(df, id):
     Returns:
         txt_size_list: list of txt_size.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        txt_size: list-1*2 matrix-size of the node text [width, height].
     """
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     txt_size_list =[] 
@@ -1937,7 +1939,7 @@ def _getTextPosition(df, txt_str):
     Returns:
         position_list: list of position.
 
-        position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+        position: list-[position_x, position_y]-top left-hand corner of the text.
     """
 
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
@@ -1958,7 +1960,7 @@ def _getTextSize(df, txt_str):
     Returns:
         txt_size_list: list of txt_size.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        txt_size: list-1*2 matrix-size of text [width, height].
     """
 
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
@@ -1979,7 +1981,7 @@ def _getShapePosition(df, shape_name_str):
     Returns:
         position_list: list of position.
 
-        position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+        position: list-[position_x, position_y]-top left-hand corner of the shape.
     """
 
     idx_list = df[4].index[df[4]["shape_name"] == shape_name_str].tolist()
@@ -2000,7 +2002,7 @@ def _getShapeSize(df, shape_name_str):
     Returns:
         shape_size_list: list of shape_size.
 
-        shape_size: list-1*2 matrix-size of the rectangle [width, height].
+        shape_size: list-1*2 matrix-size of the shape [width, height].
     """
 
     idx_list = df[4].index[df[4]["shape_name"] == shape_name_str].tolist()
@@ -2054,6 +2056,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output.png')
+        _draw(sbmlStr,output_fileName='output.pDF')
 
 

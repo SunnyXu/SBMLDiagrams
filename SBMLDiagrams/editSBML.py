@@ -11,6 +11,7 @@ Created on Mon Aug 23 13:25:34 2021
 import pandas as pd
 import os
 from SBMLDiagrams import processSBML
+from SBMLDiagrams import point
 
 color_data = {"decimal_rgb": ['[240,248,255]', '[250,235,215]', '[0,255,255]', '[127,255,212]', '[240,255,255]', '[245,245,220]', '[255,228,196]', '[0,0,0]', '[255,235,205]', '[0,0,255]', '[138,43,226]', '[165,42,42]', '[222,184,135]', '[95,158,160]', '[127,255,0]', '[210,105,30]', '[255,127,80]', '[100,149,237]', '[255,248,220]', '[220,20,60]', '[0,255,255]', '[0,0,139]', '[0,139,139]', '[184,134,11]', '[169,169,169]', '[0,100,0]', '[189,183,107]', '[139,0,139]', '[85,107,47]', '[255,140,0]', '[153,50,204]', '[139,0,0]', '[233,150,122]', '[143,188,143]', '[72,61,139]', '[47,79,79]', '[0,206,209]', '[148,0,211]', '[255,20,147]', '[0,191,255]', '[105,105,105]', '[30,144,255]', '[178,34,34]', '[255,250,240]', '[34,139,34]', '[255,0,255]', '[220,220,220]', '[248,248,255]', '[255,215,0]', '[218,165,32]', '[128,128,128]', '[0,128,0]', '[173,255,47]', '[240,255,240]', '[255,105,180]', '[205,92,92]', '[75,0,130]', '[255,255,240]', '[240,230,140]', '[230,230,250]', '[255,240,245]', '[124,252,0]', '[255,250,205]', '[173,216,230]', '[240,128,128]', '[224,255,255]', '[250,250,210]', '[144,238,144]', '[211,211,211]', '[255,182,193]', '[255,160,122]', '[32,178,170]', '[135,206,250]', '[119,136,153]', '[176,196,222]', '[255,255,224]', '[0,255,0]', '[50,205,50]', '[250,240,230]', '[255,0,255]', '[128,0,0]', '[102,205,170]', '[0,0,205]', '[186,85,211]', '[147,112,219]', '[60,179,113]', '[123,104,238]', '[0,250,154]', '[72,209,204]', '[199,21,133]', '[25,25,112]', '[245,255,250]', '[255,228,225]', '[255,228,181]', '[255,222,173]', '[0,0,128]', '[253,245,230]', '[128,128,0]', '[107,142,35]', '[255,165,0]', '[255,69,0]', '[218,112,214]', '[238,232,170]', '[152,251,152]', '[175,238,238]', '[219,112,147]', '[255,239,213]', '[255,218,185]', '[205,133,63]', '[255,192,203]', '[221,160,221]', '[176,224,230]', '[128,0,128]', '[255,0,0]', '[188,143,143]', '[65,105,225]', '[139,69,19]', '[250,128,114]', '[244,164,96]', '[46,139,87]', '[255,245,238]', '[160,82,45]', '[192,192,192]', '[135,206,235]', '[106,90,205]', '[112,128,144]', '[255,250,250]', '[0,255,127]', '[70,130,180]', '[210,180,140]', '[0,128,128]', '[216,191,216]', '[255,99,71]', '[64,224,208]', '[238,130,238]', '[245,222,179]', '[255,255,255]', '[245,245,245]', '[255,255,0]', '[154,205,50]'],\
     "html_name":['AliceBlue', 'AntiqueWhite', 'Aqua', 'Aquamarine', 'Azure', 'Beige', 'Bisque', 'Black', 'BlanchedAlmond', 'Blue', 'BlueViolet', 'Brown', 'BurlyWood', 'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue', 'Cornsilk', 'Crimson', 'Cyan', 'DarkBlue', 'DarkCyan', 'DarkGoldenrod', 'DarkGray', 'DarkGreen', 'DarkKhaki', 'DarkMagenta', 'DarkOliveGreen', 'DarkOrange', 'DarkOrchid', 'DarkRed', 'DarkSalmon', 'DarkSeaGreen', 'DarkSlateBlue', 'DarkSlateGray', 'DarkTurquoise', 'DarkViolet', 'DeepPink', 'DeepSkyBlue', 'DimGray', 'DodgerBlue', 'FireBrick', 'FloralWhite', 'ForestGreen', 'Fuchsia', 'Gainsboro', 'GhostWhite', 'Gold', 'Goldenrod', 'Gray', 'Green', 'GreenYellow', 'Honeydew', 'HotPink', 'IndianRed', 'Indigo', 'Ivory', 'Khaki', 'Lavender', 'LavenderBlush', 'LawnGreen', 'LemonChiffon', 'LightBlue', 'LightCoral', 'LightCyan', 'LightGoldenrodYellow', 'LightGreen', 'LightGrey', 'LightPink', 'LightSalmon', 'LightSeaGreen', 'LightSkyBlue', 'LightSlateGray', 'LightSteelBlue', 'LightYellow', 'Lime', 'LimeGreen', 'Linen', 'Magenta', 'Maroon', 'MediumAquamarine', 'MediumBlue', 'MediumOrchid', 'MediumPurple', 'MediumSeaGreen', 'MediumSlateBlue', 'MediumSpringGreen', 'MediumTurquoise', 'MediumVioletRed', 'MidnightBlue', 'MintCream', 'MistyRose', 'Moccasin', 'NavajoWhite', 'Navy', 'OldLace', 'Olive', 'OliveDrab', 'Orange', 'OrangeRed', 'Orchid', 'PaleGoldenrod', 'PaleGreen', 'PaleTurquoise', 'PaleVioletRed', 'PapayaWhip', 'PeachPuff', 'Peru', 'Pink', 'Plum', 'PowderBlue', 'Purple', 'Red', 'RosyBrown', 'RoyalBlue', 'SaddleBrown', 'Salmon', 'SandyBrown', 'SeaGreen', 'Seashell', 'Sienna', 'Silver', 'SkyBlue', 'SlateBlue', 'SlateGray', 'Snow', 'SpringGreen', 'SteelBlue', 'Tan', 'Teal', 'Thistle', 'Tomato', 'Turquoise', 'Violet', 'Wheat', 'White', 'WhiteSmoke', 'Yellow', 'YellowGreen'],\
@@ -56,8 +57,15 @@ def _setCompartmentPosition(df, id, position):
 
         id: str-compartment id.
 
-        position: [position_x, position_y], the coordinate represents the top-left hand corner of 
+        position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
         the compartment.
+
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the compartment.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -67,8 +75,10 @@ def _setCompartmentPosition(df, id, position):
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(position) != list:
+    if type(position) != list and type(position) != type(point.Point()):
         raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"position"] = position
     df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
@@ -85,7 +95,14 @@ def _setCompartmentSize(df, id, size):
 
         id: str-compartment id.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the compartment [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the compartment.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -95,8 +112,10 @@ def _setCompartmentSize(df, id, size):
     idx_list = df[0].index[df[0]["id"] == id].tolist() 
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.") 
-    if type(size) != list:
+    if type(size) != list and type(size) != type(point.Point()):
         raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"size"] = size
     df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
@@ -200,7 +219,7 @@ def _setFloatingBoundaryNode(df, id, floating_node, alias = 0):
 
         floating_node: bool-floating node (True) or not (False).
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -231,9 +250,16 @@ def _setNodePosition(df, id, position, alias = 0):
 
         id: str-node id.
 
-        position: list-[position_x, position_y], the coordinate represents the top-left hand corner of the node. 
+        position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of the node.
 
-        alias: int-alias node index.
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the node.
+
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -243,8 +269,10 @@ def _setNodePosition(df, id, position, alias = 0):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(position) != list:
+    if type(position) != list and type(position) != type(point.Point()):
         raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
     # for i in range(len(idx_list)):
     #     df_NodeData_temp.at[idx_list[i],"position"] = position
     if alias < len(idx_list) and alias >= 0:
@@ -265,9 +293,16 @@ def _setNodeSize(df, id, size, alias = 0):
 
         id: str-node id.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the node [width, height].
 
-        alias: int-alias node index.
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the node.
+
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -277,8 +312,10 @@ def _setNodeSize(df, id, size, alias = 0):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(size) != list:
+    if type(size) != list and type(size) != type(point.Point()):
         raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     # for i in range(len(idx_list)):
     #     df_NodeData_temp.at[idx_list[i],"size"] = size
     if alias < len(idx_list) and alias >= 0:
@@ -301,12 +338,13 @@ def _setNodeShape(df, id, shape, alias = 0):
         id: int-node id.
 
         shape: int/str-
+
         int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
             6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
         str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
             "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
             
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -436,7 +474,7 @@ def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info, alias = 0):
         shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.        
         x represents the percentage of width, and y represents the percentage of height.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     """
     shape_idx = -2 #arbitrary polygon
@@ -542,9 +580,17 @@ def _setNodeTextPosition(df, id, txt_position, alias = 0):
 
         id: str-node id.
 
-        txt_position: [position_x, position_y], the coordinate represents the top-left hand corner of the node text.
+        txt_position: list/point.Point()-
+            
+        list-
+        [txt_position_x, txt_position_y], the coordinate represents the top-left hand 
+        corner of the node text.
 
-        alias: int-alias node index.
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the node text.
+
+        alias: alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -554,8 +600,10 @@ def _setNodeTextPosition(df, id, txt_position, alias = 0):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(txt_position) != list:
-        raise Exception("Please enter a valid text position type.")
+    if type(txt_position) != list and type(txt_position) != type(point.Point()):
+        raise Exception("Please enter a valid txt_position type.")
+    if type(txt_position) == type(point.Point()):
+        txt_position = [txt_position.x, txt_position.y]
     # for i in range(len(idx_list)):
     #     df_NodeData_temp.at[idx_list[i],"txt_position"] = txt_position
     if alias < len(idx_list) and alias >= 0:
@@ -577,7 +625,7 @@ def _setNodeTextPositionCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -638,7 +686,7 @@ def _setNodeTextPositionLeftCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -679,7 +727,7 @@ def _setNodeTextPositionRightCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -720,7 +768,7 @@ def _setNodeTextPositionUpperCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -761,7 +809,7 @@ def _setNodeTextPositionLowerCenter(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index and alias >= 0.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -802,7 +850,7 @@ def _setNodeTextPositionUpperLeft(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -843,7 +891,7 @@ def _setNodeTextPositionUpperRight(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -884,7 +932,7 @@ def _setNodeTextPositionLowerLeft(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -923,7 +971,7 @@ def _setNodeTextPositionLowerRight(df, id, alias = 0):
 
         id: str-node id.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -964,9 +1012,16 @@ def _setNodeTextSize(df, id, txt_size, alias = 0):
 
         id: str-node id.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        txt_size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the node text [width, height].
 
-        alias: int-alias node index.
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the node text.
+
+        alias: alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -976,8 +1031,10 @@ def _setNodeTextSize(df, id, txt_size, alias = 0):
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(txt_size) != list:
-        raise Exception("Please enter a valid text size type.")
+    if type(txt_size) != list and type(txt_size) != type(point.Point()):
+        raise Exception("Please enter a valid txt_size type.")
+    if type(txt_size) == type(point.Point()):
+        txt_size = [txt_size.x, txt_size.y]
     # for i in range(len(idx_list)):
     #     df_NodeData_temp.at[idx_list[i],"txt_size"] = txt_size
     if alias < len(idx_list) and alias >= 0:
@@ -1003,7 +1060,7 @@ def _setNodeFillColor(df, id, fill_color, opacity, alias = 0 ):
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1039,7 +1096,7 @@ def _setNodeFillLinearGradient(df, id, gradient_info, stop_info, alias = 0):
         stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
         where x is floating number from 0 to 100.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     """
     df_NodeData_temp = df[1].copy()
@@ -1104,7 +1161,7 @@ def _setNodeFillRadialGradient(df, id, gradient_info, stop_info, alias = 0):
         stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
         where x is floating number from 0 to 100.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     """
     df_NodeData_temp = df[1].copy()
@@ -1179,7 +1236,7 @@ def _setNodeBorderColor(df, id, border_color, opacity, alias = 0):
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1213,7 +1270,7 @@ def _setNodeBorderWidth(df, id, border_width, alias = 0):
 
         border_width: float-node border line width.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1248,7 +1305,7 @@ def _setNodeTextFontColor(df, id, txt_font_color, opacity, alias = 0):
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1282,7 +1339,7 @@ def _setNodeTextLineWidth(df, id, txt_line_width, alias = 0):
 
         txt_line_width: float-node text line width.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1316,7 +1373,7 @@ def _setNodeTextFontSize(df, id, txt_font_size, alias = 0):
 
         txt_font_size: float-node text font size.
 
-        alias: int-alias node index.
+        alias: int-alias node index [0, num_alias).
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1347,7 +1404,13 @@ def _setReactionCenterPosition(df, id, position):
 
         id: str-reaction id.
         
-        position: list-1*2 matrix-[position_x, position_y]
+        position: list/point.Point()-
+            
+        list-
+        1*2 matrix-[position_x, position_y].
+
+        point.Point()-
+        a Point object with attributes x and y representing the x/y position.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1357,8 +1420,10 @@ def _setReactionCenterPosition(df, id, position):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(position) != list:
+    if type(position) != list and type(position) != type(point.Point()):
         raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"center_pos"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1375,8 +1440,16 @@ def _setReactionHandlePositions(df, id, position):
 
         id: str-reaction id.
         
-        position: list-position of the handles: [center handle, reactant handles, product handles].
+        position: list-position of the handles: [center handle, reactant handle1, ..., product handle1, ...].
+                        
+        center handle/reactant handle1/product handle1: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand 
+        corner of the node.
 
+        point.Point()-
+        a Point object with attributes x and y representing the x/y position.
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -1387,6 +1460,16 @@ def _setReactionHandlePositions(df, id, position):
         raise Exception("This is not a valid id.")
     if type(position) != list:
         raise Exception("Please enter a valid position type.")
+    else:
+        if all(isinstance(item, list) for item in position):
+            pass
+        elif all(type(item) == type(point.Point()) for item in position):
+            position_to_list = []
+            for item in position:
+                position_to_list.append([item.x,item.y])
+            position = position_to_list
+        else:
+            raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"handles"] = position
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1483,7 +1566,14 @@ def _setReactionArrowHeadSize(df, id, size):
     Args:  
         df: DataFrame-initial information.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the arrow head [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the arrow head.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1493,8 +1583,10 @@ def _setReactionArrowHeadSize(df, id, size):
     idx_list = df[2].index[df[2]["id"] == id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(size) != list:
+    if type(size) != list and type(size) != type(point.Point()):
         raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"arrow_head_size"] = size
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
@@ -1597,9 +1689,16 @@ def _setTextPosition(df, txt_str, txt_position):
         df: DataFrame-initial information.
 
         txt_str: str-the text content.
+        
+        txt_position: list/point.Point()-
+            
+        list-
+        [txt_position_x, txt_position_y], the coordinate represents the top-left hand corner of 
+        the node text.
 
-        txt_position: [position_x, position_y], the coordinate represents the top-left hand corner of the node text.
-
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the text.
     Returns:
         df_temp: DataFrame-information after updates. 
     
@@ -1608,8 +1707,10 @@ def _setTextPosition(df, txt_str, txt_position):
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(txt_position) != list:
-        raise Exception("Please enter a valid text position type.")
+    if type(txt_position) != list and type(txt_position) != type(point.Point()):
+        raise Exception("Please enter a valid txt_position type.")
+    if type(txt_position) == type(point.Point()):
+        txt_position = [txt_position.x, txt_position.y]
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_position"] = txt_position
     df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
@@ -1626,7 +1727,14 @@ def _setTextSize(df, txt_str, txt_size):
 
         txt_str: str-the text content.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        txt_size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the text [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the text.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -1636,8 +1744,10 @@ def _setTextSize(df, txt_str, txt_size):
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
-    if type(txt_size) != list:
-        raise Exception("Please enter a valid text size type.")
+    if type(txt_size) != list and type(txt_size) != type(point.Point()):
+        raise Exception("Please enter a valid txt_size type.")
+    if type(txt_size) == type(point.Point()):
+        txt_size = [txt_size.x, txt_size.y]
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_size"] = txt_size
     df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
@@ -1734,10 +1844,24 @@ def _addText(df, txt_str, txt_position, txt_size,
     Args:  
         txt_str: str-the text content.
 
-        txt_position: list-[position_x, position_y], the coordinate represents the top-left hand 
-        corner of the node text.
+        txt_position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the text.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the text.
+
+        txt_size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the text [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the text.
 
         txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1748,6 +1872,14 @@ def _addText(df, txt_str, txt_position, txt_size,
         txt_font_size: float-node text font size.
         
     """
+    if type(txt_position) != list and type(txt_position) != type(point.Point()):
+        raise Exception("Please enter a valid txt_position type.")
+    if type(txt_position) == type(point.Point()):
+        txt_position = [txt_position.x, txt_position.y]
+    if type(txt_size) != list and type(txt_size) != type(point.Point()):
+        raise Exception("Please enter a valid txt_size type.")
+    if type(txt_size) == type(point.Point()):
+        txt_size = [txt_size.x, txt_size.y]
     txt_font_color_rgba = _color_to_rgb(txt_font_color, opacity)
     df_TextData_temp = df[3].copy()
     text_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_TextData}
@@ -1792,10 +1924,24 @@ def _addRectangle(df, shape_name, position, size, fill_color=[255,255,255], fill
     Args:  
         shape_name: str-the name of the rectangle.
 
-        position: list-[position_x, position_y], the coordinate represents the top-left hand 
-        corner of the node text.
+        position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the rectangle.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the rectangle.
+
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the rectangle [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the rectangle.
 
         fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1809,6 +1955,14 @@ def _addRectangle(df, shape_name, position, size, fill_color=[255,255,255], fill
         
     """
 
+    if type(position) != list and type(position) != type(point.Point()):
+        raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
+    if type(size) != list and type(size) != type(point.Point()):
+        raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     fill_color_rgba = _color_to_rgb(fill_color, fill_opacity)
     border_color_rgba = _color_to_rgb(border_color, border_opacity)
     df_ShapeData_temp = df[4].copy()
@@ -1838,10 +1992,24 @@ def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill
     Args:  
         shape_name: str-the name of the ellipse.
 
-        position: list-[position_x, position_y], the coordinate represents the top-left hand 
-        corner of the node text.
+        position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the ellipse.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the ellipse.
+
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the ellipse [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the ellipse.
 
         fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1854,7 +2022,15 @@ def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill
         border_width: float-node text line width.
         
     """
-
+    
+    if type(position) != list and type(position) != type(point.Point()):
+        raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
+    if type(size) != list and type(size) != type(point.Point()):
+        raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     fill_color_rgba = _color_to_rgb(fill_color, fill_opacity)
     border_color_rgba = _color_to_rgb(border_color, border_opacity)
     df_ShapeData_temp = df[4].copy()
@@ -1887,10 +2063,24 @@ def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,
         shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
         x represents the percentage of width, and y represents the percentage of height.
 
-        position: list-[position_x, position_y], the coordinate represents the top-left hand 
-        corner of the node text.
+        position: list/point.Point()-
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the Polygon.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the polygon.
+
+        size: list/point.Point()-
+            
+        list-
+        1*2 matrix-size of the polygon [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the Polygon.
 
         fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1904,6 +2094,14 @@ def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,
         
     """
 
+    if type(position) != list and type(position) != type(point.Point()):
+        raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
+    if type(size) != list and type(size) != type(point.Point()):
+        raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
     fill_color_rgba = _color_to_rgb(fill_color, fill_opacity)
     border_color_rgba = _color_to_rgb(border_color, border_opacity)
     df_ShapeData_temp = df[4].copy()
