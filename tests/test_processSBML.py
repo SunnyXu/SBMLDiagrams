@@ -1292,9 +1292,9 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return
 
-    self.assertTrue(self.df.getNetworkTopLeftCorner() == [205.0, 216.0])
-    self.assertTrue(self.df.getNetworkBottomRightCorner() == [463.0, 246.0])
-    self.assertTrue(self.df.getNetworkSize() == [258, 30])
+    self.assertTrue(self.df.getNetworkTopLeftCorner().x == [205.0, 216.0][0])
+    self.assertTrue(self.df.getNetworkBottomRightCorner().x == [463.0, 246.0][0])
+    self.assertTrue(self.df.getNetworkSize().x == [258, 30][0])
 
   def testGetIds(self):
     # Test the functions for getting ids

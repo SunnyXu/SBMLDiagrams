@@ -257,7 +257,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
-        setImageSize: list-1*2 matrix-size of the rectangle [width, height].
+        setImageSize: list-1*2 matrix-size of the image [width, height].
 
         scale: float-makes the figure output size = scale * default output size.
         Increasing the scale can make the resolution higher.
@@ -1741,7 +1741,7 @@ def _getNetworkSize(sbmlStr):
         sbmlStr: str-the string of the input sbml file.
 
     Returns:
-        list-1*2 matrix-size of the rectangle [width, height].
+        list-1*2 matrix-size of the network size [width, height].
     
     """ 
     position_topLeft = _getNetworkTopLeftCorner(sbmlStr)
@@ -1763,7 +1763,7 @@ def _getCompartmentPosition(df, id):
     Returns:
         position_list: list of position.
 
-        position: list-1*2 matrix-top left-hand corner of the rectangle [position_x, position_y].
+        position: list-1*2 matrix-top left-hand corner of the compartment [position_x, position_y].
     """
 
     idx_list = df[0].index[df[0]["id"] == id].tolist()
@@ -1785,7 +1785,7 @@ def _getCompartmentSize(df, id):
     Returns:
         size_list: list of size.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list-1*2 matrix-size of the compartment [width, height].
     """
 
     idx_list = df[0].index[df[0]["id"] == id].tolist()
@@ -1808,7 +1808,7 @@ def _getNodePosition(df, id):
     Returns:
         position_list: list of position.
 
-        position: list-[position_x, position_y]-top left-hand corner of the rectangle.           
+        position: list-[position_x, position_y]-top left-hand corner of the node.           
 
     """
 
@@ -1831,7 +1831,7 @@ def _getNodeSize(df, id):
     Returns:
         size_list: list of size.
 
-        size: list-1*2 matrix-size of the rectangle [width, height].
+        size: list-1*2 matrix-size of the node [width, height].
 
     """
     idx_list = df[1].index[df[1]["id"] == id].tolist()
@@ -1853,7 +1853,7 @@ def _getNodeTextPosition(df, id):
         Returns:
             txt_position_list: list of txt_position.
 
-            txt_position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+            txt_position: list-[position_x, position_y]-top left-hand corner of the node text.
         """
         idx_list = df[1].index[df[1]["id"] == id].tolist()
         txt_position_list =[] 
@@ -1874,7 +1874,7 @@ def _getNodeTextSize(df, id):
     Returns:
         txt_size_list: list of txt_size.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        txt_size: list-1*2 matrix-size of the node text [width, height].
     """
     idx_list = df[1].index[df[1]["id"] == id].tolist()
     txt_size_list =[] 
@@ -1939,7 +1939,7 @@ def _getTextPosition(df, txt_str):
     Returns:
         position_list: list of position.
 
-        position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+        position: list-[position_x, position_y]-top left-hand corner of the text.
     """
 
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
@@ -1960,7 +1960,7 @@ def _getTextSize(df, txt_str):
     Returns:
         txt_size_list: list of txt_size.
 
-        txt_size: list-1*2 matrix-size of the rectangle [width, height].
+        txt_size: list-1*2 matrix-size of text [width, height].
     """
 
     idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
@@ -1981,7 +1981,7 @@ def _getShapePosition(df, shape_name_str):
     Returns:
         position_list: list of position.
 
-        position: list-[position_x, position_y]-top left-hand corner of the rectangle.
+        position: list-[position_x, position_y]-top left-hand corner of the shape.
     """
 
     idx_list = df[4].index[df[4]["shape_name"] == shape_name_str].tolist()
@@ -2002,7 +2002,7 @@ def _getShapeSize(df, shape_name_str):
     Returns:
         shape_size_list: list of shape_size.
 
-        shape_size: list-1*2 matrix-size of the rectangle [width, height].
+        shape_size: list-1*2 matrix-size of the shape [width, height].
     """
 
     idx_list = df[4].index[df[4]["shape_name"] == shape_name_str].tolist()
