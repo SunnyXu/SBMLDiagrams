@@ -384,7 +384,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                     #prd_specGlyph_list.append(prd_specGlyph_temp_list)
                     #
-                    reaction_center_handle_list.append(center_handle[0])
+
+                    if len(center_handle) != 0:
+                        reaction_center_handle_list.append(center_handle[0])
+                    else:
+                        #raise Exception("Can not find center handle information to process.")
+                        reaction_center_handle_list.append([])
+
                     rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
                     prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
                     mod_specGlyph_list.append(mod_specGlyph_temp_list)
@@ -3746,7 +3752,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3790,7 +3796,7 @@ if __name__ == '__main__':
     #filename = "putida_gb_newgenes.xml"
 
     #filename = "bart2.xml"
-    #filename = "bart_arccenter.xml"
+    filename = "bart_arccenter.xml"
     #filename = "bart_spRefBezier.xml"
     #filename = "newSBML.xml"
     #filename = "output.xml"

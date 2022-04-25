@@ -527,7 +527,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             
                         #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                         #prd_specGlyph_list.append(prd_specGlyph_temp_list)
-                        reaction_center_handle_list.append(center_handle[0])
+
+                        if len(center_handle) != 0:
+                            reaction_center_handle_list.append(center_handle[0])
+                        else:
+                            #raise Exception("Can not find center handle information to process.")
+                            reaction_center_handle_list.append([])
+
                         rct_specGlyph_handle_list.append(rct_specGlyph_handles_temp_list)
                         prd_specGlyph_handle_list.append(prd_specGlyph_handles_temp_list) 
                         mod_specGlyph_list.append(mod_specGlyph_temp_list)
