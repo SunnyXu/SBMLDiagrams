@@ -3559,7 +3559,7 @@ class load:
         elif layout == "random":
             pos = nx.random_layout(graph, center=center)
         elif layout == "circular":
-            pos = nx.circular_layout(graph, scale=scale, center=center, iterations=iterations)
+            pos = nx.circular_layout(graph, scale=scale, center=center)
         else:
             raise Exception("no such layout")
 
