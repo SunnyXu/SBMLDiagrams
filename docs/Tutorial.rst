@@ -259,7 +259,7 @@ Tutorial
 
    df.draw(output_fileName = 'output-SBGN2.png', scale = 2)
 
-7) Interface to color style: loading the color style information from a JSON file.
+7) Interface to color style, i.e. loading the color style information from a JSON file.
 
 .. code-block:: python
 

@@ -385,9 +385,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     #prd_specGlyph_list.append(prd_specGlyph_temp_list)
                     #
 
-                    if len(center_handle) != 0:
+                    try:
                         reaction_center_handle_list.append(center_handle[0])
-                    else:
+                    except:
                         #raise Exception("Can not find center handle information to process.")
                         reaction_center_handle_list.append([])
 
