@@ -19,7 +19,7 @@ using any of the code, please cite the PYPI web page (https://pypi.org/project/S
 
 Here is a figure example visualized by SBMLDiagrams below:
 
-<img src="https://github.com/SunnyXu/SBMLDiagrams/blob/main/docs/Figures/Jana_WolfGlycolysis.png" width="350" height="450">
+<img src="https://github.com/SunnyXu/SBMLDiagrams/blob/main/docs/Figures/Introduction/Jana_WolfGlycolysis.png" width="350" height="450">
 
 Its animation is also available at https://youtu.be/3pFvLbtRBnQ. 
 Please see more figure examples in the documentation.
