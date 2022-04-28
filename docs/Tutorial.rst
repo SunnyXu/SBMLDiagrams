@@ -404,5 +404,5 @@ The file style.json:
    f = open(os.path.join(DIR, filename), 'r')
    sbmlStr = f.read()
    f.close()
-   SBMLDiagrams.animate(0,30,10, r, 0.5, sbmlStr=sbmlStr, outputName="output")
+   SBMLDiagrams.animate(0,30,1000, r, 0.5, sbmlStr=sbmlStr, outputName="output")
 
