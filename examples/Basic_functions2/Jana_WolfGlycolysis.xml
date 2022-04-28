@@ -67,11 +67,11 @@
       <reaction id="J1" reversible="true" fast="false">
         <listOfReactants>
           <speciesReference id="SpecRef_J1_rct0" species="Glucose" constant="false"/>
-          <speciesReference id="SpecRef_J1_rct1" species="ATP" constant="false"/>
+          <speciesReference id="SpecRef_J1_rct1" species="ATP" constant="false" stoichiometry="2"/>
         </listOfReactants>
         <listOfProducts>
           <speciesReference id="SpecRef_J1_prd0" species="fructose_1_6_bisphosphate" constant="false"/>
-          <speciesReference id="SpecRef_J1_prd1" species="ADP" constant="false"/>
+          <speciesReference id="SpecRef_J1_prd1" species="ADP" constant="false" stoichiometry="2"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -107,6 +107,7 @@
         </listOfReactants>
         <listOfProducts>
           <speciesReference id="SpecRef_J2_prd0" species="glyceraldehyde_3_phosphate" constant="false"/>
+          <speciesReference id="SpecRef_J2_prd1" species="glyceraldehyde_3_phosphate" constant="false"/>
         </listOfProducts>
         <kineticLaw>
           <math xmlns="http://www.w3.org/1998/Math/MathML">
