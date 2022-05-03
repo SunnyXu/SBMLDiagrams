@@ -1119,6 +1119,7 @@ class TestImportSBML(unittest.TestCase):
     txt_position_upperRight = [255.0, 186.0]
     txt_position_lowerLeft = [155.0, 246.0]
     txt_position_lowerRight = [255.0, 246.0]
+    mv_position = [1., 1.]
 
     self.df.setNodeTextPositionCenter("x_0")
     self.assertTrue(self.df.getNodeTextPosition("x_0")[0].x == txt_position_center[0])
@@ -1138,6 +1139,9 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeTextPosition("x_0")[0].x == txt_position_lowerLeft[0])
     self.df.setNodeTextPositionLowerRight("x_0")
     self.assertTrue(self.df.getNodeTextPosition("x_0")[0].x == txt_position_lowerRight[0])
+    self.df.moveNodeTextPosition("x_0", mv_position)
+    self.assertTrue(self.df.getNodeTextPosition("x_0")[0].x == 
+    txt_position_lowerRight[0] + mv_position[0])
 
 
   def testSetReaction(self):

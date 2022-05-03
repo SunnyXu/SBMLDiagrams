@@ -2505,6 +2505,36 @@ class load:
         self.df = editSBML._setNodeTextPosition(self.df, id, txt_position, alias=alias)
         #return self.df
 
+    def moveNodeTextPosition(self, id, rel_position, alias = 0):
+        """
+        Move the x,y coordinates of the node text position relative to its original position.
+
+        Args:  
+            id: str-node id.
+
+            rel_position: list/point.Point()-
+                
+            list-
+            [rel_position_x, rel_position_y], the relative coordinates moving away from the 
+            original node text position.
+
+            point.Point()-
+            a Point object with attributes x and y representing the relative coordinates moving 
+            away from the original node text position.
+
+            alias: alias node index [0, num_alias).
+
+        """
+        original_position = visualizeSBML._getNodeTextPosition(self.df, id)[alias]
+        if type(rel_position) != list and type(rel_position) != type(point.Point()):
+            raise Exception("Please enter a valid rel_position type.")
+        if type(rel_position) == type(point.Point()):
+            rel_position = [rel_position.x, rel_position.y]
+        update_position = [original_position[0] + rel_position[0], 
+                            original_position[1] + rel_position[1]]
+        self.df = editSBML._setNodeTextPosition(self.df, id, update_position, alias=alias)
+        #return self.df
+
     def setNodeTextPositionCenter(self, id, alias = 0):
         """
         Set the node text position as the center of the node.
@@ -3779,7 +3809,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3794,7 +3824,7 @@ if __name__ == '__main__':
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
     #node shape:
-    #filename = "rectangle.xml"
+    filename = "rectangle.xml"
     #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
@@ -3869,7 +3899,7 @@ if __name__ == '__main__':
     # print(df.getNodeSize("x_0")[0])
     # print(df.getNodeCenter("x_0")[0])
     # print(df.getNodeShape("x_0"))
-    # print(df.getNodeTextPosition("x_0")[0])
+    #print(df.getNodeTextPosition("x_0")[0])
     # print(df.getNodeTextSize("x_0"))
     # print(df.getNodeFillColor("Species_1"))
     # print(df.getNodeBorderColor("x_1"))
@@ -3906,11 +3936,12 @@ if __name__ == '__main__':
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
     # df.setNodeShape("x_0",0)
-    #df.setNodeShape("x_0","downTriangle")
-    #df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
+    # df.setNodeShape("x_0","downTriangle")
+    # df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
     # df.setNodeShape("x_0","ellipse")
     # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
+    #df.moveNodeTextPosition("x_0", point.Point(0,0))
     #df.setNodeTextPositionCenter("x_0")
     #df.setNodeTextPositionLeftCenter("x_0")
     #df.setNodeTextPositionRightCenter("x_0")
@@ -3920,7 +3951,8 @@ if __name__ == '__main__':
     #df.setNodeTextPositionUpperRight("x_0")
     #df.setNodeTextPositionLowerLeft("x_0")
     #df.setNodeTextPositionLowerRight("x_0")
-    #print(df.getNodeTextPosition("x_0"))
+    #df.setNodeTextPosition("x_0", [160., 107.])
+    #print(df.getNodeTextPosition("x_0")[0])
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     #df.setNodeFillLinearGradient("Species_1", [[0.0, 0.0], [100.0, 100.0]], [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
@@ -3990,5 +4022,5 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.draw(output_fileName = 'output.png', scale = 2.)
+    df.draw(output_fileName = 'output.png', scale = 2.)
 
