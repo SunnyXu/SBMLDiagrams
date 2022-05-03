@@ -13,7 +13,6 @@ import libsbml
 import math
 import random as _random
 import pandas as pd
-from sympy import nonlinsolve
 from SBMLDiagrams import exportSBML
 from SBMLDiagrams import editSBML
 from SBMLDiagrams import visualizeSBML
