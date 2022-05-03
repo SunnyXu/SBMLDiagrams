@@ -13,6 +13,7 @@ import libsbml
 import math
 import random as _random
 import pandas as pd
+from sympy import nonlinsolve
 from SBMLDiagrams import exportSBML
 from SBMLDiagrams import editSBML
 from SBMLDiagrams import visualizeSBML
@@ -3746,13 +3747,37 @@ class load:
         shape_name_list = self.df[4]["shape_name"].tolist()
         return shape_name_list
 
-    
+    def hasLayout(self):
+        """
+        Judge whether there is layout in the sbml or not.
+
+        Returns:
+            flag: bool-true (there is layout) or false (there is no layout). 
+        """
+
+        flag = True
+        sbmlStr = self.sbmlstr
+        document = libsbml.readSBMLFromString(sbmlStr)
+        if document.getNumErrors() != 0:
+            errMsgRead = document.getErrorLog().toString()
+            raise Exception("Errors in SBML Model: ", errMsgRead)
+        model_layout = document.getModel()
+        try:
+            mplugin = model_layout.getPlugin("layout")
+            layout = mplugin.getLayout(0)
+            if layout == None:
+                flag = False
+        except:
+            flag = False
+
+        return flag
+  
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3796,13 +3821,15 @@ if __name__ == '__main__':
     #filename = "putida_gb_newgenes.xml"
 
     #filename = "bart2.xml"
-    filename = "bart_arccenter.xml"
+    #filename = "bart_arccenter.xml"
     #filename = "bart_spRefBezier.xml"
     #filename = "newSBML.xml"
     #filename = "output.xml"
     #filename = "Coyote.xml"
     #filename = "newSBML2.xml"
     #filename = "coyote2.xml"
+
+    #filename = "BIOMD0000000006.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -3952,6 +3979,8 @@ if __name__ == '__main__':
     # print(df.getTextContentList())
     # print(df.getCompartmentIdList())
 
+    # print(df.hasLayout())
+
     # sbmlStr_layout_render = df.export()
 
     # f = open("output.xml", "w")
@@ -3959,5 +3988,5 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output.png')
+    # df.draw(output_fileName = 'output.png', scale = 2.)
 

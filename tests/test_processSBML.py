@@ -1309,6 +1309,15 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df_text.getTextContentList() == ['text_content1', 'text_content2'])
     self.assertTrue(self.df_shape.getShapeNameList() == ['shape_name'])
 
+  def testHasLayout(self):
+    # Test the functions of hasLayout()
+
+    if IGNORE_TEST:
+      return
+
+    self.assertTrue(self.df.hasLayout() == True)
+
+
   # def testText(self):
   #   # set text one by one
   #   if IGNORE_TEST:
