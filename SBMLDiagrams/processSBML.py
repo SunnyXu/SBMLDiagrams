@@ -2358,6 +2358,9 @@ class load:
     def setNodeAndTextPosition(self, id, position, alias = 0):
         """
         Set the x,y coordinates of the node position and node text position if they are consistent.
+        Please only use this function if you want to design the node position and node text 
+        position to be the same, otherwise use setNodePosition() and setNodeTextPosition() 
+        separately to set the position of the node and the node text.
 
         Args:  
             id: str-node id.
