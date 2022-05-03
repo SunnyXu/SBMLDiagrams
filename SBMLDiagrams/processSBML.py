@@ -2357,7 +2357,7 @@ class load:
 
     def setNodeAndTextPosition(self, id, position, alias = 0):
         """
-        Set the x,y coordinates of the node and node text position if there are consistent.
+        Set the x,y coordinates of the node position and node text position if they are consistent.
 
         Args:  
             id: str-node id.
@@ -2366,11 +2366,11 @@ class load:
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of the 
-            node and text.
+            node and the node text.
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the node and text.
+            the x/y position of the top-left hand corner of the node and the node text.
 
             alias: int-alias node index [0, num_alias).
 
