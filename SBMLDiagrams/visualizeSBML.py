@@ -1542,8 +1542,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[1] = text_temp_position[j][1]
     for i in range(numComps):
         if Comps_ids[i] != "_compartment_default_":
-            comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])[0]
-            comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])[0]
+            comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
+            comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
             if comp_temp_fill_color[0] != [255,255,255,255] or \
                 comp_temp_border_color[0] != [255,255,255,255]:
                 comp_temp_position = _getCompartmentPosition(_df, Comps_ids[i])[0]
@@ -1683,8 +1683,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[1] = text_temp_position[1]
     for i in range(numComps):
         if Comps_ids[i] != "_compartment_default_":
-            comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])[0]
-            comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])[0]
+            comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
+            comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
             if comp_temp_fill_color[0] != [255,255,255,255] or \
             comp_temp_border_color[0] != [255,255,255,255]:
                 comp_temp_size = _getCompartmentSize(_df, Comps_ids[i])[0]
