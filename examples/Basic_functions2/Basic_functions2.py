@@ -10,19 +10,20 @@ with open(os.path.join(dirname, filename), 'r', encoding="utf8") as f:
 
 la = SBMLDiagrams.load(sbmlStr)
 
-def createCircleNode (la, id, alias=0):
+def createCircleNode (la, id):
     #get center and size of the node
-    center_list = la.getNodeCenter(id)
 
-    if len(center_list) == 1:
+    num_alias = la.getNodeAliasNum(id)
+
+    if num_alias == 1:
         # Change the node size and corectly adjust for the new position
-        center = center_list[0]
+        center = la.getNodeCenter(id)
         la.setNodeSize(id, [18, 18])
         la.setNodePosition(id, [center.x-9, center.y-9])
 
         # get the new position and size
-        p = la.getNodePosition(id)[alias]     
-        size = la.getNodeSize(id)[alias]
+        p = la.getNodePosition(id)    
+        size = la.getNodeSize(id)
 
         # Position thetrext just outside the node
         q = [p.x + 1.2*size.x, p.y-5]
@@ -31,16 +32,15 @@ def createCircleNode (la, id, alias=0):
         la.setNodeShape(id, 'ellipse')
         la.setNodeBorderWidth (id, 0) 
     else:
-        num_alias = len(center_list)
         for alias in range(num_alias):
             # Change the node size and corectly adjust for the new position
-            center = center_list[alias]
+            center = la.getNodeCenter(id, alias = alias)
             la.setNodeSize(id, [18, 18], alias = alias)
             la.setNodePosition(id, [center.x-9, center.y-9], alias = alias)
 
             # get the new position and size
-            p = la.getNodePosition(id)[alias]     
-            size = la.getNodeSize(id)[alias]
+            p = la.getNodePosition(id, alias = alias)   
+            size = la.getNodeSize(id, alias = alias)
 
             # Position thetrext just outside the node
             q = [p.x + 1.2*size.x, p.y-5]

@@ -1768,8 +1768,8 @@ class load:
         p = visualizeSBML._getNodePosition(self.df, id)
         num_alias = len(p)
         position_list = []
-        for alias in range(num_alias):
-            position = point.Point (p[alias][0], p[alias][1])
+        for i in range(num_alias):
+            position = point.Point (p[i][0], p[i][1])
             position_list.append(position)
         if len(position_list) == 0:
             raise Exception("This is not a valid id.")
@@ -1806,9 +1806,9 @@ class load:
         size = visualizeSBML._getNodeSize(self.df, id)
         num_alias = len(p)
         position_list = []
-        for alias in range(num_alias):
-            cx = p[alias][0] + size[alias][0]/2
-            cy = p[alias][1] + size[alias][1]/2
+        for i in range(num_alias):
+            cx = p[i][0] + size[i][0]/2
+            cy = p[i][1] + size[i][1]/2
             position = point.Point(cx, cy) 
             position_list.append(position)
         if len(position_list) == 0:
@@ -1844,8 +1844,8 @@ class load:
         p = visualizeSBML._getNodeSize (self.df, id)
         num_alias = len(p)
         size_list = []
-        for alias in range(num_alias):
-            size = point.Point (p[alias][0], p[alias][1])
+        for i in range(num_alias):
+            size = point.Point (p[i][0], p[i][1])
             size_list.append(size)
         if len(size_list) == 0:
             raise Exception("This is not a valid id.")
@@ -1926,8 +1926,8 @@ class load:
         p = visualizeSBML._getNodeTextPosition(self.df, id)
         num_alias = len(p)
         txt_position_list = []
-        for alias in range(num_alias):
-            txt_position = point.Point (p[alias][0], p[alias][1])
+        for i in range(num_alias):
+            txt_position = point.Point (p[i][0], p[i][1])
             txt_position_list.append(txt_position)
         if len(txt_position_list) == 0:
             raise Exception("This is not a valid id.")
@@ -1962,8 +1962,8 @@ class load:
         p = visualizeSBML._getNodeTextSize(self.df, id)
         num_alias = len(p)
         txt_size_list = []
-        for alias in range(num_alias):
-            txt_size = point.Point (p[alias][0], p[alias][1])
+        for i in range(num_alias):
+            txt_size = point.Point (p[i][0], p[i][1])
             txt_size_list.append(txt_size)
         if len(txt_size_list) == 0:
             raise Exception("This is not a valid id.")
@@ -2168,10 +2168,10 @@ class load:
         """
 
         p = visualizeSBML._getReactionCenterPosition(self.df, id)
-        num_alias = len(p)
+        num = len(p)
         center_position_list = []
-        for alias in range(num_alias):
-            center_position = point.Point (p[alias][0], p[alias][1])
+        for i in range(num):
+            center_position = point.Point (p[i][0], p[i][1])
             center_position_list.append(center_position)
         if len(center_position_list) == 1:
             center_position = center_position_list[0]
@@ -2196,12 +2196,12 @@ class load:
         """
 
         p = visualizeSBML._getReactionHandlePositions(self.df, id)
-        num_alias = len(p)
+        num = len(p)
         handle_position_list = []
-        for alias in range(num_alias):
+        for j in range(num):
             handle_position = []
-            for i in range(len(p[alias])):
-                handle_position.append(point.Point(p[alias][i][0], p[alias][i][1]))
+            for i in range(len(p[j])):
+                handle_position.append(point.Point(p[j][i][0], p[j][i][1]))
             handle_position_list.append(handle_position)
 
         if len(handle_position_list) == 1:
@@ -3943,13 +3943,13 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
 
-    #filename = "Jana_WolfGlycolysis.xml"
+    filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml" 
     #filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
     #node shape:
-    filename = "rectangle.xml"
+    #filename = "rectangle.xml"
     #filename = "triangle.xml"
     #filename = "ellipse.xml"
     #filename = "line.xml"
