@@ -1734,10 +1734,14 @@ class load:
         """
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         floating_node_list =[] 
+        if len(idx_list) == 0:
+            raise Exception("This is not a valid id.")
         for i in range(len(idx_list)):
             floating_node_list.append(bool(self.df[1].iloc[idx_list[i]]["floating_node"]))
-
-        floating_node = floating_node_list[alias]
+        if alias < len(idx_list) and alias >= 0:
+            floating_node = floating_node_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
         return floating_node
 
 
@@ -1767,7 +1771,13 @@ class load:
         for alias in range(num_alias):
             position = point.Point (p[alias][0], p[alias][1])
             position_list.append(position)
-        position = position_list[alias]
+        if len(position_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(position_list) and alias >= 0:
+            position = position_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        
         return position
 
 
@@ -1801,7 +1811,13 @@ class load:
             cy = p[alias][1] + size[alias][1]/2
             position = point.Point(cx, cy) 
             position_list.append(position)
-        position = position_list[alias]
+        if len(position_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(position_list) and alias >= 0:
+            position = position_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        
         return position
         
 
@@ -1831,7 +1847,13 @@ class load:
         for alias in range(num_alias):
             size = point.Point (p[alias][0], p[alias][1])
             size_list.append(size)
-        size =  size_list[alias]
+        if len(size_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(size_list) and alias >= 0:
+            size =  size_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        
         return size
 
     def getNodeShape(self, id, alias = 0):
@@ -1872,8 +1894,12 @@ class load:
                     vertex.append([vertex_x,vertex_y])         
 
             shape_list.append((shape_name, vertex))
-
-        shape = shape_list[alias]
+        if len(shape_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(shape_list) and alias >= 0:
+            shape =  shape_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
         return shape
 
 
@@ -1903,8 +1929,13 @@ class load:
         for alias in range(num_alias):
             txt_position = point.Point (p[alias][0], p[alias][1])
             txt_position_list.append(txt_position)
+        if len(txt_position_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(txt_position_list) and alias >= 0:
+            txt_position =  txt_position_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        txt_position = txt_position_list[alias]
         return txt_position
 
         
@@ -1934,8 +1965,13 @@ class load:
         for alias in range(num_alias):
             txt_size = point.Point (p[alias][0], p[alias][1])
             txt_size_list.append(txt_size)
+        if len(txt_size_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(txt_size_list) and alias >= 0:
+            txt_size =  txt_size_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        txt_size = txt_size_list[alias]
         return txt_size
 
 
@@ -1965,8 +2001,12 @@ class load:
             else:
                 color = _rgb_to_color(rgb)
             fill_color_list.append(color)
-
-        fill_color = fill_color_list[alias]
+        if len(fill_color_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(fill_color_list) and alias >= 0:
+            fill_color = fill_color_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
         return fill_color
 
 
@@ -1991,7 +2031,13 @@ class load:
             rgb = self.df[1].iloc[idx_list[i]]["border_color"]
             color = _rgb_to_color(rgb)
             border_color_list.append(color)
-        border_color = border_color_list[alias]
+        if len(border_color_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(border_color_list) and alias >= 0:
+            border_color =  border_color_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+
         return border_color
 
 
@@ -2012,8 +2058,13 @@ class load:
         border_width_list =[] 
         for i in range(len(idx_list)):
             border_width_list.append(self.df[1].iloc[idx_list[i]]["border_width"])
+        if len(border_width_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(border_width_list) and alias >= 0:
+            border_width =  border_width_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        border_width = border_width_list[alias]
         return border_width
 
     def getNodeTextFontColor(self, id, alias = 0):
@@ -2037,8 +2088,13 @@ class load:
             rgb = self.df[1].iloc[idx_list[i]]["txt_font_color"]
             color = _rgb_to_color(rgb)
             txt_font_color_list.append(color)
+        if len(txt_font_color_list) == 0:
+            raise Exception("This is not a valid id.")
 
-        txt_font_color = txt_font_color_list[alias]
+        if alias < len(txt_font_color_list) and alias >= 0:
+            txt_font_color =  txt_font_color_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
         return txt_font_color
 
     def getNodeTextLineWidth(self, id, alias = 0):
@@ -2058,8 +2114,13 @@ class load:
         txt_line_width_list =[] 
         for i in range(len(idx_list)):
             txt_line_width_list.append(self.df[1].iloc[idx_list[i]]["txt_line_width"])
+        if len(txt_line_width_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(txt_line_width_list) and alias >= 0:
+            txt_line_width =  txt_line_width_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        txt_line_width = txt_line_width_list[alias]
         return txt_line_width
 
     def getNodeTextFontSize(self, id, alias = 0):
@@ -2079,8 +2140,13 @@ class load:
         txt_font_size_list =[] 
         for i in range(len(idx_list)):
             txt_font_size_list.append(float(self.df[1].iloc[idx_list[i]]["txt_font_size"]))
+        if len(txt_font_size_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(txt_font_size_list) and alias >= 0:
+            txt_font_size =  txt_font_size_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        txt_font_size = txt_font_size_list[alias]
         return txt_font_size
 
     def getReactionCenterPosition(self, id):
