@@ -3704,7 +3704,7 @@ class load:
 
     def export(self):
         """
-        Write to an SBML string. 
+        Generates an SBML string for the current model.
 
         Returns:
             SBMLStr_layout_render: str-the string of the output sbml file. 
@@ -3728,17 +3728,19 @@ class load:
 
     def getColorStyle(self):
         """
-        Get the current color style.
+        Returns an object representing the current color style.
 
         Returns: 
             The current color style.
         
+        Example:
+            la.getColorStyle().getStyleName()
         """
         return self.color_style
 
     def getColorStyleJson(self, filename = None):
         """
-        Get the current color style in json format and save to a json file if need
+        Get the current color style in json format and save to a json file if need be.
 
         Returns:
             The current color style. in json format
@@ -3972,7 +3974,7 @@ class load:
 
     def getShapeNameList(self):
         """
-        Returns a list of arbitrary shape names.
+        Returns a list of possible shape names.
 
         Returns:
             shape_name_list-list of shape_name.
