@@ -1540,8 +1540,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
 class load:
     """
-    Load SBML string for further process, i.e. read, edit, visualize the SBML string or
-    export it to an updated SBML string.
+    Load SBML string for further processing, i.e. read, edit, visualize the SBML string or
+    export it as an updated SBML string.
 
     Args: 
         sbmlstr: str-the SBML string.
@@ -3752,7 +3752,7 @@ class load:
         """
         Autolayout the node positions using networkX library.
 
-        layout: str-the layout name from networkX, including
+        layout: str-the layout name from networkX, which can be one of the following:
 
             spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
 
@@ -3762,9 +3762,9 @@ class load:
         
             circular: positioning nodes on a circle.
 
-        scale: float-the scale factor for positions. 
+        scale: float-the scaling factor to use
         
-        iterations: int-maximum number of iterations taken.             
+        iterations: int-maximum number of iterations to use during the calculation             
         
         """
 
@@ -3822,26 +3822,26 @@ class load:
         Draw to a PNG/JPG/PDF file.
 
         Args: 
-            setImageSize: list-1*2 matrix-size of the image [width, height].
+            setImageSize: list-containing two elements indicating the szie of the image (if bitmap) [width, height].
 
-            scale: float-makes the figure output size = scale * default output size.
-            Increasing the scale can make the resolution higher.
+            scale: float-determines the figure output size = scale * default output size.
+            Increasing the scale will make the resolution higher.
 
             output_fileName: str-filename: '' (default: will not save the file), 
-            or 'fileName.png' (self-designed file name) which has to end up with '.png', '.jpg', or 'pdf'.
+            or eg 'fileName.png'. Allowable extensions include '.png', '.jpg', or 'pdf'.
 
             reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
             If there is no layout information from the SBML file, all reaction lines will look like
-            straight lines even set as 'bezier' because they are set as default center and handle positions.
+            straight lines even when using 'bezier' curves.
 
             showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
             showReactionIds: bool-show the reaction ids (True) or not (False as default).
 
-            showReversible: bool-show the reaction reversible (True) or not (False as default).
+            showReversible: bool-show whether the reaction is reversible (True) or not (False as default).
 
-            longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
-            node; 'ellipsis' will show '....' if the text is too long to show in the node
+            longText: str-'auto-font'(default) will automatically decrease the font size to fit the 
+            current dimensions of the node; 'ellipsis' will show '....' if the text is too long to fit the node
         
         """
 
@@ -3855,11 +3855,11 @@ class load:
 
     def getNetworkTopLeftCorner(self):
         """
-        Get the top left-hand corner of the network(s) from the SBML string.
+        Returns the top left-hand corner of the network from the SBML string.
 
         Returns:   
             position: a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the network(s).
+            the x/y position of the top-left hand corner of the network.
         Examples:
             p = sd.getNetworkTopLeftConer()
                 
@@ -3873,11 +3873,11 @@ class load:
 
     def getNetworkBottomRightCorner(self):
         """
-        Get the bottom right-hand corner of the network(s) from the SBML string.
+        Returns the bottom right-hand corner of the network from the SBML string.
 
         Returns:
             position: a Point object with attributes x and y representing
-            the x/y position of the bottom-right hand corner of the network(s).
+            the x/y position of the bottom-right hand corner of the network.
 
         Examples:
             p = sd.getNetworkBottomRightConer()
@@ -3892,11 +3892,11 @@ class load:
     
     def getNetworkSize(self):
         """
-        Get the size of the network(s).
+        Returns the size of the network.
 
         Returns:
             size: a Point object with attributes x and y representing
-            the width and height of the network(s).
+            the width and height of the network.
         
         Examples: 
             p = sd.getNetworkSize()
@@ -3911,7 +3911,7 @@ class load:
 
     def getCompartmentIdList(self):
         """
-        Get the list of compartment ids.
+        Returns the list of compartment ids.
 
         Args:  
 
@@ -3927,7 +3927,7 @@ class load:
 
     def getNodeIdList(self):
         """
-        Get the list of node ids.
+        Returns the list of node ids.
 
         Returns:
             id_list-list of ids.
@@ -3941,7 +3941,7 @@ class load:
 
     def getReactionIdList(self):
         """
-        Get the list of reaction ids.
+        Returns the list of reaction ids.
 
         Returns:
             id_list-list of ids.
@@ -3955,7 +3955,7 @@ class load:
 
     def getTextContentList(self):
         """
-        Get the list of arbitrary text content.
+        Returns a list of free-floating text objects.
 
         Returns:
             txt_content_list-list of txt_content.
@@ -3969,7 +3969,7 @@ class load:
 
     def getShapeNameList(self):
         """
-        Get the list of arbitrary shape names.
+        Returns a list of arbitrary shape names.
 
         Returns:
             shape_name_list-list of shape_name.
@@ -3983,7 +3983,7 @@ class load:
 
     def hasLayout(self):
         """
-        Judge whether there is layout in the sbml or not.
+        Teturns True if the current SBML model has layout/redner information.
 
         Returns:
             flag: bool-true (there is layout) or false (there is no layout). 
