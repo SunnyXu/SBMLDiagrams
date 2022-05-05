@@ -245,8 +245,8 @@ class TestEditSBML(unittest.TestCase):
     arrowHeadSize = [20, 20]
     rxn_dash = [5, 10]
 
-    df_update = editSBML._setReactionCenterPosition(self.df, "r_0", center_pos)
-    df_update = editSBML._setReactionHandlePositions(df_update, "r_0", handles)
+    df_update = editSBML._setReactionCentroidPosition(self.df, "r_0", center_pos)
+    df_update = editSBML._setReactionBezierHandles(df_update, "r_0", handles)
     df_update = editSBML._setReactionFillColor(df_update, "r_0", fill_color, opacity = opacity)
     df_update = editSBML._setReactionLineThickness(df_update, "r_0", line_thickness)
     df_update = editSBML._setBezierReactionType(df_update, "r_0", bezier)

@@ -25,7 +25,7 @@ def createCircleNode (la, id):
         p = la.getNodePosition(id)    
         size = la.getNodeSize(id)
 
-        # Position thetrext just outside the node
+        # Position the text just outside the node
         q = [p.x + 1.2*size.x, p.y-5]
 
         la.setNodeTextPosition(id, q)
@@ -42,7 +42,7 @@ def createCircleNode (la, id):
             p = la.getNodePosition(id, alias = alias)   
             size = la.getNodeSize(id, alias = alias)
 
-            # Position thetrext just outside the node
+            # Position the text just outside the node
             q = [p.x + 1.2*size.x, p.y-5]
 
             la.setNodeTextPosition(id, q, alias = alias)

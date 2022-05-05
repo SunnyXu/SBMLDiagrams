@@ -11,7 +11,7 @@ to an existing valid SBML model which can subsequently be exported.
 
 We also have an interface of SBMLDiagrams to NetworkX to exploit the variety of layout algorithms. If 
 you are using any of the code, please cite the arXiv (http://arxiv.org/abs/2204.12611) and the PYPI 
-web page (https://pypi.org/project/SBMLDiagrams/). Thanks. 
+web page (https://pypi.org/project/SBMLDiagrams/).
 
 ------------
 Installation 

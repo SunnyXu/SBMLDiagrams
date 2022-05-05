@@ -25,9 +25,11 @@ Read the reaction information.
 Edit the reaction information.
 --------------------------------
 
-.. autofunction:: SBMLDiagrams.load.setReactionCenterPosition
+.. autofunction:: SBMLDiagrams.load.setReactionLineType
 
-.. autofunction:: SBMLDiagrams.load.setReactionHandlePositions
+.. autofunction:: SBMLDiagrams.load.setReactionCentroidPosition
+
+.. autofunction:: SBMLDiagrams.load.setReactionBezierHandles
 
 .. autofunction:: SBMLDiagrams.load.setReactionDefaultCenterAndHandlePositions
 

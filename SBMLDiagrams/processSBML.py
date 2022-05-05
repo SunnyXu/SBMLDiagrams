@@ -136,7 +136,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
+        reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
 
     Returns:
         (df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData): tuple.
@@ -2917,9 +2917,22 @@ class load:
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
         #return self.df
 
-    def setReactionCenterPosition(self, id, position):
+    def setReactionLineType(self, id, line_type = "bezier"):
         """
-        Set the reaction center position.
+        Set the line type for a certain reaction with its id.
+
+        Args:  
+            id: str-reaction id.
+
+            line_type: str-"bezier" (default) or "straight".
+            
+        """
+        if line_type == "straight":
+            self.setReactionDefaultCenterAndHandlePositions(id)
+
+    def setReactionCentroidPosition(self, id, position):
+        """
+        Set the reaction centroid position.
 
         Args:  
             id: str-reaction id.
@@ -2933,13 +2946,13 @@ class load:
             a Point object with attributes x and y representing the x/y position.
 
         """
-        self.df = editSBML._setReactionCenterPosition(self.df, id, position)
+        self.df = editSBML._setReactionCentroidPosition(self.df, id, position)
         #return self.df
     
 
-    def setReactionHandlePositions(self, id, position):
+    def setReactionBezierHandles(self, id, position):
         """
-        Set the reaction handle positions.
+        Set the reaction bezier handle positions.
 
         Args:  
             id: str-reaction id.
@@ -2956,12 +2969,12 @@ class load:
             a Point object with attributes x and y representing the x/y position.
         
         """
-        self.df = editSBML._setReactionHandlePositions(self.df, id, position)
+        self.df = editSBML._setReactionBezierHandles(self.df, id, position)
         #return self.df
 
     def setReactionDefaultCenterAndHandlePositions(self, id):
         """
-        Set detault center and handle positions, which makes the reaction lines look like straight lines.
+        Set detault center and handle positions.
 
         Args:  
             id: str-reaction id.
@@ -2972,6 +2985,8 @@ class load:
         center_y = 0.
 
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        if len(idx_list) == 0:
+            raise Exception("This is not a valid id.")
         rct_list = []
         prd_list = []
         rct_list.append(self.df[2].iloc[idx_list[0]]["sources"])
@@ -3024,8 +3039,8 @@ class load:
         # print('prd:', dst_position, dst_dimension)
         # print("center:", center_position)
         # print("handle:", handles)
-        self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
-        self.df = editSBML._setReactionHandlePositions(self.df, id, handles)
+        self.df = editSBML._setReactionCentroidPosition(self.df, id, center_position)        
+        self.df = editSBML._setReactionBezierHandles(self.df, id, handles)
 
         #return self.df
 
@@ -4098,13 +4113,14 @@ if __name__ == '__main__':
     # df._setBezierReactionType("r_0", True)
     # print(df.getReactionCenterPosition("r_0"))
     # print(df.getReactionCenterPosition("r_1"))
-    # df.setReactionCenterPosition("r_0", [449.0, 200.0])
-    # df.setReactionCenterPosition("r_1", [449.0, 278.0])
-    # df.setReactionCenterPosition("r_0", [334.0, 232.0])
-    # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
-    # df.setReactionHandlePositions("r_0", [point.Point(334.0, 232.0), 
+    # df.setReactionCentroidPosition("r_0", [449.0, 200.0])
+    # df.setReactionCentroidPosition("r_1", [449.0, 278.0])
+    # df.setReactionCentroidPosition("r_0", [334.0, 232.0])
+    df.setReactionLineType("r_0", "straight")
+    # df.setReactionBezierHandles("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
+    # df.setReactionBezierHandles("r_0", [point.Point(334.0, 232.0), 
     # point.Point(386.0, 231.0), point.Point(282.0, 231.0)])
-    # df.setReactionDefaultCenterAndHandlePositions("r_0")
+    #df.setReactionDefaultCenterAndHandlePositions("r_0")
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # df.setReactionDash("r_0", [6,6])
 
