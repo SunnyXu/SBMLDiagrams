@@ -2773,7 +2773,8 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
-            the node text.
+            bounding box that enclosed the node text. The text font size wil be adjusted to fill
+            the given bounding box. 
 
             alias: alias node index [0, num_alias).
 
@@ -2813,6 +2814,12 @@ class load:
 
             alias: int-alias node index [0, num_alias).
 
+        Example:
+            setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
+                          [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
+
+            setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
+                          [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
         """
         self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info, alias=alias)
         #return self.df
@@ -2912,15 +2919,15 @@ class load:
         Args:  
             id: str-node id.
 
-            txt_font_size: float-node text font size.
-
+            txt_font_size: float-node text font size, the units for size are assumed to be in points.
+            
             alias: int-alias node index [0, num_alias).
         
         """
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
         #return self.df
 
-    def setReactionStraightLine(self, id):
+    def setReactionToStraightLine(self, id):
         """
         For a reaction of given id, use straight lines to represent the reaction. 
         The default reaction line style is to use Bezier curves.
@@ -3029,7 +3036,10 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing the x/y position.
-        
+
+        Example:
+            setReactionBezierHandles ('J1', [point (550,150),point (530,155),point (600,120)]))
+            setReactionBezierHandles("J3", [[550,150],[530,155],[600,120]])
         """
         self.df = editSBML._setReactionBezierHandles(self.df, id, position)
         #return self.df
@@ -3166,6 +3176,9 @@ class load:
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
             the arrow head.
+
+        Example:
+            setReactionArrowHeadSize("r_0", [50., 50.])
         
         """
         self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
@@ -3181,6 +3194,10 @@ class load:
             [a,b] means drawing a a-point line and following a b-point gap and etc;
             [a,b,c,d] means drawing a a-point line and following a b-point gap, and then 
             drawing a c-point line followed by a d-point gap.
+
+        Example:
+           # to produce a dash such as - - - -, use
+           setReactionDashStyle ('J1', [5,5,5,5])
         
         """
         self.df = editSBML._setReactionDash(self.df, id, dash)
