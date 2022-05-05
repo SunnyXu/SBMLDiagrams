@@ -1480,7 +1480,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
 
     Returns:
         position: list-[position_x, position_y], top left-hand corner of the network(s).
-        It is calculated by the minimum positions of compartments, nodes, centroid and handle 
+        It is calculated by the minimum positions of compartments, nodes, center and handle 
         positions of reactions, aribitrary text, arbitrary shape,
         excluding the compartment with the id of _compartment_default_.
     
@@ -1552,7 +1552,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 if comp_temp_position[1] < position[1]:
                     position[1] = comp_temp_position[1]
     for i in range(numRxns):
-        center_position = _getReactionCentroidPosition(_df, Rxns_ids[i])[0]
+        center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
         handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
         if center_position[0] < position[0]:
             position[0] = center_position[0]
@@ -1602,7 +1602,7 @@ def _getNetworkBottomRightCorner(sbmlStr):
     Returns:
         position: list-[position_x, position_y],bottom right-hand corner of the network(s).
         It is calculated by the maximum right down corner positions of positions of compartments, 
-        nodes, centroid and handle positions of reactions, aribitrary text, arbitrary shape,
+        nodes, center and handle positions of reactions, aribitrary text, arbitrary shape,
         excluding the compartment with the id of _compartment_default_.
     
     
@@ -1696,7 +1696,7 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 if comp_temp_position[1] > position[1]:
                     position[1] = comp_temp_position[1]
     for i in range(numRxns):
-        center_position = _getReactionCentroidPosition(_df, Rxns_ids[i])[0]
+        center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
         handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
         if center_position[0] > position[0]:
             position[0] = center_position[0]
@@ -1889,9 +1889,9 @@ def _getNodeTextSize(df, id):
 
     return txt_size_list
 
-def _getReactionCentroidPosition(df, id):
+def _getReactionCenterPosition(df, id):
     """
-    Get the centroid position of a reaction with its certain reaction id.
+    Get the center position of a reaction with its certain reaction id.
 
     Args: 
         df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
@@ -1899,16 +1899,16 @@ def _getReactionCentroidPosition(df, id):
         id: str-the id of the reaction.
 
     Returns:
-        line_centroid_position_list: list of center_position.
+        line_center_position_list: list of center_position.
 
-        centroid_position:  list-1*2 matrix: position of the center.
+        center_position:  list-1*2 matrix: position of the center.
     """
     idx_list = df[2].index[df[2]["id"] == id].tolist()
-    centroid_position_list =[] 
+    center_position_list =[] 
     for i in range(len(idx_list)):
-        centroid_position_list.append(df[2].iloc[idx_list[i]]["center_pos"])
+        center_position_list.append(df[2].iloc[idx_list[i]]["center_pos"])
 
-    return centroid_position_list
+    return center_position_list
 
 def _getReactionBezierHandles(df, id):
     """

@@ -1394,10 +1394,10 @@ def _setNodeTextFontSize(df, id, txt_font_size, alias = 0):
 
     return df_temp
 
-def _setReactionCentroidPosition(df, id, position):
+def _setReactionCenterPosition(df, id, position):
 
     """
-    Set the reaction centroid position.
+    Set the reaction center position.
 
     Args:  
         df: DataFrame-initial information.

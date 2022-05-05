@@ -2149,36 +2149,36 @@ class load:
 
         return txt_font_size
 
-    def getReactionCentroidPosition(self, id):
+    def getReactionCenterPosition(self, id):
         """
-        Get the centroid position of a reaction with its certain reaction id.
+        Get the center position of a reaction with its certain reaction id.
 
         Args: 
             id: str-the id of the reaction.
 
         Returns:
-            centroid_position: a Point object with attributes x and y representing
+            center_position: a Point object with attributes x and y representing
             the x/y position. 
 
         Examples: 
-            p = sd.getReactionCentroidPosition('reaction_id')
+            p = sd.getReactionCenterPosition('reaction_id')
 
             print ('x = ', p.x, 'y = ', p.y)          
 
         """
 
-        p = visualizeSBML._getReactionCentroidPosition(self.df, id)
+        p = visualizeSBML._getReactionCenterPosition(self.df, id)
         num = len(p)
-        centroid_position_list = []
+        center_position_list = []
         for i in range(num):
-            centroid_position = point.Point (p[i][0], p[i][1])
-            centroid_position_list.append(centroid_position)
-        if len(centroid_position_list) == 1:
-            centroid_position = centroid_position_list[0]
+            center_position = point.Point (p[i][0], p[i][1])
+            center_position_list.append(center_position)
+        if len(center_position_list) == 1:
+            center_position = center_position_list[0]
         else:
             raise Exception("This is not a valid id.")
 
-        return centroid_position
+        return center_position
 
     def getReactionBezierHandles(self, id):
         """
@@ -2917,22 +2917,83 @@ class load:
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
         #return self.df
 
-    def setReactionLineType(self, id, line_type = "bezier"):
+    def setReactionStraightLine(self, id):
         """
-        Set the line type for a certain reaction with its id.
+        Set a certain reaction (with its id) to straight line, which directly connects the center
+        position with the nodes (species). The default reaction line type is bezier curves without
+        using this function.
 
         Args:  
             id: str-reaction id.
-
-            line_type: str-"bezier" (default) or "straight".
-            
+      
         """
-        if line_type == "straight":
-            self.setReactionDefaultCenterAndHandlePositions(id)
+        # center_x = 0.
+        # center_y = 0.
 
-    def setReactionCentroidPosition(self, id, position):
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        if len(idx_list) == 0:
+            raise Exception("This is not a valid id.")
+        rct_list = []
+        prd_list = []
+        rct_list.append(self.df[2].iloc[idx_list[0]]["sources"])
+        prd_list.append(self.df[2].iloc[idx_list[0]]["targets"])
+
+        rct_num = len(rct_list[0])
+        prd_num = len(prd_list[0])
+
+        rct_id_list = []
+        prd_id_list = []
+        for i in range(rct_num):
+            temp_idx = self.df[1].index[self.df[1]["idx"] == rct_list[0][i]].tolist()[0]
+            rct_id_list.append(self.df[1].iloc[temp_idx]["id"])
+        for i in range(prd_num):
+            temp_idx = self.df[1].index[self.df[1]["idx"] == prd_list[0][i]].tolist()[0]
+            prd_id_list.append(self.df[1].iloc[temp_idx]["id"])
+
+        src_position = []
+        src_dimension = []
+        dst_position = []
+        dst_dimension = []
+        for i in range(rct_num):
+            temp_idx = self.df[1].index[self.df[1]["id"] == rct_id_list[i]].tolist()[0]
+            src_position.append(self.df[1].iloc[temp_idx]["position"])
+            src_dimension.append(self.df[1].iloc[temp_idx]["size"])
+        for i in range(prd_num):
+            temp_idx = self.df[1].index[self.df[1]["id"] == prd_id_list[i]].tolist()[0]
+            dst_position.append(self.df[1].iloc[temp_idx]["position"])
+            dst_dimension.append(self.df[1].iloc[temp_idx]["size"])
+  
+        # for j in range(rct_num):
+        #     center_x += src_position[j][0]+.5*src_dimension[j][0]
+        #     center_y += src_position[j][1]+.5*src_dimension[j][1]
+        # for j in range(prd_num):
+        #     center_x += dst_position[j][0]+.5*dst_dimension[j][0]
+        #     center_y += dst_position[j][1]+.5*dst_dimension[j][1]
+        # center_x = center_x/(rct_num + prd_num) 
+        # center_y = center_y/(rct_num + prd_num)
+        center_position_pt = visualizeSBML._getReactionCenterPosition(self.df, id)
+        center_position = [center_position_pt[0][0], center_position_pt[0][1]]
+        #center_position = [center_x, center_y]
+        handles = [center_position]
+        for j in range(rct_num):
+            src_handle_x = .5*(center_position[0] + src_position[j][0] + .5*src_dimension[j][0])
+            src_handle_y = .5*(center_position[1] + src_position[j][1] + .5*src_dimension[j][1])
+            handles.append([src_handle_x,src_handle_y])
+        for j in range(prd_num):
+            dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
+            dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
+            handles.append([dst_handle_x,dst_handle_y])
+        # print('rct:', src_position, src_dimension)
+        # print('prd:', dst_position, dst_dimension)
+        # print("center:", center_position)
+        # print("handle:", handles)
+        self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
+        self.df = editSBML._setReactionBezierHandles(self.df, id, handles)
+ 
+
+    def setReactionCenterPosition(self, id, position):
         """
-        Set the reaction centroid position.
+        Set the reaction center position.
 
         Args:  
             id: str-reaction id.
@@ -2946,7 +3007,7 @@ class load:
             a Point object with attributes x and y representing the x/y position.
 
         """
-        self.df = editSBML._setReactionCentroidPosition(self.df, id, position)
+        self.df = editSBML._setReactionCenterPosition(self.df, id, position)
         #return self.df
     
 
@@ -2974,7 +3035,8 @@ class load:
 
     def setReactionDefaultCenterAndHandlePositions(self, id):
         """
-        Set detault center and handle positions.
+        Set detault center and handle positions. The default center is the centroid of the reaction,
+        and the default handle positions are middle points of nodes (species) and the centroid.
 
         Args:  
             id: str-reaction id.
@@ -3039,7 +3101,7 @@ class load:
         # print('prd:', dst_position, dst_dimension)
         # print("center:", center_position)
         # print("handle:", handles)
-        self.df = editSBML._setReactionCentroidPosition(self.df, id, center_position)        
+        self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
         self.df = editSBML._setReactionBezierHandles(self.df, id, handles)
 
         #return self.df
@@ -3949,7 +4011,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -4002,7 +4064,8 @@ if __name__ == '__main__':
     #filename = "coyote2.xml"
 
     #filename = "BIOMD0000000006.xml"
-    filename = "nodes.xml"
+    #filename = "nodes.xml"
+    #filename = "test_arrows.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -4049,7 +4112,7 @@ if __name__ == '__main__':
     # print(df.getNodeTextLineWidth("x_1"))
     # print(df.getNodeTextFontSize("x_1"))
 
-    # print("center_position:", df.getReactionCentroidPosition("r_0"))
+    # print("center_position:", df.getReactionCenterPosition("r_0"))
     # print("handle_position:", df.getReactionBezierHandles("r_0"))
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
@@ -4112,12 +4175,12 @@ if __name__ == '__main__':
     # df.setReactionFillColor("r_0", [0, 0, 0])
     # df.setReactionLineThickness("r_0", 3.)
     # df._setBezierReactionType("r_0", True)
-    # print(df.getReactionCentroidPosition("r_0"))
-    # print(df.getReactionCentroidPosition("r_1"))
-    # df.setReactionCentroidPosition("r_0", [449.0, 200.0])
-    # df.setReactionCentroidPosition("r_1", [449.0, 278.0])
-    # df.setReactionCentroidPosition("r_0", [334.0, 232.0])
-    #df.setReactionLineType("r_0", "straight")
+    # print(df.getReactionCenterPosition("r_0"))
+    # print(df.getReactionCenterPosition("r_1"))
+    # df.setReactionCenterPosition("r_0", [449.0, 200.0])
+    # df.setReactionCenterPosition("r_1", [449.0, 278.0])
+    # df.setReactionCenterPosition("r_0", [334.0, 232.0])
+    # df.setReactionStraightLine("J1")
     # df.setReactionBezierHandles("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
     # df.setReactionBezierHandles("r_0", [point.Point(334.0, 232.0), 
     # point.Point(386.0, 231.0), point.Point(282.0, 231.0)])
@@ -4164,5 +4227,5 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output.png', scale = 2.)
+    df.draw(output_fileName = 'output.png')
 

@@ -993,7 +993,7 @@ class TestImportSBML(unittest.TestCase):
       return
 
 
-    self.assertTrue(self.df.getReactionCentroidPosition("r_0").x == \
+    self.assertTrue(self.df.getReactionCenterPosition("r_0").x == \
       [334.0, 231.0][0])
     self.assertTrue(self.df.getReactionBezierHandles("r_0")[0].x == \
       [[386.0, 231.0], [386.0, 231.0], [386.0, 231.0]][0][0])
@@ -1159,7 +1159,7 @@ class TestImportSBML(unittest.TestCase):
     arrowHeadSize = [20., 20.]
     rxn_dash = [5, 10]
 
-    self.df.setReactionCentroidPosition("r_0", center_pos)
+    self.df.setReactionCenterPosition("r_0", center_pos)
     self.df.setReactionBezierHandles("r_0", handles)
     self.df.setReactionFillColor("r_0", fill_color, opacity = opacity)
     self.df.setReactionLineThickness("r_0", line_thickness)
@@ -1167,7 +1167,7 @@ class TestImportSBML(unittest.TestCase):
     self.df.setReactionArrowHeadSize("r_0", arrowHeadSize)
     self.df.setReactionDash("r_0", rxn_dash)
 
-    self.assertTrue(self.df.getReactionCentroidPosition("r_0").x == center_pos[0])
+    self.assertTrue(self.df.getReactionCenterPosition("r_0").x == center_pos[0])
     self.assertTrue(self.df.getReactionBezierHandles("r_0")[0].x == handles[0][0])
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][0:-1] == [255, 165, 0])
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][3] == int(opacity*255/1.))
@@ -1183,9 +1183,9 @@ class TestImportSBML(unittest.TestCase):
       return
     
     self.df.setReactionDefaultCenterAndHandlePositions("r_0")
-    self.df.setReactionLineType("r_0", "straight")
+    self.df.setReactionStraightLine("r_0")
 
-    self.assertTrue(self.df.getReactionCentroidPosition("r_0").x == [334.0, 231.0][0])
+    self.assertTrue(self.df.getReactionCenterPosition("r_0").x == [334.0, 231.0][0])
     self.assertTrue(self.df.getReactionBezierHandles("r_0")[0].x == 
     [[334.0, 231.0], [386.0, 231.0], [282.0, 231.0]][0][0])
 

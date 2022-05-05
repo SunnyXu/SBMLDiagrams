@@ -39,7 +39,7 @@ Tutorial
    #get layout
    print(df.getCompartmentPosition("compartment_id"))
    print(df.getNodeSize("node_id"))
-   print(df.getReactionCentroidPosition("reaction_id"))
+   print(df.getReactionCenterPosition("reaction_id"))
 
    #get render
    print(df.getCompartmentFillColor("compartment_id"))
@@ -101,7 +101,7 @@ Tutorial
    la.setReactionDefaultCenterAndHandlePositions('J2')
    la.setReactionDefaultCenterAndHandlePositions('J3')
    la.setReactionDash("J1", [5,5])
-   la.setReactionCentroidPosition("J3",[550,150])
+   la.setReactionCenterPosition("J3",[550,150])
    la.setReactionBezierHandles("J3", [[550,150],[530,155],[600,120]])
 
    la.draw(showReversible=True, output_fileName = 'output.png')
