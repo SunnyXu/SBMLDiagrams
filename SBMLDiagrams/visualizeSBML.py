@@ -1552,8 +1552,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 if comp_temp_position[1] < position[1]:
                     position[1] = comp_temp_position[1]
     for i in range(numRxns):
-        center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
-        handle_positions = _getReactionHandlePositions(_df, Rxns_ids[i])[0]
+        center_position = _getReactionCentroidPosition(_df, Rxns_ids[i])[0]
+        handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
         if center_position[0] < position[0]:
             position[0] = center_position[0]
         if center_position[1] < position[1]:
@@ -1696,8 +1696,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 if comp_temp_position[1] > position[1]:
                     position[1] = comp_temp_position[1]
     for i in range(numRxns):
-        center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
-        handle_positions = _getReactionHandlePositions(_df, Rxns_ids[i])[0]
+        center_position = _getReactionCentroidPosition(_df, Rxns_ids[i])[0]
+        handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
         if center_position[0] > position[0]:
             position[0] = center_position[0]
         if center_position[1] > position[1]:
@@ -1889,9 +1889,9 @@ def _getNodeTextSize(df, id):
 
     return txt_size_list
 
-def _getReactionCenterPosition(df, id):
+def _getReactionCentroidPosition(df, id):
     """
-    Get the center position of a reaction with its certain reaction id.
+    Get the centroid position of a reaction with its certain reaction id.
 
     Args: 
         df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
@@ -1899,20 +1899,20 @@ def _getReactionCenterPosition(df, id):
         id: str-the id of the reaction.
 
     Returns:
-        line_center_position_list: list of center_position.
+        line_centroid_position_list: list of center_position.
 
-        center_position:  list-1*2 matrix: position of the center.
+        centroid_position:  list-1*2 matrix: position of the center.
     """
     idx_list = df[2].index[df[2]["id"] == id].tolist()
-    center_position_list =[] 
+    centroid_position_list =[] 
     for i in range(len(idx_list)):
-        center_position_list.append(df[2].iloc[idx_list[i]]["center_pos"])
+        centroid_position_list.append(df[2].iloc[idx_list[i]]["center_pos"])
 
-    return center_position_list
+    return centroid_position_list
 
-def _getReactionHandlePositions(df, id):
+def _getReactionBezierHandles(df, id):
     """
-    Get the handle positions of a reaction with its certain reaction id.
+    Get the bezier handle positions of a reaction with its certain reaction id.
 
     Args:
         df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).

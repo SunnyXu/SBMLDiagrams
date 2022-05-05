@@ -39,7 +39,7 @@ Tutorial
    #get layout
    print(df.getCompartmentPosition("compartment_id"))
    print(df.getNodeSize("node_id"))
-   print(df.getReactionCenterPosition("reaction_id"))
+   print(df.getReactionCentroidPosition("reaction_id"))
 
    #get render
    print(df.getCompartmentFillColor("compartment_id"))

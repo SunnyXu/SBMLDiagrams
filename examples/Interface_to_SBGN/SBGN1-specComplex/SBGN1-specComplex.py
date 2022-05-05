@@ -35,7 +35,7 @@ df.addRectangle("myosinATP_ATP", [305,130], [60,40])
 df.addEllipse("myosinATP_myosin", [315,175], [40,40])
 df.addText("myosin", [305,130], [60,40])
 df.addText("ATP", [315,175], [40,40])
-#print(df.getReactionCenterPosition("J1"))
+#print(df.getReactionCentroidPosition("J1"))
 #print(df.getReactionFillColor("J1"))
 df.addEllipse("left_small_circle", [176.0, 166.], [10,10], 
 fill_color=[91, 176, 253], border_color = [91,176,253])

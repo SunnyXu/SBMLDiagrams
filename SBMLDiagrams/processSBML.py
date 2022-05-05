@@ -2149,40 +2149,40 @@ class load:
 
         return txt_font_size
 
-    def getReactionCenterPosition(self, id):
+    def getReactionCentroidPosition(self, id):
         """
-        Get the center position of a reaction with its certain reaction id.
+        Get the centroid position of a reaction with its certain reaction id.
 
         Args: 
             id: str-the id of the reaction.
 
         Returns:
-            center_position: a Point object with attributes x and y representing
+            centroid_position: a Point object with attributes x and y representing
             the x/y position. 
 
         Examples: 
-            p = sd.getReactionCenterPosition('reaction_id')
+            p = sd.getReactionCentroidPosition('reaction_id')
 
             print ('x = ', p.x, 'y = ', p.y)          
 
         """
 
-        p = visualizeSBML._getReactionCenterPosition(self.df, id)
+        p = visualizeSBML._getReactionCentroidPosition(self.df, id)
         num = len(p)
-        center_position_list = []
+        centroid_position_list = []
         for i in range(num):
-            center_position = point.Point (p[i][0], p[i][1])
-            center_position_list.append(center_position)
-        if len(center_position_list) == 1:
-            center_position = center_position_list[0]
+            centroid_position = point.Point (p[i][0], p[i][1])
+            centroid_position_list.append(centroid_position)
+        if len(centroid_position_list) == 1:
+            centroid_position = centroid_position_list[0]
         else:
             raise Exception("This is not a valid id.")
 
-        return center_position
+        return centroid_position
 
-    def getReactionHandlePositions(self, id):
+    def getReactionBezierHandles(self, id):
         """
-        Get the handle positions of a reaction with its certain reaction id.
+        Get the bezier handle positions of a reaction with its certain reaction id.
 
         Args: 
             id: str-the id of the reaction.
@@ -2195,7 +2195,7 @@ class load:
 
         """
 
-        p = visualizeSBML._getReactionHandlePositions(self.df, id)
+        p = visualizeSBML._getReactionBezierHandles(self.df, id)
         num = len(p)
         handle_position_list = []
         for j in range(num):
@@ -3958,7 +3958,7 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
 
-    filename = "Jana_WolfGlycolysis.xml"
+    #filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml" 
     #filename = "output.xml"
     #filename = "Sauro1.xml"
@@ -4002,6 +4002,7 @@ if __name__ == '__main__':
     #filename = "coyote2.xml"
 
     #filename = "BIOMD0000000006.xml"
+    filename = "nodes.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -4048,8 +4049,8 @@ if __name__ == '__main__':
     # print(df.getNodeTextLineWidth("x_1"))
     # print(df.getNodeTextFontSize("x_1"))
 
-    # print("center_position:", df.getReactionCenterPosition("r_0"))
-    # print("handle_position:", df.getReactionHandlePositions("r_0"))
+    # print("center_position:", df.getReactionCentroidPosition("r_0"))
+    # print("handle_position:", df.getReactionBezierHandles("r_0"))
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df._isBezierReactionType("r_0"))
@@ -4111,12 +4112,12 @@ if __name__ == '__main__':
     # df.setReactionFillColor("r_0", [0, 0, 0])
     # df.setReactionLineThickness("r_0", 3.)
     # df._setBezierReactionType("r_0", True)
-    # print(df.getReactionCenterPosition("r_0"))
-    # print(df.getReactionCenterPosition("r_1"))
+    # print(df.getReactionCentroidPosition("r_0"))
+    # print(df.getReactionCentroidPosition("r_1"))
     # df.setReactionCentroidPosition("r_0", [449.0, 200.0])
     # df.setReactionCentroidPosition("r_1", [449.0, 278.0])
     # df.setReactionCentroidPosition("r_0", [334.0, 232.0])
-    df.setReactionLineType("r_0", "straight")
+    #df.setReactionLineType("r_0", "straight")
     # df.setReactionBezierHandles("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
     # df.setReactionBezierHandles("r_0", [point.Point(334.0, 232.0), 
     # point.Point(386.0, 231.0), point.Point(282.0, 231.0)])

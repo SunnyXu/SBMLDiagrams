@@ -40,7 +40,7 @@ df.setNodeAndTextSize("Ethanal",[50,50])
 df.setNodeAndTextSize("H",[50,50])
 df.setNodeAndTextSize("NADH",[50,50])
 df.setReactionDefaultCenterAndHandlePositions('J0')
-#print(df.getReactionCenterPosition("J0"))  
+#print(df.getReactionCentroidPosition("J0"))  
 df.addRectangle("centroid_sqaure", [235.0, 265.0], [20,20], 
 fill_color=[91, 176, 253], border_color = [91,176,253])
 df.setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
