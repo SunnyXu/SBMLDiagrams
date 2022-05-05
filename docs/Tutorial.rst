@@ -101,10 +101,11 @@ Tutorial
    la.setReactionDefaultCenterAndHandlePositions('J2')
    la.setReactionDefaultCenterAndHandlePositions('J3')
    la.setReactionDash("J1", [5,5])
-   la.setReactionCenterPosition("J3",[550,150])
-   la.setReactionHandlePositions("J3", [[550,150],[530,155],[600,120]])
+   la.setReactionCentroidPosition("J3",[550,150])
+   la.setReactionBezierHandles("J3", [[550,150],[530,155],[600,120]])
 
    la.draw(showReversible=True, output_fileName = 'output.png')
+
 
 4) Interface to Tellurium example 2 with alian nodes. You can assign a feature repeatly with a function.
    
