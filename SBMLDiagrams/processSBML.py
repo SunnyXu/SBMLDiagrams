@@ -1573,7 +1573,7 @@ class load:
 
     def getCompartmentPosition(self, id):
         """
-        Get the position of a compartment with its certain compartment id.
+        Get the position of a compartment with given compartment id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1603,7 +1603,7 @@ class load:
 
     def getCompartmentSize(self, id):
         """
-        Get the size of a compartment with its certain compartment id.
+        Get the size of a compartment with given compartment id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1633,7 +1633,7 @@ class load:
 
     def getCompartmentFillColor(self, id):
         """
-        Get the fill color of a compartment with its certain compartment id.
+        Get the fill color for a compartment with given compartment id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1657,7 +1657,7 @@ class load:
 
     def getCompartmentBorderColor(self, id):
         """
-        Get the border color of a compartment with its certain id.
+        Get the border color of a compartment with a given compartment id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1682,7 +1682,7 @@ class load:
 
     def getCompartmentBorderWidth(self, id):
         """
-        Get the border width of a compartment with its certain compartment id.
+        Get the border width of a compartment with a given compartment Id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1705,13 +1705,13 @@ class load:
 
     def getNodeAliasNum(self, id):
         """
-        Get the number of alias nodes with its certain node id.
+        Get the number of alias nodes with a given node Id.
 
         Args: 
             id: str-the id of the Node.
 
         Returns:
-            num_alias: int-the number of alias nodes with the same node id.            
+            num_alias: int-the number of alias nodes with the given node id.            
 
         """
 
@@ -1721,12 +1721,12 @@ class load:
 
     def isFloatingNode(self, id, alias = 0):
         """
-        Judge whether a node is floating node with its certain node id.
+        Returns True if the given node is a floating node.
 
         Args: 
             id: str-the id of the Node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number if alias nodes
 
         Returns:
             floating_node: bool-floating node (True) or not (False).
@@ -1747,12 +1747,12 @@ class load:
 
     def getNodePosition(self, id, alias = 0):
         """
-        Get the position of a node with its certain node id.
+        Get the position of a node with a given node Id.
 
         Args: 
             id: str-the id of the Node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             position: a Point object with attributes x and y representing
@@ -1783,12 +1783,12 @@ class load:
 
     def getNodeCenter(self, id, alias = 0):
         """
-        Get the center point of a node with given id.
+        Get the center point of a node with a given node Id.
 
         Args: 
             id: str-the id of the Node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             position-a Point object with x and y coordinates of the center of the node.
@@ -1823,12 +1823,12 @@ class load:
 
     def getNodeSize(self, id, alias = 0):
         """
-        Get the size of a node with its certain node id.
+        Get the size of a node with a given node Id.
 
         Args: 
             id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             size: a Point object with attributes x and y representing
@@ -1852,18 +1852,18 @@ class load:
         if alias < len(size_list) and alias >= 0:
             size =  size_list[alias]
         else:
-            raise Exception("Alias index is beyond number of alias.")
+            raise Exception("Alias index is beyond number of alias nodes.")
         
         return size
 
     def getNodeShape(self, id, alias = 0):
         """
-        Get the shape index and the shape of a node with its certain node id.
+        Get the shape index and the shape of a node with a given node Id.
 
         Args: 
             id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             shape: tuple (shape_name, vertex_positions)
@@ -1905,12 +1905,12 @@ class load:
 
     def getNodeTextPosition(self, id, alias = 0):
         """
-        Get the text position of a node with its certain node id.
+        Get the text position of a node with a given node Id.
 
         Args: 
             id: str-the id of node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             txt_position: a Point object with attributes x and y representing
@@ -1941,12 +1941,12 @@ class load:
         
     def getNodeTextSize(self, id, alias = 0):
         """
-        Get the text size of a node with its certain node id.
+        Get the text size of a node with a given node Id.
 
         Args: 
             id: str-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             size: a Point object with attributes x and y representing
@@ -1977,12 +1977,12 @@ class load:
 
     def getNodeFillColor(self, id, alias = 0):
         """
-        Get the fill color of a node with its certain node id.
+        Get the fill color of a node with a given node Id.
 
         Args: 
             id: str-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
@@ -2012,12 +2012,12 @@ class load:
 
     def getNodeBorderColor(self, id, alias = 0):
         """
-        Get the border color of a node with its certain node id.
+        Get the border color of a node with a given node Id.
 
         Args: 
             id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
@@ -2043,12 +2043,12 @@ class load:
 
     def getNodeBorderWidth(self, id, alias = 0):
         """
-        Get the border width of a node with its certain node id.
+        Get the border width of a node with a given node Id.
 
         Args: 
             id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             border_width: float-node border line width.
@@ -2069,12 +2069,12 @@ class load:
 
     def getNodeTextFontColor(self, id, alias = 0):
         """
-        Get the text font color of a node with its certain node id.
+        Get the text font color of a node with a given node Id.
 
         Args: 
             id: str-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes.
 
         Returns:
             txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
@@ -2099,12 +2099,12 @@ class load:
 
     def getNodeTextLineWidth(self, id, alias = 0):
         """
-        Get the text line width of a node with its certain node id.
+        Get the text line width of a node with a given node Id.
 
         Args: 
             id: int-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             txt_line_width: float-node text line width.
@@ -2125,12 +2125,12 @@ class load:
 
     def getNodeTextFontSize(self, id, alias = 0):
         """
-        Get the text font size of a node with its certain node id.
+        Get the text font size of a node with a given node Id.
 
         Args: 
             id: str-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes
 
         Returns:
             txt_font_size: float.
@@ -2151,14 +2151,14 @@ class load:
 
     def getReactionCenterPosition(self, id):
         """
-        Get the center position of a reaction with its certain reaction id.
+        Get the center position of a reaction with a given reaction Id.
 
         Args: 
             id: str-the id of the reaction.
 
         Returns:
             center_position: a Point object with attributes x and y representing
-            the x/y position. 
+            the x/y position of the current center of the reaction. 
 
         Examples: 
             p = sd.getReactionCenterPosition('reaction_id')
@@ -2182,7 +2182,7 @@ class load:
 
     def getReactionBezierHandles(self, id):
         """
-        Get the bezier handle positions of a reaction with its certain reaction id.
+        Get the bezier handle positions of a reaction with a given reaction Id.
 
         Args: 
             id: str-the id of the reaction.
@@ -2213,7 +2213,7 @@ class load:
 
     def getReactionFillColor(self, id):
         """
-        Get the fill color of a reaction with its certain reaction id.
+        Get the fill color of a reaction with with a given reaction Id.
 
         Args: 
             id: str-the id of the reaction.
@@ -2239,7 +2239,7 @@ class load:
 
     def getReactionLineThickness(self, id):
         """
-        Get the line thickness of a reaction with its certain reaction id.
+        Get the line thickness of a reaction with a given reaction Id.
 
         Args: 
             id: str-the id of the reaction.
@@ -2262,7 +2262,7 @@ class load:
 
     def _isBezierReactionType(self, id):
         """
-        Judge whether it is a bezier reaction curve with its certain reaction id
+        Judge whether it is a bezier reaction curve with a given reaction Id.
 
         Args: 
             id: str-the id of the reaction
@@ -2286,7 +2286,7 @@ class load:
     #def getReactionArrowHeadSize(self):
     def getReactionArrowHeadSize(self, id):
         """
-        Get the arrow head size of reactions with its certain reaction id.
+        Get the arrow head size of reactions with a given reaction Id.
 
         Args: 
 
@@ -2316,7 +2316,7 @@ class load:
 
     def getReactionDash(self, id):
         """
-        Get the dash information with its certain reaction id.
+        Get the dash information with a given reaction Id.
 
         Args: 
             id: str-the id of the reaction.
@@ -2344,11 +2344,9 @@ class load:
         Set the x,y coordinates of the compartment position.
 
         Args:  
-            df: DataFrame-initial information.
-
             id: str-compartment id.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -2646,7 +2644,7 @@ class load:
 
     def setNodeTextPositionCenter(self, id, alias = 0):
         """
-        Set the node text position as the center of the node.
+        Set the node text position to the center of the node.
 
         Args:  
             id: str-node id.
@@ -2659,7 +2657,7 @@ class load:
 
     def setNodeTextPositionLeftCenter(self, id, alias = 0):
         """
-        Set the node text position as the left center of the node.
+        Set the node text position to the left center of the node.
 
         Args:  
             id: str-node id.
@@ -2672,7 +2670,7 @@ class load:
 
     def setNodeTextPositionRightCenter(self, id, alias = 0):
         """
-        Set the node text position as the right center of the node.
+        Set the node text position to the right center of the node.
 
         Args:  
             id: str-node id.
@@ -2685,7 +2683,7 @@ class load:
 
     def setNodeTextPositionUpperCenter(self, id, alias = 0):
         """
-        Set the node text position as the upper center of the node.
+        Set the node text position to the upper center of the node.
 
         Args:  
             id: str-node id.
@@ -2698,7 +2696,7 @@ class load:
 
     def setNodeTextPositionLowerCenter(self, id, alias = 0):
         """
-        Set the node text position as the lower center of the node.
+        Set the node text position to the lower center of the node.
 
         Args:  
             id: str-node id.
@@ -2711,7 +2709,7 @@ class load:
 
     def setNodeTextPositionUpperLeft(self, id, alias = 0):
         """
-        Set the node text position as the upper left of the node.
+        Set the node text position to the upper left of the node.
 
         Args:  
             id: str-node id.
@@ -2724,7 +2722,7 @@ class load:
     
     def setNodeTextPositionUpperRight(self, id, alias = 0):
         """
-        Set the node text position as the upper right of the node.
+        Set the node text position to the upper right of the node.
 
         Args:  
             id: str-node id.
@@ -2737,7 +2735,7 @@ class load:
 
     def setNodeTextPositionLowerLeft(self, id, alias = 0):
         """
-        Set the node text position as the lower left of the node.
+        Set the node text position to the lower left of the node.
 
         Args:  
             id: str-node id.
@@ -2750,7 +2748,7 @@ class load:
 
     def setNodeTextPositionLowerRight(self, id, alias = 0):
         """
-        Set the node text position as the lower right of the node.
+        Set the node text position to the lower right of the node.
 
         Args:  
             id: str-node id.
@@ -2763,12 +2761,12 @@ class load:
 
     def setNodeTextSize(self, id, txt_size, alias = 0):
         """
-        Set the node text size.
+        Set the node text size with given node id.
 
         Args:  
             id: str-node id.
 
-            txt_size: list/point.Point()-
+            txt_size: list or point.Point()
                 
             list-
             1*2 matrix-size of the node text [width, height].
@@ -2785,7 +2783,7 @@ class load:
  
     def setNodeFillColor(self, id, fill_color, opacity = 1., alias = 0):
         """
-        Set the node fill color.
+        Set the node fill color with given node id.
 
         Args:  
             id: str-node id.
@@ -2802,7 +2800,7 @@ class load:
 
     def setNodeFillLinearGradient(self, id, gradient_info, stop_info, alias = 0):
         """
-        Set the node fill linear gradient.
+        Set the node fill linear gradient with given node id.
 
         Args:  
             id: str-node id.
@@ -2840,7 +2838,7 @@ class load:
 
     def setNodeBorderColor(self, id, border_color, opacity = 1., alias = 0):
         """
-        Set the node border color.
+        Set the node border color of a node with a given id.
 
         Args:  
             id: str-node id.
@@ -2851,13 +2849,14 @@ class load:
 
             alias: int-alias node index [0, num_alias).
 
+        Example:
+           la.setNodeBorderColor ('node1', 'CornflowerBlue')
         """
         self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity, alias=alias)
-        #return self.df
 
     def setNodeBorderWidth(self, id, border_width, alias = 0):
         """
-        Set the node border width.
+        Set the node border width for a node of given id.
 
         Args:  
             id: str-node id.
@@ -2866,13 +2865,15 @@ class load:
 
             alias: int-alias node index [0, num_alias).
 
+        Example:
+            la.setNodeBorderWidth ('node4', 3)
         """
         self.df = editSBML._setNodeBorderWidth(self.df, id, border_width, alias=alias)
         #return self.df
 
     def setNodeTextFontColor(self, id, txt_font_color, opacity = 1., alias = 0):
         """
-        Set the node text font color.
+        Set the node text font color for a node of given id.
 
         Args:  
             id: str-node id.
@@ -2883,13 +2884,15 @@ class load:
 
             alias: int-alias node index [0, num_alias).
         
+        Example:
+           la.setNodeTextFontColor ('node1', 'CornflowerBlue')
         """
         self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity, alias=alias)
         #return self.df
 
     def setNodeTextLineWidth(self, id, txt_line_width, alias = 0):
         """
-        Set the node text line width.
+        Set the node text line width for a node of given id.
 
         Args:  
             id: str-node id.
@@ -2904,7 +2907,7 @@ class load:
 
     def setNodeTextFontSize(self, id, txt_font_size, alias = 0):
         """
-        Set the node text font size.
+        Set the node text font size for a node of given id.
 
         Args:  
             id: str-node id.
@@ -2919,9 +2922,8 @@ class load:
 
     def setReactionStraightLine(self, id):
         """
-        Set a certain reaction (with its id) to straight line, which directly connects the center
-        position with the nodes (species). The default reaction line type is bezier curves without
-        using this function.
+        For a reaction of given id, use straight lines to represent the reaction. 
+        The default reaction line style is to use Bezier curves.
 
         Args:  
             id: str-reaction id.
@@ -2993,12 +2995,12 @@ class load:
 
     def setReactionCenterPosition(self, id, position):
         """
-        Set the reaction center position.
+        Set the reaction center position for a reaction with a given reaction id. .
 
         Args:  
             id: str-reaction id.
             
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             1*2 matrix-[position_x, position_y].
@@ -3008,19 +3010,18 @@ class load:
 
         """
         self.df = editSBML._setReactionCenterPosition(self.df, id, position)
-        #return self.df
     
 
     def setReactionBezierHandles(self, id, position):
         """
-        Set the reaction bezier handle positions.
+        Set the reaction bezier handle positions for a given reaction.
 
         Args:  
             id: str-reaction id.
             
             position: list-position of the handles: [center handle, reactant handle1, ..., product handle1, ...].
                             
-            center handle/reactant handle1/product handle1: list/point.Point()-
+            center handle/reactant handle1/product handle1: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand 
@@ -3116,6 +3117,9 @@ class load:
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+        Example:
+           setReactionFillColor ('J1', "BurlyWood")
         
         """
         self.df = editSBML._setReactionFillColor(self.df, id, fill_color, opacity)
@@ -3137,7 +3141,7 @@ class load:
 
     def _setBezierReactionType(self, id, bezier = True):
         """
-        Set the reaction type to bezier curve or not with a certain reaction id.
+        Set the reaction type to use a Bezier curve depending on the Bezier flag. 
 
         Args:  
             id: str-reaction id.
@@ -3154,7 +3158,7 @@ class load:
         Set the reaction arrow head size with a certain reaction id.
 
         Args:  
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the arrow head [width, height].
@@ -3165,9 +3169,8 @@ class load:
         
         """
         self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
-        #return self.df
 
-    def setReactionDash(self, id, dash = []):
+    def setReactionDashStyle(self, id, dash = []):
         """
         Set the reaction dash information with a certain reaction id.
 
