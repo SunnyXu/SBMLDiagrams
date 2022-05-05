@@ -71,7 +71,7 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(visualizeSBML._getNodeTextSize(self._df, "x_1")[0] == [50.0, 30.0])
     self.assertTrue(visualizeSBML._getReactionCenterPosition(self._df, "r_0")[0] == \
       [334.0, 231.0])
-    self.assertTrue(visualizeSBML._getReactionHandlePositions(self._df, "r_0")[0] == \
+    self.assertTrue(visualizeSBML._getReactionBezierHandles(self._df, "r_0")[0] == \
       [[386.0, 231.0], [386.0, 231.0], [386.0, 231.0]])
 
     self.assertTrue(visualizeSBML._getTextPosition(self._df_text, "text_content1")[0] == [92.0, 26.0])

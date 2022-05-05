@@ -1480,7 +1480,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
 
     Returns:
         position: list-[position_x, position_y], top left-hand corner of the network(s).
-        It is calculated by the minimum positions of compartments, nodes, centroid and handle 
+        It is calculated by the minimum positions of compartments, nodes, center and handle 
         positions of reactions, aribitrary text, arbitrary shape,
         excluding the compartment with the id of _compartment_default_.
     
@@ -1542,8 +1542,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[1] = text_temp_position[j][1]
     for i in range(numComps):
         if Comps_ids[i] != "_compartment_default_":
-            comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])[0]
-            comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])[0]
+            comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
+            comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
             if comp_temp_fill_color[0] != [255,255,255,255] or \
                 comp_temp_border_color[0] != [255,255,255,255]:
                 comp_temp_position = _getCompartmentPosition(_df, Comps_ids[i])[0]
@@ -1553,7 +1553,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
                     position[1] = comp_temp_position[1]
     for i in range(numRxns):
         center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
-        handle_positions = _getReactionHandlePositions(_df, Rxns_ids[i])[0]
+        handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
         if center_position[0] < position[0]:
             position[0] = center_position[0]
         if center_position[1] < position[1]:
@@ -1602,7 +1602,7 @@ def _getNetworkBottomRightCorner(sbmlStr):
     Returns:
         position: list-[position_x, position_y],bottom right-hand corner of the network(s).
         It is calculated by the maximum right down corner positions of positions of compartments, 
-        nodes, centroid and handle positions of reactions, aribitrary text, arbitrary shape,
+        nodes, center and handle positions of reactions, aribitrary text, arbitrary shape,
         excluding the compartment with the id of _compartment_default_.
     
     
@@ -1683,8 +1683,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[1] = text_temp_position[1]
     for i in range(numComps):
         if Comps_ids[i] != "_compartment_default_":
-            comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])[0]
-            comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])[0]
+            comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
+            comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
             if comp_temp_fill_color[0] != [255,255,255,255] or \
             comp_temp_border_color[0] != [255,255,255,255]:
                 comp_temp_size = _getCompartmentSize(_df, Comps_ids[i])[0]
@@ -1697,7 +1697,7 @@ def _getNetworkBottomRightCorner(sbmlStr):
                     position[1] = comp_temp_position[1]
     for i in range(numRxns):
         center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
-        handle_positions = _getReactionHandlePositions(_df, Rxns_ids[i])[0]
+        handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
         if center_position[0] > position[0]:
             position[0] = center_position[0]
         if center_position[1] > position[1]:
@@ -1910,9 +1910,9 @@ def _getReactionCenterPosition(df, id):
 
     return center_position_list
 
-def _getReactionHandlePositions(df, id):
+def _getReactionBezierHandles(df, id):
     """
-    Get the handle positions of a reaction with its certain reaction id.
+    Get the bezier handle positions of a reaction with its certain reaction id.
 
     Args:
         df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).

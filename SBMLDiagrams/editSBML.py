@@ -1430,10 +1430,10 @@ def _setReactionCenterPosition(df, id, position):
     
     return df_temp
 
-def _setReactionHandlePositions(df, id, position):
+def _setReactionBezierHandles(df, id, position):
 
     """
-    Set the reaction handle positions.
+    Set the reaction bezier handle positions.
 
     Args:  
         df: DataFrame-initial information.

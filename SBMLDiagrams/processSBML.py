@@ -136,7 +136,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     Args:  
         sbmlStr: str-the string of the input sbml file.
 
-        reactionLineType: str-type of the reaction line: 'linear' or 'bezier' (default).
+        reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
 
     Returns:
         (df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData): tuple.
@@ -1579,13 +1579,11 @@ class load:
             id: str-the id of the compartment.
 
         Returns:
-            position_list: list of position.
-
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the compartment.  
 
         Examples: 
-            p = sd.getCompartmentPosition('compartment_id')[0]
+            p = sd.getCompartmentPosition('compartment_id')
 
             print ('x = ', p.x, 'y = ', p.y)         
 
@@ -1597,8 +1595,11 @@ class load:
         for alias in range(num_alias):
             position = point.Point (p[alias][0], p[alias][1])
             position_list.append(position)
-
-        return position_list
+        if len(position_list) == 1:
+            position = position_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return position
 
     def getCompartmentSize(self, id):
         """
@@ -1608,13 +1609,11 @@ class load:
             id: str-the id of the compartment.
 
         Returns:
-            size_list: list of size.
-
             size: a Point object with attributes x and y representing
             the width and height of the compartment.
 
         Examples: 
-            p = sd.getCompartmentSize('compartment_id')[0]
+            p = sd.getCompartmentSize('compartment_id')
             
             print ('Width = ', p.x, 'Height = ', p.y)
 
@@ -1626,7 +1625,11 @@ class load:
         for alias in range(num_alias):
             size = point.Point (p[alias][0], p[alias][1])
             size_list.append(size)
-        return size_list
+        if len(size_list) == 1:
+            size = size_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return size
 
     def getCompartmentFillColor(self, id):
         """
@@ -1636,8 +1639,6 @@ class load:
             id: str-the id of the compartment.
 
         Returns:
-            fill_color_list: list of fill_color.
-
             fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
         """
@@ -1647,8 +1648,12 @@ class load:
             rgb = self.df[0].iloc[idx_list[i]]["fill_color"]
             color = _rgb_to_color(rgb)
             fill_color_list.append(color)
-
-        return fill_color_list
+        
+        if len(fill_color_list) == 1:
+            fill_color = fill_color_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return fill_color
 
     def getCompartmentBorderColor(self, id):
         """
@@ -1658,8 +1663,6 @@ class load:
             id: str-the id of the compartment.
 
         Returns:
-            border_color_list: list of border_color.
-
             border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
 
@@ -1671,7 +1674,11 @@ class load:
             color = _rgb_to_color(rgb)
             border_color_list.append(color)
 
-        return border_color_list
+        if len(border_color_list) == 1:
+            border_color = border_color_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return border_color
 
     def getCompartmentBorderWidth(self, id):
         """
@@ -1681,8 +1688,6 @@ class load:
             id: str-the id of the compartment.
 
         Returns:
-            border_width_list: list of border_width.
-
             border_width: float-compartment border line width.
 
         """
@@ -1692,7 +1697,11 @@ class load:
         for i in range(len(idx_list)):
             border_width_list.append(self.df[0].iloc[idx_list[i]]["border_width"])
 
-        return border_width_list
+        if len(border_width_list) == 1:
+            border_width = border_width_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return border_width
 
     def getNodeAliasNum(self, id):
         """
@@ -1710,42 +1719,47 @@ class load:
         num_alias = len(p)
         return num_alias
 
-    def isFloatingNode(self, id):
+    def isFloatingNode(self, id, alias = 0):
         """
         Judge whether a node is floating node with its certain node id.
 
         Args: 
             id: str-the id of the Node.
+            
+            alias: int-alias node index [0, num_alias).
 
         Returns:
-            floating_node_list: list-list of floating_node.
-
             floating_node: bool-floating node (True) or not (False).
 
         """
         idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
         floating_node_list =[] 
+        if len(idx_list) == 0:
+            raise Exception("This is not a valid id.")
         for i in range(len(idx_list)):
             floating_node_list.append(bool(self.df[1].iloc[idx_list[i]]["floating_node"]))
+        if alias < len(idx_list) and alias >= 0:
+            floating_node = floating_node_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        return floating_node
 
-        return floating_node_list
 
-
-    def getNodePosition(self, id):
+    def getNodePosition(self, id, alias = 0):
         """
         Get the position of a node with its certain node id.
 
         Args: 
             id: str-the id of the Node.
+            
+            alias: int-alias node index [0, num_alias).
 
         Returns:
-            position-list: list-list of position.
-
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the node.
 
         Examples: 
-            p = sd.getNodePosition('ATP')[0]
+            p = sd.getNodePosition('ATP')
             
             print('x = ', p.x, 'y = ', p.y)            
 
@@ -1754,26 +1768,33 @@ class load:
         p = visualizeSBML._getNodePosition(self.df, id)
         num_alias = len(p)
         position_list = []
-        for alias in range(num_alias):
-            position = point.Point (p[alias][0], p[alias][1])
+        for i in range(num_alias):
+            position = point.Point (p[i][0], p[i][1])
             position_list.append(position)
-        return position_list
+        if len(position_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(position_list) and alias >= 0:
+            position = position_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        
+        return position
 
 
-    def getNodeCenter(self, id):
+    def getNodeCenter(self, id, alias = 0):
         """
         Get the center point of a node with given id.
 
         Args: 
             id: str-the id of the Node.
+            
+            alias: int-alias node index [0, num_alias).
 
         Returns:
-            position_list: list-list of position.
-
             position-a Point object with x and y coordinates of the center of the node.
            
         Examples:
-            p = sd.getNodeCenter('ATP')[0]
+            p = sd.getNodeCenter('ATP')
                 
             print(p.x, p.y)
 
@@ -1785,29 +1806,36 @@ class load:
         size = visualizeSBML._getNodeSize(self.df, id)
         num_alias = len(p)
         position_list = []
-        for alias in range(num_alias):
-            cx = p[alias][0] + size[alias][0]/2
-            cy = p[alias][1] + size[alias][1]/2
+        for i in range(num_alias):
+            cx = p[i][0] + size[i][0]/2
+            cy = p[i][1] + size[i][1]/2
             position = point.Point(cx, cy) 
             position_list.append(position)
-        return position_list
+        if len(position_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(position_list) and alias >= 0:
+            position = position_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        
+        return position
         
 
-    def getNodeSize(self, id):
+    def getNodeSize(self, id, alias = 0):
         """
         Get the size of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
+            
+            alias: int-alias node index [0, num_alias).
 
         Returns:
-            size_list: list-list of size.
-
             size: a Point object with attributes x and y representing
             the width and height of the node.
 
         Examples: 
-            p = sd.getNodeSize('ATP')[0]
+            p = sd.getNodeSize('ATP')
             
             print ('Width = ', p.x, 'Height = ', p.y)
 
@@ -1816,21 +1844,29 @@ class load:
         p = visualizeSBML._getNodeSize (self.df, id)
         num_alias = len(p)
         size_list = []
-        for alias in range(num_alias):
-            size = point.Point (p[alias][0], p[alias][1])
+        for i in range(num_alias):
+            size = point.Point (p[i][0], p[i][1])
             size_list.append(size)
-        return size_list
+        if len(size_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(size_list) and alias >= 0:
+            size =  size_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        
+        return size
 
-
-    def getNodeShape(self, id):
+    def getNodeShape(self, id, alias = 0):
         """
         Get the shape index and the shape of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
+            
+            alias: int-alias node index [0, num_alias).
 
         Returns:
-            shape_list: list of tuple (shape_name, vertex_positions)
+            shape: tuple (shape_name, vertex_positions)
             
             shape_name: str-the name of the node shape.
 
@@ -1858,25 +1894,30 @@ class load:
                     vertex.append([vertex_x,vertex_y])         
 
             shape_list.append((shape_name, vertex))
+        if len(shape_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(shape_list) and alias >= 0:
+            shape =  shape_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        return shape
 
-        return shape_list
 
-
-    def getNodeTextPosition(self, id):
+    def getNodeTextPosition(self, id, alias = 0):
         """
         Get the text position of a node with its certain node id.
 
         Args: 
             id: str-the id of node.
+            
+            alias: int-alias node index [0, num_alias).
 
         Returns:
-            txt_position_list: list of txt_position.
-
             txt_position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the node text.
 
         Examples: 
-            p = sd.getNodeTextPosition('ATP')[0]
+            p = sd.getNodeTextPosition('ATP')
 
             print ('x = ', p.x, 'y = ', p.y)            
 
@@ -1885,28 +1926,34 @@ class load:
         p = visualizeSBML._getNodeTextPosition(self.df, id)
         num_alias = len(p)
         txt_position_list = []
-        for alias in range(num_alias):
-            txt_position = point.Point (p[alias][0], p[alias][1])
+        for i in range(num_alias):
+            txt_position = point.Point (p[i][0], p[i][1])
             txt_position_list.append(txt_position)
+        if len(txt_position_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(txt_position_list) and alias >= 0:
+            txt_position =  txt_position_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        return txt_position_list
+        return txt_position
 
         
-    def getNodeTextSize(self, id):
+    def getNodeTextSize(self, id, alias = 0):
         """
         Get the text size of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
 
-        Returns:
-            txt_size_list: list of txt_size.
+            alias: int-alias node index [0, num_alias).
 
+        Returns:
             size: a Point object with attributes x and y representing
             the width and height of the node text.
 
         Examples:
-            p = sd.getNodeTextSize('ATP')[0]
+            p = sd.getNodeTextSize('ATP')
 
             print ('Width = ', p.x, 'Height = ', p.y)          
 
@@ -1915,23 +1962,29 @@ class load:
         p = visualizeSBML._getNodeTextSize(self.df, id)
         num_alias = len(p)
         txt_size_list = []
-        for alias in range(num_alias):
-            txt_size = point.Point (p[alias][0], p[alias][1])
+        for i in range(num_alias):
+            txt_size = point.Point (p[i][0], p[i][1])
             txt_size_list.append(txt_size)
+        if len(txt_size_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(txt_size_list) and alias >= 0:
+            txt_size =  txt_size_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        return txt_size_list
+        return txt_size
 
 
-    def getNodeFillColor(self, id):
+    def getNodeFillColor(self, id, alias = 0):
         """
         Get the fill color of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
 
-        Returns:
-            fill_color_list: list of fill_color.
+            alias: int-alias node index [0, num_alias).
 
+        Returns:
             fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)]; or list-[str-gradient_type, list-gradient_info, list-stop_info],
             where gradient_type can be 'linearGradient' or 'radialGradient', while gradient_info
@@ -1948,20 +2001,25 @@ class load:
             else:
                 color = _rgb_to_color(rgb)
             fill_color_list.append(color)
+        if len(fill_color_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(fill_color_list) and alias >= 0:
+            fill_color = fill_color_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        return fill_color
 
-        return fill_color_list
 
-
-    def getNodeBorderColor(self, id):
+    def getNodeBorderColor(self, id, alias = 0):
         """
         Get the border color of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
+            
+            alias: int-alias node index [0, num_alias).
 
         Returns:
-            border_color_list: list of border_color.
-
             border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
 
@@ -1973,16 +2031,24 @@ class load:
             rgb = self.df[1].iloc[idx_list[i]]["border_color"]
             color = _rgb_to_color(rgb)
             border_color_list.append(color)
+        if len(border_color_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(border_color_list) and alias >= 0:
+            border_color =  border_color_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        return border_color_list
+        return border_color
 
 
-    def getNodeBorderWidth(self, id):
+    def getNodeBorderWidth(self, id, alias = 0):
         """
         Get the border width of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
+            
+            alias: int-alias node index [0, num_alias).
 
         Returns:
             border_width: float-node border line width.
@@ -1992,19 +2058,25 @@ class load:
         border_width_list =[] 
         for i in range(len(idx_list)):
             border_width_list.append(self.df[1].iloc[idx_list[i]]["border_width"])
+        if len(border_width_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(border_width_list) and alias >= 0:
+            border_width =  border_width_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        return border_width_list
+        return border_width
 
-    def getNodeTextFontColor(self, id):
+    def getNodeTextFontColor(self, id, alias = 0):
         """
         Get the text font color of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
 
-        Returns:
-            txt_font_color_list: list of txt_font_color.
+            alias: int-alias node index [0, num_alias).
 
+        Returns:
             txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
 
@@ -2016,19 +2088,25 @@ class load:
             rgb = self.df[1].iloc[idx_list[i]]["txt_font_color"]
             color = _rgb_to_color(rgb)
             txt_font_color_list.append(color)
+        if len(txt_font_color_list) == 0:
+            raise Exception("This is not a valid id.")
 
-        return txt_font_color_list
+        if alias < len(txt_font_color_list) and alias >= 0:
+            txt_font_color =  txt_font_color_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        return txt_font_color
 
-    def getNodeTextLineWidth(self, id):
+    def getNodeTextLineWidth(self, id, alias = 0):
         """
         Get the text line width of a node with its certain node id.
 
         Args: 
             id: int-the id of the node.
 
-        Returns:
-            txt_line_width_list: list of txt_line_width.
+            alias: int-alias node index [0, num_alias).
 
+        Returns:
             txt_line_width: float-node text line width.
 
         """
@@ -2036,19 +2114,25 @@ class load:
         txt_line_width_list =[] 
         for i in range(len(idx_list)):
             txt_line_width_list.append(self.df[1].iloc[idx_list[i]]["txt_line_width"])
+        if len(txt_line_width_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(txt_line_width_list) and alias >= 0:
+            txt_line_width =  txt_line_width_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        return txt_line_width_list
+        return txt_line_width
 
-    def getNodeTextFontSize(self, id):
+    def getNodeTextFontSize(self, id, alias = 0):
         """
         Get the text font size of a node with its certain node id.
 
         Args: 
             id: str-the id of the node.
 
-        Returns:
-            txt_font_size_list: list of txt_font_size.
+            alias: int-alias node index [0, num_alias).
 
+        Returns:
             txt_font_size: float.
 
         """
@@ -2056,8 +2140,14 @@ class load:
         txt_font_size_list =[] 
         for i in range(len(idx_list)):
             txt_font_size_list.append(float(self.df[1].iloc[idx_list[i]]["txt_font_size"]))
+        if len(txt_font_size_list) == 0:
+            raise Exception("This is not a valid id.")
+        if alias < len(txt_font_size_list) and alias >= 0:
+            txt_font_size =  txt_font_size_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
 
-        return txt_font_size_list
+        return txt_font_size
 
     def getReactionCenterPosition(self, id):
         """
@@ -2067,37 +2157,37 @@ class load:
             id: str-the id of the reaction.
 
         Returns:
-            line_center_position_list: list of center_position.
-
             center_position: a Point object with attributes x and y representing
             the x/y position. 
 
         Examples: 
-            p = sd.getReactionCenterPosition('reaction_id')[0]
+            p = sd.getReactionCenterPosition('reaction_id')
 
             print ('x = ', p.x, 'y = ', p.y)          
 
         """
 
         p = visualizeSBML._getReactionCenterPosition(self.df, id)
-        num_alias = len(p)
+        num = len(p)
         center_position_list = []
-        for alias in range(num_alias):
-            center_position = point.Point (p[alias][0], p[alias][1])
+        for i in range(num):
+            center_position = point.Point (p[i][0], p[i][1])
             center_position_list.append(center_position)
+        if len(center_position_list) == 1:
+            center_position = center_position_list[0]
+        else:
+            raise Exception("This is not a valid id.")
 
-        return center_position_list
+        return center_position
 
-    def getReactionHandlePositions(self, id):
+    def getReactionBezierHandles(self, id):
         """
-        Get the handle positions of a reaction with its certain reaction id.
+        Get the bezier handle positions of a reaction with its certain reaction id.
 
         Args: 
             id: str-the id of the reaction.
 
         Returns:
-            line_handle_positions_list: list of handle_positions.
-
             handle_positions: list-position of the handles: 
             [center handle, reactant handles, product handles].
 
@@ -2105,16 +2195,21 @@ class load:
 
         """
 
-        p = visualizeSBML._getReactionHandlePositions(self.df, id)
-        num_alias = len(p)
+        p = visualizeSBML._getReactionBezierHandles(self.df, id)
+        num = len(p)
         handle_position_list = []
-        for alias in range(num_alias):
+        for j in range(num):
             handle_position = []
-            for i in range(len(p[alias])):
-                handle_position.append(point.Point(p[alias][i][0], p[alias][i][1]))
+            for i in range(len(p[j])):
+                handle_position.append(point.Point(p[j][i][0], p[j][i][1]))
             handle_position_list.append(handle_position)
 
-        return handle_position_list
+        if len(handle_position_list) == 1:
+            handle_position = handle_position_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+
+        return handle_position
 
     def getReactionFillColor(self, id):
         """
@@ -2124,8 +2219,6 @@ class load:
             id: str-the id of the reaction.
 
         Returns:
-            fill_color_list: list of fill_color.
-
             fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
 
@@ -2136,8 +2229,13 @@ class load:
             rgb = self.df[2].iloc[idx_list[i]]["fill_color"]
             color = _rgb_to_color(rgb)
             fill_color_list.append(color)
-
-        return fill_color_list
+        
+        if len(fill_color_list) == 1:
+            fill_color = fill_color_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        
+        return fill_color
 
     def getReactionLineThickness(self, id):
         """
@@ -2147,8 +2245,6 @@ class load:
             id: str-the id of the reaction.
 
         Returns:
-            line_thickness_list: list of line_thickness.
-
             line_thickness: float-reaction border line width.
 
         """
@@ -2157,7 +2253,12 @@ class load:
         for i in range(len(idx_list)):
             line_thickness_list.append(self.df[2].iloc[idx_list[i]]["line_thickness"])
 
-        return line_thickness_list
+        if len(line_thickness_list) == 1:
+            line_thickness = line_thickness_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+
+        return line_thickness
 
     def _isBezierReactionType(self, id):
         """
@@ -2167,8 +2268,6 @@ class load:
             id: str-the id of the reaction
 
         Returns:
-            bezier_list: list of bezier
-
             bezier: bool-bezier reaction (True) or not (False)
 
         """
@@ -2176,8 +2275,13 @@ class load:
         bezier_list =[] 
         for i in range(len(idx_list)):
             bezier_list.append(bool(self.df[2].iloc[idx_list[i]]["bezier"]))
+        
+        if len(bezier_list) == 1:
+            bezier = bezier_list[0]
+        else:
+            raise Exception("This is not a valid id.")
 
-        return bezier_list
+        return bezier
 
     #def getReactionArrowHeadSize(self):
     def getReactionArrowHeadSize(self, id):
@@ -2187,13 +2291,11 @@ class load:
         Args: 
 
         Returns:
-            arrow_head_size_list: list of arrow_head_size.
-
             arrow_head_size: a Point object with attributes x and y representing
             the width and height of the arrow head.
 
         Examples: 
-            p = sd.getReactionArrowHeadSize('reaction_id')[0]
+            p = sd.getReactionArrowHeadSize('reaction_id')
             
             print ('Width = ', p.x, 'Height = ', p.y)
 
@@ -2205,7 +2307,12 @@ class load:
         arrow_head_size_list =[]
         for i in range(len(arrow_head_size_pre)):
             arrow_head_size_list.append(point.Point(arrow_head_size_pre[i][0],arrow_head_size_pre[i][1]))
-        return arrow_head_size_list
+        if len(arrow_head_size_list) == 1:
+            arrow_head_size = arrow_head_size_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+
+        return arrow_head_size
 
     def getReactionDash(self, id):
         """
@@ -2215,8 +2322,6 @@ class load:
             id: str-the id of the reaction.
 
         Returns:
-            dash_list: list of dash.
-
             dash: list - [] means solid; 
             [a,b] means drawing a a-point line and following a b-point gap and etc;
             [a,b,c,d] means drawing a a-point line and following a b-point gap, and then
@@ -2227,8 +2332,12 @@ class load:
         dash_list =[] 
         for i in range(len(idx_list)):
             dash_list.append((self.df[2].iloc[idx_list[i]]["rxn_dash"]))
-
-        return dash_list
+        if len(dash_list) == 1:
+            dash = dash_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        
+        return dash
     
     def setCompartmentPosition(self, id, position):
         """
@@ -2357,7 +2466,10 @@ class load:
 
     def setNodeAndTextPosition(self, id, position, alias = 0):
         """
-        Set the x,y coordinates of the node and node text position if there are consistent.
+        Set the x,y coordinates of the node position and node text position if they are consistent.
+        Please only use this function if you want to design the node position and node text 
+        position to be the same, otherwise use setNodePosition() and setNodeTextPosition() 
+        separately to set the position of the node and the node text.
 
         Args:  
             id: str-node id.
@@ -2366,11 +2478,11 @@ class load:
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of the 
-            node and text.
+            node and the node text.
 
             point.Point()-
             a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the node and text.
+            the x/y position of the top-left hand corner of the node and the node text.
 
             alias: int-alias node index [0, num_alias).
 
@@ -2500,6 +2612,36 @@ class load:
 
         """
         self.df = editSBML._setNodeTextPosition(self.df, id, txt_position, alias=alias)
+        #return self.df
+
+    def moveNodeTextPosition(self, id, rel_position, alias = 0):
+        """
+        Move the x,y coordinates of the node text position relative to its original position.
+
+        Args:  
+            id: str-node id.
+
+            rel_position: list/point.Point()-
+                
+            list-
+            [rel_position_x, rel_position_y], the relative coordinates moving away from the 
+            original node text position.
+
+            point.Point()-
+            a Point object with attributes x and y representing the relative coordinates moving 
+            away from the original node text position.
+
+            alias: alias node index [0, num_alias).
+
+        """
+        original_position = visualizeSBML._getNodeTextPosition(self.df, id)[alias]
+        if type(rel_position) != list and type(rel_position) != type(point.Point()):
+            raise Exception("Please enter a valid rel_position type.")
+        if type(rel_position) == type(point.Point()):
+            rel_position = [rel_position.x, rel_position.y]
+        update_position = [original_position[0] + rel_position[0], 
+                            original_position[1] + rel_position[1]]
+        self.df = editSBML._setNodeTextPosition(self.df, id, update_position, alias=alias)
         #return self.df
 
     def setNodeTextPositionCenter(self, id, alias = 0):
@@ -2775,6 +2917,80 @@ class load:
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
         #return self.df
 
+    def setReactionStraightLine(self, id):
+        """
+        Set a certain reaction (with its id) to straight line, which directly connects the center
+        position with the nodes (species). The default reaction line type is bezier curves without
+        using this function.
+
+        Args:  
+            id: str-reaction id.
+      
+        """
+        # center_x = 0.
+        # center_y = 0.
+
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        if len(idx_list) == 0:
+            raise Exception("This is not a valid id.")
+        rct_list = []
+        prd_list = []
+        rct_list.append(self.df[2].iloc[idx_list[0]]["sources"])
+        prd_list.append(self.df[2].iloc[idx_list[0]]["targets"])
+
+        rct_num = len(rct_list[0])
+        prd_num = len(prd_list[0])
+
+        rct_id_list = []
+        prd_id_list = []
+        for i in range(rct_num):
+            temp_idx = self.df[1].index[self.df[1]["idx"] == rct_list[0][i]].tolist()[0]
+            rct_id_list.append(self.df[1].iloc[temp_idx]["id"])
+        for i in range(prd_num):
+            temp_idx = self.df[1].index[self.df[1]["idx"] == prd_list[0][i]].tolist()[0]
+            prd_id_list.append(self.df[1].iloc[temp_idx]["id"])
+
+        src_position = []
+        src_dimension = []
+        dst_position = []
+        dst_dimension = []
+        for i in range(rct_num):
+            temp_idx = self.df[1].index[self.df[1]["id"] == rct_id_list[i]].tolist()[0]
+            src_position.append(self.df[1].iloc[temp_idx]["position"])
+            src_dimension.append(self.df[1].iloc[temp_idx]["size"])
+        for i in range(prd_num):
+            temp_idx = self.df[1].index[self.df[1]["id"] == prd_id_list[i]].tolist()[0]
+            dst_position.append(self.df[1].iloc[temp_idx]["position"])
+            dst_dimension.append(self.df[1].iloc[temp_idx]["size"])
+  
+        # for j in range(rct_num):
+        #     center_x += src_position[j][0]+.5*src_dimension[j][0]
+        #     center_y += src_position[j][1]+.5*src_dimension[j][1]
+        # for j in range(prd_num):
+        #     center_x += dst_position[j][0]+.5*dst_dimension[j][0]
+        #     center_y += dst_position[j][1]+.5*dst_dimension[j][1]
+        # center_x = center_x/(rct_num + prd_num) 
+        # center_y = center_y/(rct_num + prd_num)
+        center_position_pt = visualizeSBML._getReactionCenterPosition(self.df, id)
+        center_position = [center_position_pt[0][0], center_position_pt[0][1]]
+        #center_position = [center_x, center_y]
+        handles = [center_position]
+        for j in range(rct_num):
+            src_handle_x = .5*(center_position[0] + src_position[j][0] + .5*src_dimension[j][0])
+            src_handle_y = .5*(center_position[1] + src_position[j][1] + .5*src_dimension[j][1])
+            handles.append([src_handle_x,src_handle_y])
+        for j in range(prd_num):
+            dst_handle_x = .5*(center_position[0] + dst_position[j][0] + .5*dst_dimension[j][0])
+            dst_handle_y = .5*(center_position[1] + dst_position[j][1] + .5*dst_dimension[j][1])
+            handles.append([dst_handle_x,dst_handle_y])
+        # print('rct:', src_position, src_dimension)
+        # print('prd:', dst_position, dst_dimension)
+        # print("center:", center_position)
+        # print("handle:", handles)
+        self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
+        self.df = editSBML._setReactionBezierHandles(self.df, id, handles)
+ 
+
     def setReactionCenterPosition(self, id, position):
         """
         Set the reaction center position.
@@ -2795,9 +3011,9 @@ class load:
         #return self.df
     
 
-    def setReactionHandlePositions(self, id, position):
+    def setReactionBezierHandles(self, id, position):
         """
-        Set the reaction handle positions.
+        Set the reaction bezier handle positions.
 
         Args:  
             id: str-reaction id.
@@ -2814,12 +3030,13 @@ class load:
             a Point object with attributes x and y representing the x/y position.
         
         """
-        self.df = editSBML._setReactionHandlePositions(self.df, id, position)
+        self.df = editSBML._setReactionBezierHandles(self.df, id, position)
         #return self.df
 
     def setReactionDefaultCenterAndHandlePositions(self, id):
         """
-        Set detault center and handle positions, which makes the reaction lines look like straight lines.
+        Set detault center and handle positions. The default center is the centroid of the reaction,
+        and the default handle positions are middle points of nodes (species) and the centroid.
 
         Args:  
             id: str-reaction id.
@@ -2830,6 +3047,8 @@ class load:
         center_y = 0.
 
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        if len(idx_list) == 0:
+            raise Exception("This is not a valid id.")
         rct_list = []
         prd_list = []
         rct_list.append(self.df[2].iloc[idx_list[0]]["sources"])
@@ -2883,7 +3102,7 @@ class load:
         # print("center:", center_position)
         # print("handle:", handles)
         self.df = editSBML._setReactionCenterPosition(self.df, id, center_position)        
-        self.df = editSBML._setReactionHandlePositions(self.df, id, handles)
+        self.df = editSBML._setReactionBezierHandles(self.df, id, handles)
 
         #return self.df
 
@@ -3011,14 +3230,12 @@ class load:
         Args: 
             txt_str: str-the content of the text.
 
-        Returns:
-            position_list: list of position.
-            
+        Returns: 
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the text.
 
         Examples: 
-            p = sd.getTextPosition('text_content')[0]
+            p = sd.getTextPosition('text_content')
             
             print ('x = ', p.x, 'y = ', p.y)            
 
@@ -3030,8 +3247,12 @@ class load:
         for alias in range(num_alias):
             position = point.Point (p[alias][0], p[alias][1])
             position_list.append(position)
+        if len(position_list) == 1:
+            position = position_list[0]
+        else:
+            raise Exception("This is not a valid id.")
 
-        return position_list
+        return position
 
     def getTextSize(self, txt_str):
         """
@@ -3047,7 +3268,7 @@ class load:
             the width and height of the text.
 
         Examples: 
-            p = sd.getTextSize('text_content')[0]
+            p = sd.getTextSize('text_content')
 
             print ('Width = ', p.x, 'Height = ', p.y)
 
@@ -3059,7 +3280,11 @@ class load:
         for alias in range(num_alias):
             txt_size = point.Point (p[alias][0], p[alias][1])
             txt_size_list.append(txt_size)
-        return txt_size_list
+        if len(txt_size_list) == 1:
+            txt_size = txt_size_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return txt_size
 
     def getTextFontColor(self, txt_str):
         """
@@ -3069,8 +3294,6 @@ class load:
             txt_str: str-the text content.
 
         Returns:
-            txt_font_color_list: list of txt_font_color.
-
             txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
         """
@@ -3081,8 +3304,12 @@ class load:
             rgb = self.df[3].iloc[idx_list[i]]["txt_font_color"]
             color = _rgb_to_color(rgb)
             txt_font_color_list.append(color)
+        if len(txt_font_color_list) == 1:
+            txt_font_color = txt_font_color_list[0]
+        else:
+            raise Exception("This is not a valid id.")
 
-        return txt_font_color_list
+        return txt_font_color
 
     def getTextLineWidth(self, txt_str):
         """
@@ -3092,8 +3319,6 @@ class load:
             txt_str: str-the text content.
 
         Returns:
-            txt_line_width_list: list of txt_line_width.
-
             txt_line_width: float-node text line width.
         
         """
@@ -3101,8 +3326,12 @@ class load:
         txt_line_width_list =[] 
         for i in range(len(idx_list)):
             txt_line_width_list.append(self.df[3].iloc[idx_list[i]]["txt_line_width"])
+        if len(txt_line_width_list) == 1:
+            txt_line_width = txt_line_width_list[0]
+        else:
+            raise Exception("This is not a valid id.")
 
-        return txt_line_width_list
+        return txt_line_width
 
     def getTextFontSize(self, txt_str):
         """
@@ -3112,8 +3341,6 @@ class load:
             txt_str: str-the text content.
 
         Returns:
-            txt_font_size_list: list of txt_font_size.
-
             txt_font_size: float-text font size.
         
         """
@@ -3122,7 +3349,11 @@ class load:
         for i in range(len(idx_list)):
             txt_font_size_list.append(float(self.df[3].iloc[idx_list[i]]["txt_font_size"]))
 
-        return txt_font_size_list
+        if len(txt_font_size_list) == 1:
+            txt_font_size = txt_font_size_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return txt_font_size
 
     def setTextPosition(self, txt_str, txt_position):
         """
@@ -3415,13 +3646,11 @@ class load:
             shape_name_str: str-the shape name of the arbitrary shape.
 
         Returns:
-            position_list: list of position.
-
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the shape.
 
         Examples: 
-            p = sd.getShapePosition('shape_name')[0]
+            p = sd.getShapePosition('shape_name')
 
             print ('x = ', p.x, 'y = ', p.y)
 
@@ -3433,7 +3662,11 @@ class load:
         for alias in range(num_alias):
             position = point.Point (p[alias][0], p[alias][1])
             position_list.append(position)
-        return position_list
+        if len(position_list) == 1:
+            position = position_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return position
 
     def getShapeSize(self, shape_name_str):
         """
@@ -3443,13 +3676,11 @@ class load:
             shape_name_str: str-the shape name.
 
         Returns:
-            shape_size_list: list of shape_size.
-
             shape_size: a Point object with attributes x and y representing
             the width and height of the shape.
 
         Examples: 
-            p = sd.getShapeSize('shape_name')[0]
+            p = sd.getShapeSize('shape_name')
 
             print ('Width = ', p.x, 'Height = ', p.y)
         
@@ -3461,7 +3692,11 @@ class load:
         for alias in range(num_alias):
             shape_size = point.Point (p[alias][0], p[alias][1])
             shape_size_list.append(shape_size)
-        return shape_size_list
+        if len(shape_size_list) == 1:
+            shape_size = shape_size_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return shape_size
 
 
     def export(self):
@@ -3746,13 +3981,37 @@ class load:
         shape_name_list = self.df[4]["shape_name"].tolist()
         return shape_name_list
 
-    
+    def hasLayout(self):
+        """
+        Judge whether there is layout in the sbml or not.
+
+        Returns:
+            flag: bool-true (there is layout) or false (there is no layout). 
+        """
+
+        flag = True
+        sbmlStr = self.sbmlstr
+        document = libsbml.readSBMLFromString(sbmlStr)
+        if document.getNumErrors() != 0:
+            errMsgRead = document.getErrorLog().toString()
+            raise Exception("Errors in SBML Model: ", errMsgRead)
+        model_layout = document.getModel()
+        try:
+            mplugin = model_layout.getPlugin("layout")
+            layout = mplugin.getLayout(0)
+            if layout == None:
+                flag = False
+        except:
+            flag = False
+
+        return flag
+  
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -3796,13 +4055,17 @@ if __name__ == '__main__':
     #filename = "putida_gb_newgenes.xml"
 
     #filename = "bart2.xml"
-    filename = "bart_arccenter.xml"
+    #filename = "bart_arccenter.xml"
     #filename = "bart_spRefBezier.xml"
     #filename = "newSBML.xml"
     #filename = "output.xml"
     #filename = "Coyote.xml"
     #filename = "newSBML2.xml"
     #filename = "coyote2.xml"
+
+    #filename = "BIOMD0000000006.xml"
+    #filename = "nodes.xml"
+    #filename = "test_arrows.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -3840,7 +4103,7 @@ if __name__ == '__main__':
     # print(df.getNodeSize("x_0")[0])
     # print(df.getNodeCenter("x_0")[0])
     # print(df.getNodeShape("x_0"))
-    # print(df.getNodeTextPosition("x_0")[0])
+    #print(df.getNodeTextPosition("x_0")[0])
     # print(df.getNodeTextSize("x_0"))
     # print(df.getNodeFillColor("Species_1"))
     # print(df.getNodeBorderColor("x_1"))
@@ -3850,7 +4113,7 @@ if __name__ == '__main__':
     # print(df.getNodeTextFontSize("x_1"))
 
     # print("center_position:", df.getReactionCenterPosition("r_0"))
-    # print("handle_position:", df.getReactionHandlePositions("r_0"))
+    # print("handle_position:", df.getReactionBezierHandles("r_0"))
     # print(df.getReactionFillColor("r_0"))
     # print(df.getReactionLineThickness("r_0"))
     # print(df._isBezierReactionType("r_0"))
@@ -3877,11 +4140,12 @@ if __name__ == '__main__':
     # df.setNodeSize("x_1", [50.0, 30.0])
     # print(df.getNodeShape("x_0"))
     # df.setNodeShape("x_0",0)
-    #df.setNodeShape("x_0","downTriangle")
-    #df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
+    # df.setNodeShape("x_0","downTriangle")
+    # df.setNodeArbitraryPolygonShape("x_0","self_triangle",[[0,0],[100,0],[0,100]])
     # df.setNodeShape("x_0","ellipse")
     # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
+    #df.moveNodeTextPosition("x_0", point.Point(0,0))
     #df.setNodeTextPositionCenter("x_0")
     #df.setNodeTextPositionLeftCenter("x_0")
     #df.setNodeTextPositionRightCenter("x_0")
@@ -3891,7 +4155,8 @@ if __name__ == '__main__':
     #df.setNodeTextPositionUpperRight("x_0")
     #df.setNodeTextPositionLowerLeft("x_0")
     #df.setNodeTextPositionLowerRight("x_0")
-    #print(df.getNodeTextPosition("x_0"))
+    #df.setNodeTextPosition("x_0", [160., 107.])
+    #print(df.getNodeTextPosition("x_0")[0])
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     #df.setNodeFillLinearGradient("Species_1", [[0.0, 0.0], [100.0, 100.0]], [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
@@ -3915,10 +4180,11 @@ if __name__ == '__main__':
     # df.setReactionCenterPosition("r_0", [449.0, 200.0])
     # df.setReactionCenterPosition("r_1", [449.0, 278.0])
     # df.setReactionCenterPosition("r_0", [334.0, 232.0])
-    # df.setReactionHandlePositions("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
-    # df.setReactionHandlePositions("r_0", [point.Point(334.0, 232.0), 
+    # df.setReactionStraightLine("J1")
+    # df.setReactionBezierHandles("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
+    # df.setReactionBezierHandles("r_0", [point.Point(334.0, 232.0), 
     # point.Point(386.0, 231.0), point.Point(282.0, 231.0)])
-    # df.setReactionDefaultCenterAndHandlePositions("r_0")
+    #df.setReactionDefaultCenterAndHandlePositions("r_0")
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # df.setReactionDash("r_0", [6,6])
 
@@ -3951,6 +4217,8 @@ if __name__ == '__main__':
     # print(df.getReactionIdList())
     # print(df.getTextContentList())
     # print(df.getCompartmentIdList())
+
+    # print(df.hasLayout())
 
     # sbmlStr_layout_render = df.export()
 
