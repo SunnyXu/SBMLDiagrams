@@ -869,11 +869,12 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(len(self.df_TextData_test_textGlyph.index)>0) 
 
   def testText3(self):
-    # Test column 'txt_content' of df_TextData are strings
+    # Test column 'txt_content' and 'id 'of df_TextData are strings
     if IGNORE_TEST:
       return    
     list_text = []
     list_text += self.df_TextData_test_textGlyph[COLUMN_NAME_df_TextData[0]].tolist()
+    list_text += self.df_TextData_test_textGlyph[COLUMN_NAME_df_TextData[6]].tolist()
     test_text = all(isinstance(item, str) for item in list_text)
     self.assertTrue(test_text)
 
@@ -1203,7 +1204,7 @@ class TestImportSBML(unittest.TestCase):
 
     if IGNORE_TEST:
       return  
-
+    self.assertTrue(self.df_text.getTextContent("TextGlyph_01") == "text_content1")
     self.assertTrue(self.df_text.getTextPosition("TextGlyph_01").x == [92.0, 26.0][0])
     self.assertTrue(self.df_text.getTextSize("TextGlyph_01").x == [228.0, 24.0][0])
     self.assertTrue(self.df_text.getTextFontColor("TextGlyph_01")== [[0, 0, 0, 255], 'Black', '#000000FF'])
@@ -1216,6 +1217,7 @@ class TestImportSBML(unittest.TestCase):
     if IGNORE_TEST:
       return  
 
+    text_content = "test"
     text_position = [413., 216.]
     text_size = [413., 216.]
     text_font_color = [5,0,0]
@@ -1223,12 +1225,14 @@ class TestImportSBML(unittest.TestCase):
     text_line_width = 3.
     text_font_size = 15.
     
+    self.df_text.setTextContent("TextGlyph_01", text_content)
     self.df_text.setTextPosition("TextGlyph_01", text_position)
     self.df_text.setTextSize("TextGlyph_01", text_size)
     self.df_text.setTextFontColor("TextGlyph_01", text_font_color, opacity)
     self.df_text.setTextLineWidth("TextGlyph_02", text_line_width)
     self.df_text.setTextFontSize("TextGlyph_02", text_font_size)
 
+    self.assertTrue(self.df_text.getTextContent("TextGlyph_01") == text_content)
     self.assertTrue(self.df_text.getTextPosition("TextGlyph_01").x == text_position[0])
     self.assertTrue(self.df_text.getTextSize("TextGlyph_01").x == text_size[0])
     self.assertTrue(self.df_text.getTextFontColor("TextGlyph_01")[0] == [5, 0, 0, 255])
