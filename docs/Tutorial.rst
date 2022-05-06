@@ -89,7 +89,7 @@ Tutorial
    la.draw(showReversible=True, setImageSize=[600,300])
 
 
-4) Interface to Tellurium example 2 with alian nodes. You can assign a feature repeatly with a function.
+4) Interface to Tellurium example 2 with alias nodes. You can assign a feature repeatly with a function.
    
 .. image:: Figures/Tutorial/Basic_functions2.png
   :width: 400 
