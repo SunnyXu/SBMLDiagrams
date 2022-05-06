@@ -2857,7 +2857,7 @@ class load:
             alias: int-alias node index: 0 to number of alias nodes -1.
 
         Examples:
-           la.setNodeBorderColor ('node1', 'CornflowerBlue')
+            la.setNodeBorderColor ('node1', 'CornflowerBlue')
         """
         self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity, alias=alias)
 
@@ -2892,7 +2892,7 @@ class load:
             alias: int-alias node index: 0 to number of alias nodes -1.
         
         Examples:
-           la.setNodeTextFontColor ('node1', 'CornflowerBlue')
+            la.setNodeTextFontColor ('node1', 'CornflowerBlue')
         """
         self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity, alias=alias)
         #return self.df
@@ -3039,6 +3039,7 @@ class load:
 
         Examples:
             setReactionBezierHandles ('J1', [point.Point(550,150),point.Point(530,155),point.Point(600,120)])
+            
             setReactionBezierHandles("J3", [[550,150],[530,155],[600,120]])
         """
         self.df = editSBML._setReactionBezierHandles(self.df, id, position)
@@ -3129,7 +3130,7 @@ class load:
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
         Examples:
-           setReactionFillColor ('J1', "BurlyWood")
+            setReactionFillColor ('J1', "BurlyWood")
         
         """
         self.df = editSBML._setReactionFillColor(self.df, id, fill_color, opacity)
@@ -3196,8 +3197,7 @@ class load:
             drawing a c-point line followed by a d-point gap.
 
         Examples:
-           # to produce a dash such as - - - -, use
-           setReactionDashStyle ('J1', [5,5,5,5])
+            To produce a dash such as - - - -, use setReactionDashStyle ('J1', [5,5,5,5]).
         
         """
         self.df = editSBML._setReactionDashStyle(self.df, id, dash)
@@ -3282,8 +3282,6 @@ class load:
             txt_str: str-the text content.
 
         Returns:
-            txt_size_list: list of txt_size.
-
             txt_size: a Point object with attributes x and y representing
             the width and height of the text.
 
@@ -3882,6 +3880,7 @@ class load:
         Returns:   
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the network.
+        
         Examples:
             p = sd.getNetworkTopLeftConer()
                 
