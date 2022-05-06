@@ -1123,12 +1123,26 @@ def _setNodeFillLinearGradient(df, id, gradient_info, stop_info, alias = 0):
 
     if isinstance(stop_info, list) and len(stop_info) >= 2:
         for ii in range(len(stop_info)):
-            if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
-                if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
-                    pass
+            if isinstance(stop_info[ii], list): 
+                if len(stop_info[ii]) == 2:
+                    if type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
+                        if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
+                            pass
+                        else:
+                            stop_info_flag = False
+                            raise Exception("This is not a valid stop info.")
+                    else:
+                        stop_info_flag = False
+                        raise Exception("This is not a valid stop info.")
+                elif len(stop_info[ii]) == 3:
+                    if type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == str and type(stop_info[ii][2]) == float:
+                        html_to_rgba = _color_to_rgb(stop_info[ii][1], stop_info[ii][2])
+                        stop_info[ii] = [stop_info[ii][0], html_to_rgba]
+                    else:
+                        stop_info_flag = False
+                        raise Exception("This is not a valid stop info.")
                 else:
                     stop_info_flag = False
-                    raise Exception("This is not a valid stop info.")
             else:
                 stop_info_flag = False
                 raise Exception("This is not a valid stop info.")               
@@ -1196,15 +1210,29 @@ def _setNodeFillRadialGradient(df, id, gradient_info, stop_info, alias = 0):
 
     if isinstance(stop_info, list) and len(stop_info) >= 2:
         for ii in range(len(stop_info)):
-            if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
-                if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
-                    pass
+            if isinstance(stop_info[ii], list): 
+                if len(stop_info[ii]) == 2:
+                    if type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
+                        if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
+                            pass
+                        else:
+                            stop_info_flag = False
+                            raise Exception("This is not a valid stop info.")
+                    else:
+                        stop_info_flag = False
+                        raise Exception("This is not a valid stop info.")
+                elif len(stop_info[ii]) == 3:
+                    if type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == str and type(stop_info[ii][2]) == float:
+                        html_to_rgba = _color_to_rgb(stop_info[ii][1], stop_info[ii][2])
+                        stop_info[ii] = [stop_info[ii][0], html_to_rgba]
+                    else:
+                        stop_info_flag = False
+                        raise Exception("This is not a valid stop info.")
                 else:
                     stop_info_flag = False
-                    raise Exception("This is not a valid stop info.")
             else:
                 stop_info_flag = False
-                raise Exception("This is not a valid stop info.")               
+                raise Exception("This is not a valid stop info.")              
     else:
         stop_info_flag = False
         raise Exception("This is not a valid stop info.")

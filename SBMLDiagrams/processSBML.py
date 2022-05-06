@@ -2809,8 +2809,11 @@ class load:
             gradient_info: list - [[x1,y1],[x2,y2]], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            stop_info: list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
+            stop_info: 
+            list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
+
+            or list - [[x1, html_name_str, opacity], [x2, html_name_str, opacity], etc]
 
             alias: int-alias node index: 0 to number of alias nodes -1.
 
@@ -2834,10 +2837,20 @@ class load:
             gradient_info: list - [[x1,y1],[r]], where x,y,r are floating numbers from 0 to 100.
             x represents the center with percentage of width and height; r represents the radius.
 
-            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
+            stop_info:
+            list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
+            
+            or list - [[x1, html_name_str, opacity], [x2, html_name_str, opacity], etc]
 
             alias: int-alias node index: 0 to number of alias nodes -1.
+
+        Examples:
+            df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], 
+            [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
+    
+            df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], 
+            [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
 
         """
         self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info, alias=alias)
@@ -4032,7 +4045,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -4057,7 +4070,7 @@ if __name__ == '__main__':
     #filename = "SBGN2-modifier.xml"
     #filename = "test_genGlyph.xml"
     #gradient:
-    # filename = "test_gradientLinear.xml"
+    #filename = "test_gradientLinear.xml"
     #filename = "test_gradientRadial.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
@@ -4124,7 +4137,7 @@ if __name__ == '__main__':
     # print(df.getNodeSize("x_0"))
     # print(df.getNodeCenter("x_0"))
     # print(df.getNodeShape("x_0"))
-    #print(df.getNodeTextPosition("x_0"))
+    # print(df.getNodeTextPosition("x_0"))
     # print(df.getNodeTextSize("x_0"))
     # print(df.getNodeFillColor("Species_1"))
     # print(df.getNodeBorderColor("x_1"))
@@ -4166,22 +4179,24 @@ if __name__ == '__main__':
     # df.setNodeShape("x_0","ellipse")
     # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
-    #df.moveNodeTextPosition("x_0", point.Point(0,0))
-    #df.setNodeTextPositionCenter("x_0")
-    #df.setNodeTextPositionLeftCenter("x_0")
-    #df.setNodeTextPositionRightCenter("x_0")
-    #df.setNodeTextPositionUpperCenter("x_0")
-    #df.setNodeTextPositionLowerCenter("x_0")
-    #df.setNodeTextPositionUpperLeft("x_0")
-    #df.setNodeTextPositionUpperRight("x_0")
-    #df.setNodeTextPositionLowerLeft("x_0")
-    #df.setNodeTextPositionLowerRight("x_0")
-    #df.setNodeTextPosition("x_0", [160., 107.])
-    #print(df.getNodeTextPosition("x_0"))
+    # df.moveNodeTextPosition("x_0", point.Point(0,0))
+    # df.setNodeTextPositionCenter("x_0")
+    # df.setNodeTextPositionLeftCenter("x_0")
+    # df.setNodeTextPositionRightCenter("x_0")
+    # df.setNodeTextPositionUpperCenter("x_0")
+    # df.setNodeTextPositionLowerCenter("x_0")
+    # df.setNodeTextPositionUpperLeft("x_0")
+    # df.setNodeTextPositionUpperRight("x_0")
+    # df.setNodeTextPositionLowerLeft("x_0")
+    # df.setNodeTextPositionLowerRight("x_0")
+    # df.setNodeTextPosition("x_0", [160., 107.])
+    # print(df.getNodeTextPosition("x_0"))
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     #df.setNodeFillLinearGradient("Species_1", [[0.0, 0.0], [100.0, 100.0]], [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
-    # df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
+    #df.setNodeFillLinearGradient("Species_1", [[0.0, 50.], [100.0, 50.0]],[[0.0, "red", 1.0], [100.0, "blue", 1.0]])
+    #df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
+    #df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
     # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # print(df.getNodeBorderWidth("x_1"))
@@ -4224,11 +4239,11 @@ if __name__ == '__main__':
     # df.setTextLineWidth("text_content2", 3.)
     # df.setTextFontSize("text_content2", 15)
 
-    #df.addRectangle("selfRectangle", [400,200], [100, 100])
-    #df.addEllipse("selfEllipse", [400,200], [70, 100], fill_color = "red", fill_opacity = 0.5, 
-    #border_color="blue", border_width = 3.)
-    #df.addPolygon("self_triangle", [[0,0],[100,0],[0,100]], [400,200], [70, 100])
-    #df.removeShape("shape_name")
+    # df.addRectangle("selfRectangle", [400,200], [100, 100])
+    # df.addEllipse("selfEllipse", [400,200], [70, 100], fill_color = "red", fill_opacity = 0.5, 
+    # border_color="blue", border_width = 3.)
+    # df.addPolygon("self_triangle", [[0,0],[100,0],[0,100]], [400,200], [70, 100])
+    # df.removeShape("shape_name")
 
     # print("NetworkSize:", df.getNetworkSize())
     # print("NetworkBottomRight:", df.getNetworkBottomRightCorner())
@@ -4248,5 +4263,5 @@ if __name__ == '__main__':
     # f.close()
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png', scale = 2.)
 
