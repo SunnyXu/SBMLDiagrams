@@ -26,44 +26,18 @@ Tutorial
 .. code-block:: python
 
    import SBMLDiagrams
-   import os
 
-   dirname = "path//to"
-   filename = "SBML_file.xml"
+   with open("SBML_file.xml", 'r', encoding="utf8") as f:
+      sbmlStr = f.read()      
 
-   with open(os.path.join(dirname, filename), 'r', encoding="utf8") as f:
-        sbmlStr = f.read()      
-
-   df = SBMLDiagrams.load(sbmlStr)
-
-   #get layout
-   print(df.getCompartmentPosition("compartment_id"))
-   print(df.getNodeSize("node_id"))
-   print(df.getReactionCenterPosition("reaction_id"))
-
-   #get render
-   print(df.getCompartmentFillColor("compartment_id"))
-   print(df.getNodeShape("node_id"))
-   print(df.getReactionFillColor("reaction_id"))
-
-   #set layout
-   df.setCompartmentSize(("compartment_id", [100, 100])
-   df.setNodeTextPosition(("node_id", [30, 30])
-
-   #set render
-   # There are three ways to set colors and the opacity is optional:
-   # 1) list-decimal rgb 1*3 matrix, i.e. [255, 255, 255];
-   # 2) str-html name, i.e. "white";
-   # 3) str-hex string (6-digit), i.e. "#000000";
-   df.setCompartmentBorderColor("compartment_id", [255, 255, 255])
-   df.setNodeFillColor("node_id", "red", opacity = 0.5)
-   df.setNodeTextFontColor("node_id", "#000000", opacity = 1.)
+   df = SBMLDiagrams
+   
    df.setReactionLineThickness("reaction_id", 3.)
+      
+   updated_sbmlStr = df.export()
 
-   sbmlStr_layout_render = df.export()
-   f = open("output.xml", "w")
-   f.write(sbmlStr_layout_render)
-   f.close()
+   with open('output.xml', 'w') as f:
+      f.write(updated_sbmlStr)   
 
 3) Interface to Tellurium example 1 with some basic functions, including different node shapes, 
    dashed reaction lines, and etc.
