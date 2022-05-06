@@ -19,7 +19,7 @@ Read the reaction information.
 
 .. autofunction:: SBMLDiagrams.load.getReactionArrowHeadSize
 
-.. autofunction:: SBMLDiagrams.load.getReactionDash
+.. autofunction:: SBMLDiagrams.load.getReactionDashStyle
 
 --------------------------------
 Edit the reaction information.
