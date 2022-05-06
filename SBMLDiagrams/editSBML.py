@@ -1597,7 +1597,7 @@ def _setReactionArrowHeadSize(df, id, size):
 
     return df_temp
 
-def _setReactionDash(df, id, dash):
+def _setReactionDashStyle(df, id, dash):
 
     """
     Set the reaction dash information with a certain reaction id.

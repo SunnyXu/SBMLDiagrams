@@ -1002,7 +1002,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionLineThickness("r_0") == 3.)
     self.assertTrue(self.df._isBezierReactionType("r_0") == True)
     self.assertTrue(self.df.getReactionArrowHeadSize("r_0").x == [12., 15.][0])
-    self.assertTrue(self.df.getReactionDash("r_0") == [])
+    self.assertTrue(self.df.getReactionDashStyle("r_0") == [])
 
   def testSetCompartment(self):
     # Test all the set functions about compartment
@@ -1165,7 +1165,7 @@ class TestImportSBML(unittest.TestCase):
     self.df.setReactionLineThickness("r_0", line_thickness)
     self.df._setBezierReactionType("r_0", bezier)
     self.df.setReactionArrowHeadSize("r_0", arrowHeadSize)
-    self.df.setReactionDash("r_0", rxn_dash)
+    self.df.setReactionDashStyle("r_0", rxn_dash)
 
     self.assertTrue(self.df.getReactionCenterPosition("r_0").x == center_pos[0])
     self.assertTrue(self.df.getReactionBezierHandles("r_0")[0].x == handles[0][0])
@@ -1174,7 +1174,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionLineThickness("r_0") == line_thickness)
     self.assertTrue(self.df._isBezierReactionType("r_0") == bezier)
     self.assertTrue(self.df.getReactionArrowHeadSize("r_0").x == arrowHeadSize[0])
-    self.assertTrue(self.df.getReactionDash("r_0")== rxn_dash)
+    self.assertTrue(self.df.getReactionDashStyle("r_0")== rxn_dash)
   
   def testSetReactionDefaultCenterAndHandlePositions(self):
     # Test the function setReactionDefaultCenterAndHandlePositions
@@ -1183,7 +1183,7 @@ class TestImportSBML(unittest.TestCase):
       return
     
     self.df.setReactionDefaultCenterAndHandlePositions("r_0")
-    self.df.setReactionStraightLine("r_0")
+    self.df.setReactionToStraightLine("r_0")
 
     self.assertTrue(self.df.getReactionCenterPosition("r_0").x == [334.0, 231.0][0])
     self.assertTrue(self.df.getReactionBezierHandles("r_0")[0].x == 

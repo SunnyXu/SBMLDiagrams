@@ -2314,7 +2314,7 @@ class load:
 
         return arrow_head_size
 
-    def getReactionDash(self, id):
+    def getReactionDashStyle(self, id):
         """
         Get the dash information with a given reaction Id.
 
@@ -3200,7 +3200,7 @@ class load:
            setReactionDashStyle ('J1', [5,5,5,5])
         
         """
-        self.df = editSBML._setReactionDash(self.df, id, dash)
+        self.df = editSBML._setReactionDashStyle(self.df, id, dash)
         #return self.df
 
     # def addText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
@@ -4140,7 +4140,7 @@ if __name__ == '__main__':
     # print(df.getReactionLineThickness("r_0"))
     # print(df._isBezierReactionType("r_0"))
     # print(df.getReactionArrowHeadSize("r_0"))
-    # print(df.getReactionDash("r_0"))
+    # print(df.getReactionDashStyle("r_0"))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -4206,9 +4206,9 @@ if __name__ == '__main__':
     # df.setReactionBezierHandles("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
     # df.setReactionBezierHandles("r_0", [point.Point(334.0, 232.0), 
     # point.Point(386.0, 231.0), point.Point(282.0, 231.0)])
-    #df.setReactionDefaultCenterAndHandlePositions("r_0")
+    # df.setReactionDefaultCenterAndHandlePositions("r_0")
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
-    # df.setReactionDash("r_0", [6,6])
+    # df.setReactionDashStyle("r_0", [6,6])
 
     # df.addText("test", [413,216], [50,30])
     # df.addText("test1", [400,200], [100, 100], txt_font_color="blue", 

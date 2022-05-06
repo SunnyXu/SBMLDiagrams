@@ -251,7 +251,7 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setReactionLineThickness(df_update, "r_0", line_thickness)
     df_update = editSBML._setBezierReactionType(df_update, "r_0", bezier)
     df_update = editSBML._setReactionArrowHeadSize(df_update, "r_0", arrowHeadSize)
-    df_update = editSBML._setReactionDash(df_update, "r_0", rxn_dash)
+    df_update = editSBML._setReactionDashStyle(df_update, "r_0", rxn_dash)
 
     self.assertTrue(df_update[2].iloc[0]["center_pos"] == center_pos)
     self.assertTrue(df_update[2].iloc[0]["handles"] == handles)
@@ -264,12 +264,12 @@ class TestEditSBML(unittest.TestCase):
 
     with self.assertRaises(Exception):
       editSBML._setReactionCenterPosition(df_update, "XX", center_pos)
-      editSBML._setReactionHandlePositions(df_update, "XX", handles)
+      editSBML._setReactionBezierHandles(df_update, "XX", handles)
       editSBML._setReactionFillColor(df_update, "XX", fill_color, opacity = opacity)
       editSBML._setReactionLineThickness(df_update, "XX", line_thickness)
       editSBML._setBezierReactionType(df_update, "XX", bezier)
       editSBML._setReactionArrowHeadSize(df_update, "XX", arrowHeadSize)
-      editSBML._setReactionDash(df_update, "XX", rxn_dash)
+      editSBML._setReactionDashStyle(df_update, "XX", rxn_dash)
 
   def testSetArbitraryText(self):
     # set arbitrary text one by one
