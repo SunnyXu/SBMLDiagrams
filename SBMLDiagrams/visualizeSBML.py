@@ -1497,8 +1497,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
 
     df = processSBML.load(sbmlStr)
     _df = processSBML._SBMLToDF(sbmlStr)
-    txt_content = df.getTextContentList()
-    numTexts = len(txt_content)
+    txt_id = df.getTextIdList()
+    numTexts = len(txt_id)
     shape_name = df.getShapeNameList()
     numShapes = len(shape_name)
 
@@ -1507,11 +1507,11 @@ def _getNetworkTopLeftCorner(sbmlStr):
     if numBoundaryNodes > 0:
         position = _getNodePosition(_df, BoundaryNodes_ids[0])[0]
     # if numTexts > 0:
-    #     position_list = _getTextPosition(_df, txt_content[0])
-    #     size = _getTextSize(_df, txt_content[0])[0]
+    #     position_list = _getTextPosition(_df, txt_id[0])
+    #     size = _getTextSize(_df, txt_id[0])[0]
     #     position = [position_list[0][0], position_list[0][1]-size[1]]
     if numTexts > 0:
-        position_list = _getTextPosition(_df, txt_content[0])
+        position_list = _getTextPosition(_df, txt_id[0])
         position = position_list[0]
     if numShapes > 0:
         position_list = _getShapePosition(_df, shape_name[0])
@@ -1566,8 +1566,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[1] = handle_positions[j][1]
 
     # for i in range(numTexts):
-    #     text_position_list = _getTextPosition(_df, txt_content[i])
-    #     text_size = _getTextSize(_df, txt_content[i])[0]
+    #     text_position_list = _getTextPosition(_df, txt_id[i])
+    #     text_size = _getTextSize(_df, txt_id[i])[0]
     #     text_position = [text_position_list[0][0],text_position_list[0][1]-text_size[1]] 
     #     if text_position[0] < position[0]:
     #         position[0] = text_position[0]
@@ -1575,7 +1575,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
     #         position[1] = text_position[1]
 
     for i in range(numTexts):
-        text_position_list = _getTextPosition(_df, txt_content[i])
+        text_position_list = _getTextPosition(_df, txt_id[i])
         text_position = text_position_list[0]
         if text_position[0] < position[0]:
             position[0] = text_position[0]
@@ -1619,8 +1619,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
 
     df = processSBML.load(sbmlStr)
     _df = processSBML._SBMLToDF(sbmlStr)
-    txt_content = df.getTextContentList()
-    numTexts = len(txt_content)
+    txt_id = df.getTextIdList()
+    numTexts = len(txt_id)
 
     shape_name = df.getShapeNameList()
     numShapes = len(shape_name)
@@ -1634,12 +1634,12 @@ def _getNetworkBottomRightCorner(sbmlStr):
         size = _getNodeSize(_df, BoundaryNodes_ids[0])[0]
         position = [position_list[0][0]+size[0], position_list[0][1]+size[1]]
     # if numTexts > 0:
-    #     position_list = _getTextPosition(_df, txt_content[0])
-    #     size = _getTextSize(_df, txt_content[0])[0]
+    #     position_list = _getTextPosition(_df, txt_id[0])
+    #     size = _getTextSize(_df, txt_id[0])[0]
     #     position = [position_list[0][0]+size[0],position_list[0][1]]
     if numTexts > 0:
-        position_list = _getTextPosition(_df, txt_content[0])
-        size = _getTextSize(_df, txt_content[0])[0]
+        position_list = _getTextPosition(_df, txt_id[0])
+        size = _getTextSize(_df, txt_id[0])[0]
         position = [position_list[0][0]+size[0],position_list[0][1]+size[1]]
     if numShapes > 0:
         position_list = _getShapePosition(_df, shape_name[0])
@@ -1709,8 +1709,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[1] = handle_positions[j][1]
 
     # for i in range(numTexts):
-    #     text_position_list = _getTextPosition(_df, txt_content[i])
-    #     text_size = _getTextSize(_df, txt_content[i])[0]
+    #     text_position_list = _getTextPosition(_df, txt_id[i])
+    #     text_size = _getTextSize(_df, txt_id[i])[0]
     #     text_position = [text_position_list[0][0] + text_size[0],text_position_list[0][1]] 
     #     if text_position[0] > position[0]:
     #         position[0] = text_position[0]
@@ -1718,8 +1718,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
     #         position[1] = text_position[1]
 
     for i in range(numTexts):
-        text_position_list = _getTextPosition(_df, txt_content[i])
-        text_size = _getTextSize(_df, txt_content[i])[0]
+        text_position_list = _getTextPosition(_df, txt_id[i])
+        text_size = _getTextSize(_df, txt_id[i])[0]
         text_position = [text_position_list[0][0] + text_size[0],
                         text_position_list[0][1] + text_size[1]] 
         if text_position[0] > position[0]:
@@ -1933,14 +1933,14 @@ def _getReactionBezierHandles(df, id):
     return handle_positions_list
 
 
-def _getTextPosition(df, txt_str):
+def _getTextPosition(df, txt_id):
     """
-    Get the arbitrary text position with its content.
+    Get the arbitrary text position with its id.
 
     Args: 
         df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
     
-        txt_str: str-the content of the text.
+        txt_id: str-the id of the text.
 
     Returns:
         position_list: list of position.
@@ -1948,20 +1948,20 @@ def _getTextPosition(df, txt_str):
         position: list-[position_x, position_y]-top left-hand corner of the text.
     """
 
-    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    idx_list = df[3].index[df[3]["id"] == txt_id].tolist()
     position_list =[] 
     for i in range(len(idx_list)):
         position_list.append(df[3].iloc[idx_list[i]]["txt_position"])
     return position_list
 
-def _getTextSize(df, txt_str):
+def _getTextSize(df, txt_id):
     """
-    Get the arbitrary text size with its text content.
+    Get the arbitrary text size with its text id.
 
     Args: 
         df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
     
-        txt_str: str-the text content.
+        txt_id: str-the text id.
 
     Returns:
         txt_size_list: list of txt_size.
@@ -1969,7 +1969,7 @@ def _getTextSize(df, txt_str):
         txt_size: list-1*2 matrix-size of text [width, height].
     """
 
-    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    idx_list = df[3].index[df[3]["id"] == txt_id].tolist()
     txt_size_list =[] 
     for i in range(len(idx_list)):
         txt_size_list.append(df[3].iloc[idx_list[i]]["txt_size"])

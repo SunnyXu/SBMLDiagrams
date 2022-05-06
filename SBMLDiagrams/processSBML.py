@@ -68,7 +68,7 @@ COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV]
 COLUMN_NAME_df_TextData = [TXTCONTENT, TXTPOSITION, TXTSIZE, 
-    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
+    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, ID]
 COLUMN_NAME_df_ShapeData = [SHAPENAME, POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
                         SHAPETYPE, SHAPEINFO]
 # #This is not supported by SBML
@@ -1227,6 +1227,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 TextData_row_dct[TXTFONTCOLOR].append(text_line_color)
                 TextData_row_dct[TXTLINEWIDTH].append(text_line_width)
                 TextData_row_dct[TXTFONTSIZE].append(text_font_size)
+                TextData_row_dct[ID].append(textGlyph_id)
                 
 
                 if len(df_TextData) == 0:
@@ -2369,7 +2370,7 @@ class load:
 
             id: str-compartment id.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the compartment [width, height].
@@ -2447,7 +2448,7 @@ class load:
         Args:  
             id: str-node Id.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of the node.
@@ -2472,7 +2473,7 @@ class load:
         Args:  
             id: str-node Id.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of the 
@@ -2496,7 +2497,7 @@ class load:
         Args:  
             id: str-node Id.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the node [width, height].
@@ -2518,7 +2519,7 @@ class load:
         Args:  
             id: str-node Id.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the node and text [width, height].
@@ -2596,7 +2597,7 @@ class load:
         Args:  
             id: str-node Id.
 
-            txt_position: list/point.Point()-
+            txt_position: list or point.Point()
                 
             list-
             [txt_position_x, txt_position_y], the coordinate represents the top-left hand 
@@ -2619,7 +2620,7 @@ class load:
         Args:  
             id: str-node Id.
 
-            rel_position: list/point.Point()-
+            rel_position: list or point.Point()
                 
             list-
             [rel_position_x, rel_position_y], the relative coordinates moving away from the 
@@ -3255,26 +3256,47 @@ class load:
         
     #     return self.df_text
 
-
-    def getTextPosition(self, txt_str):
+    def getTextContent(self, txt_id):
         """
-        Get the arbitrary text position with its content.
+        Get the arbitrary text content with the text id.
 
         Args: 
-            txt_str: str-the content of the text.
+            txt_id: str-the text id.
+
+        Returns:
+            txt_content: str-text content.
+        
+        """
+        idx_list = self.df[3].index[self.df[3]["id"] == txt_id].tolist()
+        txt_content_list =[]
+        for i in range(len(idx_list)):
+            txt_content_list.append(self.df[3].iloc[idx_list[i]]["txt_content"])
+
+        if len(txt_content_list) == 1:
+            txt_content = txt_content_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return txt_content
+
+    def getTextPosition(self, txt_id):
+        """
+        Get the arbitrary text position with its id.
+
+        Args: 
+            txt_id: str-the id of the text.
 
         Returns: 
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the text.
 
         Examples: 
-            p = sd.getTextPosition('text_content')
+            p = sd.getTextPosition('text_id')
             
             print ('x = ', p.x, 'y = ', p.y)            
 
         """
 
-        p = visualizeSBML._getTextPosition(self.df, txt_str)
+        p = visualizeSBML._getTextPosition(self.df, txt_id)
         num_alias = len(p)
         position_list = []
         for alias in range(num_alias):
@@ -3287,25 +3309,25 @@ class load:
 
         return position
 
-    def getTextSize(self, txt_str):
+    def getTextSize(self, txt_id):
         """
-        Get the arbitrary text size with its text content.
+        Get the arbitrary text size with its text id.
 
         Args: 
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
         Returns:
             txt_size: a Point object with attributes x and y representing
             the width and height of the text.
 
         Examples: 
-            p = sd.getTextSize('text_content')
+            p = sd.getTextSize('text_id')
 
             print ('Width = ', p.x, 'Height = ', p.y)
 
         """
 
-        p = visualizeSBML._getTextSize (self.df, txt_str)
+        p = visualizeSBML._getTextSize (self.df, txt_id)
         num_alias = len(p)
         txt_size_list = []
         for alias in range(num_alias):
@@ -3317,19 +3339,19 @@ class load:
             raise Exception("This is not a valid id.")
         return txt_size
 
-    def getTextFontColor(self, txt_str):
+    def getTextFontColor(self, txt_id):
         """
-        Get the arbitrary text font color with its text content.
+        Get the arbitrary text font color with its text id.
 
         Args: 
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
         Returns:
             txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
         """
 
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        idx_list = self.df[3].index[self.df[3]["id"] == txt_id].tolist()
         txt_font_color_list =[] 
         for i in range(len(idx_list)):
             rgb = self.df[3].iloc[idx_list[i]]["txt_font_color"]
@@ -3342,18 +3364,18 @@ class load:
 
         return txt_font_color
 
-    def getTextLineWidth(self, txt_str):
+    def getTextLineWidth(self, txt_id):
         """
-        Get the arbitrary text line width with the text content.
+        Get the arbitrary text line width with the text id.
 
         Args: 
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
         Returns:
             txt_line_width: float-node text line width.
         
         """
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        idx_list = self.df[3].index[self.df[3]["id"] == txt_id].tolist()
         txt_line_width_list =[] 
         for i in range(len(idx_list)):
             txt_line_width_list.append(self.df[3].iloc[idx_list[i]]["txt_line_width"])
@@ -3364,19 +3386,19 @@ class load:
 
         return txt_line_width
 
-    def getTextFontSize(self, txt_str):
+    def getTextFontSize(self, txt_id):
         """
-        Get the arbitrary text font size with the text content.
+        Get the arbitrary text font size with the text id.
 
         Args: 
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
         Returns:
             txt_font_size: float-text font size.
         
         """
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
-        txt_font_size_list =[] 
+        idx_list = self.df[3].index[self.df[3]["id"] == txt_id].tolist()
+        txt_font_size_list =[]
         for i in range(len(idx_list)):
             txt_font_size_list.append(float(self.df[3].iloc[idx_list[i]]["txt_font_size"]))
 
@@ -3386,14 +3408,28 @@ class load:
             raise Exception("This is not a valid id.")
         return txt_font_size
 
-    def setTextPosition(self, txt_str, txt_position):
+
+    def setTextContent(self, txt_id, txt_content):
+        """
+        Set the arbitrary text content.
+
+        Args:  
+            txt_id: str-the text id.
+
+            txt_content: str-the text content.
+        
+        """
+        self.df = editSBML._setTextContent(self.df, txt_id, txt_content)
+        #return self.df
+
+    def setTextPosition(self, txt_id, txt_position):
         """
         Set the x,y coordinates of the arbitrary text position.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
-            txt_position: list/point.Point()-
+            txt_position: list or point.Point()
                 
             list-
             [txt_position_x, txt_position_y], the coordinate represents the top-left hand corner of 
@@ -3404,17 +3440,17 @@ class load:
             the x/y position of the top-left hand corner of the text.
 
         """
-        self.df = editSBML._setTextPosition(self.df, txt_str, txt_position)
+        self.df = editSBML._setTextPosition(self.df, txt_id, txt_position)
         #return self.df
 
-    def setTextSize(self, txt_str, txt_size):
+    def setTextSize(self, txt_id, txt_size):
         """
         Set the arbitrary text size.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
-            txt_size: list/point.Point()-
+            txt_size: list or point.Point()
                 
             list-
             1*2 matrix-size of the text [width, height].
@@ -3424,59 +3460,61 @@ class load:
             the text.
         
         """
-        self.df = editSBML._setTextSize(self.df, txt_str, txt_size)
+        self.df = editSBML._setTextSize(self.df, txt_id, txt_size)
         #return self.df
 
-    def setTextFontColor(self, txt_str, txt_font_color, opacity = 1.):
+    def setTextFontColor(self, txt_id, txt_font_color, opacity = 1.):
         """
         Set the arbitrary text font color.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
             txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         
         """
-        self.df = editSBML._setTextFontColor(self.df, txt_str, txt_font_color, opacity)
+        self.df = editSBML._setTextFontColor(self.df, txt_id, txt_font_color, opacity)
         #return self.df
 
-    def setTextLineWidth(self, txt_str, txt_line_width):
+    def setTextLineWidth(self, txt_id, txt_line_width):
         """
         Set the arbitrary text line width.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
             txt_line_width: float-node text line width.
         
         """
-        self.df = editSBML._setTextLineWidth(self.df, txt_str, txt_line_width)
+        self.df = editSBML._setTextLineWidth(self.df, txt_id, txt_line_width)
         #return self.df
 
-    def setTextFontSize(self, txt_str, txt_font_size):
+    def setTextFontSize(self, txt_id, txt_font_size):
         """
         Set the arbitrary text font size.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
-            txt_font_size: float-node text font size.
+            txt_font_size: float-text font size.
         
         """
-        self.df = editSBML._setTextFontSize(self.df, txt_str, txt_font_size)
+        self.df = editSBML._setTextFontSize(self.df, txt_id, txt_font_size)
         #return self.df
 
-    def addText(self, txt_str, txt_position, txt_size, txt_font_color = [0, 0, 0], opacity = 1., 
+    def addText(self, txt_id, txt_content, txt_position, txt_size, txt_font_color = [0, 0, 0], opacity = 1., 
         txt_line_width = 1., txt_font_size = 12.):
         """
         Add arbitrary text onto canvas.
 
-        Args:  
-            txt_str: str-the text content.
+        Args: 
+            txt_id: str-the text id.
 
-            txt_position: list/point.Point()-
+            txt_content: str-the text content.
+
+            txt_position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -3486,7 +3524,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the text.
 
-            txt_size: list/point.Point()-
+            txt_size: list or point.Point()
                 
             list-
             1*2 matrix-size of the text [width, height].
@@ -3499,25 +3537,25 @@ class load:
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            txt_line_width: float-node text line width.
+            txt_line_width: float-text line width.
 
-            txt_font_size: float-node text font size.
+            txt_font_size: float-text font size.
             
         """
-        self.df = editSBML._addText(self.df, txt_str=txt_str, txt_position=txt_position,
+        self.df = editSBML._addText(self.df, txt_id=txt_id, txt_content=txt_content, txt_position=txt_position,
         txt_size = txt_size, txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
         txt_font_size=txt_font_size) 
         
         #return self.df
 
-    def removeText(self, txt_str):
+    def removeText(self, txt_id):
         """
         Remove the arbitrary text from canvas.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
         """
-        self.df = editSBML._removeText(self.df, txt_str=txt_str) 
+        self.df = editSBML._removeText(self.df, txt_id = txt_id) 
         
         #return self.df
 
@@ -3529,7 +3567,7 @@ class load:
         Args:  
             shape_name: str-the name of the rectangle.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -3539,7 +3577,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the rectangle.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the rectangle [width, height].
@@ -3573,7 +3611,7 @@ class load:
         Args:  
             shape_name: str-the name of the ellipse.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -3583,7 +3621,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the ellipse.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the ellipse [width, height].
@@ -3620,7 +3658,7 @@ class load:
             shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -3630,7 +3668,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the polygon.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the polygon [width, height].
@@ -3987,19 +4025,19 @@ class load:
         id_list = self.df[2]["id"].tolist()
         return id_list
 
-    def getTextContentList(self):
+    def getTextIdList(self):
         """
-        Returns a list of free-floating text objects.
+        Returns a list of text id.
 
         Returns:
-            txt_content_list-list of txt_content.
+            txt_id_list-list of txt_id.
             
-            txt_content-str-arbitrary text content.
+            txt_id-str-arbitrary text id.
         
         """ 
 
-        txt_content_list = self.df[3]["txt_content"].tolist()
-        return txt_content_list
+        txt_id_list = self.df[3]["id"].tolist()
+        return txt_id_list
 
     def getShapeNameList(self):
         """
@@ -4224,20 +4262,23 @@ if __name__ == '__main__':
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
     # df.setReactionDashStyle("r_0", [6,6])
 
-    # df.addText("test", [413,216], [50,30])
-    # df.addText("test1", [400,200], [100, 100], txt_font_color="blue", 
+    # df.addText("test_id", "test", [413,216], [50,30])
+    # df.addText("test1_id", "test1", [400,200], [100, 100], txt_font_color="blue", 
     # opacity= 0.5, txt_line_width=2, txt_font_size=13)
-    # df.removeText("test")
-    # print(df.getTextPosition("text_content1"))
-    # print(df.getTextSize("text_content1"))
-    # print(df.getTextFontColor("text_content1"))
-    # print(df.getTextLineWidth("text_content2"))
-    # print(df.getTextFontSize("text_content2"))
-    # df.setTextPosition("text_content1", [413., 216.])
-    # df.setTextSize("text_content1", [100, 100])
-    # df.setTextFontColor("text_content1", "red")
-    # df.setTextLineWidth("text_content2", 3.)
-    # df.setTextFontSize("text_content2", 15)
+    # df.removeText("test_id")
+    # print(df.getTextContent("TextGlyph_01"))
+    # print(df.getTextPosition("TextGlyph_01"))
+    # print(df.getTextSize("TextGlyph_01"))
+    # print(df.getTextFontColor("TextGlyph_01"))
+    # print(df.getTextLineWidth("TextGlyph_01"))
+    # print(df.getTextFontSize("TextGlyph_01"))
+    # df.setTextContent("TextGlyph_01", "update_text")
+    # df.setTextPosition("TextGlyph_01", [413., 216.])
+    # df.setTextSize("TextGlyph_01", [100, 100])
+    # df.setTextFontColor("TextGlyph_01", "red")
+    # df.setTextLineWidth("TextGlyph_01", 3.)
+    # df.setTextFontSize("TextGlyph_01", 15)
+
 
     # df.addRectangle("selfRectangle", [400,200], [100, 100])
     # df.addEllipse("selfEllipse", [400,200], [70, 100], fill_color = "red", fill_opacity = 0.5, 
@@ -4251,7 +4292,7 @@ if __name__ == '__main__':
 
     # print(df.getNodeIdList())
     # print(df.getReactionIdList())
-    # print(df.getTextContentList())
+    # print(df.getTextIdList())
     # print(df.getCompartmentIdList())
 
     # print(df.hasLayout())

@@ -74,8 +74,8 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(visualizeSBML._getReactionBezierHandles(self._df, "r_0")[0] == \
       [[386.0, 231.0], [386.0, 231.0], [386.0, 231.0]])
 
-    self.assertTrue(visualizeSBML._getTextPosition(self._df_text, "text_content1")[0] == [92.0, 26.0])
-    self.assertTrue(visualizeSBML._getTextSize(self._df_text, "text_content1")[0] == [228.0, 24.0])
+    self.assertTrue(visualizeSBML._getTextPosition(self._df_text, "TextGlyph_01")[0] == [92.0, 26.0])
+    self.assertTrue(visualizeSBML._getTextSize(self._df_text, "TextGlyph_01")[0] == [228.0, 24.0])
     self.assertTrue(visualizeSBML._getShapePosition(self._df_shape, "shape_name")[0] == [177., 107.])
     self.assertTrue(visualizeSBML._getShapeSize(self._df_shape, "shape_name")[0] == [50., 30.])
 

@@ -283,11 +283,11 @@ class TestEditSBML(unittest.TestCase):
     text_line_width = 3.
     text_font_size = 15.
 
-    df_update = editSBML._setTextPosition(self.df_text, "text_content1", text_position)
-    df_update = editSBML._setTextSize(df_update, "text_content1", text_size)
-    df_update = editSBML._setTextFontColor(df_update, "text_content1", text_font_color, opacity)
-    df_update = editSBML._setTextLineWidth(df_update, "text_content2", text_line_width)
-    df_update = editSBML._setTextFontSize(df_update, "text_content2", text_font_size)
+    df_update = editSBML._setTextPosition(self.df_text, "TextGlyph_01", text_position)
+    df_update = editSBML._setTextSize(df_update, "TextGlyph_01", text_size)
+    df_update = editSBML._setTextFontColor(df_update, "TextGlyph_01", text_font_color, opacity)
+    df_update = editSBML._setTextLineWidth(df_update, "TextGlyph_02", text_line_width)
+    df_update = editSBML._setTextFontSize(df_update, "TextGlyph_02", text_font_size)
     
     self.assertTrue(df_update[3].iloc[0]["txt_position"] == text_position)
     self.assertTrue(df_update[3].iloc[0]["txt_size"] == text_size)
@@ -311,6 +311,7 @@ class TestEditSBML(unittest.TestCase):
     if IGNORE_TEST:
       return
 
+    txt_id = "test_id"
     txt_content = "test1"
     txt_position = [205,216]
     txt_size = [10,10]
@@ -319,7 +320,7 @@ class TestEditSBML(unittest.TestCase):
     txt_line_width=2.
     txt_font_size=13.
 
-    df_text_update = editSBML._addText(self.df_text,txt_content,txt_position,txt_size,txt_font_color,
+    df_text_update = editSBML._addText(self.df_text, txt_id, txt_content,txt_position,txt_size,txt_font_color,
     opacity,txt_line_width, txt_font_size)
     self.assertTrue(df_text_update[3].iloc[2][processSBML.TXTCONTENT] == txt_content)
     self.assertTrue(df_text_update[3].iloc[2][processSBML.TXTPOSITION] == txt_position)
@@ -327,8 +328,9 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_text_update[3].iloc[2][processSBML.TXTFONTCOLOR] == [0,0,0,255])
     self.assertTrue(df_text_update[3].iloc[2][processSBML.TXTLINEWIDTH] == txt_line_width)
     self.assertTrue(df_text_update[3].iloc[2][processSBML.TXTFONTSIZE] == txt_font_size)
+    self.assertTrue(df_text_update[3].iloc[2][processSBML.ID] == txt_id)
 
-    df_text_update = editSBML._removeText(df_text_update, txt_content)
+    df_text_update = editSBML._removeText(df_text_update, txt_id)
     self.assertTrue(len(df_text_update[3]) == 2)
 
     with self.assertRaises(Exception):
