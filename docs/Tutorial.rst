@@ -27,16 +27,14 @@ Tutorial
 
    import SBMLDiagrams
 
-   with open("SBML_file.xml", 'r', encoding="utf8") as f:
-      sbmlStr = f.read()      
-
-   df = SBMLDiagrams
+   # The load method can access an XML string or a file name to an SBML model
+   df = SBMLDiagrams.load("SBML_file.xml")
    
    df.setReactionLineThickness("reaction_id", 3.)
       
    updated_sbmlStr = df.export()
 
-   with open('output.xml', 'w') as f:
+   with open('updatedModel.xml', 'w') as f:
       f.write(updated_sbmlStr)   
 
 3) Interface to Tellurium example 1 with some basic functions, including different node shapes, 
