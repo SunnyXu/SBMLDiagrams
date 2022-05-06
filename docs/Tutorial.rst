@@ -100,7 +100,7 @@ Tutorial
    la.setReactionDefaultCenterAndHandlePositions('J1')
    la.setReactionDefaultCenterAndHandlePositions('J2')
    la.setReactionDefaultCenterAndHandlePositions('J3')
-   la.setReactionDash("J1", [5,5])
+   la.setReactionDashStyle("J1", [5,5])
    la.setReactionCenterPosition("J3",[550,150])
    la.setReactionBezierHandles("J3", [[550,150],[530,155],[600,120]])
 
