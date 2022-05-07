@@ -182,8 +182,8 @@ Tutorial
    df.setReactionDefaultCenterAndHandlePositions('J1')
    df.addRectangle("myosinATP_ATP", [305,130], [60,40])
    df.addEllipse("myosinATP_myosin", [315,175], [40,40])
-   df.addText("myosin", [305,130], [60,40])
-   df.addText("ATP", [315,175], [40,40])
+   df.addText("text_myosin", "myosin", [305,130], [60,40])
+   df.addText("text_myosin", "ATP", [315,175], [40,40])
    #print(df.getReactionCenterPosition("J1"))
    #print(df.getReactionFillColor("J1"))
    df.addEllipse("left_small_circle", [176.0, 166.], [10,10], 
