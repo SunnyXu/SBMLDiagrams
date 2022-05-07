@@ -1987,7 +1987,9 @@ class load:
 
         Returns:
             fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
-            hex str (8 digits)]; or list-[str-gradient_type, list-gradient_info, list-stop_info],
+            hex str (8 digits)]; 
+            
+            or list-[str-gradient_type, list-gradient_info, list-stop_info],
             where gradient_type can be 'linearGradient' or 'radialGradient', while gradient_info
             and stop_info refers to setNodeFillLinearGradient() and setNodeFillRadialGradient.
 
@@ -2543,14 +2545,11 @@ class load:
             id: str-node id.
 
             shape: int or str
-
-            int-
-                0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
-                6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
-
-            str-
-                "text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
-                "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
+            int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
+            6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
+                
+            str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
+            "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
 
             alias: int-alias node index: 0 to number of alias nodes -1.
             
@@ -2820,11 +2819,9 @@ class load:
             alias: int-alias node index: 0 to number of alias nodes -1.
 
         Examples:
-            setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
-                          [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
+            setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]], [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
 
-            setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
-                          [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
+            setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]], [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
         """
         self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info, alias=alias)
         #return self.df
@@ -2840,20 +2837,16 @@ class load:
             x represents the center with percentage of width and height; r represents the radius.
 
             stop_info:
-            list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
-            where x is floating number from 0 to 100.
+            list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc], where x is floating number from 0 to 100.
             
-            or list - [[x1, html_name_str, opacity], [x2, html_name_str, opacity], etc], where
-            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+            or list - [[x1, html_name_str, opacity], [x2, html_name_str, opacity], etc], where opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
             alias: int-alias node index: 0 to number of alias nodes -1.
 
         Examples:
-            df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], 
-            [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
+            df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
     
-            df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], 
-            [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
+            df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
 
         """
         self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info, alias=alias)
@@ -3987,8 +3980,6 @@ class load:
         """
         Returns the list of compartment ids.
 
-        Args:  
-
         Returns:
             id_list-list of ids.
             
@@ -4085,7 +4076,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -4304,6 +4295,9 @@ if __name__ == '__main__':
     # f = open("output.xml", "w")
     # f.write(sbmlStr_layout_render)
     # f.close()
+    
+    # with open('output.xml', 'w') as f:
+    #   f.write(sbmlStr_layout_render)   
 
     # df.draw(reactionLineType='bezier', scale = 2.)
     df.draw(output_fileName = 'output.png', scale = 2.)
