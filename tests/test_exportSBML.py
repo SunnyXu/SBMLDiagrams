@@ -920,11 +920,12 @@ class TestExportSBML(unittest.TestCase):
     self.assertTrue(len(self.df_TextData.index)>0) 
 
   def testText3(self):
-    # Test column 'txt_content' of df_TextData are strings
+    # Test column 'txt_content' and 'id' of df_TextData are strings
     if IGNORE_TEST:
       return    
     list_text = []
     list_text += self.df_TextData[processSBML.COLUMN_NAME_df_TextData[0]].tolist()
+    list_text += self.df_TextData[processSBML.COLUMN_NAME_df_TextData[6]].tolist()
     test_text = all(isinstance(item, str) for item in list_text)
     self.assertTrue(test_text)
 

@@ -57,7 +57,7 @@ def _setCompartmentPosition(df, id, position):
 
         id: str-compartment id.
 
-        position: list/point.Point()-
+        position: list or point.Point()
             
         list-
         [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -95,7 +95,7 @@ def _setCompartmentSize(df, id, size):
 
         id: str-compartment id.
 
-        size: list/point.Point()-
+        size: list or point.Point()
             
         list-
         1*2 matrix-size of the compartment [width, height].
@@ -250,7 +250,7 @@ def _setNodePosition(df, id, position, alias = 0):
 
         id: str-node id.
 
-        position: list/point.Point()-
+        position: list or point.Point()
             
         list-
         [position_x, position_y], the coordinate represents the top-left hand corner of the node.
@@ -293,7 +293,7 @@ def _setNodeSize(df, id, size, alias = 0):
 
         id: str-node id.
 
-        size: list/point.Point()-
+        size: list or point.Point()
             
         list-
         1*2 matrix-size of the node [width, height].
@@ -580,7 +580,7 @@ def _setNodeTextPosition(df, id, txt_position, alias = 0):
 
         id: str-node id.
 
-        txt_position: list/point.Point()-
+        txt_position: list or point.Point()
             
         list-
         [txt_position_x, txt_position_y], the coordinate represents the top-left hand 
@@ -1012,7 +1012,7 @@ def _setNodeTextSize(df, id, txt_size, alias = 0):
 
         id: str-node id.
 
-        txt_size: list/point.Point()-
+        txt_size: list or point.Point()
             
         list-
         1*2 matrix-size of the node text [width, height].
@@ -1123,12 +1123,26 @@ def _setNodeFillLinearGradient(df, id, gradient_info, stop_info, alias = 0):
 
     if isinstance(stop_info, list) and len(stop_info) >= 2:
         for ii in range(len(stop_info)):
-            if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
-                if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
-                    pass
+            if isinstance(stop_info[ii], list): 
+                if len(stop_info[ii]) == 2:
+                    if type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
+                        if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
+                            pass
+                        else:
+                            stop_info_flag = False
+                            raise Exception("This is not a valid stop info.")
+                    else:
+                        stop_info_flag = False
+                        raise Exception("This is not a valid stop info.")
+                elif len(stop_info[ii]) == 3:
+                    if type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == str and type(stop_info[ii][2]) == float:
+                        html_to_rgba = _color_to_rgb(stop_info[ii][1], stop_info[ii][2])
+                        stop_info[ii] = [stop_info[ii][0], html_to_rgba]
+                    else:
+                        stop_info_flag = False
+                        raise Exception("This is not a valid stop info.")
                 else:
                     stop_info_flag = False
-                    raise Exception("This is not a valid stop info.")
             else:
                 stop_info_flag = False
                 raise Exception("This is not a valid stop info.")               
@@ -1196,15 +1210,29 @@ def _setNodeFillRadialGradient(df, id, gradient_info, stop_info, alias = 0):
 
     if isinstance(stop_info, list) and len(stop_info) >= 2:
         for ii in range(len(stop_info)):
-            if isinstance(stop_info[ii], list) and type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
-                if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
-                    pass
+            if isinstance(stop_info[ii], list): 
+                if len(stop_info[ii]) == 2:
+                    if type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == list:
+                        if len(stop_info[ii][1]) == 4 and all(isinstance(int(item), int) and int(item) <= 255 and int(item) >= 0 for item in stop_info[ii][1]):
+                            pass
+                        else:
+                            stop_info_flag = False
+                            raise Exception("This is not a valid stop info.")
+                    else:
+                        stop_info_flag = False
+                        raise Exception("This is not a valid stop info.")
+                elif len(stop_info[ii]) == 3:
+                    if type(stop_info[ii][0]) == float and type(stop_info[ii][1]) == str and type(stop_info[ii][2]) == float:
+                        html_to_rgba = _color_to_rgb(stop_info[ii][1], stop_info[ii][2])
+                        stop_info[ii] = [stop_info[ii][0], html_to_rgba]
+                    else:
+                        stop_info_flag = False
+                        raise Exception("This is not a valid stop info.")
                 else:
                     stop_info_flag = False
-                    raise Exception("This is not a valid stop info.")
             else:
                 stop_info_flag = False
-                raise Exception("This is not a valid stop info.")               
+                raise Exception("This is not a valid stop info.")              
     else:
         stop_info_flag = False
         raise Exception("This is not a valid stop info.")
@@ -1404,7 +1432,7 @@ def _setReactionCenterPosition(df, id, position):
 
         id: str-reaction id.
         
-        position: list/point.Point()-
+        position: list or point.Point()
             
         list-
         1*2 matrix-[position_x, position_y].
@@ -1442,7 +1470,7 @@ def _setReactionBezierHandles(df, id, position):
         
         position: list-position of the handles: [center handle, reactant handle1, ..., product handle1, ...].
                         
-        center handle/reactant handle1/product handle1: list/point.Point()-
+        center handle/reactant handle1/product handle1: list or point.Point()
             
         list-
         [position_x, position_y], the coordinate represents the top-left hand 
@@ -1566,7 +1594,7 @@ def _setReactionArrowHeadSize(df, id, size):
     Args:  
         df: DataFrame-initial information.
 
-        size: list/point.Point()-
+        size: list or point.Point()
             
         list-
         1*2 matrix-size of the arrow head [width, height].
@@ -1597,7 +1625,7 @@ def _setReactionArrowHeadSize(df, id, size):
 
     return df_temp
 
-def _setReactionDash(df, id, dash):
+def _setReactionDashStyle(df, id, dash):
 
     """
     Set the reaction dash information with a certain reaction id.
@@ -1680,7 +1708,33 @@ def _setReactionDash(df, id, dash):
 
 #     return df_text_temp
 
-def _setTextPosition(df, txt_str, txt_position):
+def _setTextContent(df, txt_id, txt_content):
+
+    """
+    Set the arbitrary text content.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        txt_id: str-the text id.
+
+        txt_content: str-the text content.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_TextData_temp = df[3].copy()
+    idx_list = df[3].index[df[3]["id"] == txt_id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    for i in range(len(idx_list)):
+        df_TextData_temp.at[idx_list[i],"txt_content"] = txt_content
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4])
+
+    return df_temp
+
+def _setTextPosition(df, txt_id, txt_position):
 
     """
     Set the x,y coordinates of the node text position.
@@ -1688,9 +1742,9 @@ def _setTextPosition(df, txt_str, txt_position):
     Args:  
         df: DataFrame-initial information.
 
-        txt_str: str-the text content.
+        txt_id: str-the text id.
         
-        txt_position: list/point.Point()-
+        txt_position: list or point.Point()
             
         list-
         [txt_position_x, txt_position_y], the coordinate represents the top-left hand corner of 
@@ -1704,7 +1758,7 @@ def _setTextPosition(df, txt_str, txt_position):
     
     """
     df_TextData_temp = df[3].copy()
-    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    idx_list = df[3].index[df[3]["id"] == txt_id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     if type(txt_position) != list and type(txt_position) != type(point.Point()):
@@ -1717,7 +1771,7 @@ def _setTextPosition(df, txt_str, txt_position):
 
     return df_temp
 
-def _setTextSize(df, txt_str, txt_size):
+def _setTextSize(df, txt_id, txt_size):
 
     """
     Set the arbitrary text size.
@@ -1725,9 +1779,9 @@ def _setTextSize(df, txt_str, txt_size):
     Args:  
         df: DataFrame-initial information.
 
-        txt_str: str-the text content.
+        txt_id: str-the text id.
 
-        txt_size: list/point.Point()-
+        txt_size: list or point.Point()
             
         list-
         1*2 matrix-size of the text [width, height].
@@ -1741,7 +1795,7 @@ def _setTextSize(df, txt_str, txt_size):
     
     """
     df_TextData_temp = df[3].copy()
-    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    idx_list = df[3].index[df[3]["id"] == txt_id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     if type(txt_size) != list and type(txt_size) != type(point.Point()):
@@ -1754,7 +1808,7 @@ def _setTextSize(df, txt_str, txt_size):
 
     return df_temp
 
-def _setTextFontColor(df, txt_str, txt_font_color, opacity):
+def _setTextFontColor(df, txt_id, txt_font_color, opacity):
 
     """
     Set the arbitrary text font color.
@@ -1762,7 +1816,7 @@ def _setTextFontColor(df, txt_str, txt_font_color, opacity):
     Args:  
         df: DataFrame-initial information.
 
-        txt_str: str-the text content.
+        txt_id: str-the text id.
 
         txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
@@ -1773,7 +1827,7 @@ def _setTextFontColor(df, txt_str, txt_font_color, opacity):
     
     """
     df_TextData_temp = df[3].copy()
-    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    idx_list = df[3].index[df[3]["id"] == txt_id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     txt_font_color = _color_to_rgb(txt_font_color, opacity)
@@ -1783,7 +1837,7 @@ def _setTextFontColor(df, txt_str, txt_font_color, opacity):
 
     return df_temp
 
-def _setTextLineWidth(df, txt_str, txt_line_width):
+def _setTextLineWidth(df, txt_id, txt_line_width):
 
     """
     Set the arbitrary text line width.
@@ -1791,7 +1845,7 @@ def _setTextLineWidth(df, txt_str, txt_line_width):
     Args:  
         df: DataFrame-initial information.
 
-        txt_str: str-the text content.
+        txt_id: str-the text id.
 
         txt_line_width: float-node text line width.
 
@@ -1800,7 +1854,7 @@ def _setTextLineWidth(df, txt_str, txt_line_width):
     
     """
     df_TextData_temp = df[3].copy()
-    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    idx_list = df[3].index[df[3]["id"] == txt_id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
@@ -1810,7 +1864,7 @@ def _setTextLineWidth(df, txt_str, txt_line_width):
     return df_temp
 
 
-def _setTextFontSize(df, txt_str, txt_font_size):
+def _setTextFontSize(df, txt_id, txt_font_size):
 
     """
     Set the arbitrary text font size.
@@ -1818,16 +1872,16 @@ def _setTextFontSize(df, txt_str, txt_font_size):
     Args:  
         df: DataFrame-initial information.
 
-        txt_str: str-the text content.
+        txt_id: str-the text id.
 
-        txt_font_size: float-node text font size.
+        txt_font_size: float-text font size.
 
     Returns:
         df_temp: DataFrame-information after updates. 
     
     """
     df_TextData_temp = df[3].copy()
-    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    idx_list = df[3].index[df[3]["id"] == txt_id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
@@ -1836,15 +1890,19 @@ def _setTextFontSize(df, txt_str, txt_font_size):
 
     return df_temp
 
-def _addText(df, txt_str, txt_position, txt_size, 
+
+
+def _addText(df, txt_id, txt_content, txt_position, txt_size, 
     txt_font_color = [0, 0, 0], opacity = 1., txt_line_width = 1., txt_font_size = 12.):
     """
     Set arbitray text onto canvas.
 
     Args:  
-        txt_str: str-the text content.
+        txt_id: str-the text id.
 
-        txt_position: list/point.Point()-
+        txt_content: str-the text content.
+
+        txt_position: list or point.Point()
             
         list-
         [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -1854,7 +1912,7 @@ def _addText(df, txt_str, txt_position, txt_size,
         a Point object with attributes x and y representing
         the x/y position of the top-left hand corner of the text.
 
-        txt_size: list/point.Point()-
+        txt_size: list or point.Point()
             
         list-
         1*2 matrix-size of the text [width, height].
@@ -1867,9 +1925,9 @@ def _addText(df, txt_str, txt_position, txt_size,
 
         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-        txt_line_width: float-node text line width.
+        txt_line_width: float-text line width.
 
-        txt_font_size: float-node text font size.
+        txt_font_size: float-text font size.
         
     """
     if type(txt_position) != list and type(txt_position) != type(point.Point()):
@@ -1883,12 +1941,13 @@ def _addText(df, txt_str, txt_position, txt_size,
     txt_font_color_rgba = _color_to_rgb(txt_font_color, opacity)
     df_TextData_temp = df[3].copy()
     text_row_dct = {k:[] for k in processSBML.COLUMN_NAME_df_TextData}
-    text_row_dct[processSBML.TXTCONTENT].append(txt_str)
+    text_row_dct[processSBML.TXTCONTENT].append(txt_content)
     text_row_dct[processSBML.TXTPOSITION].append(txt_position)
     text_row_dct[processSBML.TXTSIZE].append(txt_size)
     text_row_dct[processSBML.TXTFONTCOLOR].append(txt_font_color_rgba)
     text_row_dct[processSBML.TXTLINEWIDTH].append(txt_line_width)
     text_row_dct[processSBML.TXTFONTSIZE].append(txt_font_size)
+    text_row_dct[processSBML.ID].append(txt_id)
     if len(df_TextData_temp) == 0:
         df_TextData_temp = pd.DataFrame(text_row_dct)
     else:
@@ -1899,16 +1958,16 @@ def _addText(df, txt_str, txt_position, txt_size,
     return df_temp
 
 
-def _removeText(df, txt_str):
+def _removeText(df, txt_id):
     """
     Remove the arbitray text.
 
     Args:  
-        txt_str: str-the text content.
+        txt_id: str-the text id.
         
     """
     df_TextData_temp = df[3].copy()
-    idx_list = df[3].index[df[3]["txt_content"] == txt_str].tolist()
+    idx_list = df[3].index[df[3]["id"] == txt_id].tolist()
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     df_TextData_temp = df_TextData_temp.drop(idx_list)
@@ -1924,7 +1983,7 @@ def _addRectangle(df, shape_name, position, size, fill_color=[255,255,255], fill
     Args:  
         shape_name: str-the name of the rectangle.
 
-        position: list/point.Point()-
+        position: list or point.Point()
             
         list-
         [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -1934,7 +1993,7 @@ def _addRectangle(df, shape_name, position, size, fill_color=[255,255,255], fill
         a Point object with attributes x and y representing
         the x/y position of the top-left hand corner of the rectangle.
 
-        size: list/point.Point()-
+        size: list or point.Point()
             
         list-
         1*2 matrix-size of the rectangle [width, height].
@@ -1992,7 +2051,7 @@ def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill
     Args:  
         shape_name: str-the name of the ellipse.
 
-        position: list/point.Point()-
+        position: list or point.Point()
             
         list-
         [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -2002,7 +2061,7 @@ def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill
         a Point object with attributes x and y representing
         the x/y position of the top-left hand corner of the ellipse.
 
-        size: list/point.Point()-
+        size: list or point.Point()
             
         list-
         1*2 matrix-size of the ellipse [width, height].
@@ -2063,7 +2122,7 @@ def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,
         shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
         x represents the percentage of width, and y represents the percentage of height.
 
-        position: list/point.Point()-
+        position: list or point.Point()
             
         list-
         [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -2073,7 +2132,7 @@ def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,
         a Point object with attributes x and y representing
         the x/y position of the top-left hand corner of the polygon.
 
-        size: list/point.Point()-
+        size: list or point.Point()
             
         list-
         1*2 matrix-size of the polygon [width, height].

@@ -68,7 +68,7 @@ COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     FILLCOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV]
 COLUMN_NAME_df_TextData = [TXTCONTENT, TXTPOSITION, TXTSIZE, 
-    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
+    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, ID]
 COLUMN_NAME_df_ShapeData = [SHAPENAME, POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
                         SHAPETYPE, SHAPEINFO]
 # #This is not supported by SBML
@@ -1227,6 +1227,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 TextData_row_dct[TXTFONTCOLOR].append(text_line_color)
                 TextData_row_dct[TXTLINEWIDTH].append(text_line_width)
                 TextData_row_dct[TXTFONTSIZE].append(text_font_size)
+                TextData_row_dct[ID].append(textGlyph_id)
                 
 
                 if len(df_TextData) == 0:
@@ -1540,8 +1541,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
 class load:
     """
-    Load SBML string for further process, i.e. read, edit, visualize the SBML string or
-    export it to an updated SBML string.
+    Load SBML string for further processing, i.e. read, edit, visualize the SBML string or
+    export it as an updated SBML string.
 
     Args: 
         sbmlstr: str-the SBML string.
@@ -1573,7 +1574,7 @@ class load:
 
     def getCompartmentPosition(self, id):
         """
-        Get the position of a compartment with its certain compartment id.
+        Get the position of a compartment with given compartment id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1603,7 +1604,7 @@ class load:
 
     def getCompartmentSize(self, id):
         """
-        Get the size of a compartment with its certain compartment id.
+        Get the size of a compartment with given compartment id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1633,7 +1634,7 @@ class load:
 
     def getCompartmentFillColor(self, id):
         """
-        Get the fill color of a compartment with its certain compartment id.
+        Get the fill color for a compartment with given compartment id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1657,7 +1658,7 @@ class load:
 
     def getCompartmentBorderColor(self, id):
         """
-        Get the border color of a compartment with its certain id.
+        Get the border color of a compartment with a given compartment id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1682,7 +1683,7 @@ class load:
 
     def getCompartmentBorderWidth(self, id):
         """
-        Get the border width of a compartment with its certain compartment id.
+        Get the border width of a compartment with a given compartment id.
 
         Args: 
             id: str-the id of the compartment.
@@ -1705,13 +1706,13 @@ class load:
 
     def getNodeAliasNum(self, id):
         """
-        Get the number of alias nodes with its certain node id.
+        Get the number of alias nodes with a given node id.
 
         Args: 
-            id: str-the id of the Node.
+            id: str-the id of the node.
 
         Returns:
-            num_alias: int-the number of alias nodes with the same node id.            
+            num_alias: int-the number of alias nodes with the given node id.            
 
         """
 
@@ -1721,12 +1722,12 @@ class load:
 
     def isFloatingNode(self, id, alias = 0):
         """
-        Judge whether a node is floating node with its certain node id.
+        Returns True if the given node is a floating node.
 
         Args: 
-            id: str-the id of the Node.
+            id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             floating_node: bool-floating node (True) or not (False).
@@ -1747,12 +1748,12 @@ class load:
 
     def getNodePosition(self, id, alias = 0):
         """
-        Get the position of a node with its certain node id.
+        Get the position of a node with a given node id.
 
         Args: 
-            id: str-the id of the Node.
+            id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             position: a Point object with attributes x and y representing
@@ -1783,12 +1784,12 @@ class load:
 
     def getNodeCenter(self, id, alias = 0):
         """
-        Get the center point of a node with given id.
+        Get the center point of a node with a given node id.
 
         Args: 
-            id: str-the id of the Node.
+            id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             position-a Point object with x and y coordinates of the center of the node.
@@ -1823,12 +1824,12 @@ class load:
 
     def getNodeSize(self, id, alias = 0):
         """
-        Get the size of a node with its certain node id.
+        Get the size of a node with a given node id.
 
         Args: 
             id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             size: a Point object with attributes x and y representing
@@ -1852,18 +1853,18 @@ class load:
         if alias < len(size_list) and alias >= 0:
             size =  size_list[alias]
         else:
-            raise Exception("Alias index is beyond number of alias.")
+            raise Exception("Alias index is beyond number of alias nodes.")
         
         return size
 
     def getNodeShape(self, id, alias = 0):
         """
-        Get the shape index and the shape of a node with its certain node id.
+        Get the shape index and the shape of a node with a given node id.
 
         Args: 
             id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             shape: tuple (shape_name, vertex_positions)
@@ -1905,12 +1906,12 @@ class load:
 
     def getNodeTextPosition(self, id, alias = 0):
         """
-        Get the text position of a node with its certain node id.
+        Get the text position of a node with a given node id.
 
         Args: 
             id: str-the id of node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             txt_position: a Point object with attributes x and y representing
@@ -1941,12 +1942,12 @@ class load:
         
     def getNodeTextSize(self, id, alias = 0):
         """
-        Get the text size of a node with its certain node id.
+        Get the text size of a node with a given node id.
 
         Args: 
             id: str-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             size: a Point object with attributes x and y representing
@@ -1977,16 +1978,18 @@ class load:
 
     def getNodeFillColor(self, id, alias = 0):
         """
-        Get the fill color of a node with its certain node id.
+        Get the fill color of a node with a given node id.
 
         Args: 
             id: str-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
-            hex str (8 digits)]; or list-[str-gradient_type, list-gradient_info, list-stop_info],
+            hex str (8 digits)]; 
+            
+            or list-[str-gradient_type, list-gradient_info, list-stop_info],
             where gradient_type can be 'linearGradient' or 'radialGradient', while gradient_info
             and stop_info refers to setNodeFillLinearGradient() and setNodeFillRadialGradient.
 
@@ -2012,12 +2015,12 @@ class load:
 
     def getNodeBorderColor(self, id, alias = 0):
         """
-        Get the border color of a node with its certain node id.
+        Get the border color of a node with a given node id.
 
         Args: 
             id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
@@ -2043,12 +2046,12 @@ class load:
 
     def getNodeBorderWidth(self, id, alias = 0):
         """
-        Get the border width of a node with its certain node id.
+        Get the border width of a node with a given node id.
 
         Args: 
             id: str-the id of the node.
             
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             border_width: float-node border line width.
@@ -2069,12 +2072,12 @@ class load:
 
     def getNodeTextFontColor(self, id, alias = 0):
         """
-        Get the text font color of a node with its certain node id.
+        Get the text font color of a node with a given node id.
 
         Args: 
             id: str-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
@@ -2099,12 +2102,12 @@ class load:
 
     def getNodeTextLineWidth(self, id, alias = 0):
         """
-        Get the text line width of a node with its certain node id.
+        Get the text line width of a node with a given node id.
 
         Args: 
             id: int-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             txt_line_width: float-node text line width.
@@ -2125,12 +2128,12 @@ class load:
 
     def getNodeTextFontSize(self, id, alias = 0):
         """
-        Get the text font size of a node with its certain node id.
+        Get the text font size of a node with a given node id.
 
         Args: 
             id: str-the id of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         Returns:
             txt_font_size: float.
@@ -2151,14 +2154,14 @@ class load:
 
     def getReactionCenterPosition(self, id):
         """
-        Get the center position of a reaction with its certain reaction id.
+        Get the center position of a reaction with a given reaction id.
 
         Args: 
             id: str-the id of the reaction.
 
         Returns:
             center_position: a Point object with attributes x and y representing
-            the x/y position. 
+            the x/y position of the current center of the reaction. 
 
         Examples: 
             p = sd.getReactionCenterPosition('reaction_id')
@@ -2182,7 +2185,7 @@ class load:
 
     def getReactionBezierHandles(self, id):
         """
-        Get the bezier handle positions of a reaction with its certain reaction id.
+        Get the bezier handle positions of a reaction with a given reaction id.
 
         Args: 
             id: str-the id of the reaction.
@@ -2213,7 +2216,7 @@ class load:
 
     def getReactionFillColor(self, id):
         """
-        Get the fill color of a reaction with its certain reaction id.
+        Get the fill color of a reaction with with a given reaction id.
 
         Args: 
             id: str-the id of the reaction.
@@ -2239,7 +2242,7 @@ class load:
 
     def getReactionLineThickness(self, id):
         """
-        Get the line thickness of a reaction with its certain reaction id.
+        Get the line thickness of a reaction with a given reaction id.
 
         Args: 
             id: str-the id of the reaction.
@@ -2262,7 +2265,7 @@ class load:
 
     def _isBezierReactionType(self, id):
         """
-        Judge whether it is a bezier reaction curve with its certain reaction id
+        Judge whether it is a bezier reaction curve with a given reaction id.
 
         Args: 
             id: str-the id of the reaction
@@ -2286,7 +2289,7 @@ class load:
     #def getReactionArrowHeadSize(self):
     def getReactionArrowHeadSize(self, id):
         """
-        Get the arrow head size of reactions with its certain reaction id.
+        Get the arrow head size of reactions with a given reaction id.
 
         Args: 
 
@@ -2314,9 +2317,9 @@ class load:
 
         return arrow_head_size
 
-    def getReactionDash(self, id):
+    def getReactionDashStyle(self, id):
         """
-        Get the dash information with its certain reaction id.
+        Get the dash information with a given reaction id.
 
         Args: 
             id: str-the id of the reaction.
@@ -2344,11 +2347,9 @@ class load:
         Set the x,y coordinates of the compartment position.
 
         Args:  
-            df: DataFrame-initial information.
-
             id: str-compartment id.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -2371,7 +2372,7 @@ class load:
 
             id: str-compartment id.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the compartment [width, height].
@@ -2436,7 +2437,7 @@ class load:
 
             floating_node: bool-floating node (True) or not (False).
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias node -1.
         
         """
         self.df = editSBML._setFloatingBoundaryNode(self.df, id, floating_node, alias=alias)
@@ -2449,7 +2450,7 @@ class load:
         Args:  
             id: str-node id.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of the node.
@@ -2458,7 +2459,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
@@ -2474,7 +2475,7 @@ class load:
         Args:  
             id: str-node id.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of the 
@@ -2484,7 +2485,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the node and the node text.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodePosition(self.df, id, position, alias=alias)
@@ -2498,7 +2499,7 @@ class load:
         Args:  
             id: str-node id.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the node [width, height].
@@ -2507,7 +2508,7 @@ class load:
             a Point object with attributes x and y representing the width and height of 
             the node.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
@@ -2520,7 +2521,7 @@ class load:
         Args:  
             id: str-node id.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the node and text [width, height].
@@ -2529,7 +2530,7 @@ class load:
             a Point object with attributes x and y representing the width and height of 
             the node and node text.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeSize(self.df, id, size, alias=alias)
@@ -2543,17 +2544,14 @@ class load:
         Args:  
             id: str-node id.
 
-            shape: int/str-
+            shape: int or str
+            int-0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
+            6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
+                
+            str-"text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
+            "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
 
-            int-
-                0:text_only, 1:rectangle, 2:ellipse, 3:hexagon, 4:line, or 5:triangle;
-                6:upTriangle, 7:downTriangle, 8:leftTriangle, 9: rightTriangle.
-
-            str-
-                "text_only", "rectangle", "ellipse", "hexagon", "line", or "triangle";
-                "upTriangle", "downTriangle", "leftTriangle", "rightTriangle".
-
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
             
         """
         self.df = editSBML._setNodeShape(self.df, id, shape, alias=alias)
@@ -2571,7 +2569,7 @@ class load:
             shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            alias: alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
             
         """
         self.df = editSBML._setNodeArbitraryPolygonShape(self.df, id, shape_name, shape_info, alias=alias)
@@ -2598,7 +2596,7 @@ class load:
         Args:  
             id: str-node id.
 
-            txt_position: list/point.Point()-
+            txt_position: list or point.Point()
                 
             list-
             [txt_position_x, txt_position_y], the coordinate represents the top-left hand 
@@ -2608,7 +2606,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the node text.
 
-            alias: alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPosition(self.df, id, txt_position, alias=alias)
@@ -2621,7 +2619,7 @@ class load:
         Args:  
             id: str-node id.
 
-            rel_position: list/point.Point()-
+            rel_position: list or point.Point()
                 
             list-
             [rel_position_x, rel_position_y], the relative coordinates moving away from the 
@@ -2631,7 +2629,7 @@ class load:
             a Point object with attributes x and y representing the relative coordinates moving 
             away from the original node text position.
 
-            alias: alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         original_position = visualizeSBML._getNodeTextPosition(self.df, id)[alias]
@@ -2646,12 +2644,12 @@ class load:
 
     def setNodeTextPositionCenter(self, id, alias = 0):
         """
-        Set the node text position as the center of the node.
+        Set the node text position to the center of the node.
 
         Args:  
             id: str-node id.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPositionCenter(self.df, id, alias=alias)
@@ -2659,12 +2657,12 @@ class load:
 
     def setNodeTextPositionLeftCenter(self, id, alias = 0):
         """
-        Set the node text position as the left center of the node.
+        Set the node text position to the left center of the node.
 
         Args:  
             id: str-node id.
 
-            alias: alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPositionLeftCenter(self.df, id, alias=alias)
@@ -2672,12 +2670,12 @@ class load:
 
     def setNodeTextPositionRightCenter(self, id, alias = 0):
         """
-        Set the node text position as the right center of the node.
+        Set the node text position to the right center of the node.
 
         Args:  
             id: str-node id.
 
-            alias: int- alias node index [0, num_alias).
+            alias: int- alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPositionRightCenter(self.df, id, alias=alias)
@@ -2685,12 +2683,12 @@ class load:
 
     def setNodeTextPositionUpperCenter(self, id, alias = 0):
         """
-        Set the node text position as the upper center of the node.
+        Set the node text position to the upper center of the node.
 
         Args:  
             id: str-node id.
 
-            alias: alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPositionUpperCenter(self.df, id, alias=alias)
@@ -2698,12 +2696,12 @@ class load:
 
     def setNodeTextPositionLowerCenter(self, id, alias = 0):
         """
-        Set the node text position as the lower center of the node.
+        Set the node text position to the lower center of the node.
 
         Args:  
             id: str-node id.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPositionLowerCenter(self.df, id, alias=alias)
@@ -2711,12 +2709,12 @@ class load:
 
     def setNodeTextPositionUpperLeft(self, id, alias = 0):
         """
-        Set the node text position as the upper left of the node.
+        Set the node text position to the upper left of the node.
 
         Args:  
             id: str-node id.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPositionUpperLeft(self.df, id, alias=alias)
@@ -2724,12 +2722,12 @@ class load:
     
     def setNodeTextPositionUpperRight(self, id, alias = 0):
         """
-        Set the node text position as the upper right of the node.
+        Set the node text position to the upper right of the node.
 
         Args:  
             id: str-node id.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPositionUpperRight(self.df, id, alias=alias)
@@ -2737,12 +2735,12 @@ class load:
 
     def setNodeTextPositionLowerLeft(self, id, alias = 0):
         """
-        Set the node text position as the lower left of the node.
+        Set the node text position to the lower left of the node.
 
         Args:  
             id: str-node id.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPositionLowerLeft(self.df, id, alias=alias)
@@ -2750,12 +2748,12 @@ class load:
 
     def setNodeTextPositionLowerRight(self, id, alias = 0):
         """
-        Set the node text position as the lower right of the node.
+        Set the node text position to the lower right of the node.
 
         Args:  
             id: str-node id.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextPositionLowerRight(self.df, id, alias=alias)
@@ -2763,21 +2761,22 @@ class load:
 
     def setNodeTextSize(self, id, txt_size, alias = 0):
         """
-        Set the node text size.
+        Set the node text size with given node id.
 
         Args:  
             id: str-node id.
 
-            txt_size: list/point.Point()-
+            txt_size: list or point.Point()
                 
             list-
             1*2 matrix-size of the node text [width, height].
 
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
-            the node text.
+            bounding box that enclosed the node text. The text font size wil be adjusted to fill
+            the given bounding box. 
 
-            alias: alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeTextSize(self.df, id, txt_size, alias=alias)
@@ -2785,7 +2784,7 @@ class load:
  
     def setNodeFillColor(self, id, fill_color, opacity = 1., alias = 0):
         """
-        Set the node fill color.
+        Set the node fill color with given node id.
 
         Args:  
             id: str-node id.
@@ -2794,7 +2793,7 @@ class load:
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
         """
         self.df = editSBML._setNodeFillColor(self.df, id, fill_color, opacity, alias=alias)
@@ -2802,7 +2801,7 @@ class load:
 
     def setNodeFillLinearGradient(self, id, gradient_info, stop_info, alias = 0):
         """
-        Set the node fill linear gradient.
+        Set the node fill linear gradient with given node id.
 
         Args:  
             id: str-node id.
@@ -2810,11 +2809,19 @@ class load:
             gradient_info: list - [[x1,y1],[x2,y2]], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            stop_info: list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
+            stop_info: 
+            list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
             where x is floating number from 0 to 100.
 
-            alias: int-alias node index [0, num_alias).
+            or list - [[x1, html_name_str, opacity], [x2, html_name_str, opacity], etc], 
+            where opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
+            alias: int-alias node index: 0 to number of alias nodes -1.
+
+        Examples:
+            setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]], [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
+
+            setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]], [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
         """
         self.df = editSBML._setNodeFillLinearGradient(self.df, id, gradient_info, stop_info, alias=alias)
         #return self.df
@@ -2829,10 +2836,17 @@ class load:
             gradient_info: list - [[x1,y1],[r]], where x,y,r are floating numbers from 0 to 100.
             x represents the center with percentage of width and height; r represents the radius.
 
-            stop_info, list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc],
-            where x is floating number from 0 to 100.
+            stop_info:
+            list - [[x1,[r1,g1,b1,a1]],[x2,[r2,g2,b2,a2]],etc], where x is floating number from 0 to 100.
+            
+            or list - [[x1, html_name_str, opacity], [x2, html_name_str, opacity], etc], where opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            alias: alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
+
+        Examples:
+            df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
+    
+            df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
 
         """
         self.df = editSBML._setNodeFillRadialGradient(self.df, id, gradient_info, stop_info, alias=alias)
@@ -2840,7 +2854,7 @@ class load:
 
     def setNodeBorderColor(self, id, border_color, opacity = 1., alias = 0):
         """
-        Set the node border color.
+        Set the node border color of a node with a given id.
 
         Args:  
             id: str-node id.
@@ -2849,30 +2863,33 @@ class load:
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
+        Examples:
+            la.setNodeBorderColor ('node1', 'CornflowerBlue')
         """
         self.df = editSBML._setNodeBorderColor(self.df, id, border_color, opacity, alias=alias)
-        #return self.df
 
     def setNodeBorderWidth(self, id, border_width, alias = 0):
         """
-        Set the node border width.
+        Set the node border width for a node of given id.
 
         Args:  
             id: str-node id.
 
             border_width: float-node border line width.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
 
+        Examples:
+            la.setNodeBorderWidth ('node4', 3)
         """
         self.df = editSBML._setNodeBorderWidth(self.df, id, border_width, alias=alias)
         #return self.df
 
     def setNodeTextFontColor(self, id, txt_font_color, opacity = 1., alias = 0):
         """
-        Set the node text font color.
+        Set the node text font color for a node of given id.
 
         Args:  
             id: str-node id.
@@ -2881,22 +2898,24 @@ class load:
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
         
+        Examples:
+            la.setNodeTextFontColor ('node1', 'CornflowerBlue')
         """
         self.df = editSBML._setNodeTextFontColor(self.df, id, txt_font_color, opacity, alias=alias)
         #return self.df
 
     def setNodeTextLineWidth(self, id, txt_line_width, alias = 0):
         """
-        Set the node text line width.
+        Set the node text line width for a node of given id.
 
         Args:  
             id: str-node id.
 
             txt_line_width: float-node text line width.
 
-            alias: int-alias node index [0, num_alias).
+            alias: int-alias node index: 0 to number of alias nodes -1.
         
         """
         self.df = editSBML._setNodeTextLineWidth(self.df, id, txt_line_width, alias=alias)
@@ -2904,24 +2923,23 @@ class load:
 
     def setNodeTextFontSize(self, id, txt_font_size, alias = 0):
         """
-        Set the node text font size.
+        Set the node text font size for a node of given id.
 
         Args:  
             id: str-node id.
 
-            txt_font_size: float-node text font size.
-
-            alias: int-alias node index [0, num_alias).
+            txt_font_size: float-node text font size, the units for size are assumed to be in points.
+            
+            alias: int-alias node index: 0 to number of alias nodes -1.
         
         """
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
         #return self.df
 
-    def setReactionStraightLine(self, id):
+    def setReactionToStraightLine(self, id):
         """
-        Set a certain reaction (with its id) to straight line, which directly connects the center
-        position with the nodes (species). The default reaction line type is bezier curves without
-        using this function.
+        For a reaction of given id, use straight lines to represent the reaction. 
+        The default reaction line style is to use Bezier curves.
 
         Args:  
             id: str-reaction id.
@@ -2993,12 +3011,12 @@ class load:
 
     def setReactionCenterPosition(self, id, position):
         """
-        Set the reaction center position.
+        Set the reaction center position for a reaction with a given reaction id.
 
         Args:  
             id: str-reaction id.
             
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             1*2 matrix-[position_x, position_y].
@@ -3008,19 +3026,18 @@ class load:
 
         """
         self.df = editSBML._setReactionCenterPosition(self.df, id, position)
-        #return self.df
     
 
     def setReactionBezierHandles(self, id, position):
         """
-        Set the reaction bezier handle positions.
+        Set the reaction bezier handle positions for a given reaction.
 
         Args:  
             id: str-reaction id.
             
             position: list-position of the handles: [center handle, reactant handle1, ..., product handle1, ...].
                             
-            center handle/reactant handle1/product handle1: list/point.Point()-
+            center handle/reactant handle1/product handle1: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand 
@@ -3028,7 +3045,11 @@ class load:
 
             point.Point()-
             a Point object with attributes x and y representing the x/y position.
-        
+
+        Examples:
+            setReactionBezierHandles ('J1', [point.Point(550,150),point.Point(530,155),point.Point(600,120)])
+            
+            setReactionBezierHandles("J3", [[550,150],[530,155],[600,120]])
         """
         self.df = editSBML._setReactionBezierHandles(self.df, id, position)
         #return self.df
@@ -3116,6 +3137,9 @@ class load:
             fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+        Examples:
+            setReactionFillColor ('J1', "BurlyWood")
         
         """
         self.df = editSBML._setReactionFillColor(self.df, id, fill_color, opacity)
@@ -3137,7 +3161,7 @@ class load:
 
     def _setBezierReactionType(self, id, bezier = True):
         """
-        Set the reaction type to bezier curve or not with a certain reaction id.
+        Set the reaction type to use a Bezier curve depending on the Bezier flag. 
 
         Args:  
             id: str-reaction id.
@@ -3154,7 +3178,7 @@ class load:
         Set the reaction arrow head size with a certain reaction id.
 
         Args:  
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the arrow head [width, height].
@@ -3162,12 +3186,14 @@ class load:
             point.Point()-
             a Point object with attributes x and y representing the width and height of 
             the arrow head.
+
+        Examples:
+            setReactionArrowHeadSize("r_0", [50., 50.])
         
         """
         self.df = editSBML._setReactionArrowHeadSize(self.df, id, size)
-        #return self.df
 
-    def setReactionDash(self, id, dash = []):
+    def setReactionDashStyle(self, id, dash = []):
         """
         Set the reaction dash information with a certain reaction id.
 
@@ -3178,9 +3204,12 @@ class load:
             [a,b] means drawing a a-point line and following a b-point gap and etc;
             [a,b,c,d] means drawing a a-point line and following a b-point gap, and then 
             drawing a c-point line followed by a d-point gap.
+
+        Examples:
+            To produce a dash such as - - - -, use setReactionDashStyle ('J1', [5,5,5,5]).
         
         """
-        self.df = editSBML._setReactionDash(self.df, id, dash)
+        self.df = editSBML._setReactionDashStyle(self.df, id, dash)
         #return self.df
 
     # def addText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
@@ -3222,26 +3251,47 @@ class load:
         
     #     return self.df_text
 
-
-    def getTextPosition(self, txt_str):
+    def getTextContent(self, txt_id):
         """
-        Get the arbitrary text position with its content.
+        Get the arbitrary text content with the text id.
 
         Args: 
-            txt_str: str-the content of the text.
+            txt_id: str-the text id.
+
+        Returns:
+            txt_content: str-text content.
+        
+        """
+        idx_list = self.df[3].index[self.df[3]["id"] == txt_id].tolist()
+        txt_content_list =[]
+        for i in range(len(idx_list)):
+            txt_content_list.append(self.df[3].iloc[idx_list[i]]["txt_content"])
+
+        if len(txt_content_list) == 1:
+            txt_content = txt_content_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return txt_content
+
+    def getTextPosition(self, txt_id):
+        """
+        Get the arbitrary text position with its id.
+
+        Args: 
+            txt_id: str-the id of the text.
 
         Returns: 
             position: a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the text.
 
         Examples: 
-            p = sd.getTextPosition('text_content')
+            p = sd.getTextPosition('text_id')
             
             print ('x = ', p.x, 'y = ', p.y)            
 
         """
 
-        p = visualizeSBML._getTextPosition(self.df, txt_str)
+        p = visualizeSBML._getTextPosition(self.df, txt_id)
         num_alias = len(p)
         position_list = []
         for alias in range(num_alias):
@@ -3254,27 +3304,25 @@ class load:
 
         return position
 
-    def getTextSize(self, txt_str):
+    def getTextSize(self, txt_id):
         """
-        Get the arbitrary text size with its text content.
+        Get the arbitrary text size with its text id.
 
         Args: 
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
         Returns:
-            txt_size_list: list of txt_size.
-
             txt_size: a Point object with attributes x and y representing
             the width and height of the text.
 
         Examples: 
-            p = sd.getTextSize('text_content')
+            p = sd.getTextSize('text_id')
 
             print ('Width = ', p.x, 'Height = ', p.y)
 
         """
 
-        p = visualizeSBML._getTextSize (self.df, txt_str)
+        p = visualizeSBML._getTextSize (self.df, txt_id)
         num_alias = len(p)
         txt_size_list = []
         for alias in range(num_alias):
@@ -3286,19 +3334,19 @@ class load:
             raise Exception("This is not a valid id.")
         return txt_size
 
-    def getTextFontColor(self, txt_str):
+    def getTextFontColor(self, txt_id):
         """
-        Get the arbitrary text font color with its text content.
+        Get the arbitrary text font color with its text id.
 
         Args: 
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
         Returns:
             txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
             hex str (8 digits)].
         """
 
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        idx_list = self.df[3].index[self.df[3]["id"] == txt_id].tolist()
         txt_font_color_list =[] 
         for i in range(len(idx_list)):
             rgb = self.df[3].iloc[idx_list[i]]["txt_font_color"]
@@ -3311,18 +3359,18 @@ class load:
 
         return txt_font_color
 
-    def getTextLineWidth(self, txt_str):
+    def getTextLineWidth(self, txt_id):
         """
-        Get the arbitrary text line width with the text content.
+        Get the arbitrary text line width with the text id.
 
         Args: 
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
         Returns:
             txt_line_width: float-node text line width.
         
         """
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
+        idx_list = self.df[3].index[self.df[3]["id"] == txt_id].tolist()
         txt_line_width_list =[] 
         for i in range(len(idx_list)):
             txt_line_width_list.append(self.df[3].iloc[idx_list[i]]["txt_line_width"])
@@ -3333,19 +3381,19 @@ class load:
 
         return txt_line_width
 
-    def getTextFontSize(self, txt_str):
+    def getTextFontSize(self, txt_id):
         """
-        Get the arbitrary text font size with the text content.
+        Get the arbitrary text font size with the text id.
 
         Args: 
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
         Returns:
             txt_font_size: float-text font size.
         
         """
-        idx_list = self.df[3].index[self.df[3]["txt_content"] == txt_str].tolist()
-        txt_font_size_list =[] 
+        idx_list = self.df[3].index[self.df[3]["id"] == txt_id].tolist()
+        txt_font_size_list =[]
         for i in range(len(idx_list)):
             txt_font_size_list.append(float(self.df[3].iloc[idx_list[i]]["txt_font_size"]))
 
@@ -3355,14 +3403,28 @@ class load:
             raise Exception("This is not a valid id.")
         return txt_font_size
 
-    def setTextPosition(self, txt_str, txt_position):
+
+    def setTextContent(self, txt_id, txt_content):
+        """
+        Set the arbitrary text content.
+
+        Args:  
+            txt_id: str-the text id.
+
+            txt_content: str-the text content.
+        
+        """
+        self.df = editSBML._setTextContent(self.df, txt_id, txt_content)
+        #return self.df
+
+    def setTextPosition(self, txt_id, txt_position):
         """
         Set the x,y coordinates of the arbitrary text position.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
-            txt_position: list/point.Point()-
+            txt_position: list or point.Point()
                 
             list-
             [txt_position_x, txt_position_y], the coordinate represents the top-left hand corner of 
@@ -3373,17 +3435,17 @@ class load:
             the x/y position of the top-left hand corner of the text.
 
         """
-        self.df = editSBML._setTextPosition(self.df, txt_str, txt_position)
+        self.df = editSBML._setTextPosition(self.df, txt_id, txt_position)
         #return self.df
 
-    def setTextSize(self, txt_str, txt_size):
+    def setTextSize(self, txt_id, txt_size):
         """
         Set the arbitrary text size.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
-            txt_size: list/point.Point()-
+            txt_size: list or point.Point()
                 
             list-
             1*2 matrix-size of the text [width, height].
@@ -3393,59 +3455,61 @@ class load:
             the text.
         
         """
-        self.df = editSBML._setTextSize(self.df, txt_str, txt_size)
+        self.df = editSBML._setTextSize(self.df, txt_id, txt_size)
         #return self.df
 
-    def setTextFontColor(self, txt_str, txt_font_color, opacity = 1.):
+    def setTextFontColor(self, txt_id, txt_font_color, opacity = 1.):
         """
         Set the arbitrary text font color.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
             txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
         
         """
-        self.df = editSBML._setTextFontColor(self.df, txt_str, txt_font_color, opacity)
+        self.df = editSBML._setTextFontColor(self.df, txt_id, txt_font_color, opacity)
         #return self.df
 
-    def setTextLineWidth(self, txt_str, txt_line_width):
+    def setTextLineWidth(self, txt_id, txt_line_width):
         """
         Set the arbitrary text line width.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
             txt_line_width: float-node text line width.
         
         """
-        self.df = editSBML._setTextLineWidth(self.df, txt_str, txt_line_width)
+        self.df = editSBML._setTextLineWidth(self.df, txt_id, txt_line_width)
         #return self.df
 
-    def setTextFontSize(self, txt_str, txt_font_size):
+    def setTextFontSize(self, txt_id, txt_font_size):
         """
         Set the arbitrary text font size.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
 
-            txt_font_size: float-node text font size.
+            txt_font_size: float-text font size.
         
         """
-        self.df = editSBML._setTextFontSize(self.df, txt_str, txt_font_size)
+        self.df = editSBML._setTextFontSize(self.df, txt_id, txt_font_size)
         #return self.df
 
-    def addText(self, txt_str, txt_position, txt_size, txt_font_color = [0, 0, 0], opacity = 1., 
+    def addText(self, txt_id, txt_content, txt_position, txt_size, txt_font_color = [0, 0, 0], opacity = 1., 
         txt_line_width = 1., txt_font_size = 12.):
         """
         Add arbitrary text onto canvas.
 
-        Args:  
-            txt_str: str-the text content.
+        Args: 
+            txt_id: str-the text id.
 
-            txt_position: list/point.Point()-
+            txt_content: str-the text content.
+
+            txt_position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -3455,7 +3519,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the text.
 
-            txt_size: list/point.Point()-
+            txt_size: list or point.Point()
                 
             list-
             1*2 matrix-size of the text [width, height].
@@ -3468,25 +3532,25 @@ class load:
 
             opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
 
-            txt_line_width: float-node text line width.
+            txt_line_width: float-text line width.
 
-            txt_font_size: float-node text font size.
+            txt_font_size: float-text font size.
             
         """
-        self.df = editSBML._addText(self.df, txt_str=txt_str, txt_position=txt_position,
+        self.df = editSBML._addText(self.df, txt_id=txt_id, txt_content=txt_content, txt_position=txt_position,
         txt_size = txt_size, txt_font_color=txt_font_color, opacity=opacity, txt_line_width=txt_line_width, 
         txt_font_size=txt_font_size) 
         
         #return self.df
 
-    def removeText(self, txt_str):
+    def removeText(self, txt_id):
         """
         Remove the arbitrary text from canvas.
 
         Args:  
-            txt_str: str-the text content.
+            txt_id: str-the text id.
         """
-        self.df = editSBML._removeText(self.df, txt_str=txt_str) 
+        self.df = editSBML._removeText(self.df, txt_id = txt_id) 
         
         #return self.df
 
@@ -3498,7 +3562,7 @@ class load:
         Args:  
             shape_name: str-the name of the rectangle.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -3508,7 +3572,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the rectangle.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the rectangle [width, height].
@@ -3542,7 +3606,7 @@ class load:
         Args:  
             shape_name: str-the name of the ellipse.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -3552,7 +3616,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the ellipse.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the ellipse [width, height].
@@ -3589,7 +3653,7 @@ class load:
             shape_info: list-[[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
             x represents the percentage of width, and y represents the percentage of height.
 
-            position: list/point.Point()-
+            position: list or point.Point()
                 
             list-
             [position_x, position_y], the coordinate represents the top-left hand corner of 
@@ -3599,7 +3663,7 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the top-left hand corner of the polygon.
 
-            size: list/point.Point()-
+            size: list or point.Point()
                 
             list-
             1*2 matrix-size of the polygon [width, height].
@@ -3701,7 +3765,7 @@ class load:
 
     def export(self):
         """
-        Write to an SBML string. 
+        Generates an SBML string for the current model.
 
         Returns:
             SBMLStr_layout_render: str-the string of the output sbml file. 
@@ -3725,17 +3789,19 @@ class load:
 
     def getColorStyle(self):
         """
-        Get the current color style.
+        Returns an object representing the current color style.
 
         Returns: 
             The current color style.
         
+        Examples:
+            la.getColorStyle().getStyleName()
         """
         return self.color_style
 
     def getColorStyleJson(self, filename = None):
         """
-        Get the current color style in json format and save to a json file if need
+        Get the current color style in json format and save to a json file if need be.
 
         Returns:
             The current color style. in json format
@@ -3752,7 +3818,7 @@ class load:
         """
         Autolayout the node positions using networkX library.
 
-        layout: str-the layout name from networkX, including
+        layout: str-the layout name from networkX, which can be one of the following:
 
             spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
 
@@ -3762,9 +3828,9 @@ class load:
         
             circular: positioning nodes on a circle.
 
-        scale: float-the scale factor for positions. 
+        scale: float-the scaling factor to use
         
-        iterations: int-maximum number of iterations taken.             
+        iterations: int-maximum number of iterations to use during the calculation.             
         
         """
 
@@ -3822,26 +3888,26 @@ class load:
         Draw to a PNG/JPG/PDF file.
 
         Args: 
-            setImageSize: list-1*2 matrix-size of the image [width, height].
+            setImageSize: list-containing two elements indicating the size of the image (if bitmap) [width, height].
 
-            scale: float-makes the figure output size = scale * default output size.
-            Increasing the scale can make the resolution higher.
+            scale: float-determines the figure output size = scale * default output size.
+            Increasing the scale will make the resolution higher.
 
             output_fileName: str-filename: '' (default: will not save the file), 
-            or 'fileName.png' (self-designed file name) which has to end up with '.png', '.jpg', or 'pdf'.
+            or eg 'fileName.png'. Allowable extensions include '.png', '.jpg', or 'pdf'.
 
             reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
             If there is no layout information from the SBML file, all reaction lines will look like
-            straight lines even set as 'bezier' because they are set as default center and handle positions.
+            straight lines even when using 'bezier' curves.
 
             showBezierHandles: bool-show the Bezier handles (True) or not (False as default).
 
             showReactionIds: bool-show the reaction ids (True) or not (False as default).
 
-            showReversible: bool-show the reaction reversible (True) or not (False as default).
+            showReversible: bool-show whether the reaction is reversible (True) or not (False as default).
 
-            longText: str-'auto-font'(default) will automatically decrease the font size to fit to the 
-            node; 'ellipsis' will show '....' if the text is too long to show in the node
+            longText: str-'auto-font'(default) will automatically decrease the font size to fit the 
+            current dimensions of the node; 'ellipsis' will show '....' if the text is too long to fit the node.
         
         """
 
@@ -3855,11 +3921,12 @@ class load:
 
     def getNetworkTopLeftCorner(self):
         """
-        Get the top left-hand corner of the network(s) from the SBML string.
+        Returns the top left-hand corner of the network from the SBML string.
 
         Returns:   
             position: a Point object with attributes x and y representing
-            the x/y position of the top-left hand corner of the network(s).
+            the x/y position of the top-left hand corner of the network.
+        
         Examples:
             p = sd.getNetworkTopLeftConer()
                 
@@ -3873,11 +3940,11 @@ class load:
 
     def getNetworkBottomRightCorner(self):
         """
-        Get the bottom right-hand corner of the network(s) from the SBML string.
+        Returns the bottom right-hand corner of the network from the SBML string.
 
         Returns:
             position: a Point object with attributes x and y representing
-            the x/y position of the bottom-right hand corner of the network(s).
+            the x/y position of the bottom-right hand corner of the network.
 
         Examples:
             p = sd.getNetworkBottomRightConer()
@@ -3892,11 +3959,11 @@ class load:
     
     def getNetworkSize(self):
         """
-        Get the size of the network(s).
+        Returns the size of the network.
 
         Returns:
             size: a Point object with attributes x and y representing
-            the width and height of the network(s).
+            the width and height of the network.
         
         Examples: 
             p = sd.getNetworkSize()
@@ -3911,9 +3978,7 @@ class load:
 
     def getCompartmentIdList(self):
         """
-        Get the list of compartment ids.
-
-        Args:  
+        Returns the list of compartment ids.
 
         Returns:
             id_list-list of ids.
@@ -3927,7 +3992,7 @@ class load:
 
     def getNodeIdList(self):
         """
-        Get the list of node ids.
+        Returns the list of node ids.
 
         Returns:
             id_list-list of ids.
@@ -3941,7 +4006,7 @@ class load:
 
     def getReactionIdList(self):
         """
-        Get the list of reaction ids.
+        Returns the list of reaction ids.
 
         Returns:
             id_list-list of ids.
@@ -3953,23 +4018,23 @@ class load:
         id_list = self.df[2]["id"].tolist()
         return id_list
 
-    def getTextContentList(self):
+    def getTextIdList(self):
         """
-        Get the list of arbitrary text content.
+        Returns a list of text id.
 
         Returns:
-            txt_content_list-list of txt_content.
+            txt_id_list-list of txt_id.
             
-            txt_content-str-arbitrary text content.
+            txt_id-str-arbitrary text id.
         
         """ 
 
-        txt_content_list = self.df[3]["txt_content"].tolist()
-        return txt_content_list
+        txt_id_list = self.df[3]["id"].tolist()
+        return txt_id_list
 
     def getShapeNameList(self):
         """
-        Get the list of arbitrary shape names.
+        Returns a list of possible shape names.
 
         Returns:
             shape_name_list-list of shape_name.
@@ -3983,7 +4048,7 @@ class load:
 
     def hasLayout(self):
         """
-        Judge whether there is layout in the sbml or not.
+        Returns True if the current SBML model has layout/redner information.
 
         Returns:
             flag: bool-true (there is layout) or false (there is no layout). 
@@ -4011,7 +4076,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -4036,7 +4101,7 @@ if __name__ == '__main__':
     #filename = "SBGN2-modifier.xml"
     #filename = "test_genGlyph.xml"
     #gradient:
-    # filename = "test_gradientLinear.xml"
+    #filename = "test_gradientLinear.xml"
     #filename = "test_gradientRadial.xml"
 
     #filename = "testbigmodel.xml" #sbml with errors
@@ -4097,13 +4162,13 @@ if __name__ == '__main__':
     # print(df.getCompartmentBorderWidth("_compartment_default_"))
 
     # print(df.isFloatingNode("x_1"))
-    # position = df.getNodePosition("x_1")[0]
+    # position = df.getNodePosition("x_1")
     # print(type(position) == type(point.Point()))
-    # print(df.getNodePosition("x_0")[0])
-    # print(df.getNodeSize("x_0")[0])
-    # print(df.getNodeCenter("x_0")[0])
+    # print(df.getNodePosition("x_0"))
+    # print(df.getNodeSize("x_0"))
+    # print(df.getNodeCenter("x_0"))
     # print(df.getNodeShape("x_0"))
-    #print(df.getNodeTextPosition("x_0")[0])
+    # print(df.getNodeTextPosition("x_0"))
     # print(df.getNodeTextSize("x_0"))
     # print(df.getNodeFillColor("Species_1"))
     # print(df.getNodeBorderColor("x_1"))
@@ -4118,7 +4183,7 @@ if __name__ == '__main__':
     # print(df.getReactionLineThickness("r_0"))
     # print(df._isBezierReactionType("r_0"))
     # print(df.getReactionArrowHeadSize("r_0"))
-    # print(df.getReactionDash("r_0"))
+    # print(df.getReactionDashStyle("r_0"))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -4145,22 +4210,24 @@ if __name__ == '__main__':
     # df.setNodeShape("x_0","ellipse")
     # print(df.getNodeShape("x_0"))
     # df.setNodeTextPosition("x_1", [413., 216.])
-    #df.moveNodeTextPosition("x_0", point.Point(0,0))
-    #df.setNodeTextPositionCenter("x_0")
-    #df.setNodeTextPositionLeftCenter("x_0")
-    #df.setNodeTextPositionRightCenter("x_0")
-    #df.setNodeTextPositionUpperCenter("x_0")
-    #df.setNodeTextPositionLowerCenter("x_0")
-    #df.setNodeTextPositionUpperLeft("x_0")
-    #df.setNodeTextPositionUpperRight("x_0")
-    #df.setNodeTextPositionLowerLeft("x_0")
-    #df.setNodeTextPositionLowerRight("x_0")
-    #df.setNodeTextPosition("x_0", [160., 107.])
-    #print(df.getNodeTextPosition("x_0")[0])
+    # df.moveNodeTextPosition("x_0", point.Point(0,0))
+    # df.setNodeTextPositionCenter("x_0")
+    # df.setNodeTextPositionLeftCenter("x_0")
+    # df.setNodeTextPositionRightCenter("x_0")
+    # df.setNodeTextPositionUpperCenter("x_0")
+    # df.setNodeTextPositionLowerCenter("x_0")
+    # df.setNodeTextPositionUpperLeft("x_0")
+    # df.setNodeTextPositionUpperRight("x_0")
+    # df.setNodeTextPositionLowerLeft("x_0")
+    # df.setNodeTextPositionLowerRight("x_0")
+    # df.setNodeTextPosition("x_0", [160., 107.])
+    # print(df.getNodeTextPosition("x_0"))
     # df.setNodeTextSize("x_1", [100, 100])
     # df.setNodeFillColor("x_1", [255, 204, 153], opacity = 0.)
     #df.setNodeFillLinearGradient("Species_1", [[0.0, 0.0], [100.0, 100.0]], [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])
-    # df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
+    #df.setNodeFillLinearGradient("Species_1", [[0.0, 50.], [100.0, 50.0]],[[0.0, "red", 1.0], [100.0, "blue", 1.0]])
+    #df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, [255, 255, 255, 255]], [100.0, [0, 0, 0, 255]]])
+    #df.setNodeFillRadialGradient("Species_1", [[50.0, 50.0], [50.]], [[0.0, "red", 1.0], [100.0, "blue", 1.0]])
     # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # print(df.getNodeBorderWidth("x_1"))
@@ -4184,30 +4251,33 @@ if __name__ == '__main__':
     # df.setReactionBezierHandles("r_0", [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]])
     # df.setReactionBezierHandles("r_0", [point.Point(334.0, 232.0), 
     # point.Point(386.0, 231.0), point.Point(282.0, 231.0)])
-    #df.setReactionDefaultCenterAndHandlePositions("r_0")
+    # df.setReactionDefaultCenterAndHandlePositions("r_0")
     # df.setReactionArrowHeadSize("r_0", [50., 50.])
-    # df.setReactionDash("r_0", [6,6])
+    # df.setReactionDashStyle("r_0", [6,6])
 
-    # df.addText("test", [413,216], [50,30])
-    # df.addText("test1", [400,200], [100, 100], txt_font_color="blue", 
+    # df.addText("test_id", "test", [413,216], [50,30])
+    # df.addText("test1_id", "test1", [400,200], [100, 100], txt_font_color="blue", 
     # opacity= 0.5, txt_line_width=2, txt_font_size=13)
-    # df.removeText("test")
-    # print(df.getTextPosition("text_content1"))
-    # print(df.getTextSize("text_content1"))
-    # print(df.getTextFontColor("text_content1"))
-    # print(df.getTextLineWidth("text_content2"))
-    # print(df.getTextFontSize("text_content2"))
-    # df.setTextPosition("text_content1", [413., 216.])
-    # df.setTextSize("text_content1", [100, 100])
-    # df.setTextFontColor("text_content1", "red")
-    # df.setTextLineWidth("text_content2", 3.)
-    # df.setTextFontSize("text_content2", 15)
+    # df.removeText("test_id")
+    # print(df.getTextContent("TextGlyph_01"))
+    # print(df.getTextPosition("TextGlyph_01"))
+    # print(df.getTextSize("TextGlyph_01"))
+    # print(df.getTextFontColor("TextGlyph_01"))
+    # print(df.getTextLineWidth("TextGlyph_01"))
+    # print(df.getTextFontSize("TextGlyph_01"))
+    # df.setTextContent("TextGlyph_01", "update_text")
+    # df.setTextPosition("TextGlyph_01", [413., 216.])
+    # df.setTextSize("TextGlyph_01", [100, 100])
+    # df.setTextFontColor("TextGlyph_01", "red")
+    # df.setTextLineWidth("TextGlyph_01", 3.)
+    # df.setTextFontSize("TextGlyph_01", 15)
 
-    #df.addRectangle("selfRectangle", [400,200], [100, 100])
-    #df.addEllipse("selfEllipse", [400,200], [70, 100], fill_color = "red", fill_opacity = 0.5, 
-    #border_color="blue", border_width = 3.)
-    #df.addPolygon("self_triangle", [[0,0],[100,0],[0,100]], [400,200], [70, 100])
-    #df.removeShape("shape_name")
+
+    # df.addRectangle("selfRectangle", [400,200], [100, 100])
+    # df.addEllipse("selfEllipse", [400,200], [70, 100], fill_color = "red", fill_opacity = 0.5, 
+    # border_color="blue", border_width = 3.)
+    # df.addPolygon("self_triangle", [[0,0],[100,0],[0,100]], [400,200], [70, 100])
+    # df.removeShape("shape_name")
 
     # print("NetworkSize:", df.getNetworkSize())
     # print("NetworkBottomRight:", df.getNetworkBottomRightCorner())
@@ -4215,7 +4285,7 @@ if __name__ == '__main__':
 
     # print(df.getNodeIdList())
     # print(df.getReactionIdList())
-    # print(df.getTextContentList())
+    # print(df.getTextIdList())
     # print(df.getCompartmentIdList())
 
     # print(df.hasLayout())
@@ -4225,7 +4295,10 @@ if __name__ == '__main__':
     # f = open("output.xml", "w")
     # f.write(sbmlStr_layout_render)
     # f.close()
+    
+    # with open('output.xml', 'w') as f:
+    #   f.write(sbmlStr_layout_render)   
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png', scale = 2.)
 
