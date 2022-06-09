@@ -954,19 +954,21 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
             pts.append(rct_handle_position)
             c1 = rct_position[i] 
             s1 = rct_dimension[i]
-            try:
-                #to calculate the end point of the arrow called arrow_end_pt
+
+            #to calculate the end point of the arrow called arrow_end_pt
+            arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
+            line_end_pt = _cross_point(rct_handle_position, 
+            [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
+            [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
+            if arrow_end_pt == None: #rct_handle_position could be inside the node
+                rct_handle_position = center_position
                 arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
                 line_end_pt = _cross_point(rct_handle_position, 
-                [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
-                [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
-                if arrow_end_pt == None: #rct_handle_position could be inside the node
-                    rct_handle_position = center_position
-                    arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
-                    line_end_pt = _cross_point(rct_handle_position, 
-                    [c1[0]-reaction_line_width*2,c1[1]-reaction_line_width*2],
-                    [s1[0]+reaction_line_width*4,s1[1]+reaction_line_width*4])
-                if reverse and showReversible:
+                [c1[0]-reaction_line_width*2,c1[1]-reaction_line_width*2],
+                [s1[0]+reaction_line_width*4,s1[1]+reaction_line_width*4])
+            
+            if reverse and showReversible:
+                if arrow_end_pt != None:
                     #draw the arrow:
                     points = [arrow_end_pt]
                     distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
@@ -994,17 +996,18 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
 
                     _drawArrow(canvas, points, lineColor)
 
-                if reverse and line_end_pt != None:
-                    pts.append(line_end_pt)
-                    _drawBezier(pts, lineColor, linewidth)
-                else:
-                    #if arrow_end_pt != None:
+            if reverse and line_end_pt != None:
+                pts.append(line_end_pt)
+                _drawBezier(pts, lineColor, linewidth)
+            else:
+                if arrow_end_pt != None:
                     pts.append(arrow_end_pt)
                     _drawBezier(pts, lineColor, linewidth)
-            except:
-                rct_center_position =  [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
-                pts.append(rct_center_position)
-                _drawBezier(pts, lineColor, linewidth)
+                else:
+                    rct_center_position =  [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
+                    pts.append(rct_center_position)
+                    _drawBezier(pts, lineColor, linewidth)
+                    
         for i in range(nProducts):
             pts = [center_position] 
             pts.append(center_handle_position_prd)
@@ -1012,19 +1015,20 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
             pts.append(prd_handle_position)
             c2 = prd_position[i] 
             s2 = prd_dimension[i]
-            try:
-                #to calculate the head point of the arrow called arrow_head_pt
+
+            #to calculate the head point of the arrow called arrow_head_pt
+            arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
+            line_head_pt = _cross_point(prd_handle_position, 
+            [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
+            [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
+            if arrow_head_pt == None: #prd_handle_position could be inside the node
+                prd_handle_position = center_position
                 arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
                 line_head_pt = _cross_point(prd_handle_position, 
-                [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
-                [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
-                if arrow_head_pt == None: #prd_handle_position could be inside the node
-                    prd_handle_position = center_position
-                    arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
-                    line_head_pt = _cross_point(prd_handle_position, 
-                    [c2[0]-reaction_line_width*2,c2[1]-reaction_line_width*2],
-                    [s2[0]+reaction_line_width*4,s2[1]+reaction_line_width*4])
-                #draw the arrow:
+                [c2[0]-reaction_line_width*2,c2[1]-reaction_line_width*2],
+                [s2[0]+reaction_line_width*4,s2[1]+reaction_line_width*4])
+            #draw the arrow:
+            if arrow_head_pt != None:
                 points = [arrow_head_pt]
                 distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
                 if distance != 0:
@@ -1050,16 +1054,18 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     points.append([pts_x_r,pts_y_r])
                 _drawArrow(canvas, points, lineColor)
 
-                if line_head_pt != None:
-                    pts.append(line_head_pt)
-                    _drawBezier(pts, lineColor, linewidth)
-                else:
+            if line_head_pt != None:
+                pts.append(line_head_pt)
+                _drawBezier(pts, lineColor, linewidth)
+            else:
+                if arrow_head_pt != None:
                     pts.append(arrow_head_pt)
                     _drawBezier(pts, lineColor, linewidth)
-            except:
-                prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
-                pts.append(prd_center_position)
-                _drawBezier(pts, lineColor, linewidth)
+                else:
+                    prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
+                    pts.append(prd_center_position)
+                    _drawBezier(pts, lineColor, linewidth)
+
     elif lineType == 'straight':
         for i in range (nReactants):
             c1 = rct_position[i] 
