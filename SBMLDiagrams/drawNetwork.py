@@ -957,16 +957,20 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
 
             #to calculate the end point of the arrow called arrow_end_pt
             arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
-            line_end_pt = _cross_point(rct_handle_position, 
-            [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
-            [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
+            line_end_pt = _cross_point(rct_handle_position, [c1[0],c1[1]],[s1[0],s1[1]])
+            if reverse and showReversible:
+                line_end_pt = _cross_point(rct_handle_position, 
+                [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
+                [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
             if arrow_end_pt == None: #rct_handle_position could be inside the node
                 rct_handle_position = center_position
                 arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
-                line_end_pt = _cross_point(rct_handle_position, 
-                [c1[0]-reaction_line_width*2,c1[1]-reaction_line_width*2],
-                [s1[0]+reaction_line_width*4,s1[1]+reaction_line_width*4])
-            
+                line_end_pt = _cross_point(rct_handle_position, [c1[0],c1[1]],[s1[0],s1[1]])
+                if reverse and showReversible:
+                    line_end_pt = _cross_point(rct_handle_position, 
+                    [c1[0]-reaction_line_width*3,c1[1]-reaction_line_width*3],
+                    [s1[0]+reaction_line_width*6,s1[1]+reaction_line_width*6])
+
             if reverse and showReversible:
                 if arrow_end_pt != None:
                     #draw the arrow:
@@ -1025,8 +1029,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 prd_handle_position = center_position
                 arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
                 line_head_pt = _cross_point(prd_handle_position, 
-                [c2[0]-reaction_line_width*2,c2[1]-reaction_line_width*2],
-                [s2[0]+reaction_line_width*4,s2[1]+reaction_line_width*4])
+                [c2[0]-reaction_line_width*3,c2[1]-reaction_line_width*3],
+                [s2[0]+reaction_line_width*6,s2[1]+reaction_line_width*6])
             #draw the arrow:
             if arrow_head_pt != None:
                 points = [arrow_head_pt]
@@ -1073,15 +1077,19 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
             try:
                 #to calculate the head point of the arrow called arrow_end_pt
                 arrow_end_pt = _cross_point(arcCenter, c1, s1) 
-                line_end_pt = _cross_point(arcCenter, 
-                [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
-                [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
-                if arrow_end_pt == None:
-                    #arcCenter is inside the node
-                    arrow_end_pt = [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
+                line_end_pt = _cross_point(arcCenter, [c1[0],c1[1]],[s1[0],s1[1]])
+                if reverse and showReversible:
                     line_end_pt = _cross_point(arcCenter, 
                     [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
                     [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
+                if arrow_end_pt == None:
+                    #arcCenter is inside the node
+                    arrow_end_pt = [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
+                    line_end_pt = _cross_point(arcCenter, [c1[0],c1[1]],[s1[0],s1[1]])
+                    if reverse and showReversible:
+                        line_end_pt = _cross_point(arcCenter, 
+                        [c1[0]-reaction_line_width*3,c1[1]-reaction_line_width*3],
+                        [s1[0]+reaction_line_width*6,s1[1]+reaction_line_width*6])
                 if reverse and showReversible:    
                     #draw the arrow:
                     points = [arrow_end_pt]
@@ -1117,8 +1125,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     #arcCenter is inside the node
                     arrow_head_pt = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
                     line_head_pt = _cross_point(arcCenter, 
-                    [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
-                    [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
+                    [c2[0]-reaction_line_width*3,c2[1]-reaction_line_width*3],
+                    [s2[0]+reaction_line_width*6,s2[1]+reaction_line_width*6])
                 #draw the arrow:
                 points = [arrow_head_pt]
                 distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)

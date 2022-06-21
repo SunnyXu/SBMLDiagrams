@@ -211,6 +211,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     gen_border_width = 2.
     gen_shape_type = ''
     gen_shape_info = []
+
+    #libSBNW
+    #comp_render = []
+    spec_render = []
+    rxn_render = []
+    text_render = []
+    #gen_render = []
     
     mplugin = None
     try: #invalid sbml
@@ -493,9 +500,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     color_list = []
                     gradient_list = []
                     comp_render = []
-                    spec_render = []
-                    rxn_render = []
-                    text_render = []
+                    #spec_render = []
+                    #rxn_render = []
+                    #text_render = []
                     gen_render = []
                     arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                     id_arrowHeadSize = []
@@ -779,6 +786,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 for j in range(numFloatingNodes):
                     if temp_id == FloatingNodes_ids[j]:
                         if temp_id not in id_list:
+                            #spec_render
                             for k in range(len(spec_render)):
                                 if temp_id == spec_render[k][0]:
                                     spec_fill_color = spec_render[k][1]
@@ -4132,6 +4140,11 @@ if __name__ == '__main__':
     #filename = "nodes.xml"
     #filename = "test_arrows.xml"
 
+    #filename = "mass_action_0.sbml"
+    #filename = "str.xml"
+
+    filename = "testWithLayout.xml" #libSBNW
+
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
@@ -4300,5 +4313,8 @@ if __name__ == '__main__':
     #   f.write(sbmlStr_layout_render)   
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    df.draw(output_fileName = 'output.png', scale = 2.)
+    # df.autolayout(layout="spectral")
+
+
+    df.draw(output_fileName = 'output.png', scale = 10.)
 
