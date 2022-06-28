@@ -3821,24 +3821,30 @@ class load:
         return json.dumps(self.color_style.__dict__)
 
 
-    def autolayout(self, layout="spectral", scale=200, iterations=100):
+    def autolayout(self, layout="spring", scale=200, k=1, iterations=100):
 
         """
         Autolayout the node positions using networkX library.
 
         layout: str-the layout name from networkX, which can be one of the following:
 
-            spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
-
             spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm;
         
-            random: positioning nodes randomly.
-        
-            circular: positioning nodes on a circle.
+            spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
 
-        scale: float-the scaling factor to use
+            random: positioning nodes randomly;
         
-        iterations: int-maximum number of iterations to use during the calculation.             
+            circular: positioning nodes on a circle;
+
+            (comming soon) graphviz: positioning the nodes using Graphiz. 
+
+        scale (applies to "spring", "spectral", "circular"): float-Scale factor for positions. 
+        The nodes are positioned in a box of size scale in each dim centered at center.
+        
+        k (applies to "spring"): float-Optimal distance between nodes. 
+        Increase this value to move nodes farther apart.
+
+        iterations (applies to "spring"): int-maximum number of iterations to use during the calculation.             
         
         """
 
@@ -3867,14 +3873,17 @@ class load:
                 g[src].append(dest)
 
         pos = defaultdict(list)
-        if layout == "spectral":
+
+        if layout == "spring":
+            pos = nx.spring_layout(graph, scale=scale, center=center, k=k, iterations=iterations)
+        elif layout == "spectral":
             pos = nx.spectral_layout(graph, scale=scale, center=center)
-        elif layout == "spring":
-            pos = nx.spring_layout(graph, scale=scale, center=center, k=1, iterations=iterations)
         elif layout == "random":
             pos = nx.random_layout(graph, center=center)
         elif layout == "circular":
             pos = nx.circular_layout(graph, scale=scale, center=center)
+        # elif layout == "graphviz":
+        #     pos = nx.nx_agraph.graphviz_layout(nx.petersen_graph())
         else:
             raise Exception("no such layout")
 
@@ -4094,7 +4103,7 @@ if __name__ == '__main__':
     #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
-    #filename = "Jana_WolfGlycolysis-original.xml" 
+    filename = "Jana_WolfGlycolysis-original.xml" 
     #filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
@@ -4143,7 +4152,7 @@ if __name__ == '__main__':
     #filename = "mass_action_0.sbml"
     #filename = "str.xml"
 
-    filename = "testWithLayout.xml" #libSBNW
+    #filename = "testWithLayout.xml" #libSBNW
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -4313,8 +4322,8 @@ if __name__ == '__main__':
     #   f.write(sbmlStr_layout_render)   
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    # df.autolayout(layout="spectral")
+    #df.autolayout(layout = 'graphviz')
+    df.autolayout(scale = 400, k = 2)
 
-
-    df.draw(output_fileName = 'output.png', scale = 10.)
+    df.draw(output_fileName = 'output.png')
 

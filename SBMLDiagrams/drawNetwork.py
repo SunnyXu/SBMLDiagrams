@@ -988,6 +988,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         points.append([pts_x_r,pts_y_r])
                     else:
                         distance = math.sqrt((arrow_end_pt[0]-center_position[0])**2 + (arrow_end_pt[1]-center_position[1])**2)
+                        if distance == 0:
+                            distance = 0.001
                         pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-center_position[1])*arrow_s1/distance
                         pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-center_position[0])*arrow_s1/distance
                         pts_y_l = pts_y_m + (arrow_end_pt[0]-center_position[0])*.5*arrow_s2/distance
@@ -1046,6 +1048,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/distance
                     points.append([pts_x_r,pts_y_r])
                 else:
+                    if distance == 0:
+                        distance = 0.001
                     distance = math.sqrt((arrow_head_pt[0]-center_position[0])**2 + (arrow_head_pt[1]-center_position[1])**2)
                     pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-center_position[1])*arrow_s1/distance
                     pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-center_position[0])*arrow_s1/distance
@@ -1094,6 +1098,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     #draw the arrow:
                     points = [arrow_end_pt]
                     distance = math.sqrt((arrow_end_pt[0]-arcCenter[0])**2 + (arrow_end_pt[1]-arcCenter[1])**2)
+                    if distance == 0:
+                        distance = 0.001
                     pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-arcCenter[1])*arrow_s1/distance
                     pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-arcCenter[0])*arrow_s1/distance
                     pts_y_l = pts_y_m + (arrow_end_pt[0]-arcCenter[0])*.5*arrow_s2/distance
@@ -1130,6 +1136,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 #draw the arrow:
                 points = [arrow_head_pt]
                 distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
+                if distance == 0:
+                    distance = 0.001
                 pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-arcCenter[1])*arrow_s1/distance
                 pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/distance
                 pts_y_l = pts_y_m + (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
