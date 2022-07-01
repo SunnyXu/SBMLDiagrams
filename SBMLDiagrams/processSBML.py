@@ -3836,7 +3836,7 @@ class load:
         
             circular: positioning nodes on a circle;
 
-            (comming soon) graphviz: positioning the nodes using Graphiz. 
+            #(comming soon) graphviz: positioning the nodes using Graphiz. 
 
         scale (applies to "spring", "spectral", "circular"): float-Scale factor for positions. 
         The nodes are positioned in a box of size scale in each dim centered at center.
@@ -3847,54 +3847,54 @@ class load:
         iterations (applies to "spring"): int-maximum number of iterations to use during the calculation.             
         
         """
+        if not self.hasLayout():
+            sbmlStr = self.export()
+            v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyle=self.color_style)
+            edges = v_info.edges
+            model = simplesbml.loadSBMLStr(sbmlStr)
 
-        sbmlStr = self.export()
-        v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyle=self.color_style)
-        edges = v_info.edges
-        model = simplesbml.loadSBMLStr(sbmlStr)
+            graph = nx.Graph()
+            g = defaultdict(list)
+            nodes = model.getListOfAllSpecies()
+            reaction_ids = model.getListOfReactionIds()
 
-        graph = nx.Graph()
-        g = defaultdict(list)
-        nodes = model.getListOfAllSpecies()
-        reaction_ids = model.getListOfReactionIds()
+            width, height = self.color_style.getImageSize()
+            if scale == None:
+                scale = max(width, height) // 2
+            center = [width // 2, height // 2]
 
-        width, height = self.color_style.getImageSize()
-        if scale == None:
-            scale = max(width, height) // 2
-        center = [width // 2, height // 2]
+            for node in nodes:
+                graph.add_node(node)
+            for edge in edges:
+                src = edge[0]
+                dests = edge[1:]
+                for dest in dests:
+                    graph.add_edge(src, dest)
+                    g[src].append(dest)
 
-        for node in nodes:
-            graph.add_node(node)
-        for edge in edges:
-            src = edge[0]
-            dests = edge[1:]
-            for dest in dests:
-                graph.add_edge(src, dest)
-                g[src].append(dest)
+            pos = defaultdict(list)
 
-        pos = defaultdict(list)
+            if layout == "spring":
+                pos = nx.spring_layout(graph, scale=scale, center=center, k=k, iterations=iterations)
+            elif layout == "spectral":
+                pos = nx.spectral_layout(graph, scale=scale, center=center)
+            elif layout == "random":
+                pos = nx.random_layout(graph, center=center)
+            elif layout == "circular":
+                pos = nx.circular_layout(graph, scale=scale, center=center)
+            # elif layout == "graphviz":
+            #     pos = nx.nx_agraph.graphviz_layout(graph)
+            else:
+                raise Exception("no such layout")
 
-        if layout == "spring":
-            pos = nx.spring_layout(graph, scale=scale, center=center, k=k, iterations=iterations)
-        elif layout == "spectral":
-            pos = nx.spectral_layout(graph, scale=scale, center=center)
-        elif layout == "random":
-            pos = nx.random_layout(graph, center=center)
-        elif layout == "circular":
-            pos = nx.circular_layout(graph, scale=scale, center=center)
-        # elif layout == "graphviz":
-        #     pos = nx.nx_agraph.graphviz_layout(nx.petersen_graph())
-        else:
-            raise Exception("no such layout")
+            for n, p in pos.items():
+                if layout == "random":
+                    p *= scale
+                p = p.tolist()
+                self.setNodeAndTextPosition(n, p)
 
-        for n, p in pos.items():
-            if layout == "random":
-                p *= scale
-            p = p.tolist()
-            self.setNodeAndTextPosition(n, p)
-
-        for id in reaction_ids:
-            self.setReactionDefaultCenterAndHandlePositions(id)
+            for id in reaction_ids:
+                self.setReactionDefaultCenterAndHandlePositions(id)
 
 
     def draw(self, setImageSize = '', scale = 1., output_fileName = '', 
@@ -4103,7 +4103,7 @@ if __name__ == '__main__':
     #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
-    filename = "Jana_WolfGlycolysis-original.xml" 
+    #filename = "Jana_WolfGlycolysis-original.xml" 
     #filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
@@ -4322,8 +4322,8 @@ if __name__ == '__main__':
     #   f.write(sbmlStr_layout_render)   
 
     # df.draw(reactionLineType='bezier', scale = 2.)
-    #df.autolayout(layout = 'graphviz')
-    df.autolayout(scale = 400, k = 2)
+    df.autolayout(layout = 'spring')
+    #df.autolayout(scale = 400, k = 2)
 
     df.draw(output_fileName = 'output.png')
 
