@@ -247,10 +247,10 @@ class Load:
             raise Exception("Alias index is beyond number of alias nodes.")
     
 
-
-print("Get node size by libSBML (width, height):", Load(sbmlStr).getNodeSize("x_0").x, Load(sbmlStr).getNodeSize("x_0").y)
-print("Get node border width by libSBML:", Load(sbmlStr).getNodeBorderWidth("x_0"))
-print("Get node border color by libSBML:", Load(sbmlStr).getNodeBorderColor("x_0"))
+ls = Load(sbmlStr)
+print("Get node size by libSBML (width, height):", ls.getNodeSize("x_0").x, ls.getNodeSize("x_0").y)
+print("Get node border width by libSBML:", ls.getNodeBorderWidth("x_0"))
+print("Get node border color by libSBML:", ls.getNodeBorderColor("x_0"))
 
 
     
