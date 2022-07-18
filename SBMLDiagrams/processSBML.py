@@ -283,7 +283,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     reaction = model_layout.getReaction(reaction_id)
                     rev = reaction.getReversible()
                     reaction_rev_list.append(rev)
-                    kinetics = reaction.getKineticLaw().getFormula()
+                    try:
+                        kinetics = reaction.getKineticLaw().getFormula()
+                    except:
+                        #if reaction.getKineticLaw() == None, or there is no kinetics info
+                        kinetics = ""
                     kinetics_list.append(kinetics)
                     
                     temp_mod_list = []
@@ -452,8 +456,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             concentration = 1.
                         spec_concentration_list.append(concentration)
 
-                #print(reaction_mod_list)
-                #print(mod_specGlyph_list)
+                #print(reaction_mod_list) #species_id_list
+                #print(mod_specGlyph_list) #species_reference_id_list
                 #print(spec_specGlyph_id_list)
 
                 #arbitrary text
@@ -1011,7 +1015,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 kinetics = kinetics_list[i]
                 rct_num = len(rct_specGlyph_handle_list[i])
                 prd_num = len(prd_specGlyph_handle_list[i])
-                mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                #mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                mod_num = len(mod_specGlyph_list[i])
 
                 # for j in range(rct_num):
                 #     temp_specGlyph_id = rct_specGlyph_list[i][j]
@@ -1054,6 +1059,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     dst_idx_list_corr = []
                     [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
 
+                    #print(mod_specGlyph_list)
                     for j in range(mod_num):
                         if len(mod_specGlyph_list[i]) != 0:
                             temp_specGlyph_id = mod_specGlyph_list[i][j]
@@ -4154,6 +4160,12 @@ if __name__ == '__main__':
 
     #filename = "testWithLayout.xml" #libSBNW
 
+    #bioinformatics
+    #filename = "bioinformatics/BIOMD0000000005.xml"
+    #filename = "output.xml"
+    #filename = "bioinformatics/pdmap-nucleoid.xml"
+    filename = "bioinformatics/exported_model.xml"
+
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
@@ -4310,10 +4322,9 @@ if __name__ == '__main__':
     # print(df.getTextIdList())
     # print(df.getCompartmentIdList())
 
-    # print(df.hasLayout())
+    #print(df.hasLayout())
 
     # sbmlStr_layout_render = df.export()
-
     # f = open("output.xml", "w")
     # f.write(sbmlStr_layout_render)
     # f.close()
@@ -4321,9 +4332,9 @@ if __name__ == '__main__':
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
 
-    # df.draw(reactionLineType='bezier', scale = 2.)
-    df.autolayout(layout = 'spring')
+    #df.draw(reactionLineType='bezier', scale = 2.)
+    #df.autolayout(layout = 'spring')
     #df.autolayout(scale = 400, k = 2)
 
-    df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png', reactionLineType="straight")
 

@@ -422,7 +422,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         reaction_id_list.append(reaction_id)
                         reaction_rev_list.append(rev)
                         reaction = model_layout.getReaction(reaction_id)
-                        kinetics = reaction.getKineticLaw().getFormula()
+                        try:
+                            kinetics = reaction.getKineticLaw().getFormula()
+                        except:
+                            #if reaction.getKineticLaw() == None, or there is no kinetics info
+                            kinetics = ""
                         kinetics_list.append(kinetics)
                         
                         temp_mod_list = []
@@ -579,8 +583,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             spec_text_position_list.append([text_pos_x, text_pos_y])
                             spec_text_dimension_list.append([text_dim_w, text_dim_h])
 
-                    #print(reaction_mod_list)
-                    #print(mod_specGlyph_list)
+                    #print(reaction_mod_list) #species_id_list
+                    #print(mod_specGlyph_list) #species_reference_id_list
                     #print(spec_specGlyph_id_list)
 
                     #arbitrary text
@@ -899,7 +903,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     #prd_num = len(prd_specGlyph_list[i])
                     rct_num = len(rct_specGlyph_handle_list[i])
                     prd_num = len(prd_specGlyph_handle_list[i])
-                    mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                    #mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                    mod_num = len(mod_specGlyph_list[i])
 
                     add_rct_cnt = 0
                     for j in range(rct_num):
