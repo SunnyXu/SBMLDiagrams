@@ -91,7 +91,7 @@
                       <layout:start layout:x="334" layout:y="231"/>
                       <layout:end layout:x="230" layout:y="231"/>
                       <layout:basePoint1 layout:x="282" layout:y="231"/>
-                      <layout:basePoint2 layout:x="386" layout:y="231"/>
+                      <layout:basePoint2 layout:x="282" layout:y="231"/>
                     </layout:curveSegment>
                   </layout:listOfCurveSegments>
                 </layout:curve>

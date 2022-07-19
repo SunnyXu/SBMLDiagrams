@@ -72,7 +72,7 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(visualizeSBML._getReactionCenterPosition(self._df, "r_0")[0] == \
       [334.0, 231.0])
     self.assertTrue(visualizeSBML._getReactionBezierHandles(self._df, "r_0")[0] == \
-      [[386.0, 231.0], [386.0, 231.0], [386.0, 231.0]])
+      [[386.0, 231.0], [386.0, 231.0], [282.0, 231.0]])
 
     self.assertTrue(visualizeSBML._getTextPosition(self._df_text, "TextGlyph_01")[0] == [92.0, 26.0])
     self.assertTrue(visualizeSBML._getTextSize(self._df_text, "TextGlyph_01")[0] == [228.0, 24.0])
