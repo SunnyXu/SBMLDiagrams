@@ -274,9 +274,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     #     center_x = curve.getCurveSegment(j).getStart().getXOffset()
                     #     center_y = curve.getCurveSegment(j).getStart().getYOffset()
                     for segment in curve.getListOfCurveSegments():
-                        center_x = segment.getStart().getXOffset()
-                        center_y = segment.getStart().getYOffset()
-                        center_pt = [center_x, center_y]
+                        short_line_start_x = segment.getStart().getXOffset()
+                        short_line_start_y = segment.getStart().getYOffset()
+                        short_line_end_x   = segment.getEnd().getXOffset()
+                        short_line_end_y   = segment.getEnd().getYOffset() 
+                        short_line_start = [short_line_start_x, short_line_start_y]
+                        short_line_end   = [short_line_end_x, short_line_end_y]
+                        if short_line_start == short_line_end: #the centroid is a dot
+                            center_pt = short_line_start
+                        else: #the centroid is a short line
+                            center_pt = [.5*(short_line_start_x+short_line_end_x),.5*(short_line_start_y+short_line_end_y)]
                         reaction_center_list.append(center_pt)
                     reaction_id = reactionGlyph.getReactionId()
                     reaction_id_list.append(reaction_id)
@@ -311,25 +318,43 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         curve = specRefGlyph.getCurve()
                         spec_handle = []                             
                         for segment in curve.getListOfCurveSegments():
+                                
                             line_start_x = segment.getStart().getXOffset()
                             line_start_y = segment.getStart().getYOffset()
                             line_end_x = segment.getEnd().getXOffset()
                             line_end_y = segment.getEnd().getYOffset()
                             line_start_pt =  [line_start_x, line_start_y]
                             line_end_pt = [line_end_x, line_end_y]
+
                             try:
                                 if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
                                     #line starts from center
-                                    center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
-                                                segment.getBasePoint1().getYOffset()]                                
-                                    spec_handle = [segment.getBasePoint2().getXOffset(),
-                                            segment.getBasePoint2().getYOffset()]
+                                    try: #bezier 
+                                        center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
+                                                    segment.getBasePoint1().getYOffset()]                                
+                                        spec_handle = [segment.getBasePoint2().getXOffset(),
+                                                segment.getBasePoint2().getYOffset()]
+                                    except: #straight
+                                        # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                        # .5*(center_pt[1]+line_end_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        spec_handle = center_pt
+
+
                                 else:
-                                    #line does not start from center
-                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
-                                                segment.getBasePoint1().getYOffset()]                                
-                                    center_handle_candidate = [segment.getBasePoint2().getXOffset(),
-                                            segment.getBasePoint2().getYOffset()]
+                                    #line starts from species
+                                    try: #bezier
+                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                    segment.getBasePoint1().getYOffset()]                                
+                                        center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                                                segment.getBasePoint2().getYOffset()]
+                                    except: #straight
+                                        # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                        # .5*(center_pt[1]+line_start_pt[1])]
+                                        # center_handle_candidate = center_pt
+                                        center_handle_candidate = center_pt
+                                        spec_handle = center_pt
+
                             except:
                                 center_handle_candidate = []
                                 spec_handle = []
@@ -4154,6 +4179,7 @@ if __name__ == '__main__':
     #filename = "BIOMD0000000006.xml"
     #filename = "nodes.xml"
     #filename = "test_arrows.xml"
+    #filename = "test_center.xml"
 
     #filename = "mass_action_0.sbml"
     #filename = "str.xml"
@@ -4163,8 +4189,11 @@ if __name__ == '__main__':
     #bioinformatics
     #filename = "bioinformatics/BIOMD0000000005.xml"
     #filename = "output.xml"
-    #filename = "bioinformatics/pdmap-nucleoid.xml"
-    filename = "bioinformatics/exported_model.xml"
+    filename = "bioinformatics/pdmap-nucleoid.xml"
+    #filename = "bioinformatics/exported_model.xml"
+
+    #global
+    #filename = "copasi_global/feedback_AssignRuleGlobalRender.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -4336,5 +4365,5 @@ if __name__ == '__main__':
     #df.autolayout(layout = 'spring')
     #df.autolayout(scale = 400, k = 2)
 
-    df.draw(output_fileName = 'output.png', reactionLineType="straight")
+    df.draw(output_fileName = 'output.png', reactionLineType="bezier")
 
