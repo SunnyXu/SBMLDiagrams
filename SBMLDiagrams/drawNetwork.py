@@ -1165,13 +1165,14 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         mod_start_virtual_y = .5*mod_dimension[i][1] + mod_position[i][1]
         try: 
             [mod_start_x, mod_start_y] = _cross_point(arcCenter, 
-            [mod_position[i][0]-.25*mod_dimension[i][0], mod_position[i][1]-.25*mod_dimension[i][1]],
-            [mod_dimension[i][0]*1.5, mod_dimension[i][1]*1.5]) 
+            [mod_position[i][0]-reaction_line_width*2.,mod_position[i][1]-reaction_line_width*2.],
+            [mod_dimension[i][0]+reaction_line_width*4., mod_dimension[i][1]+reaction_line_width*4.]) 
             [mod_end_x, mod_end_y] = _cross_point([mod_start_virtual_x, mod_start_virtual_y],
-            [arcCenter[0]-.5*mod_dimension[i][0],arcCenter[1]-.5*mod_dimension[i][1]], mod_dimension[i])
+            [arcCenter[0]-3.*reaction_line_width, arcCenter[1]-3.*reaction_line_width], 
+            [6.*reaction_line_width, 6.*reaction_line_width])
         except: 
-            mod_start_x = .5*mod_dimension[i][0] + mod_position[i][0]
-            mod_start_y = .5*mod_dimension[i][1] + mod_position[i][1]
+            mod_start_x = mod_start_virtual_x
+            mod_start_y = mod_start_virtual_y
             [mod_end_x, mod_end_y] = arcCenter[0], arcCenter[1] 
         _drawLine(canvas, mod_start_x, mod_start_y, mod_end_x, mod_end_y,
          modifier_lineColor, modifier_linewidth)  

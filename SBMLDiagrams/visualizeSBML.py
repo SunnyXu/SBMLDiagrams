@@ -191,6 +191,7 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
             if not user_reaction_line_color:
                 user_reaction_line_color = reaction_line_color
 
+            
             drawNetwork.addReaction(canvas,temp_id, src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
                             reaction_line_color = user_reaction_line_color, reaction_line_width = reaction_line_width*rate,
@@ -903,8 +904,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     #prd_num = len(prd_specGlyph_list[i])
                     rct_num = len(rct_specGlyph_handle_list[i])
                     prd_num = len(prd_specGlyph_handle_list[i])
-                    #mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
-                    mod_num = len(mod_specGlyph_list[i])
+                    mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                    #mod_num = len(mod_specGlyph_list[i])
 
                     add_rct_cnt = 0
                     for j in range(rct_num):
@@ -932,7 +933,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         add_rct_cnt -= 1
 
                     for j in range(mod_num):
-                        if len(mod_specGlyph_list[i]) != 0:
+                        #if len(mod_specGlyph_list[i]) != 0:
+                        if len(mod_specGlyph_list[i]) == mod_num: 
+                            #all the modifiers are defined as role in the SpecRefGlyph
                             temp_specGlyph_id = mod_specGlyph_list[i][j]
                             for k in range(numSpec_in_reaction):
                                 if temp_specGlyph_id == specGlyph_id_list[k]:

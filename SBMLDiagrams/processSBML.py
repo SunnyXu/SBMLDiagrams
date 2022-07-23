@@ -419,7 +419,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         
                     #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                     #prd_specGlyph_list.append(prd_specGlyph_temp_list)
-                    #
+                    
 
                     try:
                         reaction_center_handle_list.append(center_handle[0])
@@ -1040,8 +1040,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 kinetics = kinetics_list[i]
                 rct_num = len(rct_specGlyph_handle_list[i])
                 prd_num = len(prd_specGlyph_handle_list[i])
-                #mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
-                mod_num = len(mod_specGlyph_list[i])
+                mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                #mod_num = len(mod_specGlyph_list[i])
 
                 # for j in range(rct_num):
                 #     temp_specGlyph_id = rct_specGlyph_list[i][j]
@@ -1086,7 +1086,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
                     #print(mod_specGlyph_list)
                     for j in range(mod_num):
-                        if len(mod_specGlyph_list[i]) != 0:
+                        #if len(mod_specGlyph_list[i]) != 0:
+                        if len(mod_specGlyph_list[i]) == mod_num: 
+                            #all the modifiers are defined as role in the SpecRefGlyph
                             temp_specGlyph_id = mod_specGlyph_list[i][j]
                             for k in range(len(node_idx_specGlyphid_list)):
                                 if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
@@ -4200,18 +4202,18 @@ if __name__ == '__main__':
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('output.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # try:
-    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # except:
-    #     print("did not return shapeData")
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('output.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    try:
+        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    except:
+        print("did not return shapeData")
+    writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -4365,5 +4367,5 @@ if __name__ == '__main__':
     #df.autolayout(layout = 'spring')
     #df.autolayout(scale = 400, k = 2)
 
-    df.draw(output_fileName = 'output.png', reactionLineType="bezier")
+    df.draw(output_fileName = 'output.png')
 
