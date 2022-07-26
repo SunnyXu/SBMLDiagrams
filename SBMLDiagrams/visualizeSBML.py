@@ -320,6 +320,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
             return tuple(int(value[i:i+2], 16) for i in (0, 2, 4, 6))
 
         comp_id_list = []
+        compGlyph_id_list = []
         comp_dimension_list = []
         comp_position_list = []
         spec_id_list = []
@@ -351,6 +352,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         reaction_line_width = 3.0
         reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5]
         reaction_dash = []
+        reaction_line_fill = [255, 255, 255, 255]
         text_content = ''
         text_line_color = [0, 0, 0, 255]
         text_line_width = 1.
@@ -398,6 +400,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         comp_position_list.append([pos_x,pos_y])
                         
                     reaction_id_list = []
+                    reactionGlyph_id_list = []
                     reaction_rev_list = []
                     reaction_center_list = []
                     kinetics_list = []
@@ -420,7 +423,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         reaction_id = reactionGlyph.getReactionId()
                         reaction = model_layout.getReaction(reaction_id)
                         rev = reaction.getReversible()
+                        reactionGlyph_id = reactionGlyph.getId()
                         reaction_id_list.append(reaction_id)
+                        reactionGlyph_id_list.append(reactionGlyph_id)
                         reaction_rev_list.append(rev)
                         reaction = model_layout.getReaction(reaction_id)
                         try:
@@ -691,7 +696,28 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             group = style.getGroup()
                             typeList = style.createTypeString()
                             idList = style.createIdString()
+                                
+                            if typeList == '': 
+                                #if the typeList is not defined, self define it based on idList
+                                #which is the layout id instead of id
+                                if idList in compGlyph_id_list:
+                                    typeList = 'COMPARTMENTGLYPH'
+                                elif idList in specGlyph_id_list:
+                                    typeList = 'SPECIESGLYPH'
+                                elif idList in reactionGlyph_id_list:
+                                    typeList = 'REACTIONGLYPH'
+                                elif idList in textGlyph_id_list:
+                                    typeList = 'TEXTGLYPH'
+                                # else:
+                                #     print(idList)
+
                             if 'COMPARTMENTGLYPH' in typeList:
+                                #change layout id to id for later to build the list of render
+                                render_comp_id = idList
+                                for k in range(len(compGlyph_id_list)):    
+                                    if compGlyph_id_list[k] == idList:
+                                        render_comp_id = comp_id_list[k]                         
+
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
                                         if not color_style.getStyleName():
@@ -703,9 +729,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 comp_border_width = group.getStrokeWidth()
                                 if not color_style.getStyleName():
                                     color_style.setCompBorderWidth(comp_border_width)
-                                comp_render.append([idList, color_style.getCompFillColor(),
+                                comp_render.append([render_comp_id, color_style.getCompFillColor(),
                                                     color_style.getCompBorderColor(),color_style.getCompBorderWidth()])
                             elif 'SPECIESGLYPH' in typeList:
+                                #change layout id to id for later to build the list of render
+                                render_spec_id = idList
+
+                                for k in range(len(spec_specGlyph_id_list)):    
+                                    if spec_specGlyph_id_list[k][1] == idList:
+                                        render_spec_id = spec_specGlyph_id_list[k][0] 
+                                        spec_dimension = spec_dimension_list[k]
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
                                         if not color_style.getStyleName():
@@ -749,6 +782,15 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                             point_x = element.getListOfElements().get(num).getX().getRelativeValue()
                                             point_y = element.getListOfElements().get(num).getY().getRelativeValue()
                                             shapeInfo.append([point_x,point_y]) 
+                                        if all(v == [0.,0.] for v in shapeInfo):
+                                            shapeInfo = []
+                                            spec_width = spec_dimension[0]
+                                            spec_hight = spec_dimension[1]
+                                            for num in range(NumRenderpoints):
+                                                point_x = element.getListOfElements().get(num).getX().getAbsoluteValue()
+                                                point_y = element.getListOfElements().get(num).getY().getAbsoluteValue()
+                                                shapeInfo.append([100.*point_x/spec_width,
+                                                100.*point_y/spec_hight])
                                         if NumRenderpoints == 6: #hexagon:
                                             shapeIdx = 3
                                             shape_name = "hexagon"
@@ -781,11 +823,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                    spec_render.append([idList,spec_fill_color,color_style.getSpecBorderColor(),
                                    color_style.getSpecBorderWidth(),shapeIdx,shape_name,shape_type,shapeInfo])
                                 else:
-                                    spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
+                                    spec_render.append([render_spec_id,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
                                     color_style.getSpecBorderWidth(),shapeIdx,shape_name,shape_type,shapeInfo])
                                 
                                 
                             elif 'REACTIONGLYPH' in typeList:
+                                #change layout id to id for later to build the list of render
+                                render_rxn_id = idList
+                                for k in range(len(reactionGlyph_id_list)):    
+                                    if reactionGlyph_id_list[k] == idList:
+                                        render_rxn_id = reaction_id_list[k] 
                                 if group.isSetEndHead():
                                     temp_id = group.getEndHead()
                                 reaction_dash = []
@@ -800,10 +847,14 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
                                             color_style.setReactionLineColor(hex_to_rgb(color_list[k][1]))
+                                    if color_list[k][0] == group.getFill():
+                                        reaction_line_fill = hex_to_rgb(color_list[k][1])
                                 reaction_line_width = group.getStrokeWidth()
-                                rxn_render.append([idList, color_style.getReactionLineColor(), 
-                                reaction_line_width, arrowHeadSize, reaction_dash])
+                                rxn_render.append([render_rxn_id, color_style.getReactionLineColor(), 
+                                reaction_line_width, arrowHeadSize, reaction_dash, reaction_line_fill])
                             elif 'TEXTGLYPH' in typeList:
+                                render_text_id = idList
+
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
@@ -812,10 +863,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 if math.isnan(text_line_width):
                                     text_line_width = 1.
                                 text_font_size = float(group.getFontSize().getCoordinate())
-                                text_render.append([idList,color_style.getTextLineColor(),
+                                text_render.append([render_text_id,color_style.getTextLineColor(),
 								text_line_width, text_font_size])
 
                             elif 'GENERALGLYPH' in typeList:
+                                render_gen_id = idList
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
                                         gen_fill_color = hex_to_rgb(color_list[k][1])
@@ -833,7 +885,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                             point_x = element.getListOfElements().get(num).getX().getRelativeValue()
                                             point_y = element.getListOfElements().get(num).getY().getRelativeValue()
                                             gen_shape_info.append([point_x,point_y]) 
-                                gen_render.append([idList, gen_fill_color, gen_border_color,
+                                gen_render.append([render_gen_id, gen_fill_color, gen_border_color,
                                 gen_border_width, gen_shape_type, gen_shape_info])
         #try: 
             model = simplesbml.loadSBMLStr(sbmlStr)
@@ -961,6 +1013,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             reaction_line_width = rxn_render[j][2]
                             reaction_arrow_head_size = rxn_render[j][3]
                             reaction_dash = rxn_render[j][4]
+                            reaction_line_fill = rxn_render[j][5]
                     
                     try: 
                         center_position = reaction_center_list[i]
@@ -1498,8 +1551,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
     FloatingNodes_ids = model.getListOfFloatingSpecies()
     numBoundaryNodes  = model.getNumBoundarySpecies()
     BoundaryNodes_ids = model.getListOfBoundarySpecies()
-    numComps  = model.getNumCompartments()
-    Comps_ids = model.getListOfCompartmentIds()
+    #numComps  = model.getNumCompartments()
+    #Comps_ids = model.getListOfCompartmentIds()
     numRxns   = model.getNumReactions()
     Rxns_ids  = model.getListOfReactionIds()
 
@@ -1509,6 +1562,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
     numTexts = len(txt_id)
     shape_name = df.getShapeNameList()
     numShapes = len(shape_name)
+
+    Comps_ids = [] #only considers to visualize the compartments with species in
 
     if numFloatingNodes > 0 :
         position = _getNodePosition(_df, FloatingNodes_ids[0])[0]
@@ -1536,6 +1591,9 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[0] = text_temp_position[j][0]
             if text_temp_position[j][1] < position[1]:
                 position[1] = text_temp_position[j][1]
+        comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[i])
+        if comp_id not in Comps_ids:
+            Comps_ids.append(comp_id)
     for i in range(numBoundaryNodes):
         node_temp_position = _getNodePosition(_df, BoundaryNodes_ids[i])
         text_temp_position = _getNodeTextPosition(_df, BoundaryNodes_ids[i])
@@ -1548,7 +1606,11 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[0] = text_temp_position[j][0]
             if text_temp_position[j][1] < position[1]:
                 position[1] = text_temp_position[j][1]
-    for i in range(numComps):
+        comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[i])
+        if comp_id not in Comps_ids:
+            Comps_ids.append(comp_id)
+
+    for i in range(len(Comps_ids)):
         if Comps_ids[i] != "_compartment_default_":
             comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
             comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
@@ -1559,6 +1621,18 @@ def _getNetworkTopLeftCorner(sbmlStr):
                     position[0] = comp_temp_position[0]
                 if comp_temp_position[1] < position[1]:
                     position[1] = comp_temp_position[1]
+
+    # for i in range(numComps):
+    #     if Comps_ids[i] != "_compartment_default_":
+    #         comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
+    #         comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
+    #         if comp_temp_fill_color[0] != [255,255,255,255] or \
+    #             comp_temp_border_color[0] != [255,255,255,255]:
+    #             comp_temp_position = _getCompartmentPosition(_df, Comps_ids[i])[0]
+    #             if comp_temp_position[0] < position[0]:
+    #                 position[0] = comp_temp_position[0]
+    #             if comp_temp_position[1] < position[1]:
+    #                 position[1] = comp_temp_position[1]
     for i in range(numRxns):
         center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
         handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
@@ -1620,8 +1694,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
     FloatingNodes_ids = model.getListOfFloatingSpecies()
     numBoundaryNodes  = model.getNumBoundarySpecies()
     BoundaryNodes_ids = model.getListOfBoundarySpecies()
-    numComps  = model.getNumCompartments()
-    Comps_ids = model.getListOfCompartmentIds()
+    #numComps  = model.getNumCompartments()
+    #Comps_ids = model.getListOfCompartmentIds()
     numRxns   = model.getNumReactions()
     Rxns_ids  = model.getListOfReactionIds()
 
@@ -1632,6 +1706,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
 
     shape_name = df.getShapeNameList()
     numShapes = len(shape_name)
+
+    Comps_ids = [] #only considers to visualize the compartments with species in
 
     if numFloatingNodes > 0:
         position_list = _getNodePosition(_df, FloatingNodes_ids[0])
@@ -1671,6 +1747,9 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[0] = text_temp_position[0]
             if text_temp_position[1] > position[1]:
                 position[1] = text_temp_position[1]
+        comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[i])
+        if comp_id not in Comps_ids:
+            Comps_ids.append(comp_id)
     for i in range(numBoundaryNodes):
         node_temp_position_list = _getNodePosition(_df, BoundaryNodes_ids[i])
         text_temp_position_list = _getNodeTextPosition(_df, BoundaryNodes_ids[i])
@@ -1689,7 +1768,10 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[0] = text_temp_position[0]
             if text_temp_position[1] > position[1]:
                 position[1] = text_temp_position[1]
-    for i in range(numComps):
+        comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[i])
+        if comp_id not in Comps_ids:
+            Comps_ids.append(comp_id)
+    for i in range(len(Comps_ids)):
         if Comps_ids[i] != "_compartment_default_":
             comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
             comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
@@ -1703,6 +1785,20 @@ def _getNetworkBottomRightCorner(sbmlStr):
                     position[0] = comp_temp_position[0]
                 if comp_temp_position[1] > position[1]:
                     position[1] = comp_temp_position[1]
+    # for i in range(numComps):
+    #     if Comps_ids[i] != "_compartment_default_":
+    #         comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
+    #         comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
+    #         if comp_temp_fill_color[0] != [255,255,255,255] or \
+    #         comp_temp_border_color[0] != [255,255,255,255]:
+    #             comp_temp_size = _getCompartmentSize(_df, Comps_ids[i])[0]
+    #             comp_temp_position_list = _getCompartmentPosition(_df, Comps_ids[i])
+    #             comp_temp_position = [comp_temp_position_list[0][0]+comp_temp_size[0],
+    #             comp_temp_position_list[0][1]+comp_temp_size[1]]
+    #             if comp_temp_position[0] > position[0]:
+    #                 position[0] = comp_temp_position[0]
+    #             if comp_temp_position[1] > position[1]:
+    #                 position[1] = comp_temp_position[1]
     for i in range(numRxns):
         center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
         handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
@@ -2059,7 +2155,9 @@ if __name__ == '__main__':
     #filename = "putida_gb_newgenes.xml"
 
     #filename = "bart2.xml"
-    filename = "newSBML.xml"
+    #filename = "newSBML.xml"
+
+    filename = filename = "bioinformatics/pdmap-nucleoid.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2070,6 +2168,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output.pDF')
+        _draw(sbmlStr,output_fileName='output.png')
 
 

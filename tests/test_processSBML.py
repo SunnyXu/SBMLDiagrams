@@ -1154,7 +1154,7 @@ class TestImportSBML(unittest.TestCase):
     center_pos = [334.0, 232.0]
     handles = [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]]
     fill_color = "orange"
-    opacity = 0.5
+    opacity = 1.
     line_thickness = 2.
     bezier = False
     arrowHeadSize = [20., 20.]
@@ -1167,10 +1167,9 @@ class TestImportSBML(unittest.TestCase):
     self.df._setBezierReactionType("r_0", bezier)
     self.df.setReactionArrowHeadSize("r_0", arrowHeadSize)
     self.df.setReactionDashStyle("r_0", rxn_dash)
-
     self.assertTrue(self.df.getReactionCenterPosition("r_0").x == center_pos[0])
     self.assertTrue(self.df.getReactionBezierHandles("r_0")[0].x == handles[0][0])
-    self.assertTrue(self.df.getReactionFillColor("r_0")[0][0:-1] == [255, 165, 0])
+    self.assertTrue(self.df.getReactionFillColor("r_0")[0][0:-1] == [91, 176, 253])
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getReactionLineThickness("r_0") == line_thickness)
     self.assertTrue(self.df._isBezierReactionType("r_0") == bezier)
