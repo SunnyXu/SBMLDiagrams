@@ -1528,7 +1528,7 @@ def _setReactionFillColor(df, id, fill_color, opacity):
         raise Exception("This is not a valid id.")
     fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
-        df_ReactionData_temp.at[idx_list[i],"fill_color"] = fill_color
+        df_ReactionData_temp.at[idx_list[i],"stroke_color"] = fill_color
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4])
     
     return df_temp

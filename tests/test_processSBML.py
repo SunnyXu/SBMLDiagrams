@@ -1169,7 +1169,7 @@ class TestImportSBML(unittest.TestCase):
     self.df.setReactionDashStyle("r_0", rxn_dash)
     self.assertTrue(self.df.getReactionCenterPosition("r_0").x == center_pos[0])
     self.assertTrue(self.df.getReactionBezierHandles("r_0")[0].x == handles[0][0])
-    self.assertTrue(self.df.getReactionFillColor("r_0")[0][0:-1] == [91, 176, 253])
+    self.assertTrue(self.df.getReactionFillColor("r_0")[0][0:-1] == [255, 165, 0])
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getReactionLineThickness("r_0") == line_thickness)
     self.assertTrue(self.df._isBezierReactionType("r_0") == bezier)

@@ -323,6 +323,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         compGlyph_id_list = []
         comp_dimension_list = []
         comp_position_list = []
+        comp_text_position_list = []
+        comp_text_dimension_list = []
+        comp_text_content_list = []
         spec_id_list = []
         specGlyph_id_list = []
         spec_specGlyph_id_list = []
@@ -330,6 +333,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         spec_position_list = []
         spec_text_position_list = []
         spec_text_dimension_list = []
+        spec_text_content_list = []
         allNodes_pos_dict = defaultdict(list)
         allNodes_dim_dict = defaultdict(list)
         floatingNodes_pos_dict = defaultdict(list)
@@ -391,6 +395,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         compGlyph = layout.getCompartmentGlyph(i)
                         temp_id = compGlyph.getCompartmentId()
                         comp_id_list.append(temp_id)
+                        compGlyph_id = compGlyph.getId()
+                        compGlyph_id_list.append(compGlyph_id)
                         boundingbox = compGlyph.getBoundingBox()
                         height = boundingbox.getHeight()
                         width = boundingbox.getWidth()
@@ -398,7 +404,28 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         pos_y = boundingbox.getY()
                         comp_dimension_list.append([width,height])
                         comp_position_list.append([pos_x,pos_y])
-                        
+                        for j in range(numTextGlyphs):
+                            textGlyph_temp = layout.getTextGlyph(j)
+                            # if textGlyph_temp.isSetOriginOfTextId():
+                            #     temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            if textGlyph_temp.isSetGraphicalObjectId():
+                                temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                            else:
+                                temp_specGlyph_id = ''
+                            if temp_specGlyph_id == compGlyph_id:
+                                textGlyph = textGlyph_temp
+                                text_content = textGlyph.getText()
+                                text_boundingbox = textGlyph.getBoundingBox()
+                                text_pos_x = text_boundingbox.getX()
+                                text_pos_y = text_boundingbox.getY()   
+                                text_dim_w = text_boundingbox.getWidth()
+                                text_dim_h = text_boundingbox.getHeight()                       
+                                comp_text_content_list.append(text_content)
+                                comp_text_position_list.append([text_pos_x, text_pos_y])
+                                comp_text_dimension_list.append([text_dim_w, text_dim_h])
+
+                    #print(comp_text_content_list)
+
                     reaction_id_list = []
                     reactionGlyph_id_list = []
                     reaction_rev_list = []
@@ -463,19 +490,33 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 line_end_y = segment.getEnd().getYOffset()
                                 line_start_pt =  [line_start_x, line_start_y]
                                 line_end_pt = [line_end_x, line_end_y]
+
                                 try:
                                     if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
                                         #line starts from center
-                                        center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
-                                                    segment.getBasePoint1().getYOffset()]                                
-                                        spec_handle = [segment.getBasePoint2().getXOffset(),
-                                                segment.getBasePoint2().getYOffset()]
+                                        try: #bezier 
+                                            center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
+                                                        segment.getBasePoint1().getYOffset()]                                
+                                            spec_handle = [segment.getBasePoint2().getXOffset(),
+                                                    segment.getBasePoint2().getYOffset()]
+                                        except: #straight
+                                            # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                            # .5*(center_pt[1]+line_end_pt[1])]
+                                            center_handle_candidate = center_pt
+                                            spec_handle = center_pt
                                     else:
-                                        #line does not start from center
-                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
-                                                    segment.getBasePoint1().getYOffset()]                                
-                                        center_handle_candidate = [segment.getBasePoint2().getXOffset(),
-                                                segment.getBasePoint2().getYOffset()]
+                                        #line starts from species
+                                        try: #bezier
+                                            spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                        segment.getBasePoint1().getYOffset()]                                
+                                            center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                                                    segment.getBasePoint2().getYOffset()]
+                                        except: #straight
+                                            # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                            # .5*(center_pt[1]+line_start_pt[1])]
+                                            # center_handle_candidate = center_pt
+                                            center_handle_candidate = center_pt
+                                            spec_handle = center_pt
                                 except:
                                     center_handle_candidate = []
                                     spec_handle = []
@@ -485,14 +526,17 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             specGlyph = layout.getSpeciesGlyph(specGlyph_id)
                             
 
-                            for k in range(numSpecGlyphs):
+                            for k in range(numTextGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
-                                if textGlyph_temp.isSetOriginOfTextId():
-                                    temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
-                                elif textGlyph_temp.isSetGraphicalObjectId():
+                                # if textGlyph_temp.isSetOriginOfTextId():
+                                #     temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                if textGlyph_temp.isSetGraphicalObjectId():
                                     temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                                else:
+                                    temp_specGlyph_id = ''
                                 if temp_specGlyph_id == specGlyph_id:
                                     textGlyph = textGlyph_temp
+                                    text_content = textGlyph.getText()
 
                             spec_id = specGlyph.getSpeciesId()
                             spec_boundingbox = specGlyph.getBoundingBox()
@@ -513,6 +557,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 text_dim_w = width
                                 text_dim_h = height
 
+                            # if text_content == 'Mt-DNA repair':
+                            #         print("node:", [pos_x, pos_y])
+                            #         print("text:", [text_pos_x, text_pos_y])
+
+
                             if specGlyph_id not in specGlyph_id_list:
                                 spec_id_list.append(spec_id)
                                 specGlyph_id_list.append(specGlyph_id)
@@ -521,6 +570,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 name_to_id[spec_id] = specGlyph_id
                                 spec_dimension_list.append([width,height])
                                 spec_position_list.append([pos_x,pos_y])
+                                spec_text_content_list.append(text_content)
                                 spec_text_position_list.append([text_pos_x, text_pos_y])
                                 spec_text_dimension_list.append([text_dim_w, text_dim_h])
 
@@ -567,14 +617,19 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             spec_dimension_list.append([width,height])
                             spec_position_list.append([pos_x,pos_y])
 
-                            for k in range(numSpecGlyphs):
+                            for k in range(numTextGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
-                                if textGlyph_temp.isSetOriginOfTextId():
-                                    temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
-                                elif textGlyph_temp.isSetGraphicalObjectId():
-                                    temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
-                                if temp_specGlyph_id == specGlyph_id:
-                                    textGlyph = textGlyph_temp
+                                if textGlyph_temp != None:
+                                    # if textGlyph_temp.isSetOriginOfTextId():
+                                    #     temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                    if textGlyph_temp.isSetGraphicalObjectId():
+                                        temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                                    else:
+                                        temp_specGlyph_id = ''
+                                    if temp_specGlyph_id == specGlyph_id:
+                                        textGlyph = textGlyph_temp
+                                        text_content = textGlyph.getText()
+
                             try:
                                 text_boundingbox = textGlyph.getBoundingBox()
                                 text_pos_x = text_boundingbox.getX()
@@ -588,7 +643,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 text_dim_h = height
                             spec_text_position_list.append([text_pos_x, text_pos_y])
                             spec_text_dimension_list.append([text_dim_w, text_dim_h])
-
+                            spec_text_content_list.append(text_content)
                     #print(reaction_mod_list) #species_id_list
                     #print(mod_specGlyph_list) #species_reference_id_list
                     #print(spec_specGlyph_id_list)
@@ -596,7 +651,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     #arbitrary text
                     for i in range(numTextGlyphs):
                         textGlyph = layout.getTextGlyph(i)
-                        if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                        #if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                        if not textGlyph.isSetGraphicalObjectId():
                             #if there is no original text id set
                             temp_id = textGlyph.getId()
                             text_content = textGlyph.getText()
@@ -899,45 +955,80 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
             Comps_ids = model.getListOfCompartmentIds()
             numNodes = numFloatingNodes + numBoundaryNodes
             comp_node_list = [0]*numComps #Note: numComps is different from numCompGlyphs
+            comp_specs_in_list = []
             for i in range(numComps):
                 comp_node_list[i] = []
+            for i in range(numComps):#only consider the compartment with species in
+                for j in range(numFloatingNodes):
+                    comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[j])
+                    if comp_id not in comp_specs_in_list:
+                        comp_specs_in_list.append(comp_id)
+                for j in range(numBoundaryNodes):
+                    comp_id = model.getCompartmentIdSpeciesIsIn(BoundaryNodes_ids[j])
+                    if comp_id not in comp_specs_in_list:
+                        comp_specs_in_list.append(comp_id)
+
             #if there is layout info:
             if len(spec_id_list) != 0 or len(textGlyph_id_list) != 0 or len(gen_id_list) != 0:
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
-                    vol= model.getCompartmentVolume(i)
-                    if len(comp_id_list) != 0:
-                    #if mplugin is not None:
-                        if temp_id == "_compartment_default_":
+                    if temp_id in comp_specs_in_list:
+                        vol= model.getCompartmentVolume(i)
+                        # dimension = imageSize
+                        # position = [0,0]
+                        # comp_fill_color = [255, 255, 255, 255]
+                        # comp_border_color = [255, 255, 255, 255]
+                        # comp_border_width = 2.0
+                        # text_content = ''
+                        # text_position = [0,0]
+                        # text_dimension = 0.
+                        if len(comp_id_list) != 0:
+                        #if mplugin is not None:
+                            if temp_id == "_compartment_default_":
+                                dimension = imageSize
+                                color_style.setImageSize(dimension)
+                                position = [0, 0]
+                            for j in range(len(comp_text_content_list)):
+                                if comp_id_list[j] == temp_id:
+                                    dimension = [comp_dimension_list[j][0]*scale,
+                                    comp_dimension_list[j][1]*scale]
+                                    color_style.setImageSize(dimension)
+                                    position = [(comp_position_list[j][0] - topLeftCorner[0])*scale,
+                                    (comp_position_list[j][1] - topLeftCorner[1])*scale]
+                                    text_content = comp_text_content_list[j]
+                                    text_position = [(comp_text_position_list[j][0] - topLeftCorner[0])*scale,
+                                    (comp_text_position_list[j][1] - topLeftCorner[1])*scale]
+                                    text_dimension = [comp_text_dimension_list[j][0]*scale,
+                                    comp_text_dimension_list[j][1]*scale]
+                                    #print(dimension, position, text_content, text_position, text_dimension)
+                            for j in range(len(comp_render)):
+                                if temp_id == comp_render[j][0]:
+                                    if not color_style.getStyleName():
+                                        color_style.setCompFillColor(comp_render[j][1])
+                                        color_style.setCompBorderColor(comp_render[j][2])
+                                        color_style.setCompBorderWidth(comp_render[j][3])
+
+                        else:# no layout info about compartment,
+                            # then the whole size of the canvas is the compartment size
                             dimension = imageSize
                             color_style.setImageSize(dimension)
-                            position = [0, 0]
-                        for j in range(numCompGlyphs):
-                            if comp_id_list[j] == temp_id:
-                                dimension = [comp_dimension_list[j][0]*scale,
-                                comp_dimension_list[j][1]*scale]
-                                color_style.setImageSize(dimension)
-                                position = [(comp_position_list[j][0] - topLeftCorner[0])*scale,
-                                (comp_position_list[j][1] - topLeftCorner[1])*scale]
-                        for j in range(len(comp_render)):
-                            if temp_id == comp_render[j][0]:
-                                if not color_style.getStyleName():
-                                    color_style.setCompFillColor(comp_render[j][1])
-                                    color_style.setCompBorderColor(comp_render[j][2])
-                                    color_style.setCompBorderWidth(comp_render[j][3])
+                            position = [0,0]
+                            text_content = ''
+                            text_position = [0,0]
+                            text_dimension = 0.
+                            #allows users to set the color of the "_compartment_default" as the canvas
+                            #color_style.setCompBorderColor((255, 255, 255, 255))
+                            #color_style.setCompFillColor((255, 255, 255, 255)
+                    
 
-                    else:# no layout info about compartment,
-                        # then the whole size of the canvas is the compartment size
-                        dimension = imageSize
-                        color_style.setImageSize(dimension)
-                        position = [0,0]
-                        #allows users to set the color of the "_compartment_default" as the canvas
-                        #color_style.setCompBorderColor((255, 255, 255, 255))
-                        #color_style.setCompFillColor((255, 255, 255, 255)
-                   
-                    drawNetwork.addCompartment(canvas, position, dimension,
-                                            color_style.getCompBorderColor(), color_style.getCompFillColor(),
-                                                color_style.getCompBorderWidth()*scale)
+                        drawNetwork.addCompartment(canvas, position, dimension,
+                                                color_style.getCompBorderColor(), color_style.getCompFillColor(),
+                                                    color_style.getCompBorderWidth()*scale)
+                        if text_content != '':
+                            drawNetwork.addText(canvas, text_content, text_position, text_dimension,
+                        text_line_color = [0,0,0,255], text_line_width = 1*scale, fontSize = 12.*scale) 
+                    
+                
                 #add reactions before adding nodes to help with the line positions
                 numSpec_in_reaction = len(spec_specGlyph_id_list)
                 for i in range (numReactionGlyphs):
@@ -1093,6 +1184,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     (spec_position_list[i][1]-topLeftCorner[1])*scale]
                     dimension = [spec_dimension_list[i][0]*scale,spec_dimension_list[i][1]*scale]
                     color_style.setNodeDimension(dimension)
+                    text_content = spec_text_content_list[i]
                     text_position = [(spec_text_position_list[i][0]-topLeftCorner[0])*scale,
                     (spec_text_position_list[i][1]-topLeftCorner[1])*scale]
                     text_dimension = [spec_text_dimension_list[i][0]*scale,
@@ -1136,7 +1228,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                         color_style.getSpecBorderColor(), gradient_fill_color,
                                                         color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape = complexShape)
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                if text_content == '':
+                                    text_content = temp_id
+                                # if text_content == 'Mt-DNA repair':
+                                #     print("node:", position, dimension)
+                                #     print("text:", text_position, text_dimension)
+
+                                drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, 
                                                     longText = longText)
@@ -1176,7 +1274,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                         color_style.getSpecBorderColor(), gradient_fill_color,
                                                         color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape=complexShape)
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                if text_content == '':
+                                    text_content = temp_id
+
+                                drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
 													fontSize = text_font_size*scale, 
                                                     longText = longText)
@@ -1216,7 +1317,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                         complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                if text_content == '':
+                                    text_content = temp_id
+                                drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, 
                                                     longText = longText)
@@ -1254,7 +1357,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                     complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                if text_content == '':
+                                    text_content = temp_id
+                                drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, 
                                                     longText = longText)
@@ -1435,7 +1540,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), color_style.getSpecBorderWidth()*scale,
                                         shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
-                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
+                    if text_content == '':
+                        text_content = temp_id
+                    drawNetwork.addText(canvas, text_content, position, dimension, color_style.getTextLineColor(), 
                     text_line_width*scale, fontSize = text_font_size*scale, 
                     longText = longText)
                     floatingNodes_pos_dict[temp_id] = position
@@ -1454,7 +1561,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
                     allNodes_pos_dict[temp_id] = position
                     allNodes_dim_dict[temp_id] = dimension
-                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
+                    if text_content == '':
+                        text_content = temp_id
+                    drawNetwork.addText(canvas, text_content, position, dimension, color_style.getTextLineColor(),
                     text_line_width*scale, fontSize = text_font_size*scale, 
                     longText = longText)
 
@@ -1606,7 +1715,7 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[0] = text_temp_position[j][0]
             if text_temp_position[j][1] < position[1]:
                 position[1] = text_temp_position[j][1]
-        comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[i])
+        comp_id = model.getCompartmentIdSpeciesIsIn(BoundaryNodes_ids[i])
         if comp_id not in Comps_ids:
             Comps_ids.append(comp_id)
 
@@ -2169,5 +2278,5 @@ if __name__ == '__main__':
     else:
         #_draw(sbmlStr, showReactionIds=True)
         _draw(sbmlStr,output_fileName='output.png')
-
+        #print("finished!")
 
