@@ -1181,8 +1181,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
 
 def addText(canvas, txt_str, position, dimension, 
-    text_line_color = [0, 0, 0, 255], text_line_width = 1., fontSize = 12.,
-    longText='auto-font'):
+    text_line_color = [0, 0, 0, 255], text_line_width = 1., fontSize = 12., 
+    textAnchor = ['middle', 'middle'], longText='auto-font'):
 
     """
     Add the text.
@@ -1227,18 +1227,41 @@ def addText(canvas, txt_str, position, dimension,
             theight = font.getSpacing() 
             if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
                 stop_flag_1 = True
-                position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
-                position_x = position[0] + .5*(dimension[0] - twidth)
-                position_y = position[1] + .5*(dimension[1] - theight)
+                position = [position[0], position[1] + theight] #adjust of the text position
+                [position_x,position_y] = position
+                if textAnchor[0] == 'middle':
+                    position_x = position[0] + .5*(dimension[0] - twidth)
+                if textAnchor[0] == 'end':
+                    position_x = position[0] + (dimension[0] - twidth)
+                if textAnchor[1] == 'top':
+                    position_y = position[1] + .3*theight
+                if textAnchor[1] == 'middle':
+                    position_y = position[1] + .5*(dimension[1] - theight) - .3*theight
+                if textAnchor[1] == 'baseline':
+                    position_y = position[1] + .5*(dimension[1] - theight) 
+                if textAnchor[1] == 'bottom':
+                    position_y = position[1] + (dimension[1] - theight) -.3*theight
+
             else:
                 # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
                 fontSize = fontSize - 1.
             count_while += 1
             if count_while > 20:
                 stop_flag_1 = True
-                position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
-                position_x = position[0] + .5*(dimension[0] - twidth)
-                position_y = position[1] + .5*(dimension[1] - theight)
+                position = [position[0], position[1] + theight] #adjust of the text position
+                [position_x,position_y] = position
+                if textAnchor[0] == 'middle':
+                    position_x = position[0] + .5*(dimension[0] - twidth)
+                if textAnchor[0] == 'end':
+                    position_x = position[0] + (dimension[0] - twidth)
+                if textAnchor[1] == 'top':
+                    position_y = position[1] + .3*theight
+                if textAnchor[1] == 'middle':
+                    position_y = position[1] + .5*(dimension[1] - theight) - .3*theight
+                if textAnchor[1] == 'baseline':
+                    position_y = position[1] + .5*(dimension[1] - theight) 
+                if textAnchor[1] == 'bottom':
+                    position_y = position[1] + (dimension[1] - theight) -.3*theight
 
     elif longText == 'ellipsis':
         txt_str_len = len(txt_str)
@@ -1257,9 +1280,21 @@ def addText(canvas, txt_str, position, dimension,
 
             if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
                 stop_flag_1 = True
-                position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
-                position_x = position[0] + .5*(dimension[0] - twidth)
-                position_y = position[1] + .5*(dimension[1] - theight)
+                position = [position[0], position[1] + theight] #adjust of the text position
+                [position_x,position_y] = position
+                if textAnchor[0] == 'middle':
+                    position_x = position[0] + .5*(dimension[0] - twidth)
+                if textAnchor[0] == 'end':
+                    position_x = position[0] + (dimension[0] - twidth)
+                if textAnchor[1] == 'top':
+                    position_y = position[1] + .3*theight
+                if textAnchor[1] == 'middle':
+                    position_y = position[1] + .5*(dimension[1] - theight) - .3*theight
+                if textAnchor[1] == 'baseline':
+                    position_y = position[1] + .5*(dimension[1] - theight) 
+                if textAnchor[1] == 'bottom':
+                    position_y = position[1] + (dimension[1] - theight) -.3*theight
+
             else:
                 # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
                 txt_str_len = txt_str_len - 1
@@ -1268,14 +1303,25 @@ def addText(canvas, txt_str, position, dimension,
             count_while += 1
             if count_while > 20:
                 stop_flag_1 = True
-                position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
-                position_x = position[0] + .5*(dimension[0] - twidth)
-                position_y = position[1] + .5*(dimension[1] - theight)
+                position = [position[0], position[1] + theight] #adjust of the text position
+                [position_x,position_y] = position
+                if textAnchor[0] == 'middle':
+                    position_x = position[0] + .5*(dimension[0] - twidth)
+                if textAnchor[0] == 'end':
+                    position_x = position[0] + (dimension[0] - twidth)
+                if textAnchor[1] == 'top':
+                    position_y = position[1] + .3*theight
+                if textAnchor[1] == 'middle':
+                    position_y = position[1] + .5*(dimension[1] - theight) - .3*theight
+                if textAnchor[1] == 'baseline':
+                    position_y = position[1] + .5*(dimension[1] - theight)
+                if textAnchor[1] == 'bottom':
+                    position_y = position[1] + (dimension[1] - theight) -.3*theight
 
     else:
-        position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
+        position = [position[0], position[1] + theight] #adjust of the text position
         position_x = position[0] + .5*(dimension[0] - twidth)
-        position_y = position[1] + .5*(dimension[1] - theight)
+        position_y = position[1] + .5*(dimension[1] - theight)  - .3*theight
 
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 

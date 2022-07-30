@@ -1893,7 +1893,8 @@ def _setTextFontSize(df, txt_id, txt_font_size):
 
 
 def _addText(df, txt_id, txt_content, txt_position, txt_size, 
-    txt_font_color = [0, 0, 0], opacity = 1., txt_line_width = 1., txt_font_size = 12.):
+    txt_font_color = [0, 0, 0], opacity = 1., txt_line_width = 1., txt_font_size = 12.,
+    text_anchor = 'middle', text_vanchor = 'middle'):
     """
     Set arbitray text onto canvas.
 
@@ -1948,6 +1949,8 @@ def _addText(df, txt_id, txt_content, txt_position, txt_size,
     text_row_dct[processSBML.TXTLINEWIDTH].append(txt_line_width)
     text_row_dct[processSBML.TXTFONTSIZE].append(txt_font_size)
     text_row_dct[processSBML.ID].append(txt_id)
+    text_row_dct[processSBML.TXTANCHOR].append([text_anchor, text_vanchor])
+                
     if len(df_TextData_temp) == 0:
         df_TextData_temp = pd.DataFrame(text_row_dct)
     else:

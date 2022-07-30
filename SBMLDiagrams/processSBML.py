@@ -61,18 +61,18 @@ RXNDASH = "rxn_dash"
 RXNREV = "rxn_reversible"
 STROKECOLOR = "stroke_color"
 TXTANCHOR = 'txt_anchor'
-TXTVANCHOR = 'txt_vanchor'
 COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
     POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
-    TXTPOSITION, TXTSIZE, TXTCONTENT]
+    TXTPOSITION, TXTSIZE, TXTCONTENT, \
+    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, TXTANCHOR]
 COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
     CONCENTRATION, POSITION, SIZE, SHAPEIDX, TXTPOSITION, TXTSIZE, \
     FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, 
-    SHAPENAME, SHAPETYPE, SHAPEINFO, TXTCONTENT]
+    SHAPENAME, SHAPETYPE, SHAPEINFO, TXTCONTENT, TXTANCHOR]
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     STROKECOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV, FILLCOLOR]
 COLUMN_NAME_df_TextData = [TXTCONTENT, TXTPOSITION, TXTSIZE, 
-    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, ID]
+    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, ID, TXTANCHOR]
 COLUMN_NAME_df_ShapeData = [SHAPENAME, POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
                         SHAPETYPE, SHAPEINFO]
 # #This is not supported by SBML
@@ -187,11 +187,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     spec_text_content_list = []
     sepc_text_anchor_list = []
     spec_concentration_list = []
-    textGlyphGO_id_list = []
+    textGlyph_comp_id_list = []
+    textGlyph_spec_id_list = []
     textGlyph_id_list = []
     text_content_list = []
     text_position_list = []
     text_dimension_list = []
+    text_anchor_list = []
     gen_id_list = []
     gen_position_list = []
     gen_dimension_list = []
@@ -219,6 +221,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     text_line_color = [0, 0, 0, 255]
     text_line_width = 1.
     text_font_size = 12.
+    [text_anchor, text_vanchor] = ['middle', 'middle']
     gen_fill_color = [255, 255, 255, 255]
     gen_border_color = [0, 0, 0, 255]
     gen_border_width = 2.
@@ -274,14 +277,14 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         # if textGlyph_temp.isSetOriginOfTextId():
                         #     temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
                         if textGlyph_temp.isSetGraphicalObjectId():
-                            temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                            temp_compGlyph_id = textGlyph_temp.getGraphicalObjectId()
                         else:
-                            temp_specGlyph_id = ''
-                        if temp_specGlyph_id == compGlyph_id:
+                            temp_compGlyph_id = ''
+                        if temp_compGlyph_id == compGlyph_id:
                             textGlyph = textGlyph_temp
                             text_content = textGlyph.getText()
                             temp_id = textGlyph.getId()
-                            textGlyphGO_id_list.append(temp_id)
+                            textGlyph_comp_id_list.append([compGlyph_id, temp_id])
                             text_boundingbox = textGlyph.getBoundingBox()
                             text_pos_x = text_boundingbox.getX()
                             text_pos_y = text_boundingbox.getY()   
@@ -414,7 +417,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 textGlyph = textGlyph_temp
                                 text_content = textGlyph.getText()
                                 temp_id = textGlyph.getId()
-                                textGlyphGO_id_list.append(temp_id)
+                                textGlyph_spec_id_list.append([specGlyph_id, temp_id])
 
                         spec_id = specGlyph.getSpeciesId()
                         spec = model_layout.getSpecies(spec_id)
@@ -515,7 +518,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     textGlyph = textGlyph_temp
                                     text_content = textGlyph.getText()
                                     temp_id = textGlyph.getId()
-                                    textGlyphGO_id_list.append(temp_id)
+                                    textGlyph_spec_id_list.append([specGlyph_id, temp_id])
 
                         try:
                             text_boundingbox = textGlyph.getBoundingBox()
@@ -656,7 +659,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 typeList = 'REACTIONGLYPH'
                             elif idList in textGlyph_id_list:
                                 typeList = 'TEXTGLYPH'
-                            elif idList in textGlyphGO_id_list:
+                            elif any(idList in sublist for sublist in textGlyph_comp_id_list):
+                                typeList = 'TEXTGLYPH'
+                            elif any(idList in sublist for sublist in textGlyph_spec_id_list):
                                 typeList = 'TEXTGLYPH'
                             # else:
                             #     print(idList)
@@ -789,17 +794,25 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             arrowHeadSize, reaction_dash, reaction_line_fill])
                         elif 'TEXTGLYPH' in typeList:
                             render_text_id = idList
-
+                            for k in range(len(textGlyph_comp_id_list)):    
+                                if textGlyph_comp_id_list[k][1] == idList:
+                                    render_text_id = textGlyph_comp_id_list[k][0] 
+                            for k in range(len(textGlyph_spec_id_list)):    
+                                if textGlyph_spec_id_list[k][1] == idList:
+                                    render_text_id = textGlyph_spec_id_list[k][0]
+                                    
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
                                     text_line_color = hex_to_rgb(color_list[k][1])
                             text_line_width = group.getStrokeWidth()
                             text_anchor = group.getTextAnchorAsString()
                             text_vanchor = group.getVTextAnchorAsString()
+                            #print(text_anchor, text_vanchor)
                             if math.isnan(text_line_width):
                                 text_line_width = 1.
                             text_font_size = float(group.getFontSize().getCoordinate())
-                            
+                            if math.isnan(text_font_size):
+                                text_font_size = 12.
                             text_render.append([render_text_id,text_line_color,text_line_width,
 							text_font_size, [text_anchor, text_vanchor]])
                             #print(render_text_id)
@@ -880,7 +893,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             comp_fill_color = comp_render[j][1]
                             comp_border_color = comp_render[j][2]
                             comp_border_width = comp_render[j][3]
-                
+                    for j in range(len(comp_id_list)):    
+                        if comp_id_list[j] == temp_id:
+                            tempGlyph_id = compGlyph_id_list[j]                         
+                            for k in range(len(text_render)):
+                                if tempGlyph_id == text_render[k][0]:
+                                    text_line_color = text_render[k][1]
+                                    text_line_width = text_render[k][2]
+                                    text_font_size = text_render[k][3]
+                                    [text_anchor, text_vanchor] = text_render[k][4]
+        
 
                 else:# no layout info about compartment,
                         # then the whole size of the canvas is the compartment size
@@ -913,6 +935,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 CompartmentData_row_dct[TXTPOSITION].append(text_position)
                 CompartmentData_row_dct[TXTSIZE].append(text_dimension)
                 CompartmentData_row_dct[TXTCONTENT].append(text_content)
+                CompartmentData_row_dct[TXTFONTCOLOR].append(text_line_color)
+                CompartmentData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                CompartmentData_row_dct[TXTFONTSIZE].append(text_font_size)
+                CompartmentData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
                 # for j in range(len(COLUMN_NAME_df_CompartmentData)):
                 #     try: 
                 #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
@@ -961,10 +987,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shape_type = spec_render[k][6]
                                     shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
-                                if temp_id == text_render[k][0]:
+                                if tempGlyph_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
                                     text_line_width = text_render[k][2]
                                     text_font_size = text_render[k][3]
+                                    [text_anchor, text_vanchor] = text_render[k][4]
                             id_list.append(temp_id)
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
                             
@@ -991,6 +1018,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[SHAPETYPE].append(shape_type)
                             NodeData_row_dct[SHAPEINFO].append(shape_info)
                             NodeData_row_dct[TXTCONTENT].append(text_content)
+                            NodeData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1015,10 +1043,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shape_type = spec_render[k][6]
                                     shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
-                                if temp_id == text_render[k][0]:
+                                if tempGlyph_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
                                     text_line_width = text_render[k][2]
                                     text_font_size = text_render[k][3]
+                                    [text_anchor, text_vanchor] = text_render[k][4]
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
 
                             NodeData_row_dct = {k:[] for k in COLUMN_NAME_df_NodeData}
@@ -1044,6 +1073,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[SHAPETYPE].append(shape_type)
                             NodeData_row_dct[SHAPEINFO].append(shape_info)
                             NodeData_row_dct[TXTCONTENT].append(text_content)
+                            NodeData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1068,10 +1098,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shape_type = spec_render[k][6]
                                     shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
-                                if temp_id == text_render[k][0]:
+                                if tempGlyph_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
                                     text_line_width = text_render[k][2]  
-                                    text_font_size = text_render[k][3]      
+                                    text_font_size = text_render[k][3] 
+                                    [text_anchor, text_vanchor] = text_render[k][4]     
                             id_list.append(temp_id)
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
 
@@ -1098,6 +1129,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[SHAPETYPE].append(shape_type)
                             NodeData_row_dct[SHAPEINFO].append(shape_info)
                             NodeData_row_dct[TXTCONTENT].append(text_content)
+                            NodeData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1120,10 +1152,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shape_type = spec_render[k][6]
                                     shape_info = spec_render[k][7]
                             for k in range(len(text_render)):
-                                if temp_id == text_render[k][0]:
+                                if tempGlyph_id == text_render[k][0]:
                                     text_line_color = text_render[k][1]
                                     text_line_width = text_render[k][2] 
                                     text_font_size = text_render[k][3]
+                                    [text_anchor, text_vanchor] = text_render[k][4]
 
                             node_idx_specGlyphid_list.append([i,tempGlyph_id])
 
@@ -1150,6 +1183,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             NodeData_row_dct[SHAPETYPE].append(shape_type)
                             NodeData_row_dct[SHAPEINFO].append(shape_info)
                             NodeData_row_dct[TXTCONTENT].append(text_content)
+                            NodeData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
                             # for j in range(len(COLUMN_NAME_df_NodeData)):
                             #     try: 
                             #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1400,10 +1434,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 position = text_position_list[i]
                 dimension = text_dimension_list[i]
                 for k in range(len(text_render)):
-                    if text_content == text_render[k][0]:
+                    if textGlyph_id == text_render[k][0]:
                         text_line_color = text_render[k][1]
                         text_line_width = text_render[k][2]
                         text_font_size = text_render[k][3]
+                        [text_anchor, text_vanchor] = text_render[k][4]
                 TextData_row_dct = {k:[] for k in COLUMN_NAME_df_TextData}
                 TextData_row_dct[TXTCONTENT].append(text_content)
                 TextData_row_dct[TXTPOSITION].append(position)
@@ -1412,6 +1447,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 TextData_row_dct[TXTLINEWIDTH].append(text_line_width)
                 TextData_row_dct[TXTFONTSIZE].append(text_font_size)
                 TextData_row_dct[ID].append(textGlyph_id)
+                TextData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
                 
 
                 if len(df_TextData) == 0:
@@ -1478,6 +1514,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 CompartmentData_row_dct[TXTPOSITION].append(text_position)
                 CompartmentData_row_dct[TXTSIZE].append(text_dimension)
                 CompartmentData_row_dct[TXTCONTENT].append(text_content)
+                CompartmentData_row_dct[TXTFONTCOLOR].append(text_line_color)
+                CompartmentData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                CompartmentData_row_dct[TXTFONTSIZE].append(text_font_size)
+                CompartmentData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
                 # for j in range(len(COLUMN_NAME_df_CompartmentData)):
                 #     try: 
                 #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
@@ -1555,6 +1595,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 NodeData_row_dct[SHAPETYPE].append(shape_type)
                 NodeData_row_dct[SHAPEINFO].append(shape_info)
                 NodeData_row_dct[TXTCONTENT].append(text_content)
+                NodeData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
                 # for j in range(len(COLUMN_NAME_df_NodeData)):
                 #     try: 
                 #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -1603,6 +1644,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 NodeData_row_dct[SHAPETYPE].append(shape_type)
                 NodeData_row_dct[SHAPEINFO].append(shape_info)
                 NodeData_row_dct[TXTCONTENT].append(text_content)
+                NodeData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
                 # for j in range(len(COLUMN_NAME_df_NodeData)):
                 #     try: 
                 #         NodeData_row_dct[COLUMN_NAME_df_NodeData[j]] = NodeData_row_dct[COLUMN_NAME_df_NodeData[j]][0]
@@ -4280,7 +4322,7 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     #filename = "test.xml" 
-    filename = "feedback.xml"
+    #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
@@ -4344,7 +4386,7 @@ if __name__ == '__main__':
     #bioinformatics
     #filename = "bioinformatics/BIOMD0000000005.xml"
     #filename = "output.xml"
-    #filename = "bioinformatics/pdmap-nucleoid.xml"
+    filename = "bioinformatics/pdmap-nucleoid.xml"
     #filename = "bioinformatics/exported_model.xml"
 
     #global
@@ -4356,7 +4398,7 @@ if __name__ == '__main__':
 
 
     df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('feedback.xlsx')
+    writer = pd.ExcelWriter('output.xlsx')
     df_excel[0].to_excel(writer, sheet_name='CompartmentData')
     df_excel[1].to_excel(writer, sheet_name='NodeData')
     df_excel[2].to_excel(writer, sheet_name='ReactionData')
@@ -4521,5 +4563,5 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    # df.draw(output_fileName = 'output.png')
+    #df.draw(output_fileName = 'output.png')
 
