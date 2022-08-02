@@ -470,7 +470,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(test_node_mass_action_rxn)
 
   def testNode5(self):
-    # Test column 'id' and 'floating node' of df_NodeData is str
+    # Test column 'id', 'floating node' of df_NodeData is str
     if IGNORE_TEST:
       return    
     list_node = []
@@ -982,9 +982,13 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeBorderColor("x_1") == \
       [[255, 108, 9, 255], '', '#FF6C09FF'])
     self.assertTrue(self.df.getNodeBorderWidth("x_1") == 2.)
+    self.assertTrue(self.df.getNodeTextContent("x_1") == 'x_1')
     self.assertTrue(self.df.getNodeTextFontColor("x_1") == \
       [[0, 0, 0, 255], 'Black', '#000000FF'])
     self.assertTrue(self.df.getNodeTextLineWidth("x_1") == 1.)
+    self.assertTrue(self.df.getNodeTextFontSize("x_1") == 11.)
+    self.assertTrue(self.df.getNodeTextAnchor("x_1") == 'middle')
+    self.assertTrue(self.df.getNodeTextVAnchor("x_1") == 'middle')
 
 
   def testGetReaction(self):
@@ -1052,9 +1056,12 @@ class TestImportSBML(unittest.TestCase):
     fill_color = [255, 204, 154]
     border_color = [255, 109, 9]
     border_width = 3.
+    txt_content = 'x1'
     txt_font_color = "#000000"
     txt_line_width = 1.
     txt_font_size = 12.
+    txt_anchor = 'start'
+    txt_vanchor = 'bottom'
     opacity = 1.
     gradient_linear_info = [[0.0, 0.0], [100.0, 100.0]]
     gradient_radial_info = [[50.0, 50.0], [50.]]
@@ -1074,9 +1081,12 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodeFillRadialGradient("x_0", gradient_radial_info, stop_info)
     self.df.setNodeBorderColor("x_1", border_color, opacity = opacity)
     self.df.setNodeBorderWidth("x_1", border_width)
+    self.df.setNodeTextContent("x_1", txt_content)
     self.df.setNodeTextFontColor("x_1", txt_font_color)
     self.df.setNodeTextLineWidth("x_1", txt_line_width)
     self.df.setNodeTextFontSize("x_1", txt_font_size)
+    self.df.setNodeTextAnchor("x_1", txt_anchor)
+    self.df.setNodeTextVAnchor("x_1", txt_vanchor)
 
     self.assertTrue(self.df.isFloatingNode("x_1") == floating_node)
     self.assertTrue(self.df.getNodePosition("x_1").x == position[0])
@@ -1094,8 +1104,11 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeBorderWidth("x_1") == border_width)
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0:-1] == [0,0,0])
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][3] == 255)
+    self.assertTrue(self.df.getNodeTextContent("x_1") == txt_content)
     self.assertTrue(self.df.getNodeTextLineWidth("x_1") == txt_line_width)
     self.assertTrue(self.df.getNodeTextFontSize("x_1") == txt_font_size)
+    self.assertTrue(self.df.getNodeTextAnchor("x_1") == txt_anchor)
+    self.assertTrue(self.df.getNodeTextVAnchor("x_1") == txt_vanchor)
 
     self.df.setNodeAndTextPosition("x_1", position_txt_position)
     self.assertTrue(self.df.getNodePosition("x_1").x == position_txt_position[0])

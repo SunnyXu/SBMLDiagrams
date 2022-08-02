@@ -344,7 +344,6 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         text_content_list = []
         text_position_list = []
         text_dimension_list = []
-        text_anchor_list = []
         gen_id_list = []
         gen_position_list = []
         gen_dimension_list = []
@@ -578,6 +577,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 name_to_id[spec_id] = specGlyph_id
                                 spec_dimension_list.append([width,height])
                                 spec_position_list.append([pos_x,pos_y])
+                                if text_content == '':
+                                    text_content = spec_id
                                 spec_text_content_list.append(text_content)
                                 spec_text_position_list.append([text_pos_x, text_pos_y])
                                 spec_text_dimension_list.append([text_dim_w, text_dim_h])
@@ -653,6 +654,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 text_dim_h = height
                             spec_text_position_list.append([text_pos_x, text_pos_y])
                             spec_text_dimension_list.append([text_dim_w, text_dim_h])
+                            if text_content == '':
+                                text_content = spec_id
                             spec_text_content_list.append(text_content)
                     #print(reaction_mod_list) #species_id_list
                     #print(mod_specGlyph_list) #species_reference_id_list

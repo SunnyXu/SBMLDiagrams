@@ -85,9 +85,12 @@ class TestEditSBML(unittest.TestCase):
     fill_color = [255, 204, 154]
     border_color = [255, 109, 9]
     border_width = 3.
+    txt_content = 'x1'
     txt_font_color = [0, 0, 0]
     txt_line_width = 1.
     txt_font_size = 12.
+    txt_anchor = 'start'
+    txt_vanchor = 'bottom'
     opacity = 1.
     gradient_linear_info = [[0.0, 0.0], [100.0, 100.0]]
     gradient_radial_info = [[50.0, 50.0], [50.]]
@@ -107,9 +110,12 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setNodeFillRadialGradient(df_update, "x_0", gradient_radial_info, stop_info)
     df_update = editSBML._setNodeBorderColor(df_update, "x_1", border_color, opacity = opacity)
     df_update = editSBML._setNodeBorderWidth(df_update, "x_1", border_width)
+    df_update = editSBML._setNodeTextContent(df_update, "x_1", txt_content)
     df_update = editSBML._setNodeTextFontColor(df_update, "x_1", txt_font_color, opacity = opacity)
     df_update = editSBML._setNodeTextLineWidth(df_update, "x_1", txt_line_width)
     df_update = editSBML._setNodeTextFontSize(df_update, "x_1", txt_font_size)
+    df_update = editSBML._setNodeTextAnchor(df_update, "x_1", txt_anchor)
+    df_update = editSBML._setNodeTextVAnchor(df_update, "x_1", txt_vanchor)
     
     self.assertTrue(df_update[1].iloc[0]["floating_node"] == floating_node)
     self.assertTrue(df_update[1].iloc[0]["position"] == position)
@@ -171,11 +177,17 @@ class TestEditSBML(unittest.TestCase):
     with self.assertRaises(Exception):
       editSBML._setNodeBorderWidth(df_update, "XX", border_width)
     with self.assertRaises(Exception):
+      editSBML._setNodeTextContent(df_update, "XX", txt_content, opacity = opacity)
+    with self.assertRaises(Exception):
       editSBML._setNodeTextFontColor(df_update, "XX", txt_font_color, opacity = opacity)
     with self.assertRaises(Exception):
       editSBML._setNodeTextLineWidth(df_update, "XX", txt_line_width)
     with self.assertRaises(Exception):
       editSBML._setNodeTextFontSize(df_update, "XX", txt_font_size)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextAnchor(df_update, "XX", txt_anchor)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextVAnchor(df_update, "XX", txt_vanchor)
 
   def testSetNodeTextPosition(self):
     # Test all the set node text position functions

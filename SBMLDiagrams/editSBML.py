@@ -1319,6 +1319,39 @@ def _setNodeBorderWidth(df, id, border_width, alias = 0):
 
     return df_temp
 
+def _setNodeTextContent(df, id, txt_content, alias = 0):
+
+    """
+    Set the node text content.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+        txt_content: str-node text content.
+
+        alias: int-alias node index [0, num_alias).
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
+    if alias < len(idx_list) and alias >= 0:
+        df_NodeData_temp.at[idx_list[alias],"txt_content"] = txt_content
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+   
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
+
+    return df_temp
+
 def _setNodeTextFontColor(df, id, txt_font_color, opacity, alias = 0):
 
     """
@@ -1418,6 +1451,81 @@ def _setNodeTextFontSize(df, id, txt_font_size, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
     
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
+
+    return df_temp
+
+def _setNodeTextAnchor(df, id, txt_anchor, alias = 0):
+
+    """
+    Set the node text horizontal anchor.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+        txt_anchor: str-node text horizontal anchor, which can be "start",
+            "middle" and "end".
+
+        alias: int-alias node index [0, num_alias).
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    if txt_anchor not in ['start', 'middle', 'end']:
+        raise Exception("Please enter a valid horizontal anchor.")
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
+    if alias < len(idx_list) and alias >= 0:
+        txt_vanchor = df_NodeData_temp.at[idx_list[alias],"txt_anchor"][1]
+        df_NodeData_temp.at[idx_list[alias],"txt_anchor"] = [txt_anchor, txt_vanchor]
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+   
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
+
+    return df_temp
+
+
+def _setNodeTextVAnchor(df, id, txt_vanchor, alias = 0):
+
+    """
+    Set the node text vertical anchor.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-node id.
+
+        txt_vanchor: str-node text horizontal anchor, which can be which can be "top", 
+            "middle", "baseline" and "bottom".
+
+        alias: int-alias node index [0, num_alias).
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_NodeData_temp = df[1].copy()
+    idx_list = df[1].index[df[1]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    if txt_vanchor not in ['top', 'middle', 'baseline', 'bottom']:
+        raise Exception("Please enter a valid vertical anchor.")
+    # for i in range(len(idx_list)):
+    #     df_NodeData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
+    if alias < len(idx_list) and alias >= 0:
+        txt_anchor = df_NodeData_temp.at[idx_list[alias],"txt_anchor"][0]
+        df_NodeData_temp.at[idx_list[alias],"txt_anchor"] = [txt_anchor, txt_vanchor]
+    else:
+        raise Exception("Alias index is beyond number of alias.")
+   
     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4])
 
     return df_temp

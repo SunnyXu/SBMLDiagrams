@@ -176,7 +176,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     comp_text_position_list = []
     comp_text_dimension_list = []
     comp_text_content_list = []
-    comp_text_anchor_list = []
     spec_id_list = []
     specGlyph_id_list = []
     spec_specGlyph_id_list = []
@@ -185,7 +184,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     spec_text_position_list = []
     spec_text_dimension_list = []
     spec_text_content_list = []
-    spec_text_anchor_list = []
     spec_concentration_list = []
     textGlyph_comp_id_list = []
     textGlyph_spec_id_list = []
@@ -193,7 +191,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     text_content_list = []
     text_position_list = []
     text_dimension_list = []
-    text_anchor_list = []
     gen_id_list = []
     gen_position_list = []
     gen_dimension_list = []
@@ -454,6 +451,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             spec_specGlyph_id_list.append([spec_id,specGlyph_id])
                             spec_dimension_list.append([width,height])
                             spec_position_list.append([pos_x,pos_y])
+                            if text_content == '':
+                                text_content = spec_id
                             spec_text_content_list.append(text_content)
                             spec_text_position_list.append([text_pos_x, text_pos_y])
                             spec_text_dimension_list.append([text_dim_w, text_dim_h])
@@ -533,6 +532,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             text_dim_h = height
                         spec_text_position_list.append([text_pos_x, text_pos_y])
                         spec_text_dimension_list.append([text_dim_w, text_dim_h])
+                        if text_content == '':
+                            text_content = spec_id
                         spec_text_content_list.append(text_content)
                         try:
                             concentration = spec.getInitialConcentration()
@@ -2311,6 +2312,33 @@ class load:
 
         return border_width
 
+    def getNodeTextContent(self, id, alias = 0):
+        """
+        Get the text content of a node with a given node id.
+
+        Args: 
+            id: str-the id of the node.
+
+            alias: int-alias node index: 0 to number of alias nodes -1.
+
+        Returns:
+            txt_content: str-the content of the node text.
+        """
+
+        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
+        txt_content_list =[] 
+        for i in range(len(idx_list)):
+            content = self.df[1].iloc[idx_list[i]]["txt_content"]
+            txt_content_list.append(content)
+        if len(txt_content_list) == 0:
+            raise Exception("This is not a valid id.")
+
+        if alias < len(txt_content_list) and alias >= 0:
+            txt_content =  txt_content_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        return txt_content
+
     def getNodeTextFontColor(self, id, alias = 0):
         """
         Get the text font color of a node with a given node id.
@@ -2392,6 +2420,62 @@ class load:
             raise Exception("Alias index is beyond number of alias.")
 
         return txt_font_size
+
+    def getNodeTextAnchor(self, id, alias = 0):
+        """
+        Get the horizontal anchor of a node text with a given node id.
+
+        Args: 
+            id: str-the id of the node.
+
+            alias: int-alias node index: 0 to number of alias nodes -1.
+
+        Returns:
+            txt_anchor: str-the horizantal anchor of the node text, which can be "start",
+            "middle" and "end".
+        """
+
+        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
+        txt_anchor_list =[] 
+        for i in range(len(idx_list)):
+            anchor = self.df[1].iloc[idx_list[i]]["txt_anchor"][0]
+            txt_anchor_list.append(anchor)
+        if len(txt_anchor_list) == 0:
+            raise Exception("This is not a valid id.")
+
+        if alias < len(txt_anchor_list) and alias >= 0:
+            txt_anchor =  txt_anchor_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        return txt_anchor
+
+    def getNodeTextVAnchor(self, id, alias = 0):
+        """
+        Get the vertical anchor of a node text with a given node id.
+
+        Args: 
+            id: str-the id of the node.
+
+            alias: int-alias node index: 0 to number of alias nodes -1.
+
+        Returns:
+            txt_anchor: str-the vertical anchor of the node text, which can be "top", 
+            "middle", "baseline" and "bottom".
+        """
+
+        idx_list = self.df[1].index[self.df[1]["id"] == id].tolist()
+        txt_anchor_list =[] 
+        for i in range(len(idx_list)):
+            anchor = self.df[1].iloc[idx_list[i]]["txt_anchor"][1]
+            txt_anchor_list.append(anchor)
+        if len(txt_anchor_list) == 0:
+            raise Exception("This is not a valid id.")
+
+        if alias < len(txt_anchor_list) and alias >= 0:
+            txt_vanchor =  txt_anchor_list[alias]
+        else:
+            raise Exception("Alias index is beyond number of alias.")
+        return txt_vanchor
 
     def getReactionCenterPosition(self, id):
         """
@@ -3128,6 +3212,23 @@ class load:
         self.df = editSBML._setNodeBorderWidth(self.df, id, border_width, alias=alias)
         #return self.df
 
+    def setNodeTextContent(self, id, txt_content, alias = 0):
+        """
+        Set the node text content for a node of given id.
+
+        Args:  
+            id: str-node id.
+
+            txt_content: str-node text content.
+
+            alias: int-alias node index: 0 to number of alias nodes -1.
+
+        Examples:
+            la.setNodeTextContent ('node4', 'N4')
+        """
+        self.df = editSBML._setNodeTextContent(self.df, id, txt_content, alias=alias)
+        #return self.df
+
     def setNodeTextFontColor(self, id, txt_font_color, opacity = 1., alias = 0):
         """
         Set the node text font color for a node of given id.
@@ -3175,6 +3276,38 @@ class load:
         
         """
         self.df = editSBML._setNodeTextFontSize(self.df, id, txt_font_size, alias=alias)
+        #return self.df
+
+    def setNodeTextAnchor(self, id, txt_anchor, alias = 0):
+        """
+        Set the horizontal anchor for a node text of given id.
+
+        Args:  
+            id: str-node id.
+
+            txt_anchor: str-node text horizontal anchor, which can be "start",
+            "middle" and "end".
+            
+            alias: int-alias node index: 0 to number of alias nodes -1.
+        
+        """
+        self.df = editSBML._setNodeTextAnchor(self.df, id, txt_anchor, alias=alias)
+        #return self.df
+
+    def setNodeTextVAnchor(self, id, txt_vanchor, alias = 0):
+        """
+        Set the vertical anchor for a node text of given id.
+
+        Args:  
+            id: str-node id.
+
+            txt_vanchor: str-node text vertical anchor, which can be which can be "top", 
+            "middle", "baseline" and "bottom".
+            
+            alias: int-alias node index: 0 to number of alias nodes -1.
+        
+        """
+        self.df = editSBML._setNodeTextVAnchor(self.df, id, txt_vanchor, alias=alias)
         #return self.df
 
     def setReactionToStraightLine(self, id):
@@ -4327,10 +4460,10 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
-    filename = "test_comp.xml"
+    #filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
@@ -4391,6 +4524,7 @@ if __name__ == '__main__':
 
     #bioinformatics
     #filename = "bioinformatics/BIOMD0000000005.xml"
+    
     #filename = "output.xml"
     #filename = "bioinformatics/pdmap-nucleoid.xml"
     #filename = "bioinformatics/exported_model.xml"
@@ -4404,7 +4538,7 @@ if __name__ == '__main__':
 
 
     df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('mass_action_rxn.xlsx')
+    writer = pd.ExcelWriter('output.xlsx')
     df_excel[0].to_excel(writer, sheet_name='CompartmentData')
     df_excel[1].to_excel(writer, sheet_name='NodeData')
     df_excel[2].to_excel(writer, sheet_name='ReactionData')
@@ -4439,9 +4573,12 @@ if __name__ == '__main__':
     # print(df.getNodeFillColor("Species_1"))
     # print(df.getNodeBorderColor("x_1"))
     # print(df.getNodeBorderWidth("x_1"))
+    # print(df.getNodeTextContent("x_1"))
     # print(df.getNodeTextFontColor("x_1"))
     # print(df.getNodeTextLineWidth("x_1"))
     # print(df.getNodeTextFontSize("x_1"))
+    # print(df.getNodeTextAnchor("x_1"))
+    # print(df.getNodeTextVAnchor("x_1"))
 
     # print("center_position:", df.getReactionCenterPosition("r_0"))
     # print("handle_position:", df.getReactionBezierHandles("r_0"))
@@ -4497,12 +4634,21 @@ if __name__ == '__main__':
     # print(df.getNodeFillColor("Species_1"))
     # df.setNodeBorderColor("x_1", [255, 108, 9])
     # print(df.getNodeBorderWidth("x_1"))
+    # df.getNodeTextContent("x_1")
+    # df.setNodeTextContent("x_1", "x1")
+    # df.getNodeTextContent("x_1")
     # df.setNodeBorderWidth("x_0", 0.)
     # print(df.getNodeBorderWidth("x_1"))
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
     # df.setNodeTextLineWidth("x_1", 1.)
     # print(df.getNodeTextFontSize("x_5"))
     # df.setNodeTextFontSize("x_5", 10)
+    #print(df.getNodeTextAnchor("x_1"))
+    #print(df.getNodeTextVAnchor("x_1"))
+    #df.setNodeTextAnchor("x_1", "start")
+    #df.setNodeTextVAnchor('x_1', 'bottom')
+    #print(df.getNodeTextAnchor("x_1"))
+    #print(df.getNodeTextVAnchor("x_1"))
 
     # df.setReactionFillColor("r_0", [91, 176, 253])
     # df.setReactionFillColor("r_0", [0, 0, 0])
@@ -4569,5 +4715,5 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    df.draw(output_fileName = 'output.png')
+    #df.draw(output_fileName = 'output.png')
 
