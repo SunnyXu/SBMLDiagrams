@@ -670,7 +670,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             render_comp_id = idList
                             for k in range(len(compGlyph_id_list)):    
                                 if compGlyph_id_list[k] == idList:
-                                    render_comp_id = comp_id_list[k]                         
+                                    render_comp_id = comp_id_list[k]  
+                            if idList == 'CompG__compartment_default_':
+                                render_comp_id = '_compartment_default_'                         
                             #print(render_comp_id)
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getFill():
@@ -4328,11 +4330,11 @@ if __name__ == '__main__':
     #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
-    #filename = "test_comp.xml"
+    filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
-    filename = "mass_action_rxn.xml"
+    #filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml" 
@@ -4567,5 +4569,5 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    #df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png')
 

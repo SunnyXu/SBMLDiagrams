@@ -786,7 +786,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 render_comp_id = idList
                                 for k in range(len(compGlyph_id_list)):    
                                     if compGlyph_id_list[k] == idList:
-                                        render_comp_id = comp_id_list[k]                         
+                                        render_comp_id = comp_id_list[k] 
+                                if idList == 'CompG__compartment_default_':
+                                    render_comp_id = '_compartment_default_'                        
 
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
@@ -1030,6 +1032,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     text_dimension = [comp_text_dimension_list[j][0]*scale,
                                     comp_text_dimension_list[j][1]*scale]
                                     #print(dimension, position, text_content, text_position, text_dimension)
+
                             for j in range(len(comp_render)):
                                 if temp_id == comp_render[j][0]:
                                     if not color_style.getStyleName():
@@ -1060,7 +1063,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             #color_style.setCompBorderColor((255, 255, 255, 255))
                             #color_style.setCompFillColor((255, 255, 255, 255)
                     
-
+                        #print(temp_id)
+                        #print(color_style.getCompFillColor())
                         drawNetwork.addCompartment(canvas, position, dimension,
                                                 color_style.getCompBorderColor(), color_style.getCompFillColor(),
                                                     color_style.getCompBorderWidth()*scale)
