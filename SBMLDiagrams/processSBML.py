@@ -185,7 +185,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     spec_text_position_list = []
     spec_text_dimension_list = []
     spec_text_content_list = []
-    sepc_text_anchor_list = []
+    spec_text_anchor_list = []
     spec_concentration_list = []
     textGlyph_comp_id_list = []
     textGlyph_spec_id_list = []
@@ -805,9 +805,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if color_list[k][0] == group.getStroke():
                                     text_line_color = hex_to_rgb(color_list[k][1])
                             text_line_width = group.getStrokeWidth()
-                            text_anchor = group.getTextAnchorAsString()
-                            text_vanchor = group.getVTextAnchorAsString()
-                            #print(text_anchor, text_vanchor)
+                            if group.isSetTextAnchor():
+                                text_anchor = group.getTextAnchorAsString()
+                            if group.isSetVTextAnchor():
+                                text_vanchor = group.getVTextAnchorAsString()
                             if math.isnan(text_line_width):
                                 text_line_width = 1.
                             text_font_size = float(group.getFontSize().getCoordinate())
@@ -866,13 +867,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
                 dimension = compartmentDefaultSize
-                position = [0,0]
+                position = [0.,0.]
                 comp_fill_color = [255, 255, 255, 255]
                 comp_border_color = [255, 255, 255, 255]
                 comp_border_width = 2.0
                 text_content = ''
-                text_position = [0,0]
-                text_dimension = 0.
+                text_position = [0.,0.]
+                text_dimension = [0.,0.]
                 if len(comp_id_list) != 0:
                 #if mplugin is not None:
                     if temp_id == "_compartment_default_":
@@ -881,10 +882,12 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         #comp_border_color = [255, 255, 255, 255]
                         #comp_fill_color = [255, 255, 255, 255]
 
-                    for j in range(len(comp_text_content_list)):
+                    for j in range(len(comp_id_list)):
                         if comp_id_list[j] == temp_id:
                             dimension = comp_dimension_list[j]
                             position = comp_position_list[j]
+                    for j in range(len(comp_text_content_list)):
+                        if comp_id_list[j] == temp_id:
                             text_content = comp_text_content_list[j]
                             text_position = comp_text_position_list[j]
                             text_dimension = comp_text_dimension_list[j]
@@ -912,10 +915,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         # position = [40,40]
                         # the whole size of the compartment: 4000*2500
                         dimension = compartmentDefaultSize
-                        position = [0,0]
+                        position = [0.,0.]
                         text_content = ''
-                        text_position = [0,0]
-                        text_dimension = 0.
+                        text_position = [0.,0.]
+                        text_dimension = [0.,0.]
                         #If there is no render info about the compartments given from sbml,
                         #they will be set as white. 
                         #comp_fill_color = [255, 255, 255, 255]
@@ -1494,12 +1497,12 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
                 dimension = compartmentDefaultSize
-                position = [0,0]
+                position = [0.,0.]
                 comp_border_color = [255, 255, 255, 255]
                 comp_fill_color = [255, 255, 255, 255]
                 text_content = ''
-                text_position = [0,0]
-                text_dimension = 0.
+                text_position = [0.,0.]
+                text_dimension = [0.,0.]
 
                 CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
                 CompartmentData_row_dct[NETIDX].append(netIdx)
@@ -4321,6 +4324,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
+    
     #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
@@ -4328,7 +4332,7 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
-    #filename = "mass_action_rxn.xml"
+    filename = "mass_action_rxn.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml" 
@@ -4386,7 +4390,7 @@ if __name__ == '__main__':
     #bioinformatics
     #filename = "bioinformatics/BIOMD0000000005.xml"
     #filename = "output.xml"
-    filename = "bioinformatics/pdmap-nucleoid.xml"
+    #filename = "bioinformatics/pdmap-nucleoid.xml"
     #filename = "bioinformatics/exported_model.xml"
 
     #global
@@ -4398,7 +4402,7 @@ if __name__ == '__main__':
 
 
     df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('output.xlsx')
+    writer = pd.ExcelWriter('mass_action_rxn.xlsx')
     df_excel[0].to_excel(writer, sheet_name='CompartmentData')
     df_excel[1].to_excel(writer, sheet_name='NodeData')
     df_excel[2].to_excel(writer, sheet_name='ReactionData')

@@ -351,6 +351,25 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     width  = float(size_list[0])
                     height = float(size_list[1])
                     compartmentGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+            
+                    textGlyph = layout.createTextGlyph()
+                    textG_id = "TextG_" + comp_id
+                    textGlyph.setId(textG_id)
+                    content = str(df_CompartmentData.iloc[i]['txt_content'])
+                    textGlyph.setText(content)
+                    bb_id  = "bb_comp_text_" + comp_id 
+                    try:
+                        position_list = list(df_CompartmentData.iloc[i]['txt_position'][1:-1].split(","))
+                        size_list = list(df_CompartmentData.iloc[i]['txt_size'][1:-1].split(","))
+                    except:
+                        position_list = df_CompartmentData.iloc[i]['txt_position']
+                        size_list = df_CompartmentData.iloc[i]['txt_size']
+                    pos_x_text  = float(position_list[0])
+                    pos_y_text  = float(position_list[1])
+                    width_text  = float(size_list[0])
+                    height_text = float(size_list[1])
+                    textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
+                    textGlyph.setGraphicalObjectId(compG_id)
             for i in range(numNodes): 
                 spec_id = df_NodeData.iloc[i]['id']  
                 spec_index = df_NodeData.iloc[i]['idx']
@@ -397,11 +416,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 width  = float(size_list[0])
                 height = float(size_list[1])
                 speciesGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+                content = str(df_NodeData.iloc[i]['txt_content'])
+
 
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
                 textGlyph.setId(textG_id)
-                #textGlyph.setText(spec_id) # this will merge "setOriginOfTextId"
+                textGlyph.setText(content) # this will merge "setOriginOfTextId"
                 bb_id  = "bb_spec_text_" + spec_id + '_idx_' + str(spec_index)
                 try:
                     position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
@@ -414,7 +435,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 width_text  = float(size_list[0])
                 height_text = float(size_list[1])
                 textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
-                textGlyph.setOriginOfTextId(specG_id)
+                #textGlyph.setOriginOfTextId(specG_id)
                 textGlyph.setGraphicalObjectId(specG_id)
         else:#there is no compartment  
             comp_id= "_compartment_default_"
@@ -473,12 +494,14 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 pos_y  = float(position_list[1])
                 width  = float(size_list[0])
                 height = float(size_list[1])
+                content = str(df_NodeData.iloc[i]['txt_content'])
+
                 speciesGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
 
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
                 textGlyph.setId(textG_id)
-                #textGlyph.setText(spec_id) # this will merge "setOriginOfTextId
+                textGlyph.setText(content) # this will merge "setOriginOfTextId
                 try:
                     position_list = list(df_NodeData.iloc[i]['txt_position'][1:-1].split(","))
                     size_list = list(df_NodeData.iloc[i]['txt_size'][1:-1].split(","))
@@ -491,7 +514,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 height_text = float(size_list[1])
                 bb_id  = "bb_spec_text_" + spec_id + '_idx_' + str(spec_index)
                 textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
-                textGlyph.setOriginOfTextId(specG_id)
+                #textGlyph.setOriginOfTextId(specG_id)
                 textGlyph.setGraphicalObjectId(specG_id)
 
         # create the ReactionGlyphs and SpeciesReferenceGlyphs
@@ -610,7 +633,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 center_value = center_position
             else:
                 if [] not in handles_update:
-                    for i in range(len(handles_update)):
+                    for i in range(len(handles)):
                         handles[i] = handles_update[i]
 
             reactionCurve = reactionGlyph.getCurve()
@@ -706,7 +729,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 speciesReferenceGlyph.setRole(libsbml.SPECIES_ROLE_MODIFIER)
 
         for i in range(numArbitraryTexts):
-            txt_content = df_TextData.iloc[i]['txt_content'] 
+            txt_content = str(df_TextData.iloc[i]['txt_content']) 
             try:
                 position_list = list(df_TextData.iloc[i]['txt_position'][1:-1].split(","))
                 size_list = list(df_TextData.iloc[i]['txt_size'][1:-1].split(","))
@@ -718,7 +741,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             textG_id = "TextG_" + txt_content + '_idx_' + str(i)
             textGlyph.setId(textG_id)
             textGlyph.setText(txt_content)
-            bb_id  = "bb_spec_text_" + txt_content + '_idx_' + str(i)
+            bb_id  = "bb_text_" + txt_content + '_idx_' + str(i)
             pos_x_text  = float(position_list[0])
             pos_y_text  = float(position_list[1])
             width_text  = float(size_list[0])
@@ -738,7 +761,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             genGlyph = layout.createGeneralGlyph()
             genG_id = gen_shape_name
             genGlyph.setId(genG_id)
-            bb_id  = "bb_spec_text_" + gen_shape_name + '_idx_' + str(i)
+            bb_id  = "bb_shape_" + gen_shape_name
             pos_x_text  = float(position_list[0])
             pos_y_text  = float(position_list[1])
             width_text  = float(size_list[0])
@@ -775,45 +798,69 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             for i in range(numCompartments):
                 comp_id = df_CompartmentData.iloc[i]['id']
                 compG_id = "CompG_" + comp_id
-                if comp_id != '_compartment_default':
-                    try:
-                        fill_color   = list(df_CompartmentData.iloc[i]['fill_color'][1:-1].split(","))
-                        border_color = list(df_CompartmentData.iloc[i]['border_color'][1:-1].split(","))
-                    except:    
-                        fill_color   = df_CompartmentData.iloc[i]['fill_color']
-                        border_color = df_CompartmentData.iloc[i]['border_color']
-                    comp_border_width = float(df_CompartmentData.iloc[i]['border_width'])
-                    if len(fill_color) == 4:
-                        fill_color_str    = '#%02x%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]),int(fill_color[3]))
-                    elif len(fill_color) == 3:
-                        fill_color_str    = '#%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]))
-                   
-                    if len(border_color) == 4:    
-                        border_color_str  = '#%02x%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]),int(border_color[3]))
-                    elif len(border_color) == 3:
-                        border_color_str  = '#%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]))
+                textG_id = "TextG_" + comp_id
+                #print(comp_id)
+                #if comp_id != '_compartment_default':
+                try:
+                    fill_color   = list(df_CompartmentData.iloc[i]['fill_color'][1:-1].split(","))
+                    border_color = list(df_CompartmentData.iloc[i]['border_color'][1:-1].split(","))
+                except:    
+                    fill_color   = df_CompartmentData.iloc[i]['fill_color']
+                    border_color = df_CompartmentData.iloc[i]['border_color']
 
+                comp_border_width = float(df_CompartmentData.iloc[i]['border_width'])
+                if len(fill_color) == 4:
+                    fill_color_str    = '#%02x%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]),int(fill_color[3]))
+                elif len(fill_color) == 3:
+                    fill_color_str    = '#%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]))
+                
+                if len(border_color) == 4:    
+                    border_color_str  = '#%02x%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]),int(border_color[3]))
+                elif len(border_color) == 3:
+                    border_color_str  = '#%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]))
 
-                    color = rInfo.createColorDefinition()
-                    color.setId("comp_fill_color" + "_" + comp_id)
-                    color.setColorValue(fill_color_str)
+                #print(fill_color, fill_color_str)
+                try:
+                    font_color = list(df_CompartmentData.iloc[i]['txt_font_color'][1:-1].split(","))
+                    text_anchor_list = list(df_CompartmentData.iloc[i]['txt_anchor'][1:-1].split(","))
+                except:
+                    font_color = df_CompartmentData.iloc[i]['txt_font_color']
+                    text_anchor_list = df_CompartmentData.iloc[i]['txt_anchor']
+                if len(font_color) == 4:
+                    text_line_color_str =  '#%02x%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]),int(font_color[3]))
+                elif len(font_color) == 3:
+                    text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
+                text_line_width = float(df_CompartmentData.iloc[i]['txt_line_width'])
+                text_font_size = float(df_CompartmentData.iloc[i]['txt_font_size'])
+                [text_anchor, text_vanchor] = text_anchor_list
 
-                    color = rInfo.createColorDefinition()
-                    color.setId("comp_border_color" + "_" + comp_id)
-                    color.setColorValue(border_color_str)
+                color = rInfo.createColorDefinition()
+                color.setId("comp_fill_color" + "_" + comp_id)
+                color.setColorValue(fill_color_str)
 
-                    # add a list of styles 
-                    style = rInfo.createStyle("compStyle" + "_" + comp_id)
-                    style.getGroup().setFillColor("comp_fill_color" + "_" + comp_id)
-                    style.getGroup().setStroke("comp_border_color" + "_" + comp_id)
-                    style.getGroup().setStrokeWidth(comp_border_width)
-                    style.addType("COMPARTMENTGLYPH")
-                    #style.addId(comp_id)
-                    style.addId(compG_id)
-                    rectangle = style.getGroup().createRectangle()
-                    rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
-                    libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+                color = rInfo.createColorDefinition()
+                color.setId("comp_border_color" + "_" + comp_id)
+                color.setColorValue(border_color_str)
 
+                # add a list of styles 
+                style = rInfo.createStyle("compStyle" + "_" + comp_id)
+                style.getGroup().setFillColor("comp_fill_color" + "_" + comp_id)
+                style.getGroup().setStroke("comp_border_color" + "_" + comp_id)
+                style.getGroup().setStrokeWidth(comp_border_width)
+                style.addType("COMPARTMENTGLYPH")
+                style.addId(compG_id)
+                rectangle = style.getGroup().createRectangle()
+                rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+                libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+
+                style = rInfo.createStyle("textStyle" + "_" + comp_id)
+                style.getGroup().setStroke("text_line_color" + "_" + comp_id)
+                style.getGroup().setStrokeWidth(text_line_width)
+                style.getGroup().setFontSize(libsbml.RelAbsVector(text_font_size,0))
+                style.getGroup().setTextAnchor(text_anchor)
+                style.getGroup().setVTextAnchor(text_vanchor)
+                style.addType("TEXTGLYPH")
+                style.addId(textG_id)
         else:
             comp_id= "_compartment_default_"
             compG_id = "CompG_" + comp_id
@@ -836,7 +883,6 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             style.getGroup().setStroke("comp_border_color")
             style.getGroup().setStrokeWidth(comp_border_width)
             style.addType("COMPARTMENTGLYPH")
-            #style.addId(comp_id)
             style.addId(compG_id)
             rectangle = style.getGroup().createRectangle()
             rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
@@ -900,14 +946,17 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
                 try:
                     font_color = list(df_NodeData.iloc[i]['txt_font_color'][1:-1].split(","))
+                    text_anchor_list = list(df_NodeData.iloc[i]['txt_anchor'][1:-1].split(","))
                 except:
                     font_color = df_NodeData.iloc[i]['txt_font_color']
+                    text_anchor_list = df_NodeData.iloc[i]['txt_anchor']
                 if len(font_color) == 4:
                     text_line_color_str =  '#%02x%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]),int(font_color[3]))
                 elif len(font_color) == 3:
                     text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
                 text_line_width = float(df_NodeData.iloc[i]['txt_line_width'])
                 text_font_size = float(df_NodeData.iloc[i]['txt_font_size'])
+                [text_anchor, text_vanchor] = text_anchor_list
             except: #text-only: set default species/node with white color
                 spec_fill_color_str = '#ffffffff'
                 spec_border_color_str = '#ffffffff'
@@ -915,6 +964,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 text_line_color_str = '#000000ff'
                 text_line_width = 1.
                 text_font_size = 12.
+                [text_anchor, text_vanchor] = ['middle', 'middle']
 
             if gradient_type == '':
                 color = rInfo.createColorDefinition()
@@ -1035,12 +1085,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 #     libsbml.RelAbsVector(0, spec_shapeInfo[1][1]))
 
             
-            style = rInfo.createStyle("textStyle")
+            style = rInfo.createStyle("textStyle" + "_" + spec_id)
             style.getGroup().setStroke("text_line_color" + "_" + spec_id)
             style.getGroup().setStrokeWidth(text_line_width)
             style.getGroup().setFontSize(libsbml.RelAbsVector(text_font_size,0))
+            style.getGroup().setTextAnchor(text_anchor)
+            style.getGroup().setVTextAnchor(text_vanchor)
             style.addType("TEXTGLYPH")
-            #style.addId(spec_id)
             style.addId(textG_id)
 
         if numReactions != 0:
@@ -1130,30 +1181,37 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 try: 
                     try:
                         font_color = list(df_TextData.iloc[i]['txt_font_color'][1:-1].split(","))
+                        text_anchor_list = list(df_NodeData.iloc[i]['txt_anchor'][1:-1].split(","))
                     except:
-                        font_color = df_TextData.iloc[i]['txt_font_color']
+                        font_color = df_NodeData.iloc[i]['txt_font_color']
+                        text_anchor_list = df_NodeData.iloc[i]['txt_anchor']
+
                     if len(font_color) == 4:
                         text_line_color_str =  '#%02x%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]),int(font_color[3]))
                     elif len(font_color) == 3:
                         text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
                     text_line_width = float(df_TextData.iloc[i]['txt_line_width'])
                     text_font_size = float(df_TextData.iloc[i]['txt_font_size'])
+                    [text_anchor, text_vanchor] = text_anchor_list
                 except: #text-only: set default species/node with white color
                     text_line_color_str = '#000000ff'
                     text_line_width = 1.
                     text_font_size = 12.
+                    [text_anchor, text_vanchor] = ['middle', 'middle']
 
                 color = rInfo.createColorDefinition()
                 color.setId("text_line_color" + "_" + text_content)
                 color.setColorValue(text_line_color_str)
                 
-                style = rInfo.createStyle("textStyle")
-                style.getGroup().setStroke("text_line_color" + "_" + text_content)
+                style = rInfo.createStyle("textStyle" + "_" + textG_id)
+                style.getGroup().setStroke("text_line_color" + "_" + textG_id)
                 style.getGroup().setStrokeWidth(text_line_width)
                 style.getGroup().setFontSize(libsbml.RelAbsVector(text_font_size,0))
+                style.getGroup().setTextAnchor(text_anchor)
+                style.getGroup().setVTextAnchor(text_vanchor)
                 style.addType("TEXTGLYPH")
-                #style.addId(text_content)
                 style.addId(textG_id)
+
 
         #arbitrary shape
         if numArbitraryShapes != 0:

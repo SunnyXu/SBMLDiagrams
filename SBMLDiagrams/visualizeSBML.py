@@ -294,8 +294,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         The visualization info object containing the drawing information of the plot
     """
 
-    # df = processSBML.load(sbmlStr)
-    # sbmlStr = df.export()
+    df = processSBML.load(sbmlStr)
+    sbmlStr = df.export()
     
     topLeftCorner = _getNetworkTopLeftCorner(sbmlStr)
     networkSize = _getNetworkSize(sbmlStr)
@@ -937,8 +937,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(hex_to_rgb(color_list[k][1]))
                                 text_line_width = group.getStrokeWidth()
-                                text_anchor = group.getTextAnchorAsString()
-                                text_vanchor = group.getVTextAnchorAsString()
+                                if group.isSetTextAnchor():
+                                    text_anchor = group.getTextAnchorAsString()
+                                if group.isSetVTextAnchor():
+                                    text_vanchor = group.getVTextAnchorAsString()
                                 if math.isnan(text_line_width):
                                     text_line_width = 1.
                                 text_font_size = float(group.getFontSize().getCoordinate())
@@ -1000,26 +1002,28 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     if temp_id in comp_specs_in_list:
                         vol= model.getCompartmentVolume(i)
                         dimension = imageSize
-                        position = [0,0]
+                        position = [0.,0.]
                         comp_fill_color = [255, 255, 255, 255]
                         comp_border_color = [255, 255, 255, 255]
                         comp_border_width = 2.0
                         text_content = ''
-                        text_position = [0,0]
-                        text_dimension = 0.
+                        text_position = [0.,0.]
+                        text_dimension = [0.,0.]
                         if len(comp_id_list) != 0:
                         #if mplugin is not None:
                             if temp_id == "_compartment_default_":
                                 dimension = imageSize
                                 color_style.setImageSize(dimension)
                                 position = [0, 0]
-                            for j in range(len(comp_text_content_list)):
+                            for j in range(len(comp_id_list)):
                                 if comp_id_list[j] == temp_id:
                                     dimension = [comp_dimension_list[j][0]*scale,
                                     comp_dimension_list[j][1]*scale]
                                     color_style.setImageSize(dimension)
                                     position = [(comp_position_list[j][0] - topLeftCorner[0])*scale,
                                     (comp_position_list[j][1] - topLeftCorner[1])*scale]
+                            for j in range(len(comp_text_content_list)):
+                                if comp_id_list[j] == temp_id:
                                     text_content = comp_text_content_list[j]
                                     text_position = [(comp_text_position_list[j][0] - topLeftCorner[0])*scale,
                                     (comp_text_position_list[j][1] - topLeftCorner[1])*scale]
@@ -1048,10 +1052,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             # then the whole size of the canvas is the compartment size
                             dimension = imageSize
                             color_style.setImageSize(dimension)
-                            position = [0,0]
+                            position = [0.,0.]
                             text_content = ''
-                            text_position = [0,0]
-                            text_dimension = 0.
+                            text_position = [0.,0.]
+                            text_dimension = [0.,0.]
                             #allows users to set the color of the "_compartment_default" as the canvas
                             #color_style.setCompBorderColor((255, 255, 255, 255))
                             #color_style.setCompFillColor((255, 255, 255, 255)
@@ -2280,11 +2284,11 @@ if __name__ == '__main__':
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
-    #filename = "test_comp.xml"
+    filename = "test_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
-    filename = "Jana_WolfGlycolysis.xml"
+    #filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml"
     #filename = "BorisEJB.xml"
     #filename = "100nodes.sbml"
@@ -2307,7 +2311,7 @@ if __name__ == '__main__':
     #filename = "bart2.xml"
     #filename = "newSBML.xml"
 
-    filename = filename = "bioinformatics/pdmap-nucleoid.xml"
+    #filename = filename = "bioinformatics/pdmap-nucleoid.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
