@@ -1946,6 +1946,208 @@ class load:
             raise Exception("This is not a valid id.")
         return border_width
 
+
+    def getCompartmentTextPosition(self, id):
+        """
+        Get the text position of a compartment with given compartment id.
+
+        Args: 
+            id: str-the id of the compartment.
+
+        Returns:
+            position: a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the compartment.  
+
+        Examples: 
+            p = sd.getCompartmentTextPosition('compartment_id')
+
+            print ('x = ', p.x, 'y = ', p.y)         
+
+        """
+
+        p = visualizeSBML._getCompartmentTextPosition(self.df, id)
+        num_alias = len(p)
+        position_list = []
+        for alias in range(num_alias):
+            position = point.Point (p[alias][0], p[alias][1])
+            position_list.append(position)
+        if len(position_list) == 1:
+            position = position_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return position
+
+    def getCompartmentTextSize(self, id):
+        """
+        Get the text size of a compartment with given compartment id.
+
+        Args: 
+            id: str-the id of the compartment.
+
+        Returns:
+            size: a Point object with attributes x and y representing
+            the width and height of the compartment.
+
+        Examples: 
+            p = sd.getCompartmentTextSize('compartment_id')
+            
+            print ('Width = ', p.x, 'Height = ', p.y)
+
+        """
+
+        p = visualizeSBML._getCompartmentTextSize (self.df, id)
+        num_alias = len(p)
+        size_list = []
+        for alias in range(num_alias):
+            size = point.Point (p[alias][0], p[alias][1])
+            size_list.append(size)
+        if len(size_list) == 1:
+            size = size_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        return size
+
+    def getCompartmentTextContent(self, id):
+        """
+        Get the text content of a compartment with a given compartment id.
+
+        Args: 
+            id: str-the id of the compartment.
+
+        Returns:
+            txt_content: str-the content of the compartment text.
+        """
+
+        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
+        txt_content_list =[] 
+        for i in range(len(idx_list)):
+            content = self.df[0].iloc[idx_list[i]]["txt_content"]
+            txt_content_list.append(content)
+        if len(txt_content_list) == 1:
+            txt_content =  txt_content_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        
+        return txt_content
+
+    def getCompartmentTextFontColor(self, id):
+        """
+        Get the text font color of a compartment with a given compartment id.
+
+        Args: 
+            id: str-the id of the compartment.
+
+        Returns:
+            txt_font_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)].
+
+        """
+
+        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
+        txt_font_color_list =[] 
+        for i in range(len(idx_list)):
+            rgb = self.df[0].iloc[idx_list[i]]["txt_font_color"]
+            color = _rgb_to_color(rgb)
+            txt_font_color_list.append(color)
+        if len(txt_font_color_list) == 1:
+            txt_font_color = txt_font_color_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+
+        return txt_font_color
+
+    def getCompartmentTextLineWidth(self, id):
+        """
+        Get the text line width of a compartment with a given compartment id.
+
+        Args: 
+            id: int-the id of the compartment.
+
+        Returns:
+            txt_line_width: float-compartment text line width.
+
+        """
+        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
+        txt_line_width_list =[] 
+        for i in range(len(idx_list)):
+            txt_line_width_list.append(self.df[0].iloc[idx_list[i]]["txt_line_width"])
+        if len(txt_line_width_list) == 1:
+            txt_line_width =  txt_line_width_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+
+        return txt_line_width
+
+    def getCompartmentTextFontSize(self, id):
+        """
+        Get the text font size of a compartment with a given compartment id.
+
+        Args: 
+            id: str-the id of the compartment.
+
+        Returns:
+            txt_font_size: float.
+
+        """
+        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
+        txt_font_size_list =[] 
+        for i in range(len(idx_list)):
+            txt_font_size_list.append(float(self.df[0].iloc[idx_list[i]]["txt_font_size"]))
+        if len(txt_font_size_list) == 1:
+            txt_font_size =  txt_font_size_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+            
+        return txt_font_size
+
+    def getCompartmentTextAnchor(self, id):
+        """
+        Get the horizontal anchor of a compartment text with a given compartment id.
+
+        Args: 
+            id: str-the id of the compartment.
+
+        Returns:
+            txt_anchor: str-the horizantal anchor of the compartment text, which can be "start",
+            "middle" and "end".
+        """
+
+        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
+        txt_anchor_list =[] 
+        for i in range(len(idx_list)):
+            anchor = self.df[0].iloc[idx_list[i]]["txt_anchor"][0]
+            txt_anchor_list.append(anchor)
+        if len(txt_anchor_list) == 1:
+            txt_anchor =  txt_anchor_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+
+        return txt_anchor
+
+    def getCompartmentTextVAnchor(self, id):
+        """
+        Get the vertical anchor of a compartment text with a given compartment id.
+
+        Args: 
+            id: str-the id of the compartment.
+
+        Returns:
+            txt_anchor: str-the vertical anchor of the compartment text, which can be "top", 
+            "middle", "baseline" and "bottom".
+        """
+
+        idx_list = self.df[0].index[self.df[0]["id"] == id].tolist()
+        txt_anchor_list =[] 
+        for i in range(len(idx_list)):
+            anchor = self.df[0].iloc[idx_list[i]]["txt_anchor"][1]
+            txt_anchor_list.append(anchor)
+        if len(txt_anchor_list) == 1:
+            txt_vanchor =  txt_anchor_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+
+        return txt_vanchor
+
     def getNodeAliasNum(self, id):
         """
         Get the number of alias nodes with a given node id.
@@ -2752,6 +2954,137 @@ class load:
         """
         self.df = editSBML._setCompartmentBorderWidth(self.df, id, border_width)
         #return self.df
+
+    def setCompartmentTextPosition(self, id, position):
+        """
+        Set the x,y coordinates of the compartment text position.
+
+        Args:  
+            id: str-compartment id.
+
+            position: list or point.Point()
+                
+            list-
+            [position_x, position_y], the coordinate represents the top-left hand corner of 
+            the compartment.
+
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the top-left hand corner of the compartment.
+
+        """
+        self.df = editSBML._setCompartmentTextPosition(self.df, id, position)
+        #return self.df
+    
+    def setCompartmentTextSize(self, id, size):
+        """
+        Set the compartment text size.
+
+        Args:  
+            df: DataFrame-initial information.
+
+            id: str-compartment id.
+
+            size: list or point.Point()
+                
+            list-
+            1*2 matrix-size of the compartment [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the compartment.
+
+        """
+        self.df = editSBML._setCompartmentTextSize(self.df, id, size)
+        #return self.df
+    
+    def setCompartmentTextContent(self, id, txt_content):
+        """
+        Set the compartment text content for a compartment of given id.
+
+        Args:  
+            id: str-compartment id.
+
+            txt_content: str-compartment text content.
+
+        Examples:
+            la.setCompartmentTextContent ('compartment4', 'C4')
+        """
+        self.df = editSBML._setCompartmentTextContent(self.df, id, txt_content)
+        #return self.df
+
+    def setCompartmentTextFontColor(self, id, txt_font_color, opacity = 1.):
+        """
+        Set the compartment text font color for a compartment of given id.
+
+        Args:  
+            id: str-compartment id.
+
+            txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+        Examples:
+            la.setCompartmentTextFontColor ('commpartment1', 'CornflowerBlue')
+        """
+        self.df = editSBML._setCompartmentTextFontColor(self.df, id, txt_font_color, opacity)
+        #return self.df
+
+    def setCompartmentTextLineWidth(self, id, txt_line_width):
+        """
+        Set the compartment text line width for a compartment of given id.
+
+        Args:  
+            id: str-compartment id.
+
+            txt_line_width: float-compartment text line width.
+
+        """
+        self.df = editSBML._setCompartmentTextLineWidth(self.df, id, txt_line_width)
+        #return self.df
+
+    def setCompartmentTextFontSize(self, id, txt_font_size):
+        """
+        Set the compartment text font size for a compartment of given id.
+
+        Args:  
+            id: str-compartment id.
+
+            txt_font_size: float-compartment text font size, the units for size are assumed to be in points.
+            
+        """
+        self.df = editSBML._setCompartmentTextFontSize(self.df, id, txt_font_size)
+        #return self.df
+
+    def setCompartmentTextAnchor(self, id, txt_anchor):
+        """
+        Set the horizontal anchor for a compartment text of given id.
+
+        Args:  
+            id: str-compartment id.
+
+            txt_anchor: str-compartment text horizontal anchor, which can be "start",
+            "middle" and "end".
+            
+        """
+        self.df = editSBML._setCompartmentTextAnchor(self.df, id, txt_anchor)
+        #return self.df
+
+    def setCompartmentTextVAnchor(self, id, txt_vanchor):
+        """
+        Set the vertical anchor for a compartment text of given id.
+
+        Args:  
+            id: str-compartment id.
+
+            txt_vanchor: str-compartment text vertical anchor, which can be which can be "top", 
+            "middle", "baseline" and "bottom".
+            
+        """
+        self.df = editSBML._setCompartmentTextVAnchor(self.df, id, txt_vanchor)
+        #return self.df
+
+
 
     def setFloatingBoundaryNode(self, id, floating_node, alias = 0):
         """
@@ -4560,6 +4893,14 @@ if __name__ == '__main__':
     # print(df.getCompartmentFillColor("_compartment_default_"))
     # print(df.getCompartmentBorderColor("_compartment_default_"))
     # print(df.getCompartmentBorderWidth("_compartment_default_"))
+    # print(df.getCompartmentTextPosition("_compartment_default_"))
+    # print(df.getCompartmentTextSize("_compartment_default_"))
+    # print(df.getCompartmentTextContent("_compartment_default_"))
+    # print(df.getCompartmentTextFontColor("_compartment_default_"))
+    # print(df.getCompartmentTextLineWidth("_compartment_default_"))
+    # print(df.getCompartmentTextFontSize("_compartment_default_"))
+    # print(df.getCompartmentTextAnchor("_compartment_default_"))
+    # print(df.getCompartmentTextVAnchor("_compartment_default_"))
 
     # print(df.isFloatingNode("x_1"))
     # position = df.getNodePosition("x_1")
@@ -4599,6 +4940,18 @@ if __name__ == '__main__':
     # print(df.getCompartmentFillColor('_compartment_default_'))
     # df.setCompartmentBorderColor('_compartment_default_', [255, 255, 255])
     # df.setCompartmentBorderWidth('_compartment_default_', 2.)
+    # print(df.getCompartmentTextPosition("_compartment_default_"))
+    # print(df.getCompartmentTextSize("_compartment_default_"))
+    # df.setCompartmentTextPosition('_compartment_default_', [10,10])
+    # df.setCompartmentTextSize('_compartment_default_', [1000, 1000])
+    # print(df.getCompartmentTextPosition("_compartment_default_"))
+    # print(df.getCompartmentTextSize("_compartment_default_"))
+    # df.setCompartmentTextContent('_compartment_default_', 'comp')
+    # df.setCompartmentTextFontColor("_compartment_default_", 'red')
+    # df.setCompartmentTextLineWidth("_compartment_default_", 10.)
+    # df.setCompartmentTextFontSize("_compartment_default_", 10)
+    # df.setCompartmentTextAnchor("_compartment_default_", "start")
+    # df.setCompartmentTextVAnchor('_compartment_default_', 'bottom')
 
     # df.getNodeAliasNum("ATP")
     # df.setFloatingBoundaryNode("x_1", True)

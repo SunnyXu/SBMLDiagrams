@@ -2067,6 +2067,51 @@ def _getCompartmentSize(df, id):
     return size_list
 
 
+def _getCompartmentTextPosition(df, id):
+    """
+    Get the text position of a compartment with its certain compartment id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the compartment.
+
+    Returns:
+        position_list: list of position.
+
+        position: list-1*2 matrix-top left-hand corner of the compartment [position_x, position_y].
+    """
+
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    position_list =[] 
+    for i in range(len(idx_list)):
+        position_list.append(df[0].iloc[idx_list[i]]["txt_position"])
+
+    return position_list
+
+def _getCompartmentTextSize(df, id):
+    """
+    Get the text size of a compartment with its certain compartment id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the compartment.
+
+    Returns:
+        size_list: list of size.
+
+        size: list-1*2 matrix-size of the compartment [width, height].
+    """
+
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    size_list =[] 
+    for i in range(len(idx_list)):
+        size_list.append(df[0].iloc[idx_list[i]]["txt_size"])
+
+    return size_list
+
+
 def _getNodePosition(df, id):
     """
     Get the position of a node with its certain node id.

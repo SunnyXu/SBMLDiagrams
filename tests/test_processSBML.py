@@ -962,6 +962,13 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_") == \
      [[255, 255, 255, 255], 'White', '#FFFFFFFF'])
     self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_") == 2.)
+    self.assertTrue(self.df.getCompartmentTextPosition("_compartment_default_").x == 0.)
+    self.assertTrue(self.df.getCompartmentTextSize("_compartment_default_").x == 0.)
+    self.assertTrue(self.df.getCompartmentTextContent("_compartment_default_") == '')
+    self.assertTrue(self.df.getCompartmentTextLineWidth("_compartment_default_") == 1.)
+    self.assertTrue(self.df.getCompartmentTextFontSize("_compartment_default_") == 11.)
+    self.assertTrue(self.df.getCompartmentTextAnchor("_compartment_default_") == 'middle')
+    self.assertTrue(self.df.getCompartmentTextVAnchor("_compartment_default_") == 'middle')
 
   def testGetNode(self):
     # Test all the get functions about node
@@ -1020,12 +1027,28 @@ class TestImportSBML(unittest.TestCase):
     border_color = [255, 255, 254]
     border_width = 2.
     opacity = 0.
+    txt_position = [10, 10]
+    txt_size = [1000, 1000]
+    txt_content = 'comp'
+    txt_font_color = 'Red'
+    txt_line_width = 10.
+    txt_font_size = 10.
+    txt_anchor = "start"
+    txt_vanchor = 'bottom'
 
     self.df.setCompartmentPosition('_compartment_default_', position)
     self.df.setCompartmentSize('_compartment_default_', size)
     self.df.setCompartmentFillColor('_compartment_default_', fill_color, opacity = opacity)
     self.df.setCompartmentBorderColor('_compartment_default_', border_color)
     self.df.setCompartmentBorderWidth('_compartment_default_', border_width)
+    self.df.setCompartmentTextPosition('_compartment_default_', txt_position)
+    self.df.setCompartmentTextSize('_compartment_default_', txt_size)
+    self.df.setCompartmentTextContent('_compartment_default_', txt_content)
+    self.df.setCompartmentTextFontColor('_compartment_default_', txt_font_color)
+    self.df.setCompartmentTextLineWidth('_compartment_default_', txt_line_width)
+    self.df.setCompartmentTextFontSize('_compartment_default_', txt_font_size)
+    self.df.setCompartmentTextAnchor('_compartment_default_', txt_anchor)
+    self.df.setCompartmentTextVAnchor('_compartment_default_', txt_vanchor)
 
     self.assertTrue(self.df.getCompartmentPosition("_compartment_default_").x == position[0])
     self.assertTrue(self.df.getCompartmentSize("_compartment_default_").x == size[0])
@@ -1034,6 +1057,15 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_")[0][0:-1] == border_color)
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_")[0][3] == 255)
     self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_") == border_width)
+    self.assertTrue(self.df.getCompartmentTextPosition("_compartment_default_").x == txt_position[0])
+    self.assertTrue(self.df.getCompartmentTextSize("_compartment_default_").x == txt_size[0])
+    self.assertTrue(self.df.getCompartmentTextContent("_compartment_default_") == txt_content)
+    self.assertTrue(self.df.getCompartmentTextFontColor("_compartment_default_")[1] == txt_font_color)
+    self.assertTrue(self.df.getCompartmentTextLineWidth("_compartment_default_") == txt_line_width)
+    self.assertTrue(self.df.getCompartmentTextFontSize("_compartment_default_") == txt_font_size)
+    self.assertTrue(self.df.getCompartmentTextAnchor("_compartment_default_") == txt_anchor)
+    self.assertTrue(self.df.getCompartmentTextVAnchor("_compartment_default_") == txt_vanchor)
+
 
   def testSetNode(self):
     # Test all the set functions about node

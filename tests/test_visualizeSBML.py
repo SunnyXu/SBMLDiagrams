@@ -69,6 +69,11 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(visualizeSBML._getNodeSize(self._df, "x_1")[0] == [50.0, 30.0])
     self.assertTrue(visualizeSBML._getNodeTextPosition(self._df, "x_1")[0] == [413.0, 216.0])
     self.assertTrue(visualizeSBML._getNodeTextSize(self._df, "x_1")[0] == [50.0, 30.0])
+    self.assertTrue(visualizeSBML._getCompartmentTextPosition(self._df, "_compartment_default_")[0]
+      == [0.0, 0.0])
+    self.assertTrue(visualizeSBML._getCompartmentTextSize(self._df, "_compartment_default_")[0] 
+      == [0.0, 0.0])
+
     self.assertTrue(visualizeSBML._getReactionCenterPosition(self._df, "r_0")[0] == \
       [334.0, 231.0])
     self.assertTrue(visualizeSBML._getReactionBezierHandles(self._df, "r_0")[0] == \

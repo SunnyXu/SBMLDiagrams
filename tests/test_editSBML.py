@@ -42,12 +42,28 @@ class TestEditSBML(unittest.TestCase):
     border_color = [255, 255, 254]
     border_width = 2.
     opacity = 0.
+    txt_position = [10, 10]
+    txt_size = [1000, 1000]
+    txt_content = 'comp'
+    txt_font_color = 'Red'
+    txt_line_width = 10.
+    txt_font_size = 10.
+    txt_anchor = "start"
+    txt_vanchor = 'bottom'
 
     df_update = editSBML._setCompartmentPosition(self.df, "_compartment_default_", position)
     df_update = editSBML._setCompartmentSize(df_update, "_compartment_default_", size)
     df_update = editSBML._setCompartmentFillColor(df_update, "_compartment_default_", fill_color, opacity = opacity)
     df_update = editSBML._setCompartmentBorderColor(df_update, "_compartment_default_", border_color, opacity = opacity)
     df_update = editSBML._setCompartmentBorderWidth(df_update, "_compartment_default_", border_width)
+    df_update = editSBML._setCompartmentTextPosition(df_update, "_compartment_default_", txt_position)
+    df_update = editSBML._setCompartmentTextSize(df_update, "_compartment_default_", txt_size)
+    df_update = editSBML._setCompartmentTextContent(df_update, "_compartment_default_", txt_content)
+    df_update = editSBML._setCompartmentTextFontColor(df_update, "_compartment_default_", txt_font_color, opacity = 1.)
+    df_update = editSBML._setCompartmentTextLineWidth(df_update, "_compartment_default_", txt_line_width)
+    df_update = editSBML._setCompartmentTextFontSize(df_update, "_compartment_default_", txt_font_size)
+    df_update = editSBML._setCompartmentTextAnchor(df_update, "_compartment_default_", txt_anchor)
+    df_update = editSBML._setCompartmentTextVAnchor(df_update, "_compartment_default_", txt_vanchor)
 
     self.assertTrue(df_update[0].iloc[0]["position"] == position)
     self.assertTrue(df_update[0].iloc[0]["size"] == size) 
@@ -56,7 +72,14 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[0].iloc[0]["border_color"][0:-1] == border_color)
     self.assertTrue(df_update[0].iloc[0]["border_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[0].iloc[0]["border_width"] == border_width)
-       
+    self.assertTrue(df_update[0].iloc[0]["txt_position"] == txt_position)
+    self.assertTrue(df_update[0].iloc[0]["txt_size"] == txt_size) 
+    self.assertTrue(df_update[0].iloc[0]["txt_content"] == txt_content) 
+    self.assertTrue(df_update[0].iloc[0]["txt_font_color"] == [255, 0, 0, 255])
+    self.assertTrue(df_update[0].iloc[0]["txt_line_width"] == txt_line_width) 
+    self.assertTrue(df_update[0].iloc[0]["txt_font_size"] == txt_font_size)
+    self.assertTrue(df_update[0].iloc[0]["txt_anchor"] == [txt_anchor, txt_vanchor]) 
+
     with self.assertRaises(Exception):
       editSBML._setCompartmentPosition(df_update, "XX", position)
     with self.assertRaises(Exception):
@@ -67,6 +90,24 @@ class TestEditSBML(unittest.TestCase):
       editSBML._setCompartmentBorderColor(df_update, "XX", border_color)
     with self.assertRaises(Exception):
       editSBML._setCompartmentBorderWidth(df_update, "XX", border_width)
+    
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextPosition(df_update, "XX", txt_position)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextSize(df_update, "XX", txt_size)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextContent(df_update, "XX", txt_content)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextFontSize(df_update, "XX", txt_font_color)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextLineWidth(df_update, "XX", txt_line_width)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextFontSize(df_update, "XX", txt_font_size)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextAnchor(df_update, "XX", txt_anchor)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextVAnchor(df_update, "XX", txt_vanchor)
+
 
   def testSetNode(self):
     # set node one by one

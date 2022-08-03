@@ -207,6 +207,259 @@ def _setCompartmentBorderWidth(df, id, border_width):
 
     return df_temp
 
+def _setCompartmentTextPosition(df, id, position):
+
+    """
+    Set the x,y coordinates of the compartment text position.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-compartment id.
+
+        position: list or point.Point()
+            
+        list-
+        [position_x, position_y], the coordinate represents the top-left hand corner of 
+        the compartment.
+
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the top-left hand corner of the compartment.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_CompartmentData_temp = df[0].copy()
+    idx_list = df[0].index[df[0]["id"] == id].tolist() 
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    if type(position) != list and type(position) != type(point.Point()):
+        raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
+    for i in range(len(idx_list)):
+        df_CompartmentData_temp.at[idx_list[i],"txt_position"] = position
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
+
+    return df_temp
+
+def _setCompartmentTextSize(df, id, size):
+
+    """
+    Set the compartment text size.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-compartment id.
+
+        size: list or point.Point()
+            
+        list-
+        1*2 matrix-size of the compartment [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the compartment.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_CompartmentData_temp = df[0].copy()   
+    idx_list = df[0].index[df[0]["id"] == id].tolist() 
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.") 
+    if type(size) != list and type(size) != type(point.Point()):
+        raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
+    for i in range(len(idx_list)):
+        df_CompartmentData_temp.at[idx_list[i],"txt_size"] = size
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
+
+    return df_temp
+
+def _setCompartmentTextContent(df, id, txt_content):
+
+    """
+    Set the compartment text content.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-compartment id.
+
+        txt_content: str-compartment text content.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_CompartmentData_temp = df[0].copy()
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    if len(idx_list) != 1:
+        raise Exception("This is not a valid id.")
+    else:
+        df_CompartmentData_temp.at[idx_list[0],"txt_content"] = txt_content
+
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
+
+    return df_temp
+
+def _setCompartmentTextFontColor(df, id, txt_font_color, opacity):
+
+    """
+    Set the compartment text font color.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-compartment id.
+
+        txt_font_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_CompartmentData_temp = df[0].copy()
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    if len(idx_list) != 1:
+        raise Exception("This is not a valid id.")
+    else:
+        txt_font_color = _color_to_rgb(txt_font_color, opacity)
+        df_CompartmentData_temp.at[idx_list[0],"txt_font_color"] = txt_font_color
+
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
+
+    return df_temp
+
+def _setCompartmentTextLineWidth(df, id, txt_line_width):
+
+    """
+    Set the compartment text line width.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-compartment id.
+
+        txt_line_width: float-compartment text line width.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_CompartmentData_temp = df[0].copy()
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    if len(idx_list) != 1:
+        raise Exception("This is not a valid id.")
+    else:
+        df_CompartmentData_temp.at[idx_list[0],"txt_line_width"] = txt_line_width
+
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
+
+    return df_temp
+
+
+def _setCompartmentTextFontSize(df, id, txt_font_size):
+
+    """
+    Set the compartment text font size.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-compartment id.
+
+        txt_font_size: float-compartment text font size.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_CompartmentData_temp = df[0].copy()
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    if len(idx_list) != 1:
+        raise Exception("This is not a valid id.")
+    else:
+        df_CompartmentData_temp.at[idx_list[0],"txt_font_size"] = txt_font_size
+
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
+
+    return df_temp
+
+def _setCompartmentTextAnchor(df, id, txt_anchor):
+
+    """
+    Set the compartment text horizontal anchor.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-compartment id.
+
+        txt_anchor: str-compartment text horizontal anchor, which can be "start",
+            "middle" and "end".
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_CompartmentData_temp = df[0].copy()
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    if len(idx_list) != 1:
+        raise Exception("This is not a valid id.")
+    else:
+        txt_vanchor = df_CompartmentData_temp.at[idx_list[0],"txt_anchor"][1]
+        df_CompartmentData_temp.at[idx_list[0],"txt_anchor"] = [txt_anchor, txt_vanchor]
+
+    if txt_anchor not in ['start', 'middle', 'end']:
+        raise Exception("Please enter a valid horizontal anchor.")
+
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
+
+    return df_temp
+
+
+def _setCompartmentTextVAnchor(df, id, txt_vanchor):
+
+    """
+    Set the compartment text vertical anchor.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-compartment id.
+
+        txt_vanchor: str-compartment text horizontal anchor, which can be which can be "top", 
+            "middle", "baseline" and "bottom".
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_CompartmentData_temp = df[0].copy()
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    if len(idx_list) != 1:
+        raise Exception("This is not a valid id.")
+    else:
+        txt_anchor = df_CompartmentData_temp.at[idx_list[0],"txt_anchor"][0]
+        df_CompartmentData_temp.at[idx_list[0],"txt_anchor"] = [txt_anchor, txt_vanchor]
+
+    if txt_vanchor not in ['top', 'middle', 'baseline', 'bottom']:
+        raise Exception("Please enter a valid vertical anchor.")
+
+
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4])
+
+    return df_temp
+
 def _setFloatingBoundaryNode(df, id, floating_node, alias = 0):
 
     """
