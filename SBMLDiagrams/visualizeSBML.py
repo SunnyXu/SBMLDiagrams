@@ -1583,6 +1583,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
 
                 for i in range (numFloatingNodes):
                     temp_id = FloatingNodes_ids[i]
+                    text_content = temp_id
                     for k in range(numNodes):
                         if spec_id_list[k] == temp_id:
                             position = [(spec_position_list[k][0]-topLeftCorner[0])*scale,
@@ -1603,6 +1604,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     allNodes_dim_dict[temp_id] = dimension
                 for i in range (numBoundaryNodes):
                     temp_id = BoundaryNodes_ids[i]
+                    text_content = temp_id
                     for k in range(numNodes):
                         if spec_id_list[k] == temp_id:
                             position = [(spec_position_list[k][0]-topLeftCorner[0])*scale,

@@ -869,8 +869,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 temp_id = Comps_ids[i]
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
-                dimension = compartmentDefaultSize
                 position = [0.,0.]
+                dimension = compartmentDefaultSize
                 comp_fill_color = [255, 255, 255, 255]
                 comp_border_color = [255, 255, 255, 255]
                 comp_border_width = 2.0
@@ -880,8 +880,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 if len(comp_id_list) != 0:
                 #if mplugin is not None:
                     if temp_id == "_compartment_default_":
-                        dimension = compartmentDefaultSize
                         position = [0, 0]
+                        dimension = compartmentDefaultSize
                         #comp_border_color = [255, 255, 255, 255]
                         #comp_fill_color = [255, 255, 255, 255]
 
@@ -917,11 +917,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         # dimension = [800,800]
                         # position = [40,40]
                         # the whole size of the compartment: 4000*2500
-                        dimension = compartmentDefaultSize
                         position = [0.,0.]
+                        dimension = compartmentDefaultSize
                         text_content = ''
-                        text_position = [0.,0.]
-                        text_dimension = [0.,0.]
+                        text_position = [0., 0.]
+                        text_dimension = [0, 0.]
                         #If there is no render info about the compartments given from sbml,
                         #they will be set as white. 
                         #comp_fill_color = [255, 255, 255, 255]
@@ -1568,6 +1568,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
             for i in range (numFloatingNodes):
                 temp_id = FloatingNodes_ids[i]
+                text_content = temp_id
                 comp_id = model.getCompartmentIdSpeciesIsIn(temp_id)
                 temp_comp_idx = -1
                 for j in range(len(comp_idx_id_list)):
@@ -1616,6 +1617,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         pd.DataFrame(NodeData_row_dct)], ignore_index=True)
             for i in range (numBoundaryNodes):
                 temp_id = BoundaryNodes_ids[i]
+                text_content = temp_id
                 comp_id = model.getCompartmentIdSpeciesIsIn(temp_id)
                 temp_comp_idx = -1
                 for j in range(len(comp_idx_id_list)):
@@ -4793,7 +4795,7 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -4804,7 +4806,7 @@ if __name__ == '__main__':
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml" 
-    #filename = "output.xml"
+    filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
     #node shape:
@@ -5055,10 +5057,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    # sbmlStr_layout_render = df.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    sbmlStr_layout_render = df.export()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
@@ -5068,5 +5070,5 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    #df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png')
 
