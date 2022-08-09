@@ -1146,7 +1146,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                             style.getGroup().addDash(int(reaction_dash[pt]))
                         except:
                             pass
-                style.addType("REACTIONGLYPH SPECIESREFERENCEGLYPH")
+                style.addType("REACTIONGLYPH")
                 #style.addId(rxn_id)
                 style.addId(reactionG_id)
 

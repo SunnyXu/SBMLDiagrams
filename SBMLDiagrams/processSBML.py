@@ -61,6 +61,9 @@ RXNDASH = "rxn_dash"
 RXNREV = "rxn_reversible"
 STROKECOLOR = "stroke_color"
 TXTANCHOR = 'txt_anchor'
+SOURCESLINEENDING = 'sources_lineending'
+TARGETSLINEENDING = 'targets_lineending'
+MODIFIERSLINEENDING = 'modifiers_lineending'
 COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
     POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
     TXTPOSITION, TXTSIZE, TXTCONTENT, \
@@ -70,11 +73,13 @@ COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
     FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, 
     SHAPENAME, SHAPETYPE, SHAPEINFO, TXTCONTENT, TXTANCHOR]
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
-    STROKECOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV, FILLCOLOR]
+    STROKECOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV, 
+    FILLCOLOR, SOURCESLINEENDING, TARGETSLINEENDING, MODIFIERSLINEENDING]
 COLUMN_NAME_df_TextData = [TXTCONTENT, TXTPOSITION, TXTSIZE, 
     TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, ID, TXTANCHOR]
 COLUMN_NAME_df_ShapeData = [SHAPENAME, POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
                         SHAPETYPE, SHAPEINFO]
+COLUMN_NAME_df_LineEndingData = [ID, POSITION, SIZE, FILLCOLOR, SHAPETYPE, SHAPEINFO]
 # #This is not supported by SBML
 # COLUMN_NAME_df_text = [TXTCONTENT, TXTPOSITION, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 
@@ -168,6 +173,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     df_ReactionData = pd.DataFrame(columns = COLUMN_NAME_df_ReactionData)
     df_TextData = pd.DataFrame(columns = COLUMN_NAME_df_TextData)
     df_ShapeData = pd.DataFrame(columns = COLUMN_NAME_df_ShapeData)
+    df_LineEndingData = pd.DataFrame(columns = COLUMN_NAME_df_LineEndingData)
 
     comp_id_list = []
     compGlyph_id_list = []
@@ -185,6 +191,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     spec_text_dimension_list = []
     spec_text_content_list = []
     spec_concentration_list = []
+    specRefGlyph_id_list = []
+    specGlyph_specRefGlyph_id_list = []
     textGlyph_comp_id_list = []
     textGlyph_spec_id_list = []
     textGlyph_id_list = []
@@ -356,7 +364,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     center_handle = []
                     for j in range(numSpecRefGlyphs):
                         specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
-                        #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()                   
+                        specRefGlyph_id = specRefGlyph.getId()                   
+                        specRefGlyph_id_list.append(specRefGlyph_id)
                         curve = specRefGlyph.getCurve()
                         spec_handle = []                             
                         for segment in curve.getListOfCurveSegments():
@@ -400,6 +409,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
                         role = specRefGlyph.getRoleString()
                         specGlyph_id = specRefGlyph.getSpeciesGlyphId()
+                        specGlyph_specRefGlyph_id_list.append([specGlyph_id, specRefGlyph_id])
                         specGlyph = layout.getSpeciesGlyph(specGlyph_id)
                         
                         for k in range(numTextGlyphs):
@@ -460,14 +470,14 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
                         if role == "substrate": #it is a rct
                             #rct_specGlyph_temp_list.append(specGlyph_id)
-                            rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
+                            rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle, specRefGlyph_id])
                             if center_handle == []:
                                 center_handle.append(center_handle_candidate)
                         elif role == "product": #it is a prd
                             #prd_specGlyph_temp_list.append(specGlyph_id)
-                            prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
-                        elif role == "modifier": #it is a modifier
-                            mod_specGlyph_temp_list.append(specGlyph_id)
+                            prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle, specRefGlyph_id])
+                        elif role == "modifier" or role == 'activator': #it is a modifier
+                            mod_specGlyph_temp_list.append([specGlyph_id, specRefGlyph_id])
                         
                     #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                     #prd_specGlyph_list.append(prd_specGlyph_temp_list)
@@ -487,6 +497,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 # print(rct_specGlyph_handle_list)
                 # print(prd_specGlyph_handle_list)
                 # print(mod_specGlyph_list)
+                # print(specRefGlyph_id_list)
+                # print(specGlyph_specRefGlyph_id_list)
 
                 #orphan nodes
                 for i in range(numSpecGlyphs):
@@ -593,30 +605,88 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     #spec_render = []
                     #rxn_render = []
                     #text_render = []
+                    lineEnding_render = []
                     gen_render = []
+                    specRefGlyph_render = []
                     arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                     id_arrowHeadSize = []
+
+                    for  j in range(0, info.getNumColorDefinitions()):
+                        color = info.getColorDefinition(j)
+                        color_list.append([color.getId(),color.createValueString()])
+
                     
                     for j in range(0, info.getNumLineEndings()):
                         lineEnding = info.getLineEnding(j)
+                        group = lineEnding.getGroup()
                         temp_id = lineEnding.getId()
                         boundingbox = lineEnding.getBoundingBox()
                         width = boundingbox.getWidth()
                         height= boundingbox.getHeight()
                         pos_x = boundingbox.getX()
                         pos_y = boundingbox.getY()
-                        temp_arrowHeadSize = [width, height]
-                        id_arrowHeadSize.append([temp_id,temp_arrowHeadSize])
-                        # group = lineEnding.getGroup()
-                        # for element in group.getListOfElements():
-                        #     NumRenderPoints = element.getListOfElements().getNumRenderPoints()
-                        #     for k in range(NumRenderPoints):
-                        #         x = element.getListOfElements().get(k).getX().getCoordinate()
-                        #         y = element.getListOfElements().get(k).getY().getCoordinate()
+                        temp_pos = [pos_x,pos_y]
+                        temp_size = [width, height]
+                        id_arrowHeadSize.append([temp_id,temp_size])
+                        lineEnding_fill_color = []
+                        for k in range(len(color_list)):
+                            if color_list[k][0] == group.getFill():
+                                lineEnding_fill_color = hex_to_rgb(color_list[k][1])
+                                
+                        shape_type=[]
+                        shapeInfo=[]
+                        for k in range(group.getNumElements()):
+                            element = group.getElement(k)
+                            temp_shape_type = element.getElementName()
+                            shape_type.append(temp_shape_type)
+                        
+                            if temp_shape_type == 'ellipse':
+                                center_x = (element.getCX().getRelativeValue())
+                                center_y = (element.getCY().getRelativeValue())
+                                radius_x = (element.getRX().getRelativeValue())
+                                radius_y = (element.getRY().getRelativeValue())
+                                if all(v == 0 for v in [radius_x, radius_y]):
+                                    radius_x = element.getRX().getAbsoluteValue()
+                                    radius_y = element.getRY().getAbsoluteValue()
+                                    radius_x = 100*(radius_x)/width
+                                    radius_y = 100*(radius_y)/height                     
+                                shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
 
-                    for  j in range(0, info.getNumColorDefinitions()):
-                        color = info.getColorDefinition(j)
-                        color_list.append([color.getId(),color.createValueString()])
+                            if temp_shape_type == 'polygon':
+                                NumRenderPoints = element.getListOfElements().getNumRenderPoints()
+                                temp_shapeInfo = []
+                                for k in range(NumRenderPoints):
+                                    point_x = float(element.getListOfElements().get(k).getX().getCoordinate().strip('%'))
+                                    point_y = float(element.getListOfElements().get(k).getY().getCoordinate().strip('%'))         
+                                    temp_shapeInfo.append([point_x,point_y])
+                                shapeInfo.append(temp_shapeInfo)
+                        # print(temp_id)
+                        # print(shape_type)
+                        # print(shapeInfo)
+                            
+                        lineEnding_render.append([temp_id, temp_pos, temp_size, 
+                        lineEnding_fill_color, shape_type, shapeInfo])
+                    
+                    for j in range(len(lineEnding_render)):
+                        temp_id = lineEnding_render[j][0]
+                        temp_pos = lineEnding_render[j][1]
+                        temp_size = lineEnding_render[j][2]
+                        lineEnding_fill_color = lineEnding_render[j][3]
+                        shape_type = lineEnding_render[j][4]
+                        shapeInfo = lineEnding_render[j][5]
+                        LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                        LineEndingData_row_dct[ID].append(temp_id)
+                        LineEndingData_row_dct[POSITION].append(temp_pos)
+                        LineEndingData_row_dct[SIZE].append(temp_size)
+                        LineEndingData_row_dct[FILLCOLOR].append(lineEnding_fill_color)
+                        LineEndingData_row_dct[SHAPETYPE].append(shape_type)
+                        LineEndingData_row_dct[SHAPEINFO].append(shapeInfo)
+                        if len(df_LineEndingData) == 0:
+                            df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                        else:
+                            df_LineEndingData = pd.concat([df_LineEndingData,\
+                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
 
                     for j in range(0, info.getNumGradientDefinitions()):
                         gradient = info.getGradientDefinition(j)
@@ -664,6 +734,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 typeList = 'TEXTGLYPH'
                             elif any(idList in sublist for sublist in textGlyph_spec_id_list):
                                 typeList = 'TEXTGLYPH'
+                            elif idList in specRefGlyph_id_list:
+                                typeList = 'SPECIESREFERENCEGLYPH'
                             # else:
                             #     print(idList)
                         if 'COMPARTMENTGLYPH' in typeList:
@@ -843,8 +915,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             gen_render.append([render_gen_id, gen_fill_color, gen_border_color,
                             gen_border_width, gen_shape_type, gen_shape_info])
 
+                        elif 'SPECIESREFERENCEGLYPH' in typeList:
+                            render_specRefGlyph_id = idList
+                            # for k in range(len(specGlyph_specRefGlyph_id_list)):    
+                            #     if specGlyph_specRefGlyph_id_list[k][1] == idList:
+                            #         render_specRefGlyph_id = specGlyph_specRefGlyph_id_list[k][0] 
+                            endHead = group.getEndHead()
+                            specRefGlyph_render.append([render_specRefGlyph_id, endHead])
+
         #print(gen_render)
         #print(gradient_list)
+        #print(specRefGlyph_render)
 
         model = simplesbml.loadSBMLStr(sbmlStr)
         numFloatingNodes  = model.getNumFloatingSpecies()
@@ -1206,12 +1287,15 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 src_idx_list = []
                 src_position = []
                 src_dimension = []
+                src_endhead = []
                 dst_idx_list = [] 
                 dst_position = []
                 dst_dimension = []
+                dst_endhead = []
                 mod_idx_list = []
                 mod_position = []
                 mod_dimension = []
+                mod_endhead = []
                 src_handle = []
                 dst_handle = []
                 temp_id = reaction_id_list[i]
@@ -1239,6 +1323,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 if rct_num != 0 and prd_num != 0:
                     for j in range(rct_num):
                         temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
+                        temp_specRefGlyph_id = rct_specGlyph_handle_list[i][j][2]
                         for k in range(len(node_idx_specGlyphid_list)):
                             if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
                                 src_idx_list.append(node_idx_specGlyphid_list[k][0])
@@ -1246,12 +1331,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             if temp_specGlyph_id == specGlyph_id_list[k]:
                                 src_position.append(spec_position_list[k])
                                 src_dimension.append(spec_dimension_list[k])
+                        for k in range(len(specRefGlyph_render)):
+                            if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                src_endhead.append(specRefGlyph_render[k][1])
                         src_handle.append(rct_specGlyph_handle_list[i][j][1])
                     src_idx_list_corr = []
                     [src_idx_list_corr.append(x) for x in src_idx_list if x not in src_idx_list_corr]
 
                     for j in range(prd_num):
                         temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
+                        temp_specRefGlyph_id = prd_specGlyph_handle_list[i][j][2]
                         for k in range(len(node_idx_specGlyphid_list)):
                             if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
                                 dst_idx_list.append(node_idx_specGlyphid_list[k][0])
@@ -1259,6 +1348,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             if temp_specGlyph_id == specGlyph_id_list[k]:
                                 dst_position.append(spec_position_list[k])
                                 dst_dimension.append(spec_dimension_list[k])
+                        for k in range(len(specRefGlyph_render)):
+                            if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                dst_endhead.append(specRefGlyph_render[k][1])
                         dst_handle.append(prd_specGlyph_handle_list[i][j][1])
                     dst_idx_list_corr = []
                     [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
@@ -1268,7 +1360,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         #if len(mod_specGlyph_list[i]) != 0:
                         if len(mod_specGlyph_list[i]) == mod_num: 
                             #all the modifiers are defined as role in the SpecRefGlyph
-                            temp_specGlyph_id = mod_specGlyph_list[i][j]
+                            temp_specGlyph_id = mod_specGlyph_list[i][j][0]
+                            temp_specRefGlyph_id = mod_specGlyph_list[i][j][1]
                             for k in range(len(node_idx_specGlyphid_list)):
                                 if temp_specGlyph_id == node_idx_specGlyphid_list[k][1]:
                                     mod_idx_list.append(node_idx_specGlyphid_list[k][0])
@@ -1276,6 +1369,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if temp_specGlyph_id == specGlyph_id_list[k]:
                                     mod_position.append(spec_position_list[k])
                                     mod_dimension.append(spec_dimension_list[k])
+                            for k in range(len(specRefGlyph_render)):
+                                if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                    mod_endhead.append(specRefGlyph_render[k][1])
                         else:
                             for k in range(len(spec_specGlyph_id_list)):
                                 if reaction_mod_list[i][j] == spec_specGlyph_id_list[k][0]:
@@ -1287,6 +1383,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if temp_specGlyph_id == specGlyph_id_list[k]:
                                     mod_position.append(spec_position_list[k])
                                     mod_dimension.append(spec_dimension_list[k])
+                            for k in range(len(specRefGlyph_render)):
+                                if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                    mod_endhead.append(specRefGlyph_render[k][1])
 
                 else:
                     src_idx_list = []
@@ -1366,6 +1465,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[RXNDASH].append(reaction_dash)
                     ReactionData_row_dct[RXNREV].append(rxn_rev)
                     ReactionData_row_dct[FILLCOLOR].append(reaction_line_fill)
+                    ReactionData_row_dct[SOURCESLINEENDING].append(src_endhead)
+                    ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                    ReactionData_row_dct[MODIFIERSLINEENDING].append(mod_endhead)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -1419,6 +1521,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[RXNDASH].append(reaction_dash)
                     ReactionData_row_dct[RXNREV].append(rxn_rev)
                     ReactionData_row_dct[FILLCOLOR].append(reaction_line_fill)
+                    ReactionData_row_dct[SOURCESLINEENDING].append(src_endhead)
+                    ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                    ReactionData_row_dct[MODIFIERSLINEENDING].append(mod_endhead)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -1675,6 +1780,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 src_dimension = []
                 dst_dimension = []
                 mod_dimension = []
+                src_endhead = []
+                dst_endhead = []
+                mod_endhead = []
                 temp_id = Rxns_ids[i]
                 reaction = model_layout.getReaction(temp_id)
                 rxn_rev = reaction.getReversible()
@@ -1761,6 +1869,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 ReactionData_row_dct[RXNDASH].append(reaction_dash)
                 ReactionData_row_dct[RXNREV].append(rxn_rev)
                 ReactionData_row_dct[FILLCOLOR].append(reaction_line_fill)
+                ReactionData_row_dct[SOURCESLINEENDING].append(src_endhead)
+                ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                ReactionData_row_dct[MODIFIERSLINEENDING].append(mod_endhead)
                 # for j in range(len(COLUMN_NAME_df_ReactionData)):
                 #     try: 
                 #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -1774,7 +1885,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         pd.DataFrame(ReactionData_row_dct)], ignore_index=True)  
         
         #return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData) 
-        return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData, df_ShapeData) 
+        return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData, df_ShapeData, df_LineEndingData) 
 
     # except:
     #    raise ValueError('Invalid SBML!')
@@ -4806,7 +4917,7 @@ if __name__ == '__main__':
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml" 
-    filename = "output.xml"
+    #filename = "output.xml"
     #filename = "Sauro1.xml"
     #filename = "test_textGlyph.xml"
     #node shape:
@@ -4861,7 +4972,7 @@ if __name__ == '__main__':
     #filename = "bioinformatics/BIOMD0000000005.xml"
     
     #filename = "output.xml"
-    #filename = "bioinformatics/pdmap-nucleoid.xml"
+    filename = "bioinformatics/pdmap-nucleoid.xml"
     #filename = "bioinformatics/exported_model.xml"
 
     #global
@@ -4883,6 +4994,7 @@ if __name__ == '__main__':
         df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
     except:
         print("did not return shapeData")
+    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
     writer.save()
 
     df = load(sbmlStr)
@@ -5057,10 +5169,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    sbmlStr_layout_render = df.export()
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
@@ -5070,5 +5182,5 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    df.draw(output_fileName = 'output.png')
+    #df.draw(output_fileName = 'output.png')
 

@@ -748,7 +748,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 rct_dimension, prd_dimension, mod_dimension, reaction_line_color, reaction_line_width, 
                 reaction_line_type = 'bezier', show_bezier_handles = False, show_reaction_ids = False,
                 reaction_arrow_head_size = [2., 2.], scale = 1., reaction_dash = [], reverse = False,
-                showReversible = False):
+                showReversible = False, rct_endhead_render = [], prd_endhead_render = [], 
+                mod_endhead_render = []):
     
     """
     Add a reaction.
@@ -795,9 +796,12 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         
         reverse: bool-reversible reaction or not.
                 
-        showReversible = False):
+        showReversible: bool-show reversible reactions or not.
 
     """
+    #print(rct_endhead_render)
+    #print(prd_endhead_render)
+    #print(mod_endhead_render)
     
     def _cross_point(arcCenter, c2, s2):
         """
@@ -1001,7 +1005,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         points.append([pts_x_r,pts_y_r])
 
                     _drawArrow(canvas, points, lineColor)
-
+            if rct_endhead_render[i][3] == []:
+                pass
             if reverse and line_end_pt != None:
                 pts.append(line_end_pt)
                 _drawBezier(pts, lineColor, linewidth)

@@ -294,8 +294,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         The visualization info object containing the drawing information of the plot
     """
 
-    df = processSBML.load(sbmlStr)
-    sbmlStr = df.export()
+    # df = processSBML.load(sbmlStr)
+    # sbmlStr = df.export()
     
     topLeftCorner = _getNetworkTopLeftCorner(sbmlStr)
     networkSize = _getNetworkSize(sbmlStr)
@@ -334,6 +334,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         spec_text_position_list = []
         spec_text_dimension_list = []
         spec_text_content_list = []
+        specRefGlyph_id_list = []
+        specGlyph_specRefGlyph_id_list = []
         allNodes_pos_dict = defaultdict(list)
         allNodes_dim_dict = defaultdict(list)
         floatingNodes_pos_dict = defaultdict(list)
@@ -484,7 +486,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         center_handle = []
                         for j in range(numSpecRefGlyphs):
                             specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
-                            #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
+                            specRefGlyph_id = specRefGlyph.getId()                   
+                            specRefGlyph_id_list.append(specRefGlyph_id)
                                                 
                             curve = specRefGlyph.getCurve()  
                             spec_handle = []                            
@@ -528,6 +531,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
 
                             role = specRefGlyph.getRoleString()
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
+                            specGlyph_specRefGlyph_id_list.append([specGlyph_id, specRefGlyph_id])
                             specGlyph = layout.getSpeciesGlyph(specGlyph_id)
                             
 
@@ -585,14 +589,15 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
 
                             if role == "substrate": #it is a rct
                                 #rct_specGlyph_temp_list.append(specGlyph_id)
+                                rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle, specRefGlyph_id])
                                 if center_handle == []:
                                     center_handle.append(center_handle_candidate)
-                                rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
                             elif role == "product": #it is a prd
                                 #prd_specGlyph_temp_list.append(specGlyph_id)
-                                prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
-                            elif role == "modifier": #it is a modifier
-                                mod_specGlyph_temp_list.append(specGlyph_id)
+                                prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle, specRefGlyph_id])
+                            elif role == "modifier" or role == 'activator': #it is a modifier
+                                mod_specGlyph_temp_list.append([specGlyph_id, specRefGlyph_id])
+                            
                             
                         #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                         #prd_specGlyph_list.append(prd_specGlyph_temp_list)
@@ -709,32 +714,65 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         spec_render = []
                         rxn_render = []
                         text_render = []
+                        lineEnding_render = []
                         gen_render = []
+                        specRefGlyph_render = []
                         arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                         id_arrowHeadSize = []
+
+                        for  j in range ( 0, info.getNumColorDefinitions()):
+                            color = info.getColorDefinition(j)
+                            color_list.append([color.getId(),color.createValueString()])
+
                         for j in range(0, info.getNumLineEndings()):
                             lineEnding = info.getLineEnding(j)
+                            group = lineEnding.getGroup()
                             temp_id = lineEnding.getId()
                             boundingbox = lineEnding.getBoundingBox()
                             width = boundingbox.getWidth()
                             height= boundingbox.getHeight()
                             pos_x = boundingbox.getX()
                             pos_y = boundingbox.getY()
-                            arrowHeadSize = [width, height]
-                            temp_arrowHeadSize = [width, height]
-                            id_arrowHeadSize.append([temp_id,temp_arrowHeadSize])
-                            # print(lineEnding.getEnableRotationalMapping())
-                            # group = lineEnding.getGroup()
-                            # for element in group.getListOfElements():
-                            #     #name = element.getElementName()
-                            #     NumRenderPoints = element.getListOfElements().getNumRenderPoints()
-                            #     for k in range(NumRenderPoints):
-                            #         x = element.getListOfElements().get(k).getX().getCoordinate()
-                            #         y = element.getListOfElements().get(k).getY().getCoordinate()
-                        
-                        for  j in range ( 0, info.getNumColorDefinitions()):
-                            color = info.getColorDefinition(j)
-                            color_list.append([color.getId(),color.createValueString()])
+                            temp_pos = [pos_x,pos_y]
+                            temp_size = [width, height]
+                            id_arrowHeadSize.append([temp_id,temp_size])
+                            lineEnding_fill_color = []
+                            for k in range(len(color_list)):
+                                if color_list[k][0] == group.getFill():
+                                    lineEnding_fill_color = hex_to_rgb(color_list[k][1])
+                                    
+                            shape_type=[]
+                            shapeInfo=[]
+                            for k in range(group.getNumElements()):
+                                element = group.getElement(k)
+                                temp_shape_type = element.getElementName()
+                                shape_type.append(temp_shape_type)
+                            
+                                if temp_shape_type == 'ellipse':
+                                    center_x = (element.getCX().getRelativeValue())
+                                    center_y = (element.getCY().getRelativeValue())
+                                    radius_x = (element.getRX().getRelativeValue())
+                                    radius_y = (element.getRY().getRelativeValue())
+                                    if all(v == 0 for v in [radius_x, radius_y]):
+                                        radius_x = element.getRX().getAbsoluteValue()
+                                        radius_y = element.getRY().getAbsoluteValue()
+                                        radius_x = 100*(radius_x)/width
+                                        radius_y = 100*(radius_y)/height                     
+                                    shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
+
+                                if temp_shape_type == 'polygon':
+                                    NumRenderPoints = element.getListOfElements().getNumRenderPoints()
+                                    temp_shapeInfo = []
+                                    for k in range(NumRenderPoints):
+                                        point_x = float(element.getListOfElements().get(k).getX().getCoordinate().strip('%'))
+                                        point_y = float(element.getListOfElements().get(k).getY().getCoordinate().strip('%'))         
+                                        temp_shapeInfo.append([point_x,point_y])
+                                    shapeInfo.append(temp_shapeInfo)
+                                
+                            lineEnding_render.append([temp_id, temp_pos, temp_size, 
+                            lineEnding_fill_color, shape_type, shapeInfo])
+                        #print(lineEnding_render)
+
                         #print(info.getNumGradientDefinitions())
                         for j in range(0, info.getNumGradientDefinitions()):
                             gradient = info.getGradientDefinition(j)
@@ -781,6 +819,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     typeList = 'TEXTGLYPH'
                                 elif any(idList in sublist for sublist in textGlyph_spec_id_list):
                                     typeList = 'TEXTGLYPH'
+                                elif idList in specRefGlyph_id_list:
+                                    typeList = 'SPECIESREFERENCEGLYPH'
                                 # else:
                                 #     print(idList)
 
@@ -975,6 +1015,14 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                             gen_shape_info.append([point_x,point_y]) 
                                 gen_render.append([render_gen_id, gen_fill_color, gen_border_color,
                                 gen_border_width, gen_shape_type, gen_shape_info])
+                            elif 'SPECIESREFERENCEGLYPH' in typeList:
+                                render_specRefGlyph_id = idList
+                                # for k in range(len(specGlyph_specRefGlyph_id_list)):    
+                                #     if specGlyph_specRefGlyph_id_list[k][1] == idList:
+                                #         render_specRefGlyph_id = specGlyph_specRefGlyph_id_list[k][0] 
+                                endHead = group.getEndHead()
+                                specRefGlyph_render.append([render_specRefGlyph_id, endHead])
+
         #try: 
             model = simplesbml.loadSBMLStr(sbmlStr)
             numFloatingNodes  = model.getNumFloatingSpecies()
@@ -1081,10 +1129,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                 for i in range (numReactionGlyphs):
                     src_position = []
                     src_dimension = [] 
+                    src_endhead = []
                     dst_position = []
                     dst_dimension = []
+                    dst_endhead = []
                     mod_position = []
                     mod_dimension = []
+                    mod_endhead = []
                     src_handle = []
                     dst_handle = []
                     temp_id = reaction_id_list[i]
@@ -1100,24 +1151,32 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     add_rct_cnt = 0
                     for j in range(rct_num):
                         temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
+                        temp_specRefGlyph_id = rct_specGlyph_handle_list[i][j][2]
                         for k in range(numSpec_in_reaction):
                             if temp_specGlyph_id == specGlyph_id_list[k]:
                                 src_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
                                 (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                 src_dimension.append([spec_dimension_list[k][0]*scale,
                                 spec_dimension_list[k][1]*scale])
+                        for k in range(len(specRefGlyph_render)):
+                            if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                src_endhead.append(specRefGlyph_render[k][1])
                         src_handle.append(rct_specGlyph_handle_list[i][j][1])
                         add_rct_cnt += 1
                         edges.append([id_to_name[temp_specGlyph_id]])
 
                     for j in range(prd_num):
                         temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
+                        temp_specRefGlyph_id = prd_specGlyph_handle_list[i][j][2]
                         for k in range(numSpec_in_reaction):
                             if temp_specGlyph_id == specGlyph_id_list[k]:
                                 dst_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
                                 (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                 dst_dimension.append([spec_dimension_list[k][0]*scale,
                                 spec_dimension_list[k][1]*scale])
+                        for k in range(len(specRefGlyph_render)):
+                            if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                dst_endhead.append(specRefGlyph_render[k][1])
                         dst_handle.append(prd_specGlyph_handle_list[i][j][1])
                         edges[-add_rct_cnt].append(id_to_name[temp_specGlyph_id])
                         add_rct_cnt -= 1
@@ -1126,13 +1185,17 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         #if len(mod_specGlyph_list[i]) != 0:
                         if len(mod_specGlyph_list[i]) == mod_num: 
                             #all the modifiers are defined as role in the SpecRefGlyph
-                            temp_specGlyph_id = mod_specGlyph_list[i][j]
+                            temp_specGlyph_id = mod_specGlyph_list[i][j][0]      
+                            temp_specRefGlyph_id = mod_specGlyph_list[i][j][1]
                             for k in range(numSpec_in_reaction):
                                 if temp_specGlyph_id == specGlyph_id_list[k]:
                                     mod_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
                                     (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                     mod_dimension.append([spec_dimension_list[k][0]*scale,
                                     spec_dimension_list[k][1]*scale])
+                            for k in range(len(specRefGlyph_render)):
+                                if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                    mod_endhead.append(specRefGlyph_render[k][1])
                         else:
                             for k in range(len(spec_specGlyph_id_list)):
                                 if reaction_mod_list[i][j] == spec_specGlyph_id_list[k][0]:
@@ -1143,6 +1206,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                     mod_dimension.append([spec_dimension_list[k][0]*scale,
                                     spec_dimension_list[k][1]*scale])
+                            for k in range(len(specRefGlyph_render)):
+                                if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                    mod_endhead.append(specRefGlyph_render[k][1])
 
                     for j in range(len(rxn_render)):
                         if temp_id == rxn_render[j][0]:
@@ -1153,6 +1219,22 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             reaction_dash = rxn_render[j][4]
                             reaction_line_fill = rxn_render[j][5]
                     
+                    src_endhead_render = []
+                    dst_endhead_render = []
+                    mod_endhead_render = []
+                    for j in range(len(src_endhead)):
+                        for k in range(len(lineEnding_render)):
+                            if src_endhead[j] == lineEnding_render[k][0]:
+                                src_endhead_render.append(lineEnding_render[k][1:])
+                    for j in range(len(dst_endhead)):
+                        for k in range(len(lineEnding_render)):
+                            if dst_endhead[j] == lineEnding_render[k][0]:
+                                dst_endhead_render.append(lineEnding_render[k][1:])
+                    for j in range(len(mod_endhead)):
+                        for k in range(len(lineEnding_render)):
+                            if mod_endhead[j] == lineEnding_render[k][0]:
+                                mod_endhead_render.append(lineEnding_render[k][1:])
+
                     try: 
                         center_position = reaction_center_list[i]
                         center_handle = reaction_center_handle_list[i]
@@ -1175,7 +1257,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
+                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible,
+                                rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, 
+                                mod_endhead_render = mod_endhead_render )
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -1211,7 +1295,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
+                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible,
+                                rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, 
+                                mod_endhead_render = mod_endhead_render)
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -2338,7 +2424,7 @@ if __name__ == '__main__':
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
-    filename = "test_comp.xml"
+    #filename = "test_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
@@ -2365,7 +2451,7 @@ if __name__ == '__main__':
     #filename = "bart2.xml"
     #filename = "newSBML.xml"
 
-    #filename = filename = "bioinformatics/pdmap-nucleoid.xml"
+    filename = filename = "bioinformatics/pdmap-nucleoid.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
