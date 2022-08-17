@@ -27,6 +27,7 @@ class TestImportSBML(unittest.TestCase):
     TEST_PATH_mass_action_rxn = os.path.join(TEST_FOLDER, "mass_action_rxn.xml")
     TEST_PATH_test_textGlyph = os.path.join(TEST_FOLDER, "test_textGlyph.xml")
     TEST_PATH_test_genGlyph = os.path.join(TEST_FOLDER, "test_genGlyph.xml")
+    TEST_PATH_test_lineEnding = os.path.join(TEST_FOLDER, "pdmap-nucleoid.xml")
 
     f_test = open(TEST_PATH_test, 'r')
     sbmlStr_test = f_test.read()
@@ -58,6 +59,9 @@ class TestImportSBML(unittest.TestCase):
     f_test_genGlyph = open(TEST_PATH_test_genGlyph, 'r')
     sbmlStr_test_genGlyph = f_test_genGlyph.read()
     f_test_genGlyph.close()
+    f_test_lineEnding = open(TEST_PATH_test_lineEnding, 'r')
+    sbmlStr_test_lineEnding = f_test_lineEnding.read()
+    f_test_lineEnding.close()
     self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _, _, _ = _SBMLToDF(sbmlStr_test)
     self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _, _, _ = \
       _SBMLToDF(sbmlStr_feedback)
@@ -78,6 +82,7 @@ class TestImportSBML(unittest.TestCase):
     self.df = SBMLDiagrams.load(sbmlStr_test)
     self.df_text = SBMLDiagrams.load(sbmlStr_test_textGlyph)
     self.df_shape = SBMLDiagrams.load(sbmlStr_test_genGlyph)
+    self.df_lineEnding = SBMLDiagrams.load(sbmlStr_test_lineEnding)
 
   def loadInvalidStr(self):
     # an exception raises if load an invalid string
@@ -1013,8 +1018,16 @@ class TestImportSBML(unittest.TestCase):
       [[91, 176, 253, 255], '', '#5BB0FDFF'])
     self.assertTrue(self.df.getReactionLineThickness("r_0") == 3.)
     self.assertTrue(self.df._isBezierReactionType("r_0") == True)
-    self.assertTrue(self.df.getReactionArrowHeadSize("r_0").x == [12., 15.][0])
+    #self.assertTrue(self.df.getReactionArrowHeadSize("r_0").x == [12., 15.][0])
     self.assertTrue(self.df.getReactionDashStyle("r_0") == [])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadPosition("path_0_re6338").x \
+      == [-12.0, -6.0][0])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadSize("path_0_re6338").x \
+      == [12.0, 12.0][0])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadFillColor("path_0_re6338")[0] \
+      == [0, 0, 0, 255])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadShape("path_0_re6338") \
+      == (['polygon'], [[[0.0, 0.0], [100.0, 50.0], [0.0, 100.0], [0.0, 0.0]]]))
 
   def testSetCompartment(self):
     # Test all the set functions about compartment
@@ -1202,7 +1215,11 @@ class TestImportSBML(unittest.TestCase):
     opacity = 1.
     line_thickness = 2.
     bezier = False
-    arrowHeadSize = [20., 20.]
+    arrowHeadPosition = [-12.,-7.]
+    arrowHeadSize = [12.,13.]
+    arrowHeadFillColor = "BurlyWood"
+    shape_type_list=['polygon']
+    shape_info_list=[[[0.0, 0.0], [100.0, 60.0], [0.0, 100.0], [0.0, 0.0]]]
     rxn_dash = [5, 10]
 
     self.df.setReactionCenterPosition("r_0", center_pos)
@@ -1210,7 +1227,11 @@ class TestImportSBML(unittest.TestCase):
     self.df.setReactionFillColor("r_0", fill_color, opacity = opacity)
     self.df.setReactionLineThickness("r_0", line_thickness)
     self.df._setBezierReactionType("r_0", bezier)
-    self.df.setReactionArrowHeadSize("r_0", arrowHeadSize)
+    self.df_lineEnding.setReactionArrowHeadPosition("path_0_re6338", arrowHeadPosition)
+    self.df_lineEnding.setReactionArrowHeadSize("path_0_re6338", arrowHeadSize)
+    self.df_lineEnding.setReactionArrowHeadFillColor("path_0_re6338", arrowHeadFillColor)
+    self.df_lineEnding.setReactionArrowHeadShape("path_0_re6338", 
+    shape_type_list=shape_type_list, shape_info_list=shape_info_list)
     self.df.setReactionDashStyle("r_0", rxn_dash)
     self.assertTrue(self.df.getReactionCenterPosition("r_0").x == center_pos[0])
     self.assertTrue(self.df.getReactionBezierHandles("r_0")[0].x == handles[0][0])
@@ -1218,7 +1239,10 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getReactionLineThickness("r_0") == line_thickness)
     self.assertTrue(self.df._isBezierReactionType("r_0") == bezier)
-    self.assertTrue(self.df.getReactionArrowHeadSize("r_0").x == arrowHeadSize[0])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadPosition("path_0_re6338").x == arrowHeadPosition[0])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadSize("path_0_re6338").x == arrowHeadSize[0])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadFillColor("path_0_re6338")[1] == arrowHeadFillColor)
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadShape("path_0_re6338") == (shape_type_list, shape_info_list))
     self.assertTrue(self.df.getReactionDashStyle("r_0")== rxn_dash)
   
   def testSetReactionDefaultCenterAndHandlePositions(self):

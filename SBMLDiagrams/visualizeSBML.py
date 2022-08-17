@@ -741,6 +741,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 if color_list[k][0] == group.getFill():
                                     lineEnding_fill_color = hex_to_rgb(color_list[k][1])
                                     
+                                    
                             shape_type=[]
                             shapeInfo=[]
                             for k in range(group.getNumElements()):
@@ -965,6 +966,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     if color_list[k][0] == group.getFill():
                                         reaction_line_fill = hex_to_rgb(color_list[k][1])
                                 reaction_line_width = group.getStrokeWidth()
+                                color_style.setReactionLineWidth(reaction_line_width)
                                 rxn_render.append([render_rxn_id, color_style.getReactionLineColor(), 
                                 reaction_line_width, arrowHeadSize, reaction_dash, reaction_line_fill])
                             elif 'TEXTGLYPH' in typeList:
@@ -1214,6 +1216,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         if temp_id == rxn_render[j][0]:
                             if not color_style.getStyleName():
                                 color_style.setReactionLineColor(rxn_render[j][1])
+                                color_style.setReactionLineWidth(rxn_render[j][2])
                             reaction_line_width = rxn_render[j][2]
                             reaction_arrow_head_size = rxn_render[j][3]
                             reaction_dash = rxn_render[j][4]
@@ -1222,6 +1225,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     src_endhead_render = []
                     dst_endhead_render = []
                     mod_endhead_render = []
+                    #print(lineEnding_render)
                     for j in range(len(src_endhead)):
                         for k in range(len(lineEnding_render)):
                             if src_endhead[j] == lineEnding_render[k][0]:
@@ -1250,6 +1254,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         for j in range(len(handles)):
                             handles[j] = [(handles[j][0]-topLeftCorner[0])*scale, 
                             (handles[j][1]-topLeftCorner[1])*scale]
+                        #print(dst_endhead_render)
                         if drawArrow:
                             drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
                                 center_position, handles, src_dimension, dst_dimension, mod_dimension,
