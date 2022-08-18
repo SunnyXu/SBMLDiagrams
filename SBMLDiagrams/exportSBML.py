@@ -78,6 +78,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             df_ShapeData = df[4]
         except:
             df_ShapeData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_ShapeData)
+        try:
+            df_LineEndingData = df[5]
+        except:
+            df_LineEndingData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_LineEndingData)
     except Exception as err:
         raise Exception (err)
 
@@ -86,6 +90,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
     numReactions = len(df_ReactionData)
     numArbitraryTexts = len(df_TextData)
     numArbitraryShapes = len(df_ShapeData)
+    numlineEndings = len(df_LineEndingData)
 
     if numNodes != 0 or numArbitraryTexts != 0 or numArbitraryShapes != 0:
         numCompartments = len(df_CompartmentData)      
@@ -793,7 +798,71 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         rInfo.setName("Render Information")
         rInfo.setProgramName("RenderInformation")
         rInfo.setProgramVersion("1.0")
-        
+
+        #lineEnding
+        for i in range(numlineEndings):
+            lineEnding_id = df_LineEndingData.iloc[i]['id']
+            try:
+                position = list(df_LineEndingData.iloc[i]['position'][1:-1].split(","))
+                size = list(df_LineEndingData.iloc[i]['size'][1:-1].split(","))
+                fill_color = list(df_LineEndingData.iloc[i]['fill_color'][1:-1].split(","))
+                shape_type_list = list(df_LineEndingData.iloc[i]['shape_type'][1:-1].split(","))
+                shape_info_list = list(df_LineEndingData.iloc[i]['shape_info'][1:-1].split(","))
+            except:    
+                position = df_LineEndingData.iloc[i]['position']
+                size = df_LineEndingData.iloc[i]['size']
+                fill_color = df_LineEndingData.iloc[i]['fill_color'] 
+                shape_type_list = df_LineEndingData.iloc[i]['shape_type']
+                shape_info_list = df_LineEndingData.iloc[i]['shape_info']
+
+
+            lineEnding = rInfo.createLineEnding()
+            lineEnding.setId(lineEnding_id)
+            if lineEnding_id != '_line_ending_default_NONE_':
+                bb_id = "bb_" + lineEnding_id
+                [pos_x, pos_y] = position
+                [width, height] = size
+                if size != [0.,0.]:
+                    lineEnding.setEnableRotationalMapping(True)
+                    lineEnding.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+                    #print(fill_color)
+                    if len(fill_color) == 4:
+                        fill_color_str    = '#%02x%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]),int(fill_color[3]))
+                        color = rInfo.createColorDefinition()
+                        color.setId("lineEnding_fill_color" + "_" + lineEnding_id)
+                        color.setColorValue(fill_color_str)
+                        lineEnding.getGroup().setFill('lineEnding_fill_color' + '_' + lineEnding_id)
+
+                    elif len(fill_color) == 3:
+                        fill_color_str    = '#%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]))     
+                        color = rInfo.createColorDefinition()
+                        color.setId("lineEnding_fill_color" + "_" + lineEnding_id)
+                        color.setColorValue(fill_color_str)
+                        lineEnding.getGroup().setFill('lineEnding_fill_color' + '_' + lineEnding_id)
+
+                    for j in range(len(shape_type_list)):
+                        if shape_type_list[j] == 'polygon':
+                            polygon = lineEnding.getGroup().createPolygon()
+                            for k in range(len(shape_info_list[j])):
+                                x = shape_info_list[j][k][0]
+                                y = shape_info_list[j][k][1]                           
+                                renderPoint = polygon.createPoint()
+                                renderPoint.setCoordinates(libsbml.RelAbsVector(0,x), libsbml.RelAbsVector(0,y))
+
+                        elif shape_type_list[j] == 'ellipse':
+                            ellipse = lineEnding.getGroup().createEllipse()
+                            cx = shape_info_list[j][0][0]
+                            cy = shape_info_list[j][0][1]
+                            rx = shape_info_list[j][1][0]
+                            ry = shape_info_list[j][1][1] 
+                            ellipse.setCenter2D(libsbml.RelAbsVector(0, cx), libsbml.RelAbsVector(0, cy))
+                            ellipse.setRadii(libsbml.RelAbsVector(0, rx),libsbml.RelAbsVector(0, ry))
+                
+                        elif shape_type_list[j] == 'rectangle':
+                            rectangle = lineEnding.getGroup().createRectangle()
+                            rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+                            libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+
         if numCompartments != 0:  
             for i in range(numCompartments):
                 comp_id = df_CompartmentData.iloc[i]['id']
@@ -1118,10 +1187,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     reaction_stroke_color_str = '#%02x%02x%02x' % (int(reaction_stroke_color[0]),int(reaction_stroke_color[1]),int(reaction_stroke_color[2]))           
                 
                 reaction_line_thickness = float(df_ReactionData.iloc[i]['line_thickness'])
-                try:
-                    reaction_arrow_head_size = list(df_ReactionData.iloc[i]['arrow_head_size'][1:-1].split(","))
-                except:
-                    reaction_arrow_head_size = df_ReactionData.iloc[i]['arrow_head_size']
+                # try:
+                #     reaction_arrow_head_size = list(df_ReactionData.iloc[i]['arrow_head_size'][1:-1].split(","))
+                # except:
+                #     reaction_arrow_head_size = df_ReactionData.iloc[i]['arrow_head_size']
 
                 try:
                     reaction_dash = list(df_ReactionData.iloc[i]['rxn_dash'][1:-1].split(","))
@@ -1150,28 +1219,42 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 #style.addId(rxn_id)
                 style.addId(reactionG_id)
 
-                #arrowHead
-                lineEnding = rInfo.createLineEnding()
-                lineEnding.setId("reaction_arrow_head" + "_" + rxn_id)
-                lineEnding.setEnableRotationalMapping(True)
-                bb_id = "bb_" + rxn_id
-                pos_x = 0
-                pos_y = 0
-                width = float(reaction_arrow_head_size[0])
-                height = float(reaction_arrow_head_size[1])
-                lineEnding.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+                try:
+                    src_lineending = list(df_ReactionData.iloc[i]['sources_lineending'][1:-1].split(","))
+                    dst_lineending = list(df_ReactionData.iloc[i]['targets_lineending'][1:-1].split(","))
+                    mod_lineending = list(df_ReactionData.iloc[i]['modifiers_lineending'][1:-1].split(","))
+                except:
+                    src_lineending = list(df_ReactionData.iloc[i]['sources_lineending'])
+                    dst_lineending = list(df_ReactionData.iloc[i]['targets_lineending'])
+                    mod_lineending = list(df_ReactionData.iloc[i]['modifiers_lineending'])
 
-                # polygon = lineEnding.getGroup().createPolygon()
-                # renderPoint1 = polygon.createPoint()
-                # renderPoint1.setCoordinates(libsbml.RelAbsVector(0,100), libsbml.RelAbsVector(0,50))
-                # renderPoint2 = polygon.createPoint()
-                # renderPoint2.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,0))
-                # renderPoint3 = polygon.createPoint()
-                # renderPoint3.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,50))
-                # renderPoint4 = polygon.createPoint()
-                # renderPoint4.setCoordinates(libsbml.RelAbsVector(0,0), libsbml.RelAbsVector(0,100))
-
-                style.getGroup().setEndHead("reaction_arrow_head" + "_" + rxn_id)
+                for j in range(len(src_lineending)):
+                    specsRefG_id = "SpecRefG_" + rxn_id + "_rct" + str(j)
+                    style = rInfo.createStyle("specRefGlyphStyle" + rxn_id + "_rct" + str(j))
+                    style.getGroup().setEndHead(src_lineending[j])
+                    style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
+                    style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
+                    style.getGroup().setStrokeWidth(reaction_line_thickness)
+                    style.addType('SPECIESREFERENCEGLYPH')
+                    style.addId(specsRefG_id)
+                for j in range(len(dst_lineending)):
+                    specsRefG_id = "SpecRefG_" + rxn_id + "_prd" + str(j)
+                    style = rInfo.createStyle("specRefGlyphStyle" + rxn_id + "_prd" + str(j))
+                    style.getGroup().setEndHead(dst_lineending[j])
+                    style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
+                    style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
+                    style.getGroup().setStrokeWidth(reaction_line_thickness)
+                    style.addType('SPECIESREFERENCEGLYPH')
+                    style.addId(specsRefG_id)
+                for j in range(len(mod_lineending)):
+                    specsRefG_id = "SpecRefG_" + rxn_id + "_mod" + str(j)
+                    style = rInfo.createStyle("specRefGlyphStyle" + rxn_id + "_mod" + str(j))
+                    style.getGroup().setEndHead(mod_lineending[j])
+                    style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
+                    style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
+                    style.getGroup().setStrokeWidth(reaction_line_thickness)
+                    style.addType('SPECIESREFERENCEGLYPH')
+                    style.addId(specsRefG_id)
 
         if numArbitraryTexts != 0:
             for i in range(numArbitraryTexts):

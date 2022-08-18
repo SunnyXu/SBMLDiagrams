@@ -294,8 +294,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         The visualization info object containing the drawing information of the plot
     """
 
-    # df = processSBML.load(sbmlStr)
-    # sbmlStr = df.export()
+    df = processSBML.load(sbmlStr)
+    sbmlStr = df.export()
     
     topLeftCorner = _getNetworkTopLeftCorner(sbmlStr)
     networkSize = _getNetworkSize(sbmlStr)
@@ -358,7 +358,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         shape_type = ''
         shape_info = []
         reaction_line_width = 3.0
-        reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5]
+        reaction_arrow_head_size = [reaction_line_width*5, reaction_line_width*4]
         reaction_dash = []
         reaction_line_fill = [255, 255, 255, 255]
         text_content = ''
@@ -739,8 +739,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             lineEnding_fill_color = []
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getFill():
-                                    lineEnding_fill_color = hex_to_rgb(color_list[k][1])
-                                    
+                                    lineEnding_fill_color = hex_to_rgb(color_list[k][1])     
                                     
                             shape_type=[]
                             shapeInfo=[]
