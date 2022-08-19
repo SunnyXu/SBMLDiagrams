@@ -1232,7 +1232,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     for j in range(len(dst_endhead)):
                         for k in range(len(lineEnding_render)):
                             if dst_endhead[j] == lineEnding_render[k][0]:
-                                dst_endhead_render.append(lineEnding_render[k][1:])
+                                if dst_endhead[j] == '_line_ending_default_':
+                                    dst_endhead_render = []
+                                else:
+                                    dst_endhead_render.append(lineEnding_render[k][1:])
                     for j in range(len(mod_endhead)):
                         for k in range(len(lineEnding_render)):
                             if mod_endhead[j] == lineEnding_render[k][0]:

@@ -5207,7 +5207,7 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -5273,7 +5273,7 @@ if __name__ == '__main__':
     #filename = "bioinformatics/BIOMD0000000005.xml"
     
     #filename = "output.xml"
-    #filename = "bioinformatics/pdmap-nucleoid.xml"
+    filename = "bioinformatics/pdmap-nucleoid.xml"
     #filename = "bioinformatics/exported_model.xml"
 
     #global
