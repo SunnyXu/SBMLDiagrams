@@ -1946,6 +1946,38 @@ def _setBezierReactionType(df, id, bezier):
 
     return df_temp
 
+
+def _setReactionDashStyle(df, id, dash):
+
+    """
+    Set the reaction dash information with a certain reaction id.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        id: str-reaction id.
+ 
+        dash: list - [] means solid; 
+            [a,b] means drawing a a-point line and following a b-point gap and etc;
+            [a,b,c,d] means drawing a a-point line and following a b-point gap, and then
+            drawing a c-point line followed by a d-point gap.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_ReactionData_temp = df[2].copy()
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    if len(idx_list) == 0:
+        raise Exception("This is not a valid id.")
+    if type(dash) != list:
+        raise Exception("Please enter a valid dash type.")
+    for i in range(len(idx_list)):
+        df_ReactionData_temp.at[idx_list[i],"rxn_dash"] = dash
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5])
+
+    return df_temp
+
 def _setReactionArrowHeadPosition(df, id, position):
 
     """
@@ -2002,7 +2034,7 @@ def _setReactionArrowHeadPosition(df, id, position):
                 raise Exception("There is no initial arrow head information to edit.")
                 
     else:
-        raise Exception("This is not a valid id or there is no initial arrow head information to edit.")
+        raise Exception("This is not a valid id.")
 
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
 
@@ -2039,7 +2071,6 @@ def _setReactionArrowHeadSize(df, id, size):
         size = [size.x, size.y]
     for i in range(len(idx_list)):
         line_ending_id.append(df[2].iloc[idx_list[i]]["targets_lineending"][0]) 
-        df_ReactionData_temp.at[idx_list[0],"targets_lineending"] = ['line_ending_' + id]
     if len(line_ending_id) == 1:
         if line_ending_id != ['line_ending_' + id]:
             df_ReactionData_temp.at[idx_list[0],"targets_lineending"] = ['line_ending_' + id]
@@ -2063,7 +2094,7 @@ def _setReactionArrowHeadSize(df, id, size):
                 raise Exception("There is no initial arrow head information to edit.")
 
     else:
-        raise Exception("This is not a valid id or there is no initial arrow head information to edit.")
+        raise Exception("This is not a valid id.")
 
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
 
@@ -2134,7 +2165,7 @@ def _setReactionArrowHeadFillColor(df, id, fill_color, opacity = 1.):
     fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         line_ending_id.append(df[2].iloc[idx_list[i]]["targets_lineending"][0]) 
-        df_ReactionData_temp.at[idx_list[0],"targets_lineending"] = ['line_ending_' + id]
+        #df_ReactionData_temp.at[idx_list[0],"targets_lineending"] = ['line_ending_' + id]
     if len(line_ending_id) == 1:
         if line_ending_id != ['line_ending_' + id]:
             df_ReactionData_temp.at[idx_list[0],"targets_lineending"] = ['line_ending_' + id]
@@ -2158,7 +2189,7 @@ def _setReactionArrowHeadFillColor(df, id, fill_color, opacity = 1.):
                 raise Exception("There is no initial arrow head information to edit.")
         
     else:
-        raise Exception("This is not a valid id or there is no initial arrow head information to edit.")
+        raise Exception("This is not a valid id.")
 
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
 
@@ -2233,7 +2264,7 @@ def _setReactionArrowHeadShape(df, id, shape_type_list, shape_info_list):
     
     for i in range(len(idx_list)):
         line_ending_id.append(df[2].iloc[idx_list[i]]["targets_lineending"][0]) 
-        df_ReactionData_temp.at[idx_list[0],"targets_lineending"] = ['line_ending_' + id]
+        #df_ReactionData_temp.at[idx_list[0],"targets_lineending"] = ['line_ending_' + id]
     if len(line_ending_id) == 1:
         if line_ending_id != ['line_ending_' + id]:
             df_ReactionData_temp.at[idx_list[0],"targets_lineending"] = ['line_ending_' + id]
@@ -2258,42 +2289,295 @@ def _setReactionArrowHeadShape(df, id, shape_type_list, shape_info_list):
             else:
                 raise Exception("There is no initial arrow head information to edit.")
     else:
-        raise Exception("This is not a valid id or there is no initial arrow head information to edit.")
+        raise Exception("This is not a valid id.")
 
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
 
     return df_temp
 
-def _setReactionDashStyle(df, id, dash):
+def _setReactionModifierHeadPosition(df, id, position, mod_idx = 0):
 
     """
-    Set the reaction dash information with a certain reaction id.
+    Set the reaction modifier head position with a certain reaction id.
 
     Args:  
         df: DataFrame-initial information.
+            
+        position: list or point.Point()
+                
+        list-
+        [position_x, position_y], the coordinate represents the relative position of the 
+        modifier head as an line ending.
 
-        id: str-reaction id.
- 
-        dash: list - [] means solid; 
-            [a,b] means drawing a a-point line and following a b-point gap and etc;
-            [a,b,c,d] means drawing a a-point line and following a b-point gap, and then
-            drawing a c-point line followed by a d-point gap.
+        point.Point()-
+        a Point object with attributes x and y representing
+        the x/y position of the relative position of the modifier head as an line ending.
+
+        mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
 
     Returns:
         df_temp: DataFrame-information after updates. 
     
     """
     df_ReactionData_temp = df[2].copy()
+    df_LineEndingData_temp = df[5].copy()
     idx_list = df[2].index[df[2]["id"] == id].tolist()
-    if len(idx_list) == 0:
-        raise Exception("This is not a valid id.")
-    if type(dash) != list:
-        raise Exception("Please enter a valid dash type.")
+    line_ending_id = []
+    if type(position) != list and type(position) != type(point.Point()):
+        raise Exception("Please enter a valid position type.")
+    if type(position) == type(point.Point()):
+        position = [position.x, position.y]
     for i in range(len(idx_list)):
-        df_ReactionData_temp.at[idx_list[i],"rxn_dash"] = dash
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5])
+        line_ending_id.append(df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
+    if len(line_ending_id) == 1:
+        if line_ending_id != ['line_ending_modifier_' + id + str(mod_idx)]:
+            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] = 'line_ending_modifier_' + id + str(mod_idx)
+            idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
+            if len(idx_lineending) == 1:
+                row = len(df[5])
+                LineEndingData_row_dct = df_LineEndingData_temp.to_dict('records')[idx_lineending[0]]
+                keys = list(LineEndingData_row_dct.keys())
+                values = list(LineEndingData_row_dct.values())
+                for k in range(len(keys)):
+                    LineEndingData_row_dct[keys[k]] = [values[k]]
+                df_LineEndingData_temp = pd.concat([df_LineEndingData_temp,\
+                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + str(mod_idx)
+                df_LineEndingData_temp.at[row,"position"] = position
+        else:
+            idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
+            if len(idx_lineending) == 1:
+                #df_LineEndingData_temp.at[idx_lineending[0],"id"] = 'line_ending_' + id
+                df_LineEndingData_temp.at[idx_lineending[0],"position"] = position
+            else:
+                raise Exception("There is no initial modifier head information to edit.")
+                
+    else:
+        raise Exception("This is not a valid id.")
+
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
 
     return df_temp
+
+def _setReactionModifierHeadSize(df, id, size, mod_idx = 0):
+
+    """
+    Set the reaction modifier head size with a certain reaction id.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        size: list or point.Point()
+                
+        list-
+        1*2 matrix-size of the modifier head [width, height].
+
+        point.Point()-
+        a Point object with attributes x and y representing the width and height of 
+        the modifier head.
+        
+        mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+    df_ReactionData_temp = df[2].copy()
+    df_LineEndingData_temp = df[5].copy()
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    line_ending_id = []
+    if type(size) != list and type(size) != type(point.Point()):
+        raise Exception("Please enter a valid size type.")
+    if type(size) == type(point.Point()):
+        size = [size.x, size.y]
+    for i in range(len(idx_list)):
+        line_ending_id.append(df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
+    if len(line_ending_id) == 1:
+        if line_ending_id != ['line_ending_modifier_' + id + str(mod_idx)]:
+            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] = 'line_ending_modifier_' + id + str(mod_idx)
+            idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
+            if len(idx_lineending) == 1:
+                row = len(df[5])
+                LineEndingData_row_dct = df_LineEndingData_temp.to_dict('records')[idx_lineending[0]]
+                keys = list(LineEndingData_row_dct.keys())
+                values = list(LineEndingData_row_dct.values())
+                for k in range(len(keys)):
+                    LineEndingData_row_dct[keys[k]] = [values[k]]
+                df_LineEndingData_temp = pd.concat([df_LineEndingData_temp,\
+                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + str(mod_idx)
+                df_LineEndingData_temp.at[row,"size"] = size
+        else:
+            idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
+            if len(idx_lineending) == 1:
+                df_LineEndingData_temp.at[idx_lineending[0],"size"] = size
+            else:
+                raise Exception("There is no initial modifier head information to edit.")
+
+    else:
+        raise Exception("This is not a valid id.")
+
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+
+    return df_temp
+
+def _setReactionModifierHeadFillColor(df, id, fill_color, opacity = 1., mod_idx = 0):
+
+    """
+    Set the reaction modifier head fill color with a certain reaction id.
+
+    Args:  
+        df: DataFrame-initial information.
+
+
+        fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+        opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+        
+        mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    df_ReactionData_temp = df[2].copy()
+    df_LineEndingData_temp = df[5].copy()
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    line_ending_id = []
+    fill_color = _color_to_rgb(fill_color, opacity)
+    for i in range(len(idx_list)):
+        line_ending_id.append(df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
+    if len(line_ending_id) == 1:
+        if line_ending_id != ['line_ending_modifier_' + id + str(mod_idx)]:
+            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] ='line_ending_modifier_' + id + str(mod_idx)
+            idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
+            if len(idx_lineending) == 1:
+                row = len(df[5])
+                LineEndingData_row_dct = df_LineEndingData_temp.to_dict('records')[idx_lineending[0]]
+                keys = list(LineEndingData_row_dct.keys())
+                values = list(LineEndingData_row_dct.values())
+                for k in range(len(keys)):
+                    LineEndingData_row_dct[keys[k]] = [values[k]]
+                df_LineEndingData_temp = pd.concat([df_LineEndingData_temp,\
+                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + str(mod_idx)
+                df_LineEndingData_temp.at[row,"fill_color"] = fill_color
+        else:
+            idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
+            if len(idx_lineending) == 1:
+                df_LineEndingData_temp.at[idx_lineending[0],"fill_color"] = fill_color
+            else:
+                raise Exception("There is no initial modifier head information to edit.")
+        
+    else:
+        raise Exception("This is not a valid id.")
+
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+
+    return df_temp
+
+def _setReactionModifierHeadShape(df, id, shape_type_list, shape_info_list, mod_idx = 0):
+
+    """
+    Set the reaction arrow head fill color with a certain reaction id.
+
+    Args:  
+        df: DataFrame-initial information.
+
+        shape_type_list: list-list of shape_type.
+
+        shape_type: str-polygon, ellipse, rectangle.
+
+        shape_info_list: list-list of shape_info.
+
+        shape_info: list-
+        if polygon:
+        [[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
+        x represents the percentage of width, and y represents the percentage of height.
+        if ellipse:
+        [[cx, cy], [rx, ry]], where each number is a floating number from 0 to 100.
+        c represent the center of the ellipse, and r represents its radii.
+        if rectangle:
+        [] 
+                
+        mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
+
+    Returns:
+        df_temp: DataFrame-information after updates. 
+    
+    """
+
+    if isinstance(shape_info_list, list) and isinstance(shape_type_list, list) and len(shape_type_list) == len(shape_info_list):
+        for i in range(len(shape_info_list)):
+            shape_type = shape_type_list[i]
+            shape_info = shape_info_list[i]
+            if shape_type == 'polygon':
+                if isinstance(shape_info, list) and len(shape_info) >= 2:
+                    for ii in range(len(shape_info)):
+                        if isinstance(shape_info[ii], list) and len(shape_info[ii]) == 2:
+                            if all((float(item) >= 0. and float(item) <= 100.) for item in shape_info[ii]):
+                                pass
+                            else:
+                                raise Exception("This is not a valid polygon shape info.")
+                        else:
+                            raise Exception("This is not a valid polygon shape info.")               
+                else:
+                    raise Exception("This is not a valid polygon shape info.")
+            elif shape_type == 'rectangle':
+                if shape_info != []:
+                    raise Exception("This is not a valid rectangle shape info.")
+            elif shape_type == 'ellipse':
+                # [[0.0, 0.0], [100.0, 100.0]]
+                if isinstance(shape_info, list) and len(shape_info) == 2:
+                    for ii in range(len(shape_info)):
+                        if len(shape_info[ii]) == 2 and all((float(item) >= 0. and float(item) <= 100.) for item in shape_info[ii]):
+                            pass
+                        else:
+                            raise Exception("This is not a valid ellipse shape info.")
+                else:
+                    raise Exception("This is not a valid ellipse shape info.")
+
+    else:
+        raise Exception("This is not a valid shape.")
+
+    df_ReactionData_temp = df[2].copy()
+    df_LineEndingData_temp = df[5].copy()
+    idx_list = df[2].index[df[2]["id"] == id].tolist()
+    line_ending_id = []
+    
+    for i in range(len(idx_list)):
+        line_ending_id.append(df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
+    if len(line_ending_id) == 1:
+        if line_ending_id != ['line_ending_modifier_' + id + str(mod_idx)]:
+            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] = 'line_ending_modifier_' + id + str(mod_idx)
+            idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
+            if len(idx_lineending) == 1:
+                row = len(df[5])
+                LineEndingData_row_dct = df_LineEndingData_temp.to_dict('records')[idx_lineending[0]]
+                keys = list(LineEndingData_row_dct.keys())
+                values = list(LineEndingData_row_dct.values())
+                for k in range(len(keys)):
+                    LineEndingData_row_dct[keys[k]] = [values[k]]
+                df_LineEndingData_temp = pd.concat([df_LineEndingData_temp,\
+                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + str(mod_idx)
+                df_LineEndingData_temp.at[row,"shape_type"] = shape_type_list
+                df_LineEndingData_temp.at[row,"shape_info"] = shape_info_list
+        else:
+            idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
+            if len(idx_lineending) == 1:
+                df_LineEndingData_temp.at[idx_lineending[0],"shape_type"] = shape_type_list
+                df_LineEndingData_temp.at[idx_lineending[0],"shape_info"] = shape_info_list
+            else:
+                raise Exception("There is no initial modifier head information to edit.")
+    else:
+        raise Exception("This is not a valid id.")
+
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+
+    return df_temp
+
 
 # def _addText(df_text, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
 #     txt_line_width = 1., txt_font_size = 12.):

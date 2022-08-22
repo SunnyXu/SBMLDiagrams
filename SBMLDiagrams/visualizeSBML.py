@@ -294,8 +294,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         The visualization info object containing the drawing information of the plot
     """
 
-    df = processSBML.load(sbmlStr)
-    sbmlStr = df.export()
+    # df = processSBML.load(sbmlStr)
+    # sbmlStr = df.export()
     
     topLeftCorner = _getNetworkTopLeftCorner(sbmlStr)
     networkSize = _getNetworkSize(sbmlStr)

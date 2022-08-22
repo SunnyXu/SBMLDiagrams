@@ -325,12 +325,16 @@ class TestEditSBML(unittest.TestCase):
       editSBML._setReactionBezierHandles(df_update, "XX", handles)
       editSBML._setReactionFillColor(df_update, "XX", fill_color, opacity = opacity)
       editSBML._setReactionLineThickness(df_update, "XX", line_thickness)
+      editSBML._setReactionDashStyle(df_update, "XX", rxn_dash)
       editSBML._setBezierReactionType(df_update, "XX", bezier)
       editSBML._setReactionArrowHeadPosition(df_update, "XX", arrowHeadSize)
       editSBML._setReactionArrowHeadSize(df_update, "XX", arrowHeadSize)
       editSBML._setReactionArrowHeadFillColor(df_update, "XX", arrowHeadSize)
       editSBML._setReactionArrowHeadShape(df_update, "XX", arrowHeadSize)
-      editSBML._setReactionDashStyle(df_update, "XX", rxn_dash)
+      editSBML._setReactionModifierHeadPosition(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionModifierHeadSize(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionModifierHeadFillColor(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionModifierHeadShape(df_update, "XX", arrowHeadSize)
 
   def testSetArbitraryText(self):
     # set arbitrary text one by one

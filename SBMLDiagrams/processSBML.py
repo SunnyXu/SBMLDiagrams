@@ -722,7 +722,21 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             df_LineEndingData = pd.concat([df_LineEndingData,\
                                 pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
 
+                    #default modifier endhead
+                    if '_line_ending_default_CIRCLE' not in df_LineEndingData[ID].values: 
+                        LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                        LineEndingData_row_dct[ID].append('_line_ending_default_CIRCLE')
+                        LineEndingData_row_dct[POSITION].append([-2.*reaction_line_width, 0.])
+                        LineEndingData_row_dct[SIZE].append([4.*reaction_line_width, 4.*reaction_line_width])
+                        LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
+                        LineEndingData_row_dct[SHAPETYPE].append(['ellipse'])
+                        LineEndingData_row_dct[SHAPEINFO].append([[[0.0, 0.0], [100.0, 100.0]]])
 
+                        if len(df_LineEndingData) == 0:
+                            df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                        else:
+                            df_LineEndingData = pd.concat([df_LineEndingData,\
+                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
 
 
                     for j in range(0, info.getNumGradientDefinitions()):
@@ -1510,6 +1524,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     if dst_endhead == []:
                         dst_endhead = ['_line_ending_default_']
                     ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                    if mod_endhead == [] and len(mod_idx_list) != 0:
+                        mod_endhead = ['_line_ending_default_CIRCLE_']*len(mod_idx_list)
                     ReactionData_row_dct[MODIFIERSLINEENDING].append(mod_endhead)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
@@ -1572,6 +1588,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     if dst_endhead == []:
                         dst_endhead = ['_line_ending_default_']
                     ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                    if mod_endhead == [] and len(mod_idx_list) != 0:
+                        mod_endhead = ['_line_ending_default_CIRCLE_']*len(mod_idx_list)
                     ReactionData_row_dct[MODIFIERSLINEENDING].append(mod_endhead)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
@@ -1648,7 +1666,55 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
         
         else: # there is no layout information, assign position randomly and size as default
             comp_id_list = Comps_ids
-            nodeIdx_temp = 0 #to track the node index    
+            nodeIdx_temp = 0 #to track the node index
+            #default src endhead 
+            if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values:        
+                LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
+                LineEndingData_row_dct[POSITION].append([0.,0.])
+                LineEndingData_row_dct[SIZE].append([0.,0.])
+                LineEndingData_row_dct[FILLCOLOR].append([])
+                LineEndingData_row_dct[SHAPETYPE].append([])
+                LineEndingData_row_dct[SHAPEINFO].append([])
+                if len(df_LineEndingData) == 0:
+                    df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                else:
+                    df_LineEndingData = pd.concat([df_LineEndingData,\
+                        pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
+
+            #default dst endhead
+            if '_line_ending_default_' not in df_LineEndingData[ID].values: 
+                LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                LineEndingData_row_dct[ID].append('_line_ending_default_')
+                LineEndingData_row_dct[POSITION].append([-reaction_arrow_head_size[0], -0.5*reaction_arrow_head_size[1]])
+                LineEndingData_row_dct[SIZE].append(reaction_arrow_head_size)
+                LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
+                LineEndingData_row_dct[SHAPETYPE].append(['polygon'])
+                LineEndingData_row_dct[SHAPEINFO].append([[[0,0], [100,50], [0,100], [0,0]]])
+
+                if len(df_LineEndingData) == 0:
+                    df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                else:
+                    df_LineEndingData = pd.concat([df_LineEndingData,\
+                        pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
+            #default modifier endhead
+            if '_line_ending_default_CIRCLE' not in df_LineEndingData[ID].values: 
+                LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                LineEndingData_row_dct[ID].append('_line_ending_default_CIRCLE')
+                LineEndingData_row_dct[POSITION].append([-2.*reaction_line_width, 0.])
+                LineEndingData_row_dct[SIZE].append([4.*reaction_line_width, 4.*reaction_line_width])
+                LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
+                LineEndingData_row_dct[SHAPETYPE].append(['ellipse'])
+                LineEndingData_row_dct[SHAPEINFO].append([[[0.0, 0.0], [100.0, 100.0]]])
+
+                if len(df_LineEndingData) == 0:
+                    df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                else:
+                    df_LineEndingData = pd.concat([df_LineEndingData,\
+                        pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
             for i in range(numComps):
                 temp_id = Comps_ids[i]
                 comp_idx_id_list.append([i,temp_id])
@@ -1924,6 +1990,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 if dst_endhead == []:
                     dst_endhead = ['_line_ending_default_']
                 ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                if mod_endhead == [] and len(mod_idx_list) != 0:
+                    mod_endhead = ['_line_ending_default_CIRCLE_']*len(mod_idx_list)
                 ReactionData_row_dct[MODIFIERSLINEENDING].append(mod_endhead)
                 # for j in range(len(COLUMN_NAME_df_ReactionData)):
                 #     try: 
@@ -2956,12 +3024,37 @@ class load:
 
         return line_thickness
 
+    def getReactionDashStyle(self, id):
+        """
+        Get the dash information with a given reaction id.
+
+        Args: 
+            id: str-the id of the reaction.
+
+        Returns:
+            dash: list - [] means solid; 
+            [a,b] means drawing a a-point line and following a b-point gap and etc;
+            [a,b,c,d] means drawing a a-point line and following a b-point gap, and then
+            drawing a c-point line followed by a d-point gap.
+
+        """
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        dash_list =[] 
+        for i in range(len(idx_list)):
+            dash_list.append((self.df[2].iloc[idx_list[i]]["rxn_dash"]))
+        if len(dash_list) == 1:
+            dash = dash_list[0]
+        else:
+            raise Exception("This is not a valid id.")
+        
+        return dash
+
     def _isBezierReactionType(self, id):
         """
         Judge whether it is a bezier reaction curve with a given reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
             bezier: bool-bezier reaction (True) or not (False)
@@ -2984,7 +3077,7 @@ class load:
         Get the arrow head position of reactions with a given reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
             arrow_head_position: a Point object with attributes x and y representing
@@ -3012,7 +3105,7 @@ class load:
             else:
                 raise Exception("There is no arrow head information.")
         else:
-            raise Exception("This is not a valid id or there is no arrow head information.")
+            raise Exception("This is not a valid id.")
 
         return arrow_head_position
 
@@ -3022,7 +3115,7 @@ class load:
     #     Get the arrow head size of reactions with a given reaction id.
 
     #     Args: 
-    #         id: str-the id of the reaction
+    #         id: str-the id of the reaction.
 
     #     Returns:
     #         arrow_head_size: a Point object with attributes x and y representing
@@ -3053,7 +3146,7 @@ class load:
         Get the arrow head size of reactions with a given reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
             arrow_head_size: a Point object with attributes x and y representing
@@ -3081,7 +3174,7 @@ class load:
             else:
                 raise Exception("There is no arrow head information.")
         else:
-            raise Exception("This is not a valid id or there is no arrow head information.")
+            raise Exception("This is not a valid id.")
 
         return arrow_head_size
 
@@ -3092,7 +3185,7 @@ class load:
         Get the fill color of the reaction arrow head with a given reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
             fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
@@ -3115,7 +3208,7 @@ class load:
             else:
                 raise Exception("There is no arrow head information.")
         else:
-            raise Exception("This is not a valid id or there is no arrow head information.")
+            raise Exception("This is not a valid id.")
 
         return fill_color
 
@@ -3125,7 +3218,7 @@ class load:
         Get the shape of the reaction arrow head with a given reaction id.
 
         Args: 
-            id: str-the id of the reaction
+            id: str-the id of the reaction.
 
         Returns:
             shape: tuple (shape_type_list, shape_info_list)
@@ -3154,37 +3247,201 @@ class load:
             else:
                 raise Exception("There is no arrow head information.")
         else:
-            raise Exception("This is not a valid id or there is no arrow head information.")
+            raise Exception("This is not a valid id.")
 
         return shape
 
-
-
-    def getReactionDashStyle(self, id):
+    def getReactionModifierNum(self, id):
         """
-        Get the dash information with a given reaction id.
+        Get the number of modifiers of reactions with a given reaction id.
 
         Args: 
             id: str-the id of the reaction.
 
         Returns:
-            dash: list - [] means solid; 
-            [a,b] means drawing a a-point line and following a b-point gap and etc;
-            [a,b,c,d] means drawing a a-point line and following a b-point gap, and then
-            drawing a c-point line followed by a d-point gap.
+            modifier_num: int-number of modifiers.
 
         """
         idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
-        dash_list =[] 
         for i in range(len(idx_list)):
-            dash_list.append((self.df[2].iloc[idx_list[i]]["rxn_dash"]))
-        if len(dash_list) == 1:
-            dash = dash_list[0]
+            line_ending_id = self.df[2].iloc[idx_list[i]]["modifiers_lineending"]
+        if len(line_ending_id) != 0:
+            modifier_num = len(line_ending_id)
         else:
             raise Exception("This is not a valid id.")
-        
-        return dash
-    
+
+        return modifier_num
+
+    def getReactionModifierHeadPosition(self, id, mod_idx = 0):
+        """
+        Get the modifier head position of reactions with a given reaction id.
+
+        Args: 
+            id: str-the id of the reaction.
+
+            mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
+
+        Returns:
+            head_position: a Point object with attributes x and y representing
+            the x/y position of the relative position of the modifier head as an line ending.
+
+        Examples: 
+            p = sd.getReactionModifierHeadPosition('reaction_id')
+            
+            print('x = ', p.x, 'y = ', p.y)
+
+        """
+        line_ending_id = []
+        head_position_pre = []
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        mod_num = self.getReactionModifierNum(id)
+        if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+            for i in range(len(idx_list)):
+                line_ending_id.append(self.df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
+            if len(line_ending_id) == 1:
+                idx_lineending = self.df[5].index[self.df[5]["id"] == line_ending_id[0]].tolist()
+                if len(idx_lineending) == 1:
+                    head_position_pre.append(self.df[5].iloc[idx_lineending[0]]["position"])
+                    if len(head_position_pre) == 1:
+                        head_position = point.Point(head_position_pre[0][0],head_position_pre[0][1])
+                    else:
+                        raise Exception("There is no modifier head position information.")
+                else:
+                    raise Exception("There is no modifier head information.")
+            else:
+                raise Exception("This is not a valid id.")
+        else:
+            raise Exception("This is not a valid modifier index.")
+
+        return head_position
+
+    def getReactionModifierHeadSize(self, id, mod_idx = 0):
+        """
+        Get the modifier head size of reactions with a given reaction id.
+
+        Args: 
+            id: str-the id of the reaction.
+
+            mod_idx: int-index of the modifier: 0 to number of modifiers -1.
+
+        Returns:
+            head_size: a Point object with attributes x and y representing
+            the width and height of the modifier head.
+
+        Examples: 
+            p = sd.getReactionModifierHeadSize('reaction_id')
+            
+            print ('Width = ', p.x, 'Height = ', p.y)
+
+        """
+        line_ending_id = []
+        head_size_pre = []
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        mod_num = self.getReactionModifierNum(id)
+        if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+            for i in range(len(idx_list)):
+                line_ending_id.append(self.df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
+            if len(line_ending_id) == 1:
+                idx_lineending = self.df[5].index[self.df[5]["id"] == line_ending_id[0]].tolist()
+                if len(idx_lineending) == 1:
+                    head_size_pre.append(self.df[5].iloc[idx_lineending[0]]["size"])
+                    if len(head_size_pre) == 1:
+                        head_size = point.Point(head_size_pre[0][0],head_size_pre[0][1])
+                    else:
+                        raise Exception("There is no modifier head size information.")
+                else:
+                    raise Exception("There is no modifier head information.")
+            else:
+                raise Exception("This is not a valid id.")
+        else:
+            raise Exception("This is not a valid modifier index.")
+
+        return head_size
+
+    def getReactionModifierHeadFillColor(self, id, mod_idx = 0):
+        """
+
+        Get the fill color of the reaction modifier head with a given reaction id.
+
+        Args: 
+            id: str-the id of the reaction.
+
+            mod_idx: int-index of the modifier: 0 to number of modifiers -1.
+
+        Returns:
+            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)]
+
+        """
+        line_ending_id = []
+        head_fill_pre = []
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        mod_num = self.getReactionModifierNum(id)
+        if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+            for i in range(len(idx_list)):
+                line_ending_id.append(self.df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
+            if len(line_ending_id) == 1:
+                idx_lineending = self.df[5].index[self.df[5]["id"] == line_ending_id[0]].tolist()
+                if len(idx_lineending) == 1:
+                    head_fill_pre.append(self.df[5].iloc[idx_lineending[0]]["fill_color"])
+                    if len(head_fill_pre) == 1:
+                        fill_color = _rgb_to_color(head_fill_pre[0])
+                    else:
+                        raise Exception("There is no modifier head size information.")
+                else:
+                    raise Exception("There is no modifier head information.")
+            else:
+                raise Exception("This is not a valid id.")
+        else:
+            raise Exception("This is not a valid modifier index.")
+
+        return fill_color
+
+    def getReactionModifierHeadShape(self, id, mod_idx = 0):
+        """
+
+        Get the shape of the reaction modifier head with a given reaction id.
+
+        Args: 
+            id: str-the id of the reaction.
+     
+            mod_idx: int-index of the modifier: 0 to number of modifiers -1.
+
+        Returns:
+            shape: tuple (shape_type_list, shape_info_list)
+            
+            shape_type_list: list of str-the name of the modifier head shape.
+
+            shape_info_list: list-the shape information corresponding to the list of 
+            shape_type_list.
+
+        """
+        line_ending_id = []
+        shape_type = []
+        shape_info = []
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        mod_num = self.getReactionModifierNum(id)
+        if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+            for i in range(len(idx_list)):
+                line_ending_id.append(self.df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
+            if len(line_ending_id) == 1:
+                idx_lineending = self.df[5].index[self.df[5]["id"] == line_ending_id[0]].tolist()
+                if len(idx_lineending) == 1:
+                    shape_type = self.df[5].iloc[idx_lineending[0]]["shape_type"]
+                    shape_info = self.df[5].iloc[idx_lineending[0]]["shape_info"]
+                    if len(shape_type) >= 1:
+                        shape = (shape_type, shape_info)
+                    else:
+                        raise Exception("There is no modifier head size information.")
+                else:
+                    raise Exception("There is no modifier head information.")
+            else:
+                raise Exception("This is not a valid id.")
+        else:
+            raise Exception("This is not a valid modifier index.")
+
+        return shape
+
     def setCompartmentPosition(self, id, position):
         """
         Set the x,y coordinates of the compartment position.
@@ -4182,6 +4439,25 @@ class load:
         self.df = editSBML._setReactionLineThickness(self.df, id, line_thickness)
         #return self.df
 
+    def setReactionDashStyle(self, id, dash = []):
+        """
+        Set the reaction dash information with a certain reaction id.
+
+        Args:  
+            id: str-reaction id.
+
+            dash: list-[] means solid; 
+            [a,b] means drawing a a-point line and following a b-point gap and etc;
+            [a,b,c,d] means drawing a a-point line and following a b-point gap, and then 
+            drawing a c-point line followed by a d-point gap.
+
+        Examples:
+            To produce a dash such as - - - -, use setReactionDashStyle ('J1', [5,5,5,5]).
+        
+        """
+        self.df = editSBML._setReactionDashStyle(self.df, id, dash)
+        #return self.df
+
     def _setBezierReactionType(self, id, bezier = True):
         """
         Set the reaction type to use a Bezier curve depending on the Bezier flag. 
@@ -4213,9 +4489,8 @@ class load:
             a Point object with attributes x and y representing
             the x/y position of the relative position of the arrow head as an line ending.
 
-
         Examples:
-            setReactionArrowHeadSize("r_0", [-12., -6.])
+            setReactionArrowHeadPosition("r_0", [-12., -6.])
         
         """
         self.df = editSBML._setReactionArrowHeadPosition(self.df, id, position)
@@ -4314,25 +4589,6 @@ class load:
         self.df = editSBML._setReactionArrowHeadShape(self.df, id, shape_type_list, shape_info_list)
         #return self.df
 
-    def setReactionDashStyle(self, id, dash = []):
-        """
-        Set the reaction dash information with a certain reaction id.
-
-        Args:  
-            id: str-reaction id.
-
-            dash: list-[] means solid; 
-            [a,b] means drawing a a-point line and following a b-point gap and etc;
-            [a,b,c,d] means drawing a a-point line and following a b-point gap, and then 
-            drawing a c-point line followed by a d-point gap.
-
-        Examples:
-            To produce a dash such as - - - -, use setReactionDashStyle ('J1', [5,5,5,5]).
-        
-        """
-        self.df = editSBML._setReactionDashStyle(self.df, id, dash)
-        #return self.df
-
     # def addText(self, txt_str, txt_position, txt_font_color = [0, 0, 0], opacity = 1., 
     #     txt_line_width = 1., txt_font_size = 12.):
     #     """
@@ -4371,6 +4627,132 @@ class load:
     #     self.df_text = editSBML._removeText(self.df_text, txt_str=txt_str) 
         
     #     return self.df_text
+
+    def setReactionModifierHeadPosition(self, id, position, mod_idx = 0):
+
+        """
+        Set the reaction modifier head position with a certain reaction id.
+
+        Args: 
+            id: str-reaction id. 
+
+            position: list or point.Point()
+                
+            list-
+            [position_x, position_y], the coordinate represents the relative position of the 
+            modifier head as an line ending.
+
+            point.Point()-
+            a Point object with attributes x and y representing
+            the x/y position of the relative position of the modifier head as an line ending.
+
+            mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
+
+        Examples:
+            setReactionModifierHeadPosition("r_0", [-12., -6.])
+        
+        """
+        mod_num = self.getReactionModifierNum(id)
+        if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+            pass
+        else:
+            raise Exception("This is not a valid modifier index.")
+        self.df = editSBML._setReactionModifierHeadPosition(self.df, id, position, mod_idx = mod_idx)
+    
+    def setReactionModifierHeadSize(self, id, size, mod_idx = 0):
+
+        """
+        Set the reaction modifier head size with a certain reaction id.
+
+        Args: 
+            id: str-reaction id. 
+
+            size: list or point.Point()
+                
+            list-
+            1*2 matrix-size of the modifier head [width, height].
+
+            point.Point()-
+            a Point object with attributes x and y representing the width and height of 
+            the modifier head.
+
+            mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
+
+        Examples:
+            setReactionModifierHeadSize("r_0", [12., 12.])
+        
+        """
+        mod_num = self.getReactionModifierNum(id)
+        if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+            pass
+        else:
+            raise Exception("This is not a valid modifier index.")
+        self.df = editSBML._setReactionModifierHeadSize(self.df, id, size, mod_idx = mod_idx)
+
+    def setReactionModifierHeadFillColor(self, id, fill_color, opacity = 1., mod_idx = 0):
+
+        """
+        Set the reaction modifier head fill color with a certain reaction id.
+
+        Args: 
+            id: str-reaction id. 
+
+            fill_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+            opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+            
+            mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
+
+        Examples:
+            setReactionModifierHeadFillColor ('J1', "BurlyWood")
+        
+        """
+        mod_num = self.getReactionModifierNum(id)
+        if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+            pass
+        else:
+            raise Exception("This is not a valid modifier index.")
+        self.df = editSBML._setReactionModifierHeadFillColor(self.df, id, fill_color, 
+        opacity, mod_idx = mod_idx)
+        #return self.df
+
+    def setReactionModifierHeadShape(self, id, shape_type_list, shape_info_list, mod_idx = 0):
+        """
+        Set shape(s) to a reaction modifier head by the shape info.
+
+        Args:  
+            id: str-node id.
+
+            shape_type_list: list-list of shape_type.
+
+            shape_type: str-polygon, ellipse, rectangle.
+
+            shape_info_list: list-list of shape_info.
+
+            shape_info: list-
+
+            if polygon:
+            [[x1,y1],[x2,y2],[x3,y3],etc], where x,y are floating numbers from 0 to 100.
+            x represents the percentage of width, and y represents the percentage of height.
+            
+            if ellipse:
+            [[cx, cy], [rx, ry]], where each number is a floating number from 0 to 100.
+            c represent the center of the ellipse, and r represents its radii.
+            
+            if rectangle:
+            []
+                        
+            mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
+            
+        """
+        mod_num = self.getReactionModifierNum(id)
+        if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+            pass
+        else:
+            raise Exception("This is not a valid modifier index.")
+        self.df = editSBML._setReactionModifierHeadShape(self.df, id, shape_type_list, 
+        shape_info_list, mod_idx = mod_idx)
+        #return self.df
 
     def getTextContent(self, txt_id):
         """
@@ -5284,19 +5666,19 @@ if __name__ == '__main__':
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('output.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # try:
-    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # except:
-    #     print("did not return shapeData")
-    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('output.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    try:
+        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    except:
+        print("did not return shapeData")
+    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -5354,7 +5736,11 @@ if __name__ == '__main__':
     # print(df.getReactionArrowHeadFillColor('r_0'))
     # print(df.getReactionArrowHeadShape('r_0'))
 
-
+    # print(df.getReactionModifierNum('path_0_re6338'))
+    # print(df.getReactionModifierHeadPosition('path_0_re6338', 2))
+    # print(df.getReactionModifierHeadSize('path_0_re6338', 2))
+    # print(df.getReactionModifierHeadFillColor('path_0_re6338'))
+    # print(df.getReactionModifierHeadShape('path_0_re6338', 2))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
     # df.setCompartmentSize('_compartment_default_', [1000, 1000])
@@ -5444,6 +5830,7 @@ if __name__ == '__main__':
     # df.setReactionBezierHandles("r_0", [point.Point(334.0, 232.0), 
     # point.Point(386.0, 231.0), point.Point(282.0, 231.0)])
     # df.setReactionDefaultCenterAndHandlePositions("r_0")
+    # df.setReactionDashStyle("r_0", [6,6])
     # print(df.getReactionArrowHeadPosition('path_0_re6338'))
     # df.setReactionArrowHeadPosition('path_0_re6338', [-12.,-7.])
     # print(df.getReactionArrowHeadPosition('path_0_re6338'))
@@ -5465,7 +5852,28 @@ if __name__ == '__main__':
     # shape_info_list=[[[33.0, 0.0], [100.0, 50.0], [33.0, 100.0], [33.0, 0.0]], [[0.0, 0.0], [0.0, 100.0]]])
     # print(df.getReactionArrowHeadShape('path_0_re6338'))
     # print(df.getReactionArrowHeadPosition('path_0_re6338'))
-    # df.setReactionDashStyle("r_0", [6,6])
+    # print(df.getReactionModifierHeadPosition('path_0_re6338', 2))
+    # df.setReactionModifierHeadPosition('path_0_re6338', [-12.,-7.], 2)
+    # print(df.getReactionModifierHeadPosition('path_0_re6338', 0))
+    # print("position:", df.getReactionModifierHeadPosition('path_0_re6338'))
+    # print('size:', df.getReactionModifierHeadSize('path_0_re6338'))
+    # df.setReactionModifierHeadSize('path_0_re6338', [12.,13.], 2)
+    # print("size_after:", df.getReactionModifierHeadSize('path_0_re6338', 2))
+    # print("position_after:", df.getReactionModifierHeadPosition('path_0_re6338'))
+    # print(df.getReactionModifierHeadPosition('path_0_re6338'))
+    # print(df.getReactionModifierHeadFillColor('path_0_re6338', 2))
+    # df.setReactionModifierHeadFillColor('path_0_re6338', "BurlyWood", opacity = 0.5, mod_idx = 2)
+    # print(df.getReactionModifierHeadFillColor('path_0_re6338', 2))
+    # print(df.getReactionModifierHeadPosition('path_0_re6338'))
+    # print(df.getReactionModifierHeadPosition('path_0_re6338'))
+    # print(df.getReactionModifierHeadShape('path_0_re6338'))
+    # df.setReactionModifierHeadShape('path_0_re6338', shape_type_list=['polygon'],
+    # shape_info_list=[[[0.0, 0.0], [100.0, 60.0], [0.0, 100.0], [0.0, 0.0]]], mod_idx = 2)
+    # df.setReactionModifierHeadShape('path_0_re6338', shape_type_list=['polygon', 'polygon'],
+    # shape_info_list=[[[33.0, 0.0], [100.0, 50.0], [33.0, 100.0], [33.0, 0.0]], [[0.0, 0.0], [0.0, 100.0]]])
+    # print(df.getReactionModifierHeadShape('path_0_re6338'))
+    # print(df.getReactionModifierHeadPosition('path_0_re6338'))
+
 
     # df.addText("test_id", "test", [413,216], [50,30])
     # df.addText("test1_id", "test1", [400,200], [100, 100], txt_font_color="blue", 
@@ -5515,5 +5923,5 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    df.draw(output_fileName = 'output.png')
+    #df.draw(output_fileName = 'output.png')
 

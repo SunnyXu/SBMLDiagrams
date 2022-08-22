@@ -1488,8 +1488,10 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
 
 
     #draw modifiers:
-    modifier_lineColor = skia.Color(128, 0, 128)
-    modifier_linewidth = 2*scale
+    #modifier_lineColor = skia.Color(128, 0, 128)
+    #modifier_linewidth = 2*scale
+    modifier_lineColor = lineColor
+    modifier_linewidth = reaction_line_width*scale
     mod_num = len(mod_position)
     for i in range(mod_num):
         mod_start_virtual_x = .5*mod_dimension[i][0] + mod_position[i][0]
@@ -1506,10 +1508,145 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
             mod_start_y = mod_start_virtual_y
             [mod_end_x, mod_end_y] = arcCenter[0], arcCenter[1] 
         _drawLine(canvas, mod_start_x, mod_start_y, mod_end_x, mod_end_y,
-         modifier_lineColor, modifier_linewidth)  
-        _drawCircle(canvas, mod_end_x-modifier_linewidth, mod_end_y-modifier_linewidth, 
-        2*modifier_linewidth, 2*modifier_linewidth,
-                        modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
+            modifier_lineColor, modifier_linewidth)
+
+        if mod_endhead_render == []: #there is no lineending info
+            _drawCircle(canvas, mod_end_x-modifier_linewidth, mod_end_y-modifier_linewidth, 
+            2*modifier_linewidth, 2*modifier_linewidth,
+                            modifier_lineColor, modifier_lineColor, .5*modifier_linewidth) 
+        else:
+            if mod_endhead_render[i][3] == ['ellipse']:
+                width = mod_endhead_render[i][1][0]*scale
+                height = mod_endhead_render[i][1][1]*scale
+                rx = mod_endhead_render[i][4][0][1][0]/100.*width
+                ry = mod_endhead_render[i][4][0][1][1]/100.*height
+                x = mod_end_x
+                y = mod_end_y
+                outline = lineColor
+                if mod_endhead_render[i][2] != 0: #there is fill info 
+                    cl = mod_endhead_render[i][2]
+                    fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                else:
+                    fill = lineColor               
+                _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
+                        outline, fill, linewidth)
+
+            elif mod_endhead_render[i][3] == ['polygon']:
+                width = mod_endhead_render[i][1][0]*scale
+                height = mod_endhead_render[i][1][1]*scale
+
+                distance = math.sqrt((mod_end_x-mod_start_x)**2 + (mod_end_y-mod_start_y)**2)
+                if distance == 0:
+                    distance = 0.001
+
+                outline = lineColor
+                if len(mod_endhead_render[i][2]) != 0: #there is fill info 
+                    cl = mod_endhead_render[i][2]
+                    fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                else:
+                    fill = lineColor 
+                sinTheta = (-mod_end_y + mod_start_y)/distance
+                cosTheta = ( mod_end_x - mod_start_x)/distance
+
+                x0 = mod_start_x-0.5*height*sinTheta - width*cosTheta + mod_end_x - mod_start_x
+                y0 = mod_start_y-0.5*height*cosTheta + width*sinTheta + mod_end_y - mod_start_y
+                
+                shape_info = mod_endhead_render[i][4][0]
+
+                pts = []
+                for ii in range(len(shape_info)):
+                    delta_x= width*shape_info[ii][0]/100.
+                    delta_y= height*shape_info[ii][1]/100.
+                    delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                    delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                    pts.append([(x0 + delta_x_rotate), 
+                    (y0 + delta_y_rotate)])    
+                    #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                fill, linewidth)
+
+            elif mod_endhead_render[i][3] == ['rectangle']:
+                #consider a rectangle as special polygon
+                width = mod_endhead_render[i][1][0]*scale
+                height = mod_endhead_render[i][1][1]*scale
+
+                distance = math.sqrt((mod_end_x-mod_start_x)**2 + (mod_end_y-mod_start_y)**2)
+                if distance == 0:
+                    distance = 0.001
+
+                outline = lineColor
+                if len(mod_endhead_render[i][2]) != 0: #there is fill info 
+                    cl = mod_endhead_render[i][2]
+                    fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                else:
+                    fill = lineColor 
+
+                sinTheta = (-mod_end_y + mod_start_y)/distance
+                cosTheta = ( mod_end_x - mod_start_x)/distance
+
+                x0 = mod_start_x-0.5*height*sinTheta - width*cosTheta + mod_end_x - mod_start_x
+                y0 = mod_start_y-0.5*height*cosTheta + width*sinTheta + mod_end_y - mod_start_y
+                
+                shape_info = [[0.,0],[100.,0.],[100.,100],[0.,100.], [0.,0.]]
+
+                pts = []
+                for ii in range(len(shape_info)):
+                    delta_x= width*shape_info[ii][0]/100.
+                    delta_y= height*shape_info[ii][1]/100.
+                    delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                    delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                    pts.append([(x0 + delta_x_rotate), 
+                    (y0 + delta_y_rotate)])    
+                    #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                fill, linewidth)
+
+            #combination of several polygons
+            elif len(mod_endhead_render[i][3]) > 1 and all(item == 'polygon' for item in mod_endhead_render[i][3]):
+                shape_type_list  = mod_endhead_render[i][3]
+                for j in range(len(shape_type_list)):
+                    width = mod_endhead_render[i][1][0]*scale
+                    height = mod_endhead_render[i][1][1]*scale
+  
+                    distance = math.sqrt((mod_end_x-mod_start_x)**2 + (mod_end_y-mod_start_y)**2)
+                    if distance == 0:
+                        distance = 0.001
+
+                    outline = lineColor
+                    if len(mod_endhead_render[i][2]) != 0: #there is fill info 
+                        cl = mod_endhead_render[i][2]
+                        fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                    else:
+                        fill = lineColor 
+                   
+                    sinTheta = (-mod_end_y + mod_start_y)/distance
+                    cosTheta = ( mod_end_x - mod_start_x)/distance
+
+                    x0 = mod_start_x-0.5*height*sinTheta - width*cosTheta + mod_end_x - mod_start_x
+                    y0 = mod_start_y-0.5*height*cosTheta + width*sinTheta + mod_end_y - mod_start_y
+                
+                    shape_info = mod_endhead_render[i][4][j]
+
+                    pts = []
+                    for ii in range(len(shape_info)):
+                        delta_x= width*shape_info[ii][0]/100.
+                        delta_y= height*shape_info[ii][1]/100.
+                        delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                        delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                        pts.append([(x0 + delta_x_rotate), 
+                        (y0 + delta_y_rotate)])    
+                        #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                    _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                    fill, linewidth)
+
+            else: #no the shape is not covered by the above cases
+                _drawCircle(canvas, mod_end_x-modifier_linewidth, mod_end_y-modifier_linewidth, 
+                2*modifier_linewidth, 2*modifier_linewidth,
+                                modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)
+
 
 def addText(canvas, txt_str, position, dimension, 
     text_line_color = [0, 0, 0, 255], text_line_width = 1., fontSize = 12., 
