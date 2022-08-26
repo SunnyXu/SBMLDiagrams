@@ -52,7 +52,72 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         res = []
         [res.append(x) for x in list_update if x not in res and not x.isdigit()]
         return res
-     
+    
+
+    def _cross_point(arcCenter, c2, s2):
+        """
+        Get the cross point of a point and a rectangle with position(top left-hand corner) and size 
+        given.
+
+        Args:  
+            arcCenter:  1*2 matrix-position of the point.
+            c2: 1*2 matrix-position of the rectangle (top left-hand corner).
+            s2: 1*2 matrix-size of the rectangle.
+        """
+        pt_center = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
+        pt_up_left    = c2
+        pt_up_right   = [c2[0]+s2[0], c2[1]]
+        pt_down_left  = [c2[0], c2[1]+s2[1]]
+        pt_down_right = [c2[0]+s2[0], c2[1]+s2[1]]
+
+        def _line_intersection(line1, line2):
+            """
+
+            Args:  
+                line1: list of 1*2 matrix-two points to represent line1.
+                line2: list of 1*2 matrix-two points to represent line2.
+            Returns:
+                [x,y]: 1*2 matrix-the point position of the crossed two lines.
+            """
+            xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
+            ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
+
+            def _det(a, b):
+                return a[0] * b[1] - a[1] * b[0]
+
+            div = _det(xdiff, ydiff)
+            if div == 0:
+                raise Exception('lines do not intersect1')
+            d = (_det(*line1), _det(*line2))
+            x = round(_det(d, xdiff) / div,2)
+            y = round(_det(d, ydiff) / div,2)
+            if round((x-line1[0][0])*(x-line1[1][0]),2)<=0 and round((x-line2[0][0])*(x-line2[1][0]),2)<=0 \
+            and round((y-line1[0][1])*(y-line1[1][1]),2)<=0 and round((y-line2[0][1])*(y-line2[1][1]),2)<=0:
+                return [x, y]
+            else:
+                raise Exception('lines do not intersect2')
+        try:
+            [x,y] = _line_intersection([arcCenter, pt_center], [pt_up_left, pt_down_left])
+            return [x,y]
+        except:
+            pass
+
+        try:
+            [x,y] = _line_intersection([arcCenter, pt_center], [pt_up_left, pt_up_right])
+            return [x,y]
+        except:
+            pass
+        try:
+            [x,y] = _line_intersection([arcCenter, pt_center], [pt_down_left, pt_down_right])
+            return [x,y]
+        except:
+            pass
+        try:
+            [x,y] = _line_intersection([arcCenter, pt_center], [pt_up_right, pt_down_right])
+            return [x,y]
+        except:
+            pass
+
     # if df == None:
     #     sys.exit("There is no valid information to process.")
     # else:
@@ -530,6 +595,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             reactionG_id = "ReactionG_" + reaction_id
             reactionGlyph.setId(reactionG_id)
             reactionGlyph.setReactionId(reaction_id)
+
+            reaction_line_thickness = float(df_ReactionData.iloc[i]['line_thickness'])
             
             rct = [] # id list of the rcts
             prd = []
@@ -548,6 +615,15 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             rct_num = len(rct_list)
             prd_num = len(prd_list)
             mod_num = len(mod_list)
+
+            try:
+                rct_lineend_pos_list = list(df_ReactionData.iloc[i]['src_lineend_position'][1:-1].split(","))
+                prd_lineend_pos_list = list(df_ReactionData.iloc[i]['tgt_lineend_position'][1:-1].split(","))
+                mod_lineend_pos_list = list(df_ReactionData.iloc[i]['mod_lineend_position'][1:-1].split(","))
+            except:
+                rct_lineend_pos_list = df_ReactionData.iloc[i]['src_lineend_position']
+                prd_lineend_pos_list = df_ReactionData.iloc[i]['tgt_lineend_position']
+                mod_lineend_pos_list = df_ReactionData.iloc[i]['mod_lineend_position']
 
 
             for j in range(rct_num):
@@ -679,7 +755,30 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 width = float(src_dimension[0])
                 height = float(src_dimension[1])
 
-                cb.setStart(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y + 0.5*height))
+                try:
+                    line_end_pt = rct_lineend_pos_list[j]
+                    if line_end_pt[0] < (pos_x + width) and line_end_pt[0] > pos_x  and line_end_pt[1] > pos_y and line_end_pt[1] < (pos_y+height):
+                        try:
+                            line_end_pt = _cross_point(handle2, 
+                            [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                            [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
+                        except:
+                            line_end_pt = _cross_point(center_value, 
+                            [pos_x-3.*reaction_line_thickness, pos_y-3.*reaction_line_thickness], 
+                            [width+6.*reaction_line_thickness,height+6.*reaction_line_thickness])                  
+                except:
+                    try:
+                        line_end_pt = _cross_point(handle2, 
+                        [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                        [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
+                    except:
+                        line_end_pt = _cross_point(center_value, 
+                        [pos_x-3.*reaction_line_thickness, pos_y-3.*reaction_line_thickness], 
+                        [width+6.*reaction_line_thickness,height+6.*reaction_line_thickness])
+                try:
+                    cb.setStart(libsbml.Point(layoutns, line_end_pt[0], line_end_pt[1]))
+                except:
+                    cb.setStart(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y + 0.5*height))
                 cb.setBasePoint1(libsbml.Point(layoutns, handle2[0], handle2[1]))
                 cb.setBasePoint2(libsbml.Point(layoutns, handle1[0], handle1[1]))
                 cb.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
@@ -721,7 +820,32 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 pos_y = float(dst_position[1])
                 width = float(dst_dimension[0])
                 height = float(dst_dimension[1])
-                cb.setEnd(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y + 0.5*height))
+
+                try:
+                    line_head_pt = prd_lineend_pos_list[j]
+                    if line_head_pt[0] < (pos_x + width) and line_head_pt[0] > pos_x  and line_head_pt[1] > pos_y and line_head_pt[1] < (pos_y+height):
+                        try:
+                            line_head_pt = _cross_point(handle2, 
+                            [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                            [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
+                        except:
+                            line_head_pt = _cross_point(center_value, 
+                            [pos_x-3.*reaction_line_thickness, pos_y-3.*reaction_line_thickness], 
+                            [width+6.*reaction_line_thickness,height+6.*reaction_line_thickness])            
+                except:
+                    try:
+                        line_head_pt = _cross_point(handle2, 
+                        [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                        [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
+                    except:
+                        line_head_pt = _cross_point(center_value, 
+                        [pos_x-3.*reaction_line_thickness, pos_y-3.*reaction_line_thickness], 
+                        [width+6.*reaction_line_thickness,height+6.*reaction_line_thickness])
+              
+                try:
+                    cb.setEnd(libsbml.Point(layoutns, line_head_pt[0], line_head_pt[1]))
+                except:
+                    cb.setEnd(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y + 0.5*height))
 
             for j in range(mod_num):
                 ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
@@ -732,6 +856,45 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 speciesReferenceGlyph.setSpeciesGlyphId(specG_id)
                 speciesReferenceGlyph.setSpeciesReferenceId(ref_id)
                 speciesReferenceGlyph.setRole(libsbml.SPECIES_ROLE_MODIFIER)
+
+                speciesReferenceCurve = speciesReferenceGlyph.getCurve()
+                ls = speciesReferenceCurve.createLineSegment()
+                try:
+                    mod_position = list(df_NodeData.iloc[int(mod_list[j])]['position'][1:-1].split(","))
+                    mod_dimension = list(df_NodeData.iloc[int(mod_list[j])]['size'][1:-1].split(","))
+                except:
+                    mod_position = df_NodeData.iloc[int(mod_list[j])]['position']
+                    mod_dimension = df_NodeData.iloc[int(mod_list[j])]['size']     
+
+                pos_x = float(mod_position[0])
+                pos_y = float(mod_position[1])
+                width = float(mod_dimension[0])
+                height = float(mod_dimension[1])
+
+                mod_start_virtual_x = pos_x + 0.5*width 
+                mod_start_virtual_y = pos_y + 0.5*height
+                try: 
+                    [mod_start_x, mod_start_y] = _cross_point(center_value, 
+                    [pos_x-reaction_line_thickness*2.,pos_y-reaction_line_thickness*2.],
+                    [width+reaction_line_thickness*4., height+reaction_line_thickness*4.]) 
+                except: 
+                    mod_start_x = mod_start_virtual_x
+                    mod_start_y = mod_start_virtual_y
+                ls.setStart(libsbml.Point(layoutns, mod_start_x, mod_start_y))
+
+                try:
+                    [mod_end_x, mod_end_y] = mod_lineend_pos_list[j]
+                except:
+                    try: 
+                        [mod_end_x, mod_end_y] = _cross_point([mod_start_virtual_x, mod_start_virtual_y],
+                        [center_value[0]-5.*reaction_line_thickness, center_value[1]-5.*reaction_line_thickness], 
+                        [10.*reaction_line_thickness, 10.*reaction_line_thickness])
+                    except: 
+                        [mod_end_x, mod_end_y] = center_value
+                try:
+                    ls.setEnd(libsbml.Point(layoutns, mod_end_x, mod_end_y))
+                except:
+                    ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
 
         for i in range(numArbitraryTexts):
             txt_content = str(df_TextData.iloc[i]['txt_content']) 

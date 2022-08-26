@@ -294,8 +294,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         The visualization info object containing the drawing information of the plot
     """
 
-    # df = processSBML.load(sbmlStr)
-    # sbmlStr = df.export()
+    df = processSBML.load(sbmlStr)
+    sbmlStr = df.export()
     
     topLeftCorner = _getNetworkTopLeftCorner(sbmlStr)
     networkSize = _getNetworkSize(sbmlStr)
@@ -491,43 +491,61 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                 
                             curve = specRefGlyph.getCurve()  
                             spec_handle = []                            
-                            for segment in curve.getListOfCurveSegments():
+                            num_curve = curve.getNumCurveSegments()
+                            line_start_list = []
+                            line_end_list = []                           
+                            for segment in curve.getListOfCurveSegments():                    
                                 line_start_x = segment.getStart().getXOffset()
                                 line_start_y = segment.getStart().getYOffset()
                                 line_end_x = segment.getEnd().getXOffset()
                                 line_end_y = segment.getEnd().getYOffset()
-                                line_start_pt =  [line_start_x, line_start_y]
-                                line_end_pt = [line_end_x, line_end_y]
+                                line_start_list.append([line_start_x, line_start_y])
+                                line_end_list.append([line_end_x, line_end_y])
 
-                                try:
-                                    if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
-                                        #line starts from center
-                                        try: #bezier 
-                                            center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
-                                                        segment.getBasePoint1().getYOffset()]                                
-                                            spec_handle = [segment.getBasePoint2().getXOffset(),
-                                                    segment.getBasePoint2().getYOffset()]
-                                        except: #straight
-                                            # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
-                                            # .5*(center_pt[1]+line_end_pt[1])]
-                                            center_handle_candidate = center_pt
-                                            spec_handle = center_pt
-                                    else:
-                                        #line starts from species
-                                        try: #bezier
-                                            spec_handle = [segment.getBasePoint1().getXOffset(), 
-                                                        segment.getBasePoint1().getYOffset()]                                
-                                            center_handle_candidate = [segment.getBasePoint2().getXOffset(),
-                                                    segment.getBasePoint2().getYOffset()]
-                                        except: #straight
-                                            # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
-                                            # .5*(center_pt[1]+line_start_pt[1])]
-                                            # center_handle_candidate = center_pt
-                                            center_handle_candidate = center_pt
-                                            spec_handle = center_pt
-                                except:
-                                    center_handle_candidate = []
-                                    spec_handle = []
+                            try:
+                                line_start_pt =  [line_start_list[0][0], line_start_list[0][1]]
+                                line_end_pt = [line_end_list[num_curve-1][0], line_end_list[num_curve-1][1]]
+                            except:
+                                line_start_pt = []
+                                line_end_pt = []
+
+                            modifier_lineend_pos = []
+                            spec_lineend_pos = []
+
+                            try:
+                                if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                                    #line starts from center
+                                    spec_lineend_pos = line_end_pt
+                                    modifier_lineend_pos = line_start_pt
+                                    try: #bezier 
+                                        center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
+                                                    segment.getBasePoint1().getYOffset()]                                
+                                        spec_handle = [segment.getBasePoint2().getXOffset(),
+                                                segment.getBasePoint2().getYOffset()]
+                                    except: #straight
+                                        # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                        # .5*(center_pt[1]+line_end_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        spec_handle = center_pt
+                                else:
+                                    #line starts from species
+                                    spec_lineend_pos = line_start_pt
+                                    modifier_lineend_pos = line_end_pt
+                                    try: #bezier
+                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                    segment.getBasePoint1().getYOffset()]                                
+                                        center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                                                segment.getBasePoint2().getYOffset()]
+                                    except: #straight
+                                        # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                        # .5*(center_pt[1]+line_start_pt[1])]
+                                        # center_handle_candidate = center_pt
+                                        center_handle_candidate = center_pt
+                                        spec_handle = center_pt
+                            except:
+                                center_handle_candidate = []
+                                spec_handle = []
+
 
                             role = specRefGlyph.getRoleString()
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -589,14 +607,14 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
 
                             if role == "substrate": #it is a rct
                                 #rct_specGlyph_temp_list.append(specGlyph_id)
-                                rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle, specRefGlyph_id])
+                                rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
                                 if center_handle == []:
                                     center_handle.append(center_handle_candidate)
                             elif role == "product": #it is a prd
                                 #prd_specGlyph_temp_list.append(specGlyph_id)
-                                prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle, specRefGlyph_id])
+                                prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
                             elif role == "modifier" or role == 'activator': #it is a modifier
-                                mod_specGlyph_temp_list.append([specGlyph_id, specRefGlyph_id])
+                                mod_specGlyph_temp_list.append([specGlyph_id, specRefGlyph_id,modifier_lineend_pos])
                             
                             
                         #rct_specGlyph_list.append(rct_specGlyph_temp_list)
@@ -1131,12 +1149,15 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     src_position = []
                     src_dimension = [] 
                     src_endhead = []
+                    src_lineend_pos = []
                     dst_position = []
                     dst_dimension = []
                     dst_endhead = []
+                    dst_lineend_pos = []
                     mod_position = []
                     mod_dimension = []
                     mod_endhead = []
+                    mod_lineend_pos = []
                     src_handle = []
                     dst_handle = []
                     temp_id = reaction_id_list[i]
@@ -1163,6 +1184,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
                                 src_endhead.append(specRefGlyph_render[k][1])
                         src_handle.append(rct_specGlyph_handle_list[i][j][1])
+                        src_lineend_pos.append(rct_specGlyph_handle_list[i][j][3])
                         add_rct_cnt += 1
                         edges.append([id_to_name[temp_specGlyph_id]])
 
@@ -1179,6 +1201,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
                                 dst_endhead.append(specRefGlyph_render[k][1])
                         dst_handle.append(prd_specGlyph_handle_list[i][j][1])
+                        dst_lineend_pos.append(prd_specGlyph_handle_list[i][j][3])
                         edges[-add_rct_cnt].append(id_to_name[temp_specGlyph_id])
                         add_rct_cnt -= 1
 
@@ -1188,6 +1211,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             #all the modifiers are defined as role in the SpecRefGlyph
                             temp_specGlyph_id = mod_specGlyph_list[i][j][0]      
                             temp_specRefGlyph_id = mod_specGlyph_list[i][j][1]
+                            mod_lineend_pos.append(mod_specGlyph_list[i][j][2])
                             for k in range(numSpec_in_reaction):
                                 if temp_specGlyph_id == specGlyph_id_list[k]:
                                     mod_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
@@ -1232,14 +1256,33 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     for j in range(len(dst_endhead)):
                         for k in range(len(lineEnding_render)):
                             if dst_endhead[j] == lineEnding_render[k][0]:
-                                if dst_endhead[j] == '_line_ending_default_':
-                                    dst_endhead_render = []
-                                else:
-                                    dst_endhead_render.append(lineEnding_render[k][1:])
+                                # if dst_endhead[j] == '_line_ending_default_':
+                                #     dst_endhead_render = []
+                                # else:
+                                dst_endhead_render.append(lineEnding_render[k][1:])
                     for j in range(len(mod_endhead)):
                         for k in range(len(lineEnding_render)):
                             if mod_endhead[j] == lineEnding_render[k][0]:
                                 mod_endhead_render.append(lineEnding_render[k][1:])
+
+                    for j in range(len(src_lineend_pos)):
+                        try:
+                            src_lineend_pos[j] = [(src_lineend_pos[j][0]-topLeftCorner[0])*scale, 
+                            (src_lineend_pos[j][1]-topLeftCorner[1])*scale]
+                        except:
+                            src_lineend_pos[j] = []
+                    for j in range(len(dst_lineend_pos)):
+                        try:
+                            dst_lineend_pos[j] = [(dst_lineend_pos[j][0]-topLeftCorner[0])*scale, 
+                            (dst_lineend_pos[j][1]-topLeftCorner[1])*scale]
+                        except:
+                            dst_lineend_pos[j] = []
+                    for j in range(len(mod_lineend_pos)):
+                        try:
+                            mod_lineend_pos[j] = [(mod_lineend_pos[j][0]-topLeftCorner[0])*scale, 
+                            (mod_lineend_pos[j][1]-topLeftCorner[1])*scale]
+                        except:
+                            mod_lineend_pos[j] = []
 
                     try: 
                         center_position = reaction_center_list[i]
@@ -1256,6 +1299,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         for j in range(len(handles)):
                             handles[j] = [(handles[j][0]-topLeftCorner[0])*scale, 
                             (handles[j][1]-topLeftCorner[1])*scale]
+
                         #print(dst_endhead_render)
                         if drawArrow:
                             drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
@@ -1265,8 +1309,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
                                 scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible,
-                                rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, 
-                                mod_endhead_render = mod_endhead_render )
+                                rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, mod_endhead_render = mod_endhead_render,
+                                rct_lineend_pos = src_lineend_pos, prd_lineend_pos = dst_lineend_pos, mod_lineend_pos = mod_lineend_pos)
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -1303,8 +1347,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
                                 scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible,
-                                rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, 
-                                mod_endhead_render = mod_endhead_render)
+                                rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, mod_endhead_render = mod_endhead_render,
+                                rct_lineend_pos = src_lineend_pos, prd_lineend_pos = dst_lineend_pos, mod_lineend_pos = mod_lineend_pos)
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -1605,6 +1649,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     src_dimension = []
                     dst_dimension = []
                     mod_dimension = []
+                    src_endhead = []
+                    dst_endhead = []
+                    mod_endhead = []
+                    src_lineend_pos = []
+                    dst_lineend_pos = []
+                    mod_lineend_pos = []
                     temp_id = Rxns_ids[i]
                     reaction = model_layout.getReaction(temp_id)
                     rxn_rev = reaction.getReversible()
@@ -2432,7 +2482,7 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"
-    #filename = "test_modifier.xml"
+    filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
@@ -2458,7 +2508,7 @@ if __name__ == '__main__':
     #filename = "bart2.xml"
     #filename = "newSBML.xml"
 
-    filename = filename = "bioinformatics/pdmap-nucleoid.xml"
+    #filename = filename = "bioinformatics/pdmap-nucleoid.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2469,6 +2519,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output.png')
+        _draw(sbmlStr,output_fileName='output.png', showReversible='True')
         #print("finished!")
 

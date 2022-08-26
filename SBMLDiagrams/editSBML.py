@@ -2330,8 +2330,8 @@ def _setReactionModifierHeadPosition(df, id, position, mod_idx = 0):
     for i in range(len(idx_list)):
         line_ending_id.append(df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
     if len(line_ending_id) == 1:
-        if line_ending_id != ['line_ending_modifier_' + id + str(mod_idx)]:
-            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] = 'line_ending_modifier_' + id + str(mod_idx)
+        if line_ending_id != ['line_ending_modifier_' + id + '_'+ str(mod_idx)]:
+            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] = 'line_ending_modifier_' + id + '_' + str(mod_idx)
             idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
             if len(idx_lineending) == 1:
                 row = len(df[5])
@@ -2342,7 +2342,7 @@ def _setReactionModifierHeadPosition(df, id, position, mod_idx = 0):
                     LineEndingData_row_dct[keys[k]] = [values[k]]
                 df_LineEndingData_temp = pd.concat([df_LineEndingData_temp,\
                                 pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + str(mod_idx)
+                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + '_'+ str(mod_idx)
                 df_LineEndingData_temp.at[row,"position"] = position
         else:
             idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
@@ -2393,8 +2393,8 @@ def _setReactionModifierHeadSize(df, id, size, mod_idx = 0):
     for i in range(len(idx_list)):
         line_ending_id.append(df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
     if len(line_ending_id) == 1:
-        if line_ending_id != ['line_ending_modifier_' + id + str(mod_idx)]:
-            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] = 'line_ending_modifier_' + id + str(mod_idx)
+        if line_ending_id != ['line_ending_modifier_' + id + '_' + str(mod_idx)]:
+            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] = 'line_ending_modifier_' + id + '_' + str(mod_idx)
             idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
             if len(idx_lineending) == 1:
                 row = len(df[5])
@@ -2405,7 +2405,7 @@ def _setReactionModifierHeadSize(df, id, size, mod_idx = 0):
                     LineEndingData_row_dct[keys[k]] = [values[k]]
                 df_LineEndingData_temp = pd.concat([df_LineEndingData_temp,\
                                 pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + str(mod_idx)
+                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + "_" + str(mod_idx)
                 df_LineEndingData_temp.at[row,"size"] = size
         else:
             idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
@@ -2449,8 +2449,8 @@ def _setReactionModifierHeadFillColor(df, id, fill_color, opacity = 1., mod_idx 
     for i in range(len(idx_list)):
         line_ending_id.append(df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
     if len(line_ending_id) == 1:
-        if line_ending_id != ['line_ending_modifier_' + id + str(mod_idx)]:
-            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] ='line_ending_modifier_' + id + str(mod_idx)
+        if line_ending_id != ['line_ending_modifier_' + id + '_' + str(mod_idx)]:
+            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] ='line_ending_modifier_' + id + '_' + str(mod_idx)
             idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
             if len(idx_lineending) == 1:
                 row = len(df[5])
@@ -2461,7 +2461,7 @@ def _setReactionModifierHeadFillColor(df, id, fill_color, opacity = 1., mod_idx 
                     LineEndingData_row_dct[keys[k]] = [values[k]]
                 df_LineEndingData_temp = pd.concat([df_LineEndingData_temp,\
                                 pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + str(mod_idx)
+                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + '_' + str(mod_idx)
                 df_LineEndingData_temp.at[row,"fill_color"] = fill_color
         else:
             idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
@@ -2549,8 +2549,8 @@ def _setReactionModifierHeadShape(df, id, shape_type_list, shape_info_list, mod_
     for i in range(len(idx_list)):
         line_ending_id.append(df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
     if len(line_ending_id) == 1:
-        if line_ending_id != ['line_ending_modifier_' + id + str(mod_idx)]:
-            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] = 'line_ending_modifier_' + id + str(mod_idx)
+        if line_ending_id != ['line_ending_modifier_' + id + '_' + str(mod_idx)]:
+            df_ReactionData_temp.at[idx_list[0],"modifiers_lineending"][mod_idx] = 'line_ending_modifier_' + id + '_' + str(mod_idx)
             idx_lineending = df_LineEndingData_temp.index[df[5]["id"] == line_ending_id[0]].tolist()
             if len(idx_lineending) == 1:
                 row = len(df[5])
@@ -2561,7 +2561,7 @@ def _setReactionModifierHeadShape(df, id, shape_type_list, shape_info_list, mod_
                     LineEndingData_row_dct[keys[k]] = [values[k]]
                 df_LineEndingData_temp = pd.concat([df_LineEndingData_temp,\
                                 pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + str(mod_idx)
+                df_LineEndingData_temp.at[row,"id"] = 'line_ending_modifier_' + id + '_' + str(mod_idx)
                 df_LineEndingData_temp.at[row,"shape_type"] = shape_type_list
                 df_LineEndingData_temp.at[row,"shape_info"] = shape_info_list
         else:
