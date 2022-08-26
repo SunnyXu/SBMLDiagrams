@@ -19,8 +19,6 @@ Read the reaction information.
 
 .. autofunction:: SBMLDiagrams.load.getReactionDashStyle
 
-.. autofunction:: SBMLDiagrams.load.getReactionArrowHeadPosition
-
 .. autofunction:: SBMLDiagrams.load.getReactionArrowHeadSize
 
 .. autofunction:: SBMLDiagrams.load.getReactionArrowHeadFillColor
@@ -28,8 +26,6 @@ Read the reaction information.
 .. autofunction:: SBMLDiagrams.load.getReactionArrowHeadShape
 
 .. autofunction:: SBMLDiagrams.load.getReactionModifierNum
-
-.. autofunction:: SBMLDiagrams.load.getReactionModifierHeadPosition
 
 .. autofunction:: SBMLDiagrams.load.getReactionModifierHeadSize
 
@@ -55,15 +51,11 @@ Edit the reaction information.
 
 .. autofunction:: SBMLDiagrams.load.setReactionDashStyle
 
-.. autofunction:: SBMLDiagrams.load.setReactionArrowHeadPosition
-
 .. autofunction:: SBMLDiagrams.load.setReactionArrowHeadSize
 
 .. autofunction:: SBMLDiagrams.load.setReactionArrowHeadFillColor
 
 .. autofunction:: SBMLDiagrams.load.setReactionArrowHeadShape
-
-.. autofunction:: SBMLDiagrams.load.setReactionModifierHeadPosition
 
 .. autofunction:: SBMLDiagrams.load.setReactionModifierHeadSize
 
