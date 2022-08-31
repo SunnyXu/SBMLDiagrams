@@ -951,14 +951,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                 shapeIdx = 9
                                                 shape_name = "rightTriangle"
 
-                                
                                 if spec_fill_color != []:
-                                   spec_render.append([idList,spec_fill_color,color_style.getSpecBorderColor(),
+                                   spec_render.append([render_spec_id,spec_fill_color,color_style.getSpecBorderColor(),
                                    color_style.getSpecBorderWidth(),shapeIdx,shape_name,shape_type,shapeInfo])
                                 else:
                                     spec_render.append([render_spec_id,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
                                     color_style.getSpecBorderWidth(),shapeIdx,shape_name,shape_type,shapeInfo])
-                                
                                 
                             elif 'REACTIONGLYPH' in typeList:
                                 #change layout id to id for later to build the list of render
@@ -2074,7 +2072,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[0] = text_temp_position[0]
             if text_temp_position[1] > position[1]:
                 position[1] = text_temp_position[1]
-        comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[i])
+
+        comp_id = model.getCompartmentIdSpeciesIsIn(BoundaryNodes_ids[i])
         if comp_id not in Comps_ids:
             Comps_ids.append(comp_id)
     for i in range(len(Comps_ids)):

@@ -41,7 +41,7 @@ df.setNodeAndTextSize("H",[50,50])
 df.setNodeAndTextSize("NADH",[50,50])
 df.setReactionDefaultCenterAndHandlePositions('J0')
 #print(df.getReactionCenterPosition("J0"))  
-df.addRectangle("centroid_sqaure", [235.0, 265.0], [20,20], 
+df.addRectangle("centroid_sqaure", [239, 269], [12,12], 
 fill_color=[91, 176, 253], border_color = [91,176,253])
 df.setNodeFillLinearGradient("ADH1", [[0.0, 50.], [100.0, 50.0]],
   [[0.0, [255, 255, 255, 255]], [100.0, [192, 192, 192, 255]]])

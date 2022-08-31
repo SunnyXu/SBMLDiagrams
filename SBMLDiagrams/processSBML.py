@@ -242,6 +242,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     spec_render = []
     rxn_render = []
     text_render = []
+    specRefGlyph_render = []
     #gen_render = []
 
     mplugin = None
@@ -627,7 +628,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     #text_render = []
                     lineEnding_render = []
                     gen_render = []
-                    specRefGlyph_render = []
+                    #specRefGlyph_render = []
                     arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                     id_arrowHeadSize = []
 
@@ -1498,13 +1499,61 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[FILLCOLOR].append(reaction_line_fill)
                     if src_endhead == []:
                         src_endhead = ["_line_ending_default_NONE_"]
+                        #default src endhead 
+                        if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values:        
+                            LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                            LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
+                            LineEndingData_row_dct[POSITION].append([0.,0.])
+                            LineEndingData_row_dct[SIZE].append([0.,0.])
+                            LineEndingData_row_dct[FILLCOLOR].append([])
+                            LineEndingData_row_dct[SHAPETYPE].append([])
+                            LineEndingData_row_dct[SHAPEINFO].append([])
+                            if len(df_LineEndingData) == 0:
+                                df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                            else:
+                                df_LineEndingData = pd.concat([df_LineEndingData,\
+                                    pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
                     ReactionData_row_dct[SOURCESLINEENDING].append(src_endhead)
                     if dst_endhead == []:
                         dst_endhead = ['line_ending_' + temp_id]
+                        #default dst endhead
+                        if ('line_ending_' + temp_id) not in df_LineEndingData[ID].values: 
+                            LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                            LineEndingData_row_dct[ID].append('line_ending_' + temp_id)
+                            LineEndingData_row_dct[POSITION].append([-reaction_arrow_head_size[0], -0.5*reaction_arrow_head_size[1]])
+                            LineEndingData_row_dct[SIZE].append(reaction_arrow_head_size)
+                            LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
+                            LineEndingData_row_dct[SHAPETYPE].append(['polygon'])
+                            LineEndingData_row_dct[SHAPEINFO].append([[[0,0], [100,50], [0,100], [0,0]]])
+
+                            if len(df_LineEndingData) == 0:
+                                df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                            else:
+                                df_LineEndingData = pd.concat([df_LineEndingData,\
+                                    pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
                     ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
                     if mod_endhead == [] and len(mod_idx_list) != 0:
                         for j in range(len(mod_idx_list)):
                             mod_endhead.append('line_ending_modifier_'+temp_id+"_"+str(mod_idx_list[j]))
+                        #default modifier endhead
+                        for j in range(len(mod_idx_list)):
+                            if ('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j])) not in df_LineEndingData[ID].values: 
+                                LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                                LineEndingData_row_dct[ID].append('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j]))
+                                LineEndingData_row_dct[POSITION].append([-1.*reaction_line_width, 0.])
+                                LineEndingData_row_dct[SIZE].append([2*reaction_line_width, 2*reaction_line_width])
+                                LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
+                                LineEndingData_row_dct[SHAPETYPE].append(['ellipse'])
+                                LineEndingData_row_dct[SHAPEINFO].append([[[0.0, 0.0], [100.0, 100.0]]])
+
+                                if len(df_LineEndingData) == 0:
+                                    df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                                else:
+                                    df_LineEndingData = pd.concat([df_LineEndingData,\
+                                        pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+           
                     ReactionData_row_dct[MODIFIERSLINEENDING].append(mod_endhead)
                     ReactionData_row_dct[SRCLINEENDPOS].append(src_lineend_pos)
                     ReactionData_row_dct[TGTLINEENDPOS].append(dst_lineend_pos)
@@ -1520,55 +1569,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     else:
                         df_ReactionData = pd.concat([df_ReactionData,\
                             pd.DataFrame(ReactionData_row_dct)], ignore_index=True)
-
-                    #default src endhead 
-                    if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values and src_endhead == []:        
-                        LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                        LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
-                        LineEndingData_row_dct[POSITION].append([0.,0.])
-                        LineEndingData_row_dct[SIZE].append([0.,0.])
-                        LineEndingData_row_dct[FILLCOLOR].append([])
-                        LineEndingData_row_dct[SHAPETYPE].append([])
-                        LineEndingData_row_dct[SHAPEINFO].append([])
-                        if len(df_LineEndingData) == 0:
-                            df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
-                        else:
-                            df_LineEndingData = pd.concat([df_LineEndingData,\
-                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-
-                    #default dst endhead
-                    if ('line_ending_' + temp_id) not in df_LineEndingData[ID].values and dst_endhead == []: 
-                        LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                        LineEndingData_row_dct[ID].append('line_ending_' + temp_id)
-                        LineEndingData_row_dct[POSITION].append([-reaction_arrow_head_size[0], -0.5*reaction_arrow_head_size[1]])
-                        LineEndingData_row_dct[SIZE].append(reaction_arrow_head_size)
-                        LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
-                        LineEndingData_row_dct[SHAPETYPE].append(['polygon'])
-                        LineEndingData_row_dct[SHAPEINFO].append([[[0,0], [100,50], [0,100], [0,0]]])
-
-                        if len(df_LineEndingData) == 0:
-                            df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
-                        else:
-                            df_LineEndingData = pd.concat([df_LineEndingData,\
-                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-
-                    #default modifier endhead
-                    for j in range(len(mod_idx_list)):
-                        if ('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j])) not in df_LineEndingData[ID].values and mod_endhead == []: 
-                            LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                            LineEndingData_row_dct[ID].append('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j]))
-                            LineEndingData_row_dct[POSITION].append([-1.*reaction_line_width, 0.])
-                            LineEndingData_row_dct[SIZE].append([2.*reaction_line_width, 2.*reaction_line_width])
-                            LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
-                            LineEndingData_row_dct[SHAPETYPE].append(['ellipse'])
-                            LineEndingData_row_dct[SHAPEINFO].append([[[0.0, 0.0], [100.0, 100.0]]])
-
-                            if len(df_LineEndingData) == 0:
-                                df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
-                            else:
-                                df_LineEndingData = pd.concat([df_LineEndingData,\
-                                    pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-
 
                 except:
                     center_x = 0.
@@ -1614,13 +1614,61 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[FILLCOLOR].append(reaction_line_fill)
                     if src_endhead == []:
                         src_endhead = ["_line_ending_default_NONE_"]
+                        #default src endhead 
+                        if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values:        
+                            LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                            LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
+                            LineEndingData_row_dct[POSITION].append([0.,0.])
+                            LineEndingData_row_dct[SIZE].append([0.,0.])
+                            LineEndingData_row_dct[FILLCOLOR].append([])
+                            LineEndingData_row_dct[SHAPETYPE].append([])
+                            LineEndingData_row_dct[SHAPEINFO].append([])
+                            if len(df_LineEndingData) == 0:
+                                df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                            else:
+                                df_LineEndingData = pd.concat([df_LineEndingData,\
+                                    pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
                     ReactionData_row_dct[SOURCESLINEENDING].append(src_endhead)
                     if dst_endhead == []:
                         dst_endhead = ['line_ending_' + temp_id]
+                        #default dst endhead
+                        if ('line_ending_' + temp_id) not in df_LineEndingData[ID].values: 
+                            LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                            LineEndingData_row_dct[ID].append('line_ending_' + temp_id)
+                            LineEndingData_row_dct[POSITION].append([-reaction_arrow_head_size[0], -0.5*reaction_arrow_head_size[1]])
+                            LineEndingData_row_dct[SIZE].append(reaction_arrow_head_size)
+                            LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
+                            LineEndingData_row_dct[SHAPETYPE].append(['polygon'])
+                            LineEndingData_row_dct[SHAPEINFO].append([[[0,0], [100,50], [0,100], [0,0]]])
+
+                            if len(df_LineEndingData) == 0:
+                                df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                            else:
+                                df_LineEndingData = pd.concat([df_LineEndingData,\
+                                    pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
                     ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
                     if mod_endhead == [] and len(mod_idx_list) != 0:
                         for j in range(len(mod_idx_list)):
                             mod_endhead.append('line_ending_modifier_'+temp_id+"_"+str(mod_idx_list[j]))
+                        #default modifier endhead
+                        for j in range(len(mod_idx_list)):
+                            if ('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j])) not in df_LineEndingData[ID].values: 
+                                LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                                LineEndingData_row_dct[ID].append('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j]))
+                                LineEndingData_row_dct[POSITION].append([-1.*reaction_line_width, 0.])
+                                LineEndingData_row_dct[SIZE].append([2.*reaction_line_width, 2.*reaction_line_width])
+                                LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
+                                LineEndingData_row_dct[SHAPETYPE].append(['ellipse'])
+                                LineEndingData_row_dct[SHAPEINFO].append([[[0.0, 0.0], [100.0, 100.0]]])
+
+                                if len(df_LineEndingData) == 0:
+                                    df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                                else:
+                                    df_LineEndingData = pd.concat([df_LineEndingData,\
+                                        pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
                     ReactionData_row_dct[MODIFIERSLINEENDING].append(mod_endhead)
                     ReactionData_row_dct[SRCLINEENDPOS].append(src_lineend_pos)
                     ReactionData_row_dct[TGTLINEENDPOS].append(dst_lineend_pos)
@@ -1636,55 +1684,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     else:
                         df_ReactionData = pd.concat([df_ReactionData,\
                             pd.DataFrame(ReactionData_row_dct)], ignore_index=True)
-
-                    #default src endhead 
-                    if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values and src_endhead == []:        
-                        LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                        LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
-                        LineEndingData_row_dct[POSITION].append([0.,0.])
-                        LineEndingData_row_dct[SIZE].append([0.,0.])
-                        LineEndingData_row_dct[FILLCOLOR].append([])
-                        LineEndingData_row_dct[SHAPETYPE].append([])
-                        LineEndingData_row_dct[SHAPEINFO].append([])
-                        if len(df_LineEndingData) == 0:
-                            df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
-                        else:
-                            df_LineEndingData = pd.concat([df_LineEndingData,\
-                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-
-                    #default dst endhead
-                    if ('line_ending_' + temp_id) not in df_LineEndingData[ID].values and dst_endhead == []: 
-                        LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                        LineEndingData_row_dct[ID].append('line_ending_' + temp_id)
-                        LineEndingData_row_dct[POSITION].append([-reaction_arrow_head_size[0], -0.5*reaction_arrow_head_size[1]])
-                        LineEndingData_row_dct[SIZE].append(reaction_arrow_head_size)
-                        LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
-                        LineEndingData_row_dct[SHAPETYPE].append(['polygon'])
-                        LineEndingData_row_dct[SHAPEINFO].append([[[0,0], [100,50], [0,100], [0,0]]])
-
-                        if len(df_LineEndingData) == 0:
-                            df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
-                        else:
-                            df_LineEndingData = pd.concat([df_LineEndingData,\
-                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-
-                    #default modifier endhead
-                    for j in range(len(mod_idx_list)):
-                        if ('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j])) not in df_LineEndingData[ID].values and mod_endhead == []: 
-                            LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                            LineEndingData_row_dct[ID].append('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j]))
-                            LineEndingData_row_dct[POSITION].append([-1.*reaction_line_width, 0.])
-                            LineEndingData_row_dct[SIZE].append([2.*reaction_line_width, 2.*reaction_line_width])
-                            LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
-                            LineEndingData_row_dct[SHAPETYPE].append(['ellipse'])
-                            LineEndingData_row_dct[SHAPEINFO].append([[[0.0, 0.0], [100.0, 100.0]]])
-
-                            if len(df_LineEndingData) == 0:
-                                df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
-                            else:
-                                df_LineEndingData = pd.concat([df_LineEndingData,\
-                                    pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-
 
 
             #arbitrary text
@@ -2026,13 +2025,61 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 ReactionData_row_dct[FILLCOLOR].append(reaction_line_fill)
                 if src_endhead == []:
                     src_endhead = ["_line_ending_default_NONE_"]
+                    #default src endhead 
+                    if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values:        
+                        LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                        LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
+                        LineEndingData_row_dct[POSITION].append([0.,0.])
+                        LineEndingData_row_dct[SIZE].append([0.,0.])
+                        LineEndingData_row_dct[FILLCOLOR].append([])
+                        LineEndingData_row_dct[SHAPETYPE].append([])
+                        LineEndingData_row_dct[SHAPEINFO].append([])
+                        if len(df_LineEndingData) == 0:
+                            df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                        else:
+                            df_LineEndingData = pd.concat([df_LineEndingData,\
+                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
                 ReactionData_row_dct[SOURCESLINEENDING].append(src_endhead)
                 if dst_endhead == []:
                     dst_endhead = ['line_ending_' + temp_id]
+                    #default dst endhead
+                    if ('line_ending_' + temp_id) not in df_LineEndingData[ID].values: 
+                        LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                        LineEndingData_row_dct[ID].append('line_ending_' + temp_id)
+                        LineEndingData_row_dct[POSITION].append([-reaction_arrow_head_size[0], -0.5*reaction_arrow_head_size[1]])
+                        LineEndingData_row_dct[SIZE].append(reaction_arrow_head_size)
+                        LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
+                        LineEndingData_row_dct[SHAPETYPE].append(['polygon'])
+                        LineEndingData_row_dct[SHAPEINFO].append([[[0,0], [100,50], [0,100], [0,0]]])
+
+                        if len(df_LineEndingData) == 0:
+                            df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                        else:
+                            df_LineEndingData = pd.concat([df_LineEndingData,\
+                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
                 ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
                 if mod_endhead == [] and len(mod_idx_list) != 0:
                     for j in range(len(mod_idx_list)):
                         mod_endhead.append('line_ending_modifier_'+temp_id+"_"+str(mod_idx_list[j]))
+                    #default modifier endhead
+                    for j in range(len(mod_idx_list)):
+                        if ('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j])) not in df_LineEndingData[ID].values: 
+                            LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
+                            LineEndingData_row_dct[ID].append('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j]))
+                            LineEndingData_row_dct[POSITION].append([-1.*reaction_line_width, 0.])
+                            LineEndingData_row_dct[SIZE].append([2.*reaction_line_width, 2.*reaction_line_width])
+                            LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
+                            LineEndingData_row_dct[SHAPETYPE].append(['ellipse'])
+                            LineEndingData_row_dct[SHAPEINFO].append([[[0.0, 0.0], [100.0, 100.0]]])
+
+                            if len(df_LineEndingData) == 0:
+                                df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
+                            else:
+                                df_LineEndingData = pd.concat([df_LineEndingData,\
+                                    pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
+
                 ReactionData_row_dct[MODIFIERSLINEENDING].append(mod_endhead)
                 ReactionData_row_dct[SRCLINEENDPOS].append(src_lineend_pos)
                 ReactionData_row_dct[TGTLINEENDPOS].append(dst_lineend_pos)
@@ -2049,57 +2096,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     df_ReactionData = pd.concat([df_ReactionData,\
                         pd.DataFrame(ReactionData_row_dct)], ignore_index=True)
 
-                #default src endhead 
-                if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values and src_endhead == []:        
-                    LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                    LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
-                    LineEndingData_row_dct[POSITION].append([0.,0.])
-                    LineEndingData_row_dct[SIZE].append([0.,0.])
-                    LineEndingData_row_dct[FILLCOLOR].append([])
-                    LineEndingData_row_dct[SHAPETYPE].append([])
-                    LineEndingData_row_dct[SHAPEINFO].append([])
-                    if len(df_LineEndingData) == 0:
-                        df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
-                    else:
-                        df_LineEndingData = pd.concat([df_LineEndingData,\
-                            pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
 
-                #default dst endhead
-                if ('line_ending_' + temp_id) not in df_LineEndingData[ID].values and dst_endhead == []: 
-                    LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                    LineEndingData_row_dct[ID].append('line_ending_' + temp_id)
-                    LineEndingData_row_dct[POSITION].append([-reaction_arrow_head_size[0], -0.5*reaction_arrow_head_size[1]])
-                    LineEndingData_row_dct[SIZE].append(reaction_arrow_head_size)
-                    LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
-                    LineEndingData_row_dct[SHAPETYPE].append(['polygon'])
-                    LineEndingData_row_dct[SHAPEINFO].append([[[0,0], [100,50], [0,100], [0,0]]])
-
-                    if len(df_LineEndingData) == 0:
-                        df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
-                    else:
-                        df_LineEndingData = pd.concat([df_LineEndingData,\
-                            pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-
-                #default modifier endhead
-                for j in range(len(mod_idx_list)):
-                    if ('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j])) not in df_LineEndingData[ID].values and mod_endhead == []: 
-                        LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                        LineEndingData_row_dct[ID].append('line_ending_modifier_' + temp_id + '_' + str(mod_idx_list[j]))
-                        LineEndingData_row_dct[POSITION].append([-1.*reaction_line_width, 0.])
-                        LineEndingData_row_dct[SIZE].append([2.*reaction_line_width, 2.*reaction_line_width])
-                        LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
-                        LineEndingData_row_dct[SHAPETYPE].append(['ellipse'])
-                        LineEndingData_row_dct[SHAPEINFO].append([[[0.0, 0.0], [100.0, 100.0]]])
-
-                        if len(df_LineEndingData) == 0:
-                            df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
-                        else:
-                            df_LineEndingData = pd.concat([df_LineEndingData,\
-                                pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
-
-
-            
-        
         #return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData) 
         return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData, df_ShapeData, df_LineEndingData) 
 
@@ -5682,98 +5679,78 @@ class load:
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
-
     
-    #filename = "test.xml" 
-    #filename = "feedback.xml"
-    #filename = "LinearChain.xml"
-    #filename = "test_comp.xml"
-    #filename = "test_no_comp.xml"
-    #filename = "test_modifier.xml"
-    #filename = "node_grid.xml"
-    #filename = "mass_action_rxn.xml"
-
-    #filename = "Jana_WolfGlycolysis.xml"
-    #filename = "Jana_WolfGlycolysis-original.xml" 
-    #filename = "output.xml"
-    #filename = "Sauro1.xml"
-    #filename = "test_textGlyph.xml"
-    #node shape:
-    #filename = "rectangle.xml"
-    #filename = "triangle.xml"
-    #filename = "ellipse.xml"
-    #filename = "line.xml"
-    #filename = "hexagon.xml"
-    #SBGN:
-    #filename = "SBGN1-specComplex.xml"
-    #filename = "SBGN2-modifier.xml"
-    #filename = "test_genGlyph.xml"
-    #gradient:
-    #filename = "test_gradientLinear.xml"
-    #filename = "test_gradientRadial.xml"
-
-    #filename = "testbigmodel.xml" #sbml with errors
-
-    #filename = "Sauro_test_sbml_files/branch1-1.xml"
-    #filename = "Sauro_test_sbml_files/cycle1-1.xml"
-    #filename = "Sauro_test_sbml_files/cycle2-1.xml"
-    #filename = "Sauro_test_sbml_files/linearchain.xml"
-
-    #filename = "Coyote/branch1.xml"
-    #filename = "Coyote/branch2.xml"
-    #filename = "Coyote/cycle1.xml"
-    #filename = "Coyote/test.xml"
-
-    #filename = "putida_sbml.xml"
-    #filename = "putida_gb_newgenes.xml"
-
-    #filename = "bart2.xml"
-    #filename = "bart_arccenter.xml"
-    #filename = "bart_spRefBezier.xml"
-    #filename = "newSBML.xml"
-    #filename = "output.xml"
-    #filename = "Coyote.xml"
-    #filename = "newSBML2.xml"
-    #filename = "coyote2.xml"
-
-    #filename = "BIOMD0000000006.xml"
-    #filename = "nodes.xml"
-    #filename = "test_arrows.xml"
-    #filename = "test_center.xml"
-
-    #filename = "mass_action_0.sbml"
-    #filename = "str.xml"
-
-    #filename = "testWithLayout.xml" #libSBNW
+    #filename = "test_suite/test.xml" 
+    #filename = "test_suite/feedback.xml"
+    #filename = "test_suite/LinearChain.xml"
+    #filename = "test_suite/test_comp.xml"
+    #filename = "test_suite/test_no_comp.xml"
+    #filename = "test_suite/test_modifier.xml"
+    #filename = "test_suite/node_grid.xml"
+    #filename = "test_suite/mass_action_rxn.xml"
+    #filename = "test_suite/test_textGlyph.xml"
+    #filename = "test_suite/test_genGlyph.xml"
 
     #bioinformatics
-    #filename = "bioinformatics/BIOMD0000000005.xml"
+    #filename = "test_suite/bioinformatics/BIOMD0000000005.xml"
+    filename = "test_suite/BIOMD0000000005/BIOMD0000000005_layout_render.xml"
+    #filename = "test_suite/bioinformatics/pdmap-nucleoid.xml"
     
-    #filename = "output.xml"
-    filename = "bioinformatics/pdmap-nucleoid.xml"
-    #filename = "bioinformatics/exported_model.xml"
+    #gradient: can not plot but can export
+    #filename = "test_suite/gradient/test_gradientLinear.xml"
+    #filename = "test_suite/gradient/test_gradientRadial.xml"
 
-    #global
+    #long text and alias nodes
+    #filename = "test_suite/long_text_alias/Jana_WolfGlycolysis.xml"
+
+    #sbml with errors
+    #filename = "test_suite/sbml_error/testbigmodel.xml"
+
+##############################
+    #filename = 'output.xml'
+
+    #filename = "Bart/bart_arccenter.xml"
+    #filename = "Bart/bart_spRefBezier.xml"
+    #filename = "Bart/bart2.xml"
+    #filename = "Bart/newSBML.xml"
+    #filename = "Bart/newSBML2.xml"
+    #filename = "Bart/output.xml"
+
     #filename = "copasi_global/feedback_AssignRuleGlobalRender.xml"
+
+    #filename = "libSBNW/testWithLayout.xml"
+
+    #filename = "Sauro-Coyote/branch1.xml"
+    #filename = "Sauro-Coyote/branch1-straight.xml"
+    #filename = "Sauro-Coyote/branch1-straight2.xml"
+    #filename = "Sauro-Coyote/branch2.xml"
+    #filename = "Sauro-Coyote/branch2-2.xml"
+    #filename = "Sauro-Coyote/coyote.xml"
+    #filename = "Sauro-Coyote/coyote2.xml"
+    #filename = "Sauro-Coyote/cycle1-straight.xml"
+    #filename = "Sauro-Coyote/cycle1-straight2.xml"
+    #filename = "Sauro-Coyote/test.xml"
+
+    
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('output.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    try:
-        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    except:
-        print("did not return shapeData")
-    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('output.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # try:
+    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # except:
+    #     print("did not return shapeData")
+    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -6005,10 +5982,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    # sbmlStr_layout_render = df.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    sbmlStr_layout_render = df.export()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
@@ -6018,5 +5995,5 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    #df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png')
 

@@ -758,23 +758,22 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 try:
                     line_end_pt = rct_lineend_pos_list[j]
                     if line_end_pt[0] < (pos_x + width) and line_end_pt[0] > pos_x  and line_end_pt[1] > pos_y and line_end_pt[1] < (pos_y+height):
-                        try:
-                            line_end_pt = _cross_point(handle2, 
-                            [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
-                            [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
-                        except:
-                            line_end_pt = _cross_point(center_value, 
-                            [pos_x-3.*reaction_line_thickness, pos_y-3.*reaction_line_thickness], 
-                            [width+6.*reaction_line_thickness,height+6.*reaction_line_thickness])                  
-                except:
-                    try:
                         line_end_pt = _cross_point(handle2, 
                         [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
                         [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
-                    except:
-                        line_end_pt = _cross_point(center_value, 
-                        [pos_x-3.*reaction_line_thickness, pos_y-3.*reaction_line_thickness], 
-                        [width+6.*reaction_line_thickness,height+6.*reaction_line_thickness])
+                        if line_end_pt == None:
+                            line_end_pt = _cross_point(center_value, 
+                            [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                            [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])                  
+                except:               
+                    line_end_pt = _cross_point(handle2, 
+                    [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                    [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
+                    if line_end_pt == None:
+                            line_end_pt = _cross_point(center_value, 
+                            [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                            [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
+                    
                 try:
                     cb.setStart(libsbml.Point(layoutns, line_end_pt[0], line_end_pt[1]))
                 except:
@@ -824,23 +823,21 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 try:
                     line_head_pt = prd_lineend_pos_list[j]
                     if line_head_pt[0] < (pos_x + width) and line_head_pt[0] > pos_x  and line_head_pt[1] > pos_y and line_head_pt[1] < (pos_y+height):
-                        try:
-                            line_head_pt = _cross_point(handle2, 
-                            [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
-                            [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
-                        except:
-                            line_head_pt = _cross_point(center_value, 
-                            [pos_x-3.*reaction_line_thickness, pos_y-3.*reaction_line_thickness], 
-                            [width+6.*reaction_line_thickness,height+6.*reaction_line_thickness])            
-                except:
-                    try:
                         line_head_pt = _cross_point(handle2, 
                         [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
                         [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
-                    except:
+                        if line_head_pt == None:
+                            line_head_pt = _cross_point(center_value, 
+                            [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                            [width+2*reaction_line_thickness,height+2*reaction_line_thickness])            
+                except:
+                    line_head_pt = _cross_point(handle2, 
+                    [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                    [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
+                    if line_head_pt == None:
                         line_head_pt = _cross_point(center_value, 
-                        [pos_x-3.*reaction_line_thickness, pos_y-3.*reaction_line_thickness], 
-                        [width+6.*reaction_line_thickness,height+6.*reaction_line_thickness])
+                        [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                        [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
               
                 try:
                     cb.setEnd(libsbml.Point(layoutns, line_head_pt[0], line_head_pt[1]))
