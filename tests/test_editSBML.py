@@ -42,12 +42,28 @@ class TestEditSBML(unittest.TestCase):
     border_color = [255, 255, 254]
     border_width = 2.
     opacity = 0.
+    txt_position = [10, 10]
+    txt_size = [1000, 1000]
+    txt_content = 'comp'
+    txt_font_color = 'Red'
+    txt_line_width = 10.
+    txt_font_size = 10.
+    txt_anchor = "start"
+    txt_vanchor = 'bottom'
 
     df_update = editSBML._setCompartmentPosition(self.df, "_compartment_default_", position)
     df_update = editSBML._setCompartmentSize(df_update, "_compartment_default_", size)
     df_update = editSBML._setCompartmentFillColor(df_update, "_compartment_default_", fill_color, opacity = opacity)
     df_update = editSBML._setCompartmentBorderColor(df_update, "_compartment_default_", border_color, opacity = opacity)
     df_update = editSBML._setCompartmentBorderWidth(df_update, "_compartment_default_", border_width)
+    df_update = editSBML._setCompartmentTextPosition(df_update, "_compartment_default_", txt_position)
+    df_update = editSBML._setCompartmentTextSize(df_update, "_compartment_default_", txt_size)
+    df_update = editSBML._setCompartmentTextContent(df_update, "_compartment_default_", txt_content)
+    df_update = editSBML._setCompartmentTextFontColor(df_update, "_compartment_default_", txt_font_color, opacity = 1.)
+    df_update = editSBML._setCompartmentTextLineWidth(df_update, "_compartment_default_", txt_line_width)
+    df_update = editSBML._setCompartmentTextFontSize(df_update, "_compartment_default_", txt_font_size)
+    df_update = editSBML._setCompartmentTextAnchor(df_update, "_compartment_default_", txt_anchor)
+    df_update = editSBML._setCompartmentTextVAnchor(df_update, "_compartment_default_", txt_vanchor)
 
     self.assertTrue(df_update[0].iloc[0]["position"] == position)
     self.assertTrue(df_update[0].iloc[0]["size"] == size) 
@@ -56,7 +72,14 @@ class TestEditSBML(unittest.TestCase):
     self.assertTrue(df_update[0].iloc[0]["border_color"][0:-1] == border_color)
     self.assertTrue(df_update[0].iloc[0]["border_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[0].iloc[0]["border_width"] == border_width)
-       
+    self.assertTrue(df_update[0].iloc[0]["txt_position"] == txt_position)
+    self.assertTrue(df_update[0].iloc[0]["txt_size"] == txt_size) 
+    self.assertTrue(df_update[0].iloc[0]["txt_content"] == txt_content) 
+    self.assertTrue(df_update[0].iloc[0]["txt_font_color"] == [255, 0, 0, 255])
+    self.assertTrue(df_update[0].iloc[0]["txt_line_width"] == txt_line_width) 
+    self.assertTrue(df_update[0].iloc[0]["txt_font_size"] == txt_font_size)
+    self.assertTrue(df_update[0].iloc[0]["txt_anchor"] == [txt_anchor, txt_vanchor]) 
+
     with self.assertRaises(Exception):
       editSBML._setCompartmentPosition(df_update, "XX", position)
     with self.assertRaises(Exception):
@@ -67,6 +90,24 @@ class TestEditSBML(unittest.TestCase):
       editSBML._setCompartmentBorderColor(df_update, "XX", border_color)
     with self.assertRaises(Exception):
       editSBML._setCompartmentBorderWidth(df_update, "XX", border_width)
+    
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextPosition(df_update, "XX", txt_position)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextSize(df_update, "XX", txt_size)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextContent(df_update, "XX", txt_content)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextFontSize(df_update, "XX", txt_font_color)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextLineWidth(df_update, "XX", txt_line_width)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextFontSize(df_update, "XX", txt_font_size)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextAnchor(df_update, "XX", txt_anchor)
+    with self.assertRaises(Exception):
+      editSBML._setCompartmentTextVAnchor(df_update, "XX", txt_vanchor)
+
 
   def testSetNode(self):
     # set node one by one
@@ -85,9 +126,12 @@ class TestEditSBML(unittest.TestCase):
     fill_color = [255, 204, 154]
     border_color = [255, 109, 9]
     border_width = 3.
+    txt_content = 'x1'
     txt_font_color = [0, 0, 0]
     txt_line_width = 1.
     txt_font_size = 12.
+    txt_anchor = 'start'
+    txt_vanchor = 'bottom'
     opacity = 1.
     gradient_linear_info = [[0.0, 0.0], [100.0, 100.0]]
     gradient_radial_info = [[50.0, 50.0], [50.]]
@@ -107,9 +151,12 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setNodeFillRadialGradient(df_update, "x_0", gradient_radial_info, stop_info)
     df_update = editSBML._setNodeBorderColor(df_update, "x_1", border_color, opacity = opacity)
     df_update = editSBML._setNodeBorderWidth(df_update, "x_1", border_width)
+    df_update = editSBML._setNodeTextContent(df_update, "x_1", txt_content)
     df_update = editSBML._setNodeTextFontColor(df_update, "x_1", txt_font_color, opacity = opacity)
     df_update = editSBML._setNodeTextLineWidth(df_update, "x_1", txt_line_width)
     df_update = editSBML._setNodeTextFontSize(df_update, "x_1", txt_font_size)
+    df_update = editSBML._setNodeTextAnchor(df_update, "x_1", txt_anchor)
+    df_update = editSBML._setNodeTextVAnchor(df_update, "x_1", txt_vanchor)
     
     self.assertTrue(df_update[1].iloc[0]["floating_node"] == floating_node)
     self.assertTrue(df_update[1].iloc[0]["position"] == position)
@@ -171,11 +218,17 @@ class TestEditSBML(unittest.TestCase):
     with self.assertRaises(Exception):
       editSBML._setNodeBorderWidth(df_update, "XX", border_width)
     with self.assertRaises(Exception):
+      editSBML._setNodeTextContent(df_update, "XX", txt_content, opacity = opacity)
+    with self.assertRaises(Exception):
       editSBML._setNodeTextFontColor(df_update, "XX", txt_font_color, opacity = opacity)
     with self.assertRaises(Exception):
       editSBML._setNodeTextLineWidth(df_update, "XX", txt_line_width)
     with self.assertRaises(Exception):
       editSBML._setNodeTextFontSize(df_update, "XX", txt_font_size)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextAnchor(df_update, "XX", txt_anchor)
+    with self.assertRaises(Exception):
+      editSBML._setNodeTextVAnchor(df_update, "XX", txt_vanchor)
 
   def testSetNodeTextPosition(self):
     # Test all the set node text position functions
@@ -243,6 +296,11 @@ class TestEditSBML(unittest.TestCase):
     line_thickness = 2.
     bezier = False
     arrowHeadSize = [20, 20]
+    arrowHeadPosition = [-12.,-7.]
+    arrowHeadSize = [12.,13.]
+    arrowHeadFillColor = "BurlyWood"
+    shape_type_list=['polygon']
+    shape_info_list=[[[0.0, 0.0], [100.0, 60.0], [0.0, 100.0], [0.0, 0.0]]]
     rxn_dash = [5, 10]
 
     df_update = editSBML._setReactionCenterPosition(self.df, "r_0", center_pos)
@@ -250,16 +308,16 @@ class TestEditSBML(unittest.TestCase):
     df_update = editSBML._setReactionFillColor(df_update, "r_0", fill_color, opacity = opacity)
     df_update = editSBML._setReactionLineThickness(df_update, "r_0", line_thickness)
     df_update = editSBML._setBezierReactionType(df_update, "r_0", bezier)
-    df_update = editSBML._setReactionArrowHeadSize(df_update, "r_0", arrowHeadSize)
+    #df_update = editSBML._setReactionArrowHeadSize(df_update, "r_0", arrowHeadSize)
     df_update = editSBML._setReactionDashStyle(df_update, "r_0", rxn_dash)
 
     self.assertTrue(df_update[2].iloc[0]["center_pos"] == center_pos)
     self.assertTrue(df_update[2].iloc[0]["handles"] == handles)
-    self.assertTrue(df_update[2].iloc[0]["fill_color"][0:-1] == fill_color)
-    self.assertTrue(df_update[2].iloc[0]["fill_color"][3] == int(opacity*255/1.))
+    self.assertTrue(df_update[2].iloc[0]["stroke_color"][0:-1] == fill_color)
+    self.assertTrue(df_update[2].iloc[0]["stroke_color"][3] == int(opacity*255/1.))
     self.assertTrue(df_update[2].iloc[0]["line_thickness"] == line_thickness)
     self.assertTrue(df_update[2].iloc[0]["bezier"] == bezier)
-    self.assertTrue(df_update[2].iloc[0]["arrow_head_size"] == arrowHeadSize)
+    #self.assertTrue(df_update[2].iloc[0]["arrow_head_size"] == arrowHeadSize)
     self.assertTrue(df_update[2].iloc[0]["rxn_dash"] == rxn_dash)
 
     with self.assertRaises(Exception):
@@ -267,9 +325,16 @@ class TestEditSBML(unittest.TestCase):
       editSBML._setReactionBezierHandles(df_update, "XX", handles)
       editSBML._setReactionFillColor(df_update, "XX", fill_color, opacity = opacity)
       editSBML._setReactionLineThickness(df_update, "XX", line_thickness)
-      editSBML._setBezierReactionType(df_update, "XX", bezier)
-      editSBML._setReactionArrowHeadSize(df_update, "XX", arrowHeadSize)
       editSBML._setReactionDashStyle(df_update, "XX", rxn_dash)
+      editSBML._setBezierReactionType(df_update, "XX", bezier)
+      editSBML._setReactionArrowHeadPosition(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionArrowHeadSize(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionArrowHeadFillColor(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionArrowHeadShape(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionModifierHeadPosition(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionModifierHeadSize(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionModifierHeadFillColor(df_update, "XX", arrowHeadSize)
+      editSBML._setReactionModifierHeadShape(df_update, "XX", arrowHeadSize)
 
   def testSetArbitraryText(self):
     # set arbitrary text one by one

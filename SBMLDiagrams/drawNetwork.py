@@ -747,8 +747,9 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center_position, handles,
                 rct_dimension, prd_dimension, mod_dimension, reaction_line_color, reaction_line_width, 
                 reaction_line_type = 'bezier', show_bezier_handles = False, show_reaction_ids = False,
-                reaction_arrow_head_size = [2., 2.], scale = 1., reaction_dash = [], reverse = False,
-                showReversible = False):
+                reaction_arrow_head_size = [12., 9.], scale = 1., reaction_dash = [], reverse = False,
+                showReversible = False, rct_endhead_render = [], prd_endhead_render = [], mod_endhead_render = [], 
+                rct_lineend_pos = [], prd_lineend_pos = [], mod_lineend_pos = []):
     
     """
     Add a reaction.
@@ -795,7 +796,14 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         
         reverse: bool-reversible reaction or not.
                 
-        showReversible = False):
+        showReversible: bool-show reversible reactions or not.
+
+        rct_endhead_render: list-render information of the reactant endhead.
+
+        prd_endhead_render: list-render information of the product endhead.
+
+        mod_endhead_render: list-render information of the modifier endhead.
+
 
     """
     
@@ -935,10 +943,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
     linewidth = reaction_line_width
     lineType = reaction_line_type
     lineColor = skia.Color(reaction_line_color[0], reaction_line_color[1], reaction_line_color[2], reaction_line_color[3])
-    #arrow_s1 = 5*reaction_line_width 
-    #arrow_s2 = 4*reaction_line_width
-    arrow_s2 = reaction_arrow_head_size[0] #width of the arrow
-    arrow_s1 = reaction_arrow_head_size[1] #height of the arrow
+
+    [arrow_s1, arrow_s2] = reaction_arrow_head_size #width and height of the arrow
     if show_reaction_ids:
         addSimpleText(canvas, rxn_id, center_position, reaction_line_color, 
         text_line_width = 1, fontSize = 12.*scale)
@@ -954,23 +960,65 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
             pts.append(rct_handle_position)
             c1 = rct_position[i] 
             s1 = rct_dimension[i]
-            try:
-                #to calculate the end point of the arrow called arrow_end_pt
-                arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
+
+            #to calculate the end point of the arrow called arrow_end_pt
+            arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
+            line_end_pt = _cross_point(rct_handle_position, [c1[0],c1[1]],[s1[0],s1[1]])
+            if reverse and showReversible:
                 line_end_pt = _cross_point(rct_handle_position, 
                 [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
                 [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
-                if arrow_end_pt == None: #rct_handle_position could be inside the node
-                    rct_handle_position = center_position
-                    arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
-                    line_end_pt = _cross_point(rct_handle_position, 
-                    [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
-                    [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
+            if arrow_end_pt == None: #rct_handle_position could be inside the node
+                rct_handle_position = center_position
+                arrow_end_pt = _cross_point(rct_handle_position, c1, s1)
+                line_end_pt = _cross_point(rct_handle_position, [c1[0],c1[1]],[s1[0],s1[1]])
                 if reverse and showReversible:
+                    line_end_pt = _cross_point(rct_handle_position, 
+                    [c1[0]-reaction_line_width*2,c1[1]-reaction_line_width*2],
+                    [s1[0]+reaction_line_width*4,s1[1]+reaction_line_width*4])
+
+            #draw bezier
+            try:
+                if rct_lineend_pos[i][0] < (c1[0] + s1[0]) and rct_lineend_pos[i][0] > c1[0] and rct_lineend_pos[i][1] > c1[1] and rct_lineend_pos[i][1] < (c1[1]+s1[1]):
+                    if reverse and line_end_pt != None:
+                        pts.append(line_end_pt)
+                    else:
+                        if arrow_end_pt != None:
+                            pts.append(arrow_end_pt)
+                        else:
+                            rct_center_position =  [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
+                            pts.append(rct_center_position)
+                else:  
+                    line_end_pt = rct_lineend_pos[i]
+                    pts.append(line_end_pt)
+                    try:
+                        arrow_end_pt = _cross_point(line_end_pt, 
+                            [c1[0]-reaction_line_width, c1[1]-reaction_line_width],
+                            [s1[0]+2.*reaction_line_width, s1[1]+2.*reaction_line_width])
+                    except:
+                        arrow_end_pt = line_end_pt
+            except:
+                if reverse and line_end_pt != None:
+                    pts.append(line_end_pt)
+                else:
+                    if arrow_end_pt != None:
+                        pts.append(arrow_end_pt)
+                    else:
+                        rct_center_position =  [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
+                        pts.append(rct_center_position)
+            _drawBezier(pts, lineColor, linewidth)
+                                            
+
+            #draw arrow
+            if reverse and showReversible:
+                if arrow_end_pt != None:
                     #draw the arrow:
-                    points = [arrow_end_pt]
-                    distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
-                    if distance != 0:
+                    if prd_endhead_render == []: #there is no lineending info
+                        #print(arrow_s1, arrow_s2)
+                        points = [arrow_end_pt]
+                        distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
+                        if distance == 0:
+                            distance = 0.001
                         pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-rct_handle_position[1])*arrow_s1/distance
                         pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-rct_handle_position[0])*arrow_s1/distance
                         pts_y_l = pts_y_m + (arrow_end_pt[0]-rct_handle_position[0])*.5*arrow_s2/distance
@@ -980,30 +1028,163 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         pts_y_r = pts_y_m - (arrow_end_pt[0]-rct_handle_position[0])*.5*arrow_s2/distance
                         pts_x_r = pts_x_m + (arrow_end_pt[1]-rct_handle_position[1])*.5*arrow_s2/distance
                         points.append([pts_x_r,pts_y_r])
+                        _drawArrow(canvas, points, lineColor)
                     else:
-                        distance = math.sqrt((arrow_end_pt[0]-center_position[0])**2 + (arrow_end_pt[1]-center_position[1])**2)
-                        pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-center_position[1])*arrow_s1/distance
-                        pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-center_position[0])*arrow_s1/distance
-                        pts_y_l = pts_y_m + (arrow_end_pt[0]-center_position[0])*.5*arrow_s2/distance
-                        pts_x_l = pts_x_m - (arrow_end_pt[1]-center_position[1])*.5*arrow_s2/distance
-                        points.append([pts_x_l,pts_y_l])
-                        points.append([pts_x_m, pts_y_m])
-                        pts_y_r = pts_y_m - (arrow_end_pt[0]-center_position[0])*.5*arrow_s2/distance
-                        pts_x_r = pts_x_m + (arrow_end_pt[1]-center_position[1])*.5*arrow_s2/distance
-                        points.append([pts_x_r,pts_y_r])
+                        if prd_endhead_render[0][3] == ['ellipse']:
+                            arrow_s1 = prd_endhead_render[0][1][0]*scale
+                            arrow_s2 = prd_endhead_render[0][1][1]*scale
+                            width = arrow_s1
+                            height = arrow_s2
+                            rx = prd_endhead_render[0][4][0][1][0]/100.*width
+                            ry = prd_endhead_render[0][4][0][1][1]/100.*height
+                            #rx = .5*width
+                            #ry = .5*height
+                            distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
+                            if distance == 0:
+                                distance = 0.001
+                            pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-rct_handle_position[1])*arrow_s1/distance
+                            pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-rct_handle_position[0])*arrow_s1/distance
+                            x = pts_x_m
+                            y = pts_y_m
+                            outline = lineColor
+                            if prd_endhead_render[0][2] != 0: #there is fill info 
+                                cl = prd_endhead_render[0][2]
+                                fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                            else:
+                                fill = lineColor               
+                            _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
+                                    outline, fill, linewidth)
 
-                    _drawArrow(canvas, points, lineColor)
+                        elif prd_endhead_render[0][3] == ['polygon']:
+                            arrow_s1 = prd_endhead_render[0][1][0]*scale
+                            arrow_s2 = prd_endhead_render[0][1][1]*scale
+                            #print(arrow_s1, arrow_s2)
+                            width = arrow_s1
+                            height = arrow_s2
+                            distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
+                            if distance == 0:
+                                distance = 0.001
+    
+                            outline = lineColor
+                            if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                                cl = prd_endhead_render[0][2]
+                                fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                            else:
+                                fill = lineColor 
+                            sinTheta = (-arrow_end_pt[1]+rct_handle_position[1])/distance
+                            cosTheta = (arrow_end_pt[0]-rct_handle_position[0])/distance
 
-                if reverse and line_end_pt != None:
-                    pts.append(line_end_pt)
-                    _drawBezier(pts, lineColor, linewidth)
-                if arrow_end_pt != None:
-                    pts.append(arrow_end_pt)
-                    _drawBezier(pts, lineColor, linewidth)
-            except:
-                rct_center_position =  [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
-                pts.append(rct_center_position)
-                _drawBezier(pts, lineColor, linewidth)
+                            x0 = rct_handle_position[0]-0.5*height*sinTheta - width*cosTheta + arrow_end_pt[0] - rct_handle_position[0]
+                            y0 = rct_handle_position[1]-0.5*height*cosTheta + width*sinTheta + arrow_end_pt[1] - rct_handle_position[1]
+                            
+                            shape_info = prd_endhead_render[0][4][0]
+
+                            pts = []
+                            for ii in range(len(shape_info)):
+                                delta_x= width*shape_info[ii][0]/100.
+                                delta_y= height*shape_info[ii][1]/100.
+                                delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                                delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                                pts.append([(x0 + delta_x_rotate), 
+                                (y0 + delta_y_rotate)])    
+                                #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                            _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                            fill, linewidth)
+
+                        elif prd_endhead_render[0][3] == ['rectangle']:
+                            #consider a rectangle as special polygon
+                            arrow_s1 = prd_endhead_render[0][1][0]*scale
+                            arrow_s2 = prd_endhead_render[0][1][1]*scale
+                            width = arrow_s1
+                            height = arrow_s2
+                            distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
+                            if distance == 0:
+                                distance = 0.001
+
+                            outline = lineColor
+                            if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                                cl = prd_endhead_render[0][2]
+                                fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                            else:
+                                fill = lineColor 
+                            sinTheta = (-arrow_end_pt[1]+rct_handle_position[1])/distance
+                            cosTheta = (arrow_end_pt[0]-rct_handle_position[0])/distance
+
+                            x0 = rct_handle_position[0]-0.5*height*sinTheta - width*cosTheta + arrow_end_pt[0] - rct_handle_position[0]
+                            y0 = rct_handle_position[1]-0.5*height*cosTheta + width*sinTheta + arrow_end_pt[1] - rct_handle_position[1]
+                        
+                            shape_info = [[0.,0],[100.,0.],[100.,100],[0.,100.], [0.,0.]]
+
+                            pts = []
+                            for ii in range(len(shape_info)):
+                                delta_x= width*shape_info[ii][0]/100.
+                                delta_y= height*shape_info[ii][1]/100.
+                                delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                                delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                                pts.append([(x0 + delta_x_rotate), 
+                                (y0 + delta_y_rotate)])    
+                                #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                            _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                            fill, linewidth)
+
+                        #combination of several polygons
+                        elif len(prd_endhead_render[0][3]) > 1 and all(item == 'polygon' for item in prd_endhead_render[0][3]):
+                            shape_type_list  = prd_endhead_render[0][3]
+                            for j in range(len(shape_type_list)):
+                                arrow_s1 = prd_endhead_render[0][1][0]*scale
+                                arrow_s2 = prd_endhead_render[0][1][1]*scale
+                                width = arrow_s1
+                                height = arrow_s2
+                                distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
+                                if distance == 0:
+                                    distance = 0.001
+
+                                outline = lineColor
+                                if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                                    cl = prd_endhead_render[0][2]
+                                    fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                                else:
+                                    fill = lineColor 
+                                sinTheta = (-arrow_end_pt[1]+rct_handle_position[1])/distance
+                                cosTheta = (arrow_end_pt[0]-rct_handle_position[0])/distance
+
+                                x0 = rct_handle_position[0]-0.5*height*sinTheta - width*cosTheta + arrow_end_pt[0] - rct_handle_position[0]
+                                y0 = rct_handle_position[1]-0.5*height*cosTheta + width*sinTheta + arrow_end_pt[1] - rct_handle_position[1]
+                        
+                                shape_info = prd_endhead_render[0][4][j]
+
+                                pts = []
+                                for ii in range(len(shape_info)):
+                                    delta_x= width*shape_info[ii][0]/100.
+                                    delta_y= height*shape_info[ii][1]/100.
+                                    delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                                    delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                                    pts.append([(x0 + delta_x_rotate), 
+                                    (y0 + delta_y_rotate)])    
+                                    #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                                _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                                fill, linewidth)
+
+                        else: #no the shape is not covered by the above cases
+                            points = [arrow_end_pt]
+                            distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
+                            if distance == 0:
+                                distance = 0.001
+                            pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-rct_handle_position[1])*arrow_s1/distance
+                            pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-rct_handle_position[0])*arrow_s1/distance
+                            pts_y_l = pts_y_m + (arrow_end_pt[0]-rct_handle_position[0])*.5*arrow_s2/distance
+                            pts_x_l = pts_x_m - (arrow_end_pt[1]-rct_handle_position[1])*.5*arrow_s2/distance
+                            points.append([pts_x_l,pts_y_l])
+                            points.append([pts_x_m, pts_y_m])
+                            pts_y_r = pts_y_m - (arrow_end_pt[0]-rct_handle_position[0])*.5*arrow_s2/distance
+                            pts_x_r = pts_x_m + (arrow_end_pt[1]-rct_handle_position[1])*.5*arrow_s2/distance
+                            points.append([pts_x_r,pts_y_r])
+                            _drawArrow(canvas, points, lineColor)
+
+
         for i in range(nProducts):
             pts = [center_position] 
             pts.append(center_handle_position_prd)
@@ -1011,22 +1192,58 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
             pts.append(prd_handle_position)
             c2 = prd_position[i] 
             s2 = prd_dimension[i]
-            try:
-                #to calculate the head point of the arrow called arrow_head_pt
+
+            #to calculate the head point of the arrow called arrow_head_pt
+            arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
+            line_head_pt = _cross_point(prd_handle_position, 
+            [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
+            [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
+            if arrow_head_pt == None: #prd_handle_position could be inside the node
+                prd_handle_position = center_position
                 arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
                 line_head_pt = _cross_point(prd_handle_position, 
-                [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
-                [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
-                if arrow_head_pt == None: #prd_handle_position could be inside the node
-                    prd_handle_position = center_position
-                    arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
-                    line_head_pt = _cross_point(prd_handle_position, 
-                    [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
-                    [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
-                #draw the arrow:
-                points = [arrow_head_pt]
-                distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
-                if distance != 0:
+                [c2[0]-reaction_line_width*2,c2[1]-reaction_line_width*2],
+                [s2[0]+reaction_line_width*4,s2[1]+reaction_line_width*4])
+
+            #draw bezier
+            try:
+                if prd_lineend_pos[i][0] < (c2[0] + s2[0]) and prd_lineend_pos[i][0] > c2[0]  and prd_lineend_pos[i][1] > c2[1] and prd_lineend_pos[i][1] < (c2[1]+s2[1]):
+                    if line_head_pt != None:
+                        pts.append(line_head_pt)
+                    else:
+                        if arrow_head_pt != None:
+                            pts.append(arrow_head_pt)
+                        else:
+                            prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
+                            pts.append(prd_center_position)
+                else: 
+                    line_head_pt = prd_lineend_pos[i]     
+                    pts.append(line_head_pt)
+                    try:
+                        arrow_head_pt = _cross_point(line_head_pt, 
+                        [c2[0]-reaction_line_width, c2[1]-reaction_line_width],
+                        [s2[0]+2.*reaction_line_width, s2[1]+2.*reaction_line_width])
+                    except:
+                        arrow_head_pt = line_head_pt
+            except:
+                if line_head_pt != None:
+                    pts.append(line_head_pt)
+                else:
+                    if arrow_head_pt != None:
+                        pts.append(arrow_head_pt)
+                    else:
+                        prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
+                        pts.append(prd_center_position)
+            _drawBezier(pts, lineColor, linewidth)
+
+            #draw the arrow:
+            if arrow_head_pt != None:
+                if prd_endhead_render == []: #there is no lineending info
+                    #print(arrow_s1, arrow_s2)
+                    points = [arrow_head_pt]
+                    distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
+                    if distance == 0:
+                        distance = 0.001
                     pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-prd_handle_position[1])*arrow_s1/distance
                     pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-prd_handle_position[0])*arrow_s1/distance
                     pts_y_l = pts_y_m + (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/distance
@@ -1036,49 +1253,233 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     pts_y_r = pts_y_m - (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/distance
                     pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/distance
                     points.append([pts_x_r,pts_y_r])
+                    _drawArrow(canvas, points, lineColor)
                 else:
-                    distance = math.sqrt((arrow_head_pt[0]-center_position[0])**2 + (arrow_head_pt[1]-center_position[1])**2)
-                    pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-center_position[1])*arrow_s1/distance
-                    pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-center_position[0])*arrow_s1/distance
-                    pts_y_l = pts_y_m + (arrow_head_pt[0]-center_position[0])*.5*arrow_s2/distance
-                    pts_x_l = pts_x_m - (arrow_head_pt[1]-center_position[1])*.5*arrow_s2/distance
-                    points.append([pts_x_l,pts_y_l])
-                    points.append([pts_x_m, pts_y_m])
-                    pts_y_r = pts_y_m - (arrow_head_pt[0]-center_position[0])*.5*arrow_s2/distance
-                    pts_x_r = pts_x_m + (arrow_head_pt[1]-center_position[1])*.5*arrow_s2/distance
-                    points.append([pts_x_r,pts_y_r])
-                _drawArrow(canvas, points, lineColor)
+                    if prd_endhead_render[0][3] == ['ellipse']:
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
+                        width = arrow_s1
+                        height = arrow_s2
+                        rx = prd_endhead_render[0][4][0][1][0]/100.*width
+                        ry = prd_endhead_render[0][4][0][1][1]/100.*height
+                        #rx = .5*width
+                        #ry = .5*height
+                        distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+                        pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-prd_handle_position[1])*arrow_s1/distance
+                        pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-prd_handle_position[0])*arrow_s1/distance
+                        x = pts_x_m
+                        y = pts_y_m
+                        outline = lineColor
+                        if prd_endhead_render[0][2] != 0: #there is fill info 
+                            cl = prd_endhead_render[0][2]
+                            fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            fill = lineColor               
+                        _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
+                                outline, fill, linewidth)
 
-                if line_head_pt != None:
-                    pts.append(line_head_pt)
-                    _drawBezier(pts, lineColor, linewidth)
-                else:
-                    pts.append(arrow_head_pt)
-                    _drawBezier(pts, lineColor, linewidth)
-            except:
-                prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
-                pts.append(prd_center_position)
-                _drawBezier(pts, lineColor, linewidth)
+                    elif prd_endhead_render[0][3] == ['polygon']:
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
+                        #print(arrow_s1, arrow_s2)
+                        width = arrow_s1
+                        height = arrow_s2
+                        distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+ 
+                        outline = lineColor
+                        if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                            cl = prd_endhead_render[0][2]
+                            fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                        else:
+                            fill = lineColor 
+                        sinTheta = (-arrow_head_pt[1]+prd_handle_position[1])/distance
+                        cosTheta = (arrow_head_pt[0]-prd_handle_position[0])/distance
+
+                        x0 = prd_handle_position[0]-0.5*height*sinTheta - width*cosTheta + arrow_head_pt[0] - prd_handle_position[0]
+                        y0 = prd_handle_position[1]-0.5*height*cosTheta + width*sinTheta + arrow_head_pt[1] - prd_handle_position[1]
+                        
+                        shape_info = prd_endhead_render[0][4][0]
+
+                        pts = []
+                        for ii in range(len(shape_info)):
+                            delta_x= width*shape_info[ii][0]/100.
+                            delta_y= height*shape_info[ii][1]/100.
+                            delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                            delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                            pts.append([(x0 + delta_x_rotate), 
+                            (y0 + delta_y_rotate)])    
+                            #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                        _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                        fill, linewidth)
+
+                    elif prd_endhead_render[0][3] == ['rectangle']:
+                        #consider a rectangle as special polygon
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
+                        width = arrow_s1
+                        height = arrow_s2
+                        distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+
+                        outline = lineColor
+                        if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                            cl = prd_endhead_render[0][2]
+                            fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                        else:
+                            fill = lineColor 
+                        sinTheta = (-arrow_head_pt[1]+prd_handle_position[1])/distance
+                        cosTheta = (arrow_head_pt[0]-prd_handle_position[0])/distance
+
+                        x0 = prd_handle_position[0]-0.5*height*sinTheta - width*cosTheta + arrow_head_pt[0] - prd_handle_position[0]
+                        y0 = prd_handle_position[1]-0.5*height*cosTheta + width*sinTheta + arrow_head_pt[1] - prd_handle_position[1]
+                      
+                        shape_info = [[0.,0],[100.,0.],[100.,100],[0.,100.], [0.,0.]]
+
+                        pts = []
+                        for ii in range(len(shape_info)):
+                            delta_x= width*shape_info[ii][0]/100.
+                            delta_y= height*shape_info[ii][1]/100.
+                            delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                            delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                            pts.append([(x0 + delta_x_rotate), 
+                            (y0 + delta_y_rotate)])    
+                            #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                        _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                        fill, linewidth)
+
+                    #combination of several polygons
+                    elif len(prd_endhead_render[0][3]) > 1 and all(item == 'polygon' for item in prd_endhead_render[0][3]):
+                        shape_type_list  = prd_endhead_render[0][3]
+                        for j in range(len(shape_type_list)):
+                            arrow_s1 = prd_endhead_render[0][1][0]*scale
+                            arrow_s2 = prd_endhead_render[0][1][1]*scale
+                            width = arrow_s1
+                            height = arrow_s2
+                            distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
+                            if distance == 0:
+                                distance = 0.001
+
+                            outline = lineColor
+                            if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                                cl = prd_endhead_render[0][2]
+                                fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                            else:
+                                fill = lineColor 
+                            sinTheta = (-arrow_head_pt[1]+prd_handle_position[1])/distance
+                            cosTheta = (arrow_head_pt[0]-prd_handle_position[0])/distance
+
+                            x0 = prd_handle_position[0]-0.5*height*sinTheta - width*cosTheta + arrow_head_pt[0] - prd_handle_position[0]
+                            y0 = prd_handle_position[1]-0.5*height*cosTheta + width*sinTheta + arrow_head_pt[1] - prd_handle_position[1]
+                      
+                            shape_info = prd_endhead_render[0][4][j]
+
+                            pts = []
+                            for ii in range(len(shape_info)):
+                                delta_x= width*shape_info[ii][0]/100.
+                                delta_y= height*shape_info[ii][1]/100.
+                                delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                                delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                                pts.append([(x0 + delta_x_rotate), 
+                                (y0 + delta_y_rotate)])    
+                                #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                            _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                            fill, linewidth)
+
+                    else: #no the shape is not covered by the above cases
+                        points = [arrow_head_pt]
+                        distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+                        pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-prd_handle_position[1])*arrow_s1/distance
+                        pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-prd_handle_position[0])*arrow_s1/distance
+                        pts_y_l = pts_y_m + (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/distance
+                        pts_x_l = pts_x_m - (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/distance
+                        points.append([pts_x_l,pts_y_l])
+                        points.append([pts_x_m, pts_y_m])
+                        pts_y_r = pts_y_m - (arrow_head_pt[0]-prd_handle_position[0])*.5*arrow_s2/distance
+                        pts_x_r = pts_x_m + (arrow_head_pt[1]-prd_handle_position[1])*.5*arrow_s2/distance
+                        points.append([pts_x_r,pts_y_r])
+                        _drawArrow(canvas, points, lineColor)
+
+
     elif lineType == 'straight':
         for i in range (nReactants):
             c1 = rct_position[i] 
             s1 = rct_dimension[i]
-            try:
-                #to calculate the head point of the arrow called arrow_end_pt
-                arrow_end_pt = _cross_point(arcCenter, c1, s1) 
+
+            #to calculate the head point of the arrow called arrow_end_pt
+            arrow_end_pt = _cross_point(arcCenter, c1, s1) 
+            line_end_pt = _cross_point(arcCenter, [c1[0],c1[1]],[s1[0],s1[1]])
+            if reverse and showReversible:
                 line_end_pt = _cross_point(arcCenter, 
                 [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
                 [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
-                if arrow_end_pt == None:
-                    #arcCenter is inside the node
-                    arrow_end_pt = [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
+            if arrow_end_pt == None:
+                #arcCenter is inside the node
+                arrow_end_pt = [c1[0]+.5*s1[0], c1[1]+.5*s1[1]]
+                line_end_pt = _cross_point(arcCenter, [c1[0],c1[1]],[s1[0],s1[1]])
+                if reverse and showReversible:
                     line_end_pt = _cross_point(arcCenter, 
-                    [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
-                    [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
-                if reverse and showReversible:    
-                    #draw the arrow:
+                    [c1[0]-reaction_line_width*2,c1[1]-reaction_line_width*2],
+                    [s1[0]+reaction_line_width*4,s1[1]+reaction_line_width*4])
+
+            try:
+                if rct_lineend_pos[i][0] < (c1[0] + s1[0]) and rct_lineend_pos[i][0] > c1[0] and rct_lineend_pos[i][1] > c1[1] and rct_lineend_pos[i][1] < (c1[1]+s1[1]):
+                    if reverse and line_end_pt != None:
+                        _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
+                        lineColor, linewidth)
+                    else: 
+                        _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_end_pt[0], arrow_end_pt[1], 
+                        lineColor, linewidth)
+                else:
+                    line_end_pt = rct_lineend_pos[i]
+                    _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
+                        lineColor, linewidth)
+                    try:
+                        arrow_end_pt = _cross_point(line_end_pt, 
+                        [c1[0]-reaction_line_width, c1[1]-reaction_line_width],
+                        [s1[0]+2.*reaction_line_width, s1[1]+2.*reaction_line_width])
+                    except:
+                        arrow_end_pt = line_end_pt
+            except:
+                if reverse and line_end_pt != None:
+                    _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
+                    lineColor, linewidth)
+                else: 
+                    _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_end_pt[0], arrow_end_pt[1], 
+                    lineColor, linewidth)
+
+            if reverse and showReversible:    
+                #draw the arrow:
+                # points = [arrow_end_pt]
+                # distance = math.sqrt((arrow_end_pt[0]-arcCenter[0])**2 + (arrow_end_pt[1]-arcCenter[1])**2)
+                # if distance == 0:
+                #     distance = 0.001
+                # pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-arcCenter[1])*arrow_s1/distance
+                # pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-arcCenter[0])*arrow_s1/distance
+                # pts_y_l = pts_y_m + (arrow_end_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                # pts_x_l = pts_x_m - (arrow_end_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                # points.append([pts_x_l,pts_y_l])
+                # points.append([pts_x_m, pts_y_m])
+                # pts_y_r = pts_y_m - (arrow_end_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                # pts_x_r = pts_x_m + (arrow_end_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                # points.append([pts_x_r,pts_y_r])
+                # _drawArrow(canvas, points, lineColor)
+                                    #draw the arrow:
+                if prd_endhead_render == []: #there is no lineending info
+                    #print(arrow_s1, arrow_s2)
                     points = [arrow_end_pt]
                     distance = math.sqrt((arrow_end_pt[0]-arcCenter[0])**2 + (arrow_end_pt[1]-arcCenter[1])**2)
+                    if distance == 0:
+                        distance = 0.001
                     pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-arcCenter[1])*arrow_s1/distance
                     pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-arcCenter[0])*arrow_s1/distance
                     pts_y_l = pts_y_m + (arrow_end_pt[0]-arcCenter[0])*.5*arrow_s2/distance
@@ -1089,76 +1490,566 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     pts_x_r = pts_x_m + (arrow_end_pt[1]-arcCenter[1])*.5*arrow_s2/distance
                     points.append([pts_x_r,pts_y_r])
                     _drawArrow(canvas, points, lineColor)
-            except:
-                pass
-            if reverse and line_end_pt != None:
-                _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
-                lineColor, linewidth)
-            else: 
-                _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_end_pt[0], arrow_end_pt[1], 
-                lineColor, linewidth)
+                else:
+                    if prd_endhead_render[0][3] == ['ellipse']:
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
+                        width = arrow_s1
+                        height = arrow_s2
+                        rx = prd_endhead_render[0][4][0][1][0]/100.*width
+                        ry = prd_endhead_render[0][4][0][1][1]/100.*height
+                        #rx = .5*width
+                        #ry = .5*height
+                        distance = math.sqrt((arrow_end_pt[0]-arcCenter[0])**2 + (arrow_end_pt[1]-arcCenter[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+                        pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-arcCenter[1])*arrow_s1/distance
+                        pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-arcCenter[0])*arrow_s1/distance
+                        x = pts_x_m
+                        y = pts_y_m
+                        outline = lineColor
+                        if prd_endhead_render[0][2] != 0: #there is fill info 
+                            cl = prd_endhead_render[0][2]
+                            fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            fill = lineColor               
+                        _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
+                                outline, fill, linewidth)
+
+                    elif prd_endhead_render[0][3] == ['polygon']:
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
+                        #print(arrow_s1, arrow_s2)
+                        width = arrow_s1
+                        height = arrow_s2
+                        distance = math.sqrt((arrow_end_pt[0]-arcCenter[0])**2 + (arrow_end_pt[1]-arcCenter[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+
+                        outline = lineColor
+                        if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                            cl = prd_endhead_render[0][2]
+                            fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                        else:
+                            fill = lineColor 
+                        sinTheta = (-arrow_end_pt[1]+arcCenter[1])/distance
+                        cosTheta = (arrow_end_pt[0]-arcCenter[0])/distance
+
+                        x0 = arcCenter[0]-0.5*height*sinTheta - width*cosTheta + arrow_end_pt[0] - arcCenter[0]
+                        y0 = arcCenter[1]-0.5*height*cosTheta + width*sinTheta + arrow_end_pt[1] - arcCenter[1]
+                        
+                        shape_info = prd_endhead_render[0][4][0]
+
+                        pts = []
+                        for ii in range(len(shape_info)):
+                            delta_x= width*shape_info[ii][0]/100.
+                            delta_y= height*shape_info[ii][1]/100.
+                            delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                            delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                            pts.append([(x0 + delta_x_rotate), 
+                            (y0 + delta_y_rotate)])    
+                            #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                        _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                        fill, linewidth)
+
+                    elif prd_endhead_render[0][3] == ['rectangle']:
+                        #consider a rectangle as special polygon
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
+                        width = arrow_s1
+                        height = arrow_s2
+                        distance = math.sqrt((arrow_end_pt[0]-arcCenter[0])**2 + (arrow_end_pt[1]-arcCenter[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+
+                        outline = lineColor
+                        if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                            cl = prd_endhead_render[0][2]
+                            fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                        else:
+                            fill = lineColor 
+                        sinTheta = (-arrow_end_pt[1]+arcCenter[1])/distance
+                        cosTheta = (arrow_end_pt[0]-arcCenter[0])/distance
+
+                        x0 = arcCenter[0]-0.5*height*sinTheta - width*cosTheta + arrow_end_pt[0] - arcCenter[0]
+                        y0 = arcCenter[1]-0.5*height*cosTheta + width*sinTheta + arrow_end_pt[1] - arcCenter[1]
+                    
+                        shape_info = [[0.,0],[100.,0.],[100.,100],[0.,100.], [0.,0.]]
+
+                        pts = []
+                        for ii in range(len(shape_info)):
+                            delta_x= width*shape_info[ii][0]/100.
+                            delta_y= height*shape_info[ii][1]/100.
+                            delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                            delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                            pts.append([(x0 + delta_x_rotate), 
+                            (y0 + delta_y_rotate)])    
+                            #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                        _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                        fill, linewidth)
+
+                    #combination of several polygons
+                    elif len(prd_endhead_render[0][3]) > 1 and all(item == 'polygon' for item in prd_endhead_render[0][3]):
+                        shape_type_list  = prd_endhead_render[0][3]
+                        for j in range(len(shape_type_list)):
+                            arrow_s1 = prd_endhead_render[0][1][0]*scale
+                            arrow_s2 = prd_endhead_render[0][1][1]*scale
+                            width = arrow_s1
+                            height = arrow_s2
+                            distance = math.sqrt((arrow_end_pt[0]-arcCenter[0])**2 + (arrow_end_pt[1]-arcCenter[1])**2)
+                            if distance == 0:
+                                distance = 0.001
+
+                            outline = lineColor
+                            if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                                cl = prd_endhead_render[0][2]
+                                fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                            else:
+                                fill = lineColor 
+                            sinTheta = (-arrow_end_pt[1]+arcCenter[1])/distance
+                            cosTheta = (arrow_end_pt[0]-arcCenter[0])/distance
+
+                            x0 = arcCenter[0]-0.5*height*sinTheta - width*cosTheta + arrow_end_pt[0] - arcCenter[0]
+                            y0 = arcCenter[1]-0.5*height*cosTheta + width*sinTheta + arrow_end_pt[1] - arcCenter[1]
+                    
+                            shape_info = prd_endhead_render[0][4][j]
+
+                            pts = []
+                            for ii in range(len(shape_info)):
+                                delta_x= width*shape_info[ii][0]/100.
+                                delta_y= height*shape_info[ii][1]/100.
+                                delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                                delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                                pts.append([(x0 + delta_x_rotate), 
+                                (y0 + delta_y_rotate)])    
+                                #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                            _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                            fill, linewidth)
+
+                    else: #no the shape is not covered by the above cases
+                        points = [arrow_end_pt]
+                        distance = math.sqrt((arrow_end_pt[0]-arcCenter[0])**2 + (arrow_end_pt[1]-arcCenter[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+                        pts_y_m = arrow_end_pt[1] - (arrow_end_pt[1]-arcCenter[1])*arrow_s1/distance
+                        pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-arcCenter[0])*arrow_s1/distance
+                        pts_y_l = pts_y_m + (arrow_end_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                        pts_x_l = pts_x_m - (arrow_end_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                        points.append([pts_x_l,pts_y_l])
+                        points.append([pts_x_m, pts_y_m])
+                        pts_y_r = pts_y_m - (arrow_end_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                        pts_x_r = pts_x_m + (arrow_end_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                        points.append([pts_x_r,pts_y_r])
+                        _drawArrow(canvas, points, lineColor)
+
         for i in range (nProducts):
             c2 = prd_position[i] 
             s2 = prd_dimension[i]
-            try:
-                #to calculate the head point of the arrow called arrow_head_pt
-                arrow_head_pt = _cross_point(arcCenter, c2, s2) 
+
+            #to calculate the head point of the arrow called arrow_head_pt
+            arrow_head_pt = _cross_point(arcCenter, c2, s2) 
+            line_head_pt = _cross_point(arcCenter, 
+            [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
+            [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
+            if arrow_head_pt == None:
+                #arcCenter is inside the node
+                arrow_head_pt = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
                 line_head_pt = _cross_point(arcCenter, 
-                [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
-                [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
-                if arrow_head_pt == None:
-                    #arcCenter is inside the node
-                    arrow_head_pt = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
-                    line_head_pt = _cross_point(arcCenter, 
-                    [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
-                    [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
-                #draw the arrow:
-                points = [arrow_head_pt]
-                distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
-                pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-arcCenter[1])*arrow_s1/distance
-                pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/distance
-                pts_y_l = pts_y_m + (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
-                pts_x_l = pts_x_m - (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
-                points.append([pts_x_l,pts_y_l])
-                points.append([pts_x_m, pts_y_m])
-                pts_y_r = pts_y_m - (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
-                pts_x_r = pts_x_m + (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
-                points.append([pts_x_r,pts_y_r])
-                _drawArrow(canvas, points, lineColor)
+                [c2[0]-reaction_line_width*2,c2[1]-reaction_line_width*2],
+                [s2[0]+reaction_line_width*4,s2[1]+reaction_line_width*4])
+
+            try:
+                if prd_lineend_pos[i][0] < (c2[0] + s2[0]) and prd_lineend_pos[i][0] > c2[0]  and prd_lineend_pos[i][1] > c2[1] and prd_lineend_pos[i][1] < (c2[1]+s2[1]):
+                    if line_head_pt != None:
+                        _drawLine(canvas, arcCenter[0], arcCenter[1], line_head_pt[0], line_head_pt[1], 
+                        lineColor, linewidth)
+                    else: 
+                        _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_head_pt[0], arrow_head_pt[1], 
+                        lineColor, linewidth)
+                else:
+                    line_head_pt = prd_lineend_pos[i]
+                    _drawLine(canvas, arcCenter[0], arcCenter[1], line_head_pt[0], line_head_pt[1], 
+                        lineColor, linewidth)
+                    try:
+                        arrow_head_pt = _cross_point(line_head_pt, 
+                            [c2[0]-reaction_line_width, c2[1]-reaction_line_width],
+                            [s2[0]+2.*reaction_line_width, s2[1]+2.*reaction_line_width])
+                    except:
+                        arrow_head_pt = line_head_pt
             except:
-                pass
-            if line_head_pt != None:
-                _drawLine(canvas, arcCenter[0], arcCenter[1], line_head_pt[0], line_head_pt[1], 
-                lineColor, linewidth)
-            else: 
-                _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_head_pt[0], arrow_head_pt[1], 
-                lineColor, linewidth)
+                if line_head_pt != None:
+                    _drawLine(canvas, arcCenter[0], arcCenter[1], line_head_pt[0], line_head_pt[1], 
+                    lineColor, linewidth)
+                else: 
+                    _drawLine(canvas, arcCenter[0], arcCenter[1], arrow_head_pt[0], arrow_head_pt[1], 
+                    lineColor, linewidth)
+
+            # #draw the arrow:
+            # points = [arrow_head_pt]
+            # distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
+            # if distance == 0:
+            #     distance = 0.001
+            # pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-arcCenter[1])*arrow_s1/distance
+            # pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/distance
+            # pts_y_l = pts_y_m + (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+            # pts_x_l = pts_x_m - (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+            # points.append([pts_x_l,pts_y_l])
+            # points.append([pts_x_m, pts_y_m])
+            # pts_y_r = pts_y_m - (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+            # pts_x_r = pts_x_m + (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+            # points.append([pts_x_r,pts_y_r])
+            # _drawArrow(canvas, points, lineColor)
+
+            #draw the arrow:
+            if arrow_head_pt != None:
+                if prd_endhead_render == []: #there is no lineending info
+                    #print(arrow_s1, arrow_s2)
+                    points = [arrow_head_pt]
+                    distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
+                    if distance == 0:
+                        distance = 0.001
+                    pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-arcCenter[1])*arrow_s1/distance
+                    pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/distance
+                    pts_y_l = pts_y_m + (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                    pts_x_l = pts_x_m - (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                    points.append([pts_x_l,pts_y_l])
+                    points.append([pts_x_m, pts_y_m])
+                    pts_y_r = pts_y_m - (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                    pts_x_r = pts_x_m + (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                    points.append([pts_x_r,pts_y_r])
+                    _drawArrow(canvas, points, lineColor)
+                else:
+                    if prd_endhead_render[0][3] == ['ellipse']:
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
+                        width = arrow_s1
+                        height = arrow_s2
+                        rx = prd_endhead_render[0][4][0][1][0]/100.*width
+                        ry = prd_endhead_render[0][4][0][1][1]/100.*height
+                        #rx = .5*width
+                        #ry = .5*height
+                        distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+                        pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-arcCenter[1])*arrow_s1/distance
+                        pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/distance
+                        x = pts_x_m
+                        y = pts_y_m
+                        outline = lineColor
+                        if prd_endhead_render[0][2] != 0: #there is fill info 
+                            cl = prd_endhead_render[0][2]
+                            fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            fill = lineColor               
+                        _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
+                                outline, fill, linewidth)
+
+                    elif prd_endhead_render[0][3] == ['polygon']:
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
+                        #print(arrow_s1, arrow_s2)
+                        width = arrow_s1
+                        height = arrow_s2
+                        distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+ 
+                        outline = lineColor
+                        if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                            cl = prd_endhead_render[0][2]
+                            fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                        else:
+                            fill = lineColor 
+                        sinTheta = (-arrow_head_pt[1]+arcCenter[1])/distance
+                        cosTheta = (arrow_head_pt[0]-arcCenter[0])/distance
+
+                        x0 = arcCenter[0]-0.5*height*sinTheta - width*cosTheta + arrow_head_pt[0] - arcCenter[0]
+                        y0 = arcCenter[1]-0.5*height*cosTheta + width*sinTheta + arrow_head_pt[1] - arcCenter[1]
+                        
+                        shape_info = prd_endhead_render[0][4][0]
+
+                        pts = []
+                        for ii in range(len(shape_info)):
+                            delta_x= width*shape_info[ii][0]/100.
+                            delta_y= height*shape_info[ii][1]/100.
+                            delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                            delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                            pts.append([(x0 + delta_x_rotate), 
+                            (y0 + delta_y_rotate)])    
+                            #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                        _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                        fill, linewidth)
+
+                    elif prd_endhead_render[0][3] == ['rectangle']:
+                        #consider a rectangle as special polygon
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
+                        width = arrow_s1
+                        height = arrow_s2
+                        distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+
+                        outline = lineColor
+                        if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                            cl = prd_endhead_render[0][2]
+                            fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                        else:
+                            fill = lineColor 
+                        sinTheta = (-arrow_head_pt[1]+arcCenter[1])/distance
+                        cosTheta = (arrow_head_pt[0]-arcCenter[0])/distance
+
+                        x0 = arcCenter[0]-0.5*height*sinTheta - width*cosTheta + arrow_head_pt[0] - arcCenter[0]
+                        y0 = arcCenter[1]-0.5*height*cosTheta + width*sinTheta + arrow_head_pt[1] - arcCenter[1]
+                      
+                        shape_info = [[0.,0],[100.,0.],[100.,100],[0.,100.], [0.,0.]]
+
+                        pts = []
+                        for ii in range(len(shape_info)):
+                            delta_x= width*shape_info[ii][0]/100.
+                            delta_y= height*shape_info[ii][1]/100.
+                            delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                            delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                            pts.append([(x0 + delta_x_rotate), 
+                            (y0 + delta_y_rotate)])    
+                            #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                        _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                        fill, linewidth)
+
+                    #combination of several polygons
+                    elif len(prd_endhead_render[0][3]) > 1 and all(item == 'polygon' for item in prd_endhead_render[0][3]):
+                        shape_type_list  = prd_endhead_render[0][3]
+                        for j in range(len(shape_type_list)):
+                            arrow_s1 = prd_endhead_render[0][1][0]*scale
+                            arrow_s2 = prd_endhead_render[0][1][1]*scale
+                            width = arrow_s1
+                            height = arrow_s2
+                            distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
+                            if distance == 0:
+                                distance = 0.001
+
+                            outline = lineColor
+                            if len(prd_endhead_render[0][2]) != 0: #there is fill info 
+                                cl = prd_endhead_render[0][2]
+                                fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                            else:
+                                fill = lineColor 
+                            sinTheta = (-arrow_head_pt[1]+arcCenter[1])/distance
+                            cosTheta = (arrow_head_pt[0]-arcCenter[0])/distance
+
+                            x0 = arcCenter[0]-0.5*height*sinTheta - width*cosTheta + arrow_head_pt[0] - arcCenter[0]
+                            y0 = arcCenter[1]-0.5*height*cosTheta + width*sinTheta + arrow_head_pt[1] - arcCenter[1]
+                      
+                            shape_info = prd_endhead_render[0][4][j]
+
+                            pts = []
+                            for ii in range(len(shape_info)):
+                                delta_x= width*shape_info[ii][0]/100.
+                                delta_y= height*shape_info[ii][1]/100.
+                                delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                                delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                                pts.append([(x0 + delta_x_rotate), 
+                                (y0 + delta_y_rotate)])    
+                                #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                            _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                            fill, linewidth)
+
+                    else: #no the shape is not covered by the above cases
+                        points = [arrow_head_pt]
+                        distance = math.sqrt((arrow_head_pt[0]-arcCenter[0])**2 + (arrow_head_pt[1]-arcCenter[1])**2)
+                        if distance == 0:
+                            distance = 0.001
+                        pts_y_m = arrow_head_pt[1] - (arrow_head_pt[1]-arcCenter[1])*arrow_s1/distance
+                        pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/distance
+                        pts_y_l = pts_y_m + (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                        pts_x_l = pts_x_m - (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                        points.append([pts_x_l,pts_y_l])
+                        points.append([pts_x_m, pts_y_m])
+                        pts_y_r = pts_y_m - (arrow_head_pt[0]-arcCenter[0])*.5*arrow_s2/distance
+                        pts_x_r = pts_x_m + (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
+                        points.append([pts_x_r,pts_y_r])
+                        _drawArrow(canvas, points, lineColor)
+
+
+
     #draw modifiers:
-    modifier_lineColor = skia.Color(128, 0, 128)
-    modifier_linewidth = 2*scale
+    #modifier_lineColor = skia.Color(128, 0, 128)
+    #modifier_linewidth = 2*scale
+    modifier_lineColor = lineColor
+    modifier_linewidth = reaction_line_width
     mod_num = len(mod_position)
     for i in range(mod_num):
         mod_start_virtual_x = .5*mod_dimension[i][0] + mod_position[i][0]
         mod_start_virtual_y = .5*mod_dimension[i][1] + mod_position[i][1]
         try: 
             [mod_start_x, mod_start_y] = _cross_point(arcCenter, 
-            [mod_position[i][0]-.25*mod_dimension[i][0], mod_position[i][1]-.25*mod_dimension[i][1]],
-            [mod_dimension[i][0]*1.5, mod_dimension[i][1]*1.5]) 
+            [mod_position[i][0]-reaction_line_width*2.,mod_position[i][1]-reaction_line_width*2.],
+            [mod_dimension[i][0]+reaction_line_width*4., mod_dimension[i][1]+reaction_line_width*4.]) 
             [mod_end_x, mod_end_y] = _cross_point([mod_start_virtual_x, mod_start_virtual_y],
-            [arcCenter[0]-.5*mod_dimension[i][0],arcCenter[1]-.5*mod_dimension[i][1]], mod_dimension[i])
+            [arcCenter[0]-5.*reaction_line_width, arcCenter[1]-5.*reaction_line_width], 
+            [10.*reaction_line_width, 10.*reaction_line_width])
         except: 
-            mod_start_x = .5*mod_dimension[i][0] + mod_position[i][0]
-            mod_start_y = .5*mod_dimension[i][1] + mod_position[i][1]
+            mod_start_x = mod_start_virtual_x
+            mod_start_y = mod_start_virtual_y
             [mod_end_x, mod_end_y] = arcCenter[0], arcCenter[1] 
-        _drawLine(canvas, mod_start_x, mod_start_y, mod_end_x, mod_end_y,
-         modifier_lineColor, modifier_linewidth)  
-        _drawCircle(canvas, mod_end_x-modifier_linewidth, mod_end_y-modifier_linewidth, 
-        2*modifier_linewidth, 2*modifier_linewidth,
-                        modifier_lineColor, modifier_lineColor, .5*modifier_linewidth)      
+        #print(mod_lineend_pos[i])
+        try:
+            [mod_end_x, mod_end_y] = mod_lineend_pos[i]
+            _drawLine(canvas, mod_start_x, mod_start_y, mod_end_x, mod_end_y,
+            modifier_lineColor, modifier_linewidth)
+        except:
+            _drawLine(canvas, mod_start_x, mod_start_y, mod_end_x, mod_end_y,
+                modifier_lineColor, modifier_linewidth)
+
+        if mod_endhead_render == []: #there is no lineending info
+            _drawCircle(canvas, mod_end_x-2.*modifier_linewidth, mod_end_y-2.*modifier_linewidth, 
+            4.*modifier_linewidth, 4.*modifier_linewidth,
+                            modifier_lineColor, modifier_lineColor, modifier_linewidth) 
+        else:
+            if mod_endhead_render[i][3] == ['ellipse']:
+                width = mod_endhead_render[i][1][0]*scale
+                height = mod_endhead_render[i][1][1]*scale
+                rx = mod_endhead_render[i][4][0][1][0]/100.*width
+                ry = mod_endhead_render[i][4][0][1][1]/100.*height
+                #rx = 0.5*width
+                #ry = 0.5*height
+                x = mod_end_x
+                y = mod_end_y
+                outline = lineColor
+                if mod_endhead_render[i][2] != 0: #there is fill info 
+                    cl = mod_endhead_render[i][2]
+                    fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                else:
+                    fill = lineColor               
+                _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
+                        outline, fill, linewidth)
+
+            elif mod_endhead_render[i][3] == ['polygon']:
+                width = mod_endhead_render[i][1][0]*scale
+                height = mod_endhead_render[i][1][1]*scale
+
+                distance = math.sqrt((mod_end_x-mod_start_x)**2 + (mod_end_y-mod_start_y)**2)
+                if distance == 0:
+                    distance = 0.001
+
+                outline = lineColor
+                if len(mod_endhead_render[i][2]) != 0: #there is fill info 
+                    cl = mod_endhead_render[i][2]
+                    fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                else:
+                    fill = lineColor 
+                sinTheta = (-mod_end_y + mod_start_y)/distance
+                cosTheta = ( mod_end_x - mod_start_x)/distance
+
+                x0 = mod_start_x-0.5*height*sinTheta - width*cosTheta + mod_end_x - mod_start_x
+                y0 = mod_start_y-0.5*height*cosTheta + width*sinTheta + mod_end_y - mod_start_y
+                
+                shape_info = mod_endhead_render[i][4][0]
+
+                pts = []
+                for ii in range(len(shape_info)):
+                    delta_x= width*shape_info[ii][0]/100.
+                    delta_y= height*shape_info[ii][1]/100.
+                    delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                    delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                    pts.append([(x0 + delta_x_rotate), 
+                    (y0 + delta_y_rotate)])    
+                    #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                fill, linewidth)
+
+            elif mod_endhead_render[i][3] == ['rectangle']:
+                #consider a rectangle as special polygon
+                width = mod_endhead_render[i][1][0]*scale
+                height = mod_endhead_render[i][1][1]*scale
+
+                distance = math.sqrt((mod_end_x-mod_start_x)**2 + (mod_end_y-mod_start_y)**2)
+                if distance == 0:
+                    distance = 0.001
+
+                outline = lineColor
+                if len(mod_endhead_render[i][2]) != 0: #there is fill info 
+                    cl = mod_endhead_render[i][2]
+                    fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                else:
+                    fill = lineColor 
+
+                sinTheta = (-mod_end_y + mod_start_y)/distance
+                cosTheta = ( mod_end_x - mod_start_x)/distance
+
+                x0 = mod_start_x-0.5*height*sinTheta - width*cosTheta + mod_end_x - mod_start_x
+                y0 = mod_start_y-0.5*height*cosTheta + width*sinTheta + mod_end_y - mod_start_y
+                
+                shape_info = [[0.,0],[100.,0.],[100.,100],[0.,100.], [0.,0.]]
+
+                pts = []
+                for ii in range(len(shape_info)):
+                    delta_x= width*shape_info[ii][0]/100.
+                    delta_y= height*shape_info[ii][1]/100.
+                    delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                    delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                    pts.append([(x0 + delta_x_rotate), 
+                    (y0 + delta_y_rotate)])    
+                    #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                fill, linewidth)
+
+            #combination of several polygons
+            elif len(mod_endhead_render[i][3]) > 1 and all(item == 'polygon' for item in mod_endhead_render[i][3]):
+                shape_type_list  = mod_endhead_render[i][3]
+                for j in range(len(shape_type_list)):
+                    width = mod_endhead_render[i][1][0]*scale
+                    height = mod_endhead_render[i][1][1]*scale
+  
+                    distance = math.sqrt((mod_end_x-mod_start_x)**2 + (mod_end_y-mod_start_y)**2)
+                    if distance == 0:
+                        distance = 0.001
+
+                    outline = lineColor
+                    if len(mod_endhead_render[i][2]) != 0: #there is fill info 
+                        cl = mod_endhead_render[i][2]
+                        fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
+                    else:
+                        fill = lineColor 
+                   
+                    sinTheta = (-mod_end_y + mod_start_y)/distance
+                    cosTheta = ( mod_end_x - mod_start_x)/distance
+
+                    x0 = mod_start_x-0.5*height*sinTheta - width*cosTheta + mod_end_x - mod_start_x
+                    y0 = mod_start_y-0.5*height*cosTheta + width*sinTheta + mod_end_y - mod_start_y
+                
+                    shape_info = mod_endhead_render[i][4][j]
+
+                    pts = []
+                    for ii in range(len(shape_info)):
+                        delta_x= width*shape_info[ii][0]/100.
+                        delta_y= height*shape_info[ii][1]/100.
+                        delta_x_rotate = delta_x*cosTheta + delta_y*sinTheta
+                        delta_y_rotate = delta_y*cosTheta - delta_x*sinTheta
+                        pts.append([(x0 + delta_x_rotate), 
+                        (y0 + delta_y_rotate)])    
+                        #pts.append([(x0 + delta_x), (y0 + delta_y)])       
+
+                    _drawPolygon (canvas, x0, y0, width, height, pts, outline, 
+                    fill, linewidth)
+
+            else: #no the shape is not covered by the above cases
+                _drawCircle(canvas, mod_end_x-2.*modifier_linewidth, mod_end_y-2.*modifier_linewidth, 
+                4.*modifier_linewidth, 4.*modifier_linewidth,
+                                modifier_lineColor, modifier_lineColor, modifier_linewidth)
+
 
 def addText(canvas, txt_str, position, dimension, 
-    text_line_color = [0, 0, 0, 255], text_line_width = 1., fontSize = 12.,
-    longText='auto-font'):
+    text_line_color = [0, 0, 0, 255], text_line_width = 1., fontSize = 12., 
+    textAnchor = ['middle', 'middle'], longText='auto-font'):
 
     """
     Add the text.
@@ -1203,18 +2094,41 @@ def addText(canvas, txt_str, position, dimension,
             theight = font.getSpacing() 
             if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
                 stop_flag_1 = True
-                position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
-                position_x = position[0] + .5*(dimension[0] - twidth)
-                position_y = position[1] + .5*(dimension[1] - theight)
+                position = [position[0], position[1] + theight] #adjust of the text position
+                [position_x,position_y] = position
+                if textAnchor[0] == 'middle':
+                    position_x = position[0] + .5*(dimension[0] - twidth)
+                if textAnchor[0] == 'end':
+                    position_x = position[0] + (dimension[0] - twidth)
+                if textAnchor[1] == 'top':
+                    position_y = position[1] + .3*theight
+                if textAnchor[1] == 'middle':
+                    position_y = position[1] + .5*(dimension[1] - theight) - .3*theight
+                if textAnchor[1] == 'baseline':
+                    position_y = position[1] + .5*(dimension[1] - theight) 
+                if textAnchor[1] == 'bottom':
+                    position_y = position[1] + (dimension[1] - theight) -.3*theight
+
             else:
                 # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
                 fontSize = fontSize - 1.
             count_while += 1
             if count_while > 20:
                 stop_flag_1 = True
-                position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
-                position_x = position[0] + .5*(dimension[0] - twidth)
-                position_y = position[1] + .5*(dimension[1] - theight)
+                position = [position[0], position[1] + theight] #adjust of the text position
+                [position_x,position_y] = position
+                if textAnchor[0] == 'middle':
+                    position_x = position[0] + .5*(dimension[0] - twidth)
+                if textAnchor[0] == 'end':
+                    position_x = position[0] + (dimension[0] - twidth)
+                if textAnchor[1] == 'top':
+                    position_y = position[1] + .3*theight
+                if textAnchor[1] == 'middle':
+                    position_y = position[1] + .5*(dimension[1] - theight) - .3*theight
+                if textAnchor[1] == 'baseline':
+                    position_y = position[1] + .5*(dimension[1] - theight) 
+                if textAnchor[1] == 'bottom':
+                    position_y = position[1] + (dimension[1] - theight) -.3*theight
 
     elif longText == 'ellipsis':
         txt_str_len = len(txt_str)
@@ -1233,9 +2147,21 @@ def addText(canvas, txt_str, position, dimension,
 
             if dimension[0] > (twidth+4.*text_line_width) and dimension[1] > (theight+4.*text_line_width):
                 stop_flag_1 = True
-                position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
-                position_x = position[0] + .5*(dimension[0] - twidth)
-                position_y = position[1] + .5*(dimension[1] - theight)
+                position = [position[0], position[1] + theight] #adjust of the text position
+                [position_x,position_y] = position
+                if textAnchor[0] == 'middle':
+                    position_x = position[0] + .5*(dimension[0] - twidth)
+                if textAnchor[0] == 'end':
+                    position_x = position[0] + (dimension[0] - twidth)
+                if textAnchor[1] == 'top':
+                    position_y = position[1] + .3*theight
+                if textAnchor[1] == 'middle':
+                    position_y = position[1] + .5*(dimension[1] - theight) - .3*theight
+                if textAnchor[1] == 'baseline':
+                    position_y = position[1] + .5*(dimension[1] - theight) 
+                if textAnchor[1] == 'bottom':
+                    position_y = position[1] + (dimension[1] - theight) -.3*theight
+
             else:
                 # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
                 txt_str_len = txt_str_len - 1
@@ -1244,14 +2170,25 @@ def addText(canvas, txt_str, position, dimension,
             count_while += 1
             if count_while > 20:
                 stop_flag_1 = True
-                position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
-                position_x = position[0] + .5*(dimension[0] - twidth)
-                position_y = position[1] + .5*(dimension[1] - theight)
+                position = [position[0], position[1] + theight] #adjust of the text position
+                [position_x,position_y] = position
+                if textAnchor[0] == 'middle':
+                    position_x = position[0] + .5*(dimension[0] - twidth)
+                if textAnchor[0] == 'end':
+                    position_x = position[0] + (dimension[0] - twidth)
+                if textAnchor[1] == 'top':
+                    position_y = position[1] + .3*theight
+                if textAnchor[1] == 'middle':
+                    position_y = position[1] + .5*(dimension[1] - theight) - .3*theight
+                if textAnchor[1] == 'baseline':
+                    position_y = position[1] + .5*(dimension[1] - theight)
+                if textAnchor[1] == 'bottom':
+                    position_y = position[1] + (dimension[1] - theight) -.3*theight
 
     else:
-        position = [position[0], position[1] + theight - dimension[1]*0.1] #adjust of the text position
+        position = [position[0], position[1] + theight] #adjust of the text position
         position_x = position[0] + .5*(dimension[0] - twidth)
-        position_y = position[1] + .5*(dimension[1] - theight)
+        position_y = position[1] + .5*(dimension[1] - theight)  - .3*theight
 
     canvas.drawTextBlob(text, position_x, position_y, paintText)
 

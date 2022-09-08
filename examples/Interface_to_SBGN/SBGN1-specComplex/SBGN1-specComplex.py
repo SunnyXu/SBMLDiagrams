@@ -28,6 +28,7 @@ df.setNodeAndTextPosition("myosinATP",[300,120])
 df.setNodeShape("ATP","ellipse")
 df.setNodeAndTextSize("ATP",[50,50])
 df.setNodeAndTextSize("myosinATP",[70,100])
+df.setNodeTextContent("myosinATP", "-")
 df.setNodeArbitraryPolygonShape("myosinATP","myosinATP-polygon", [[12.5,0],[87.5,0],[100,12.5],[100,87.5],
 [87.5,100],[12.5,100],[0,87.5],[0,12.5]])
 df.setReactionDefaultCenterAndHandlePositions('J1')

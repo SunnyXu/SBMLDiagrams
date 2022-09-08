@@ -37,4 +37,4 @@ la.setReactionDashStyle("J1", [5,5])
 la.setReactionCenterPosition("J3",[550,150])
 la.setReactionBezierHandles("J3", [[550,150],[530,155],[600,120]])
 
-la.draw(showReversible=True, setImageSize=[600,300], output_fileName='output.png')
+la.draw(setImageSize=[600,300], output_fileName='output.png')

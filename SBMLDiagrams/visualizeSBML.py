@@ -191,6 +191,7 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
             if not user_reaction_line_color:
                 user_reaction_line_color = reaction_line_color
 
+            
             drawNetwork.addReaction(canvas,temp_id, src_position, dst_position, mod_position,
                             center_position, handles, src_dimension, dst_dimension, mod_dimension,
                             reaction_line_color = user_reaction_line_color, reaction_line_width = reaction_line_width*rate,
@@ -308,6 +309,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         scale = min(setImageSize[0]/(networkSize[0]+20), setImageSize[1]/(networkSize[1]+20))
 
     color_style = newStyle
+    #print(color_style.getReactionLineColor())
     color_style.setImageSize(imageSize)
 
     def draw_on_canvas(canvas, color_style):
@@ -319,8 +321,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
             return tuple(int(value[i:i+2], 16) for i in (0, 2, 4, 6))
 
         comp_id_list = []
+        compGlyph_id_list = []
         comp_dimension_list = []
         comp_position_list = []
+        comp_text_position_list = []
+        comp_text_dimension_list = []
+        comp_text_content_list = []
         spec_id_list = []
         specGlyph_id_list = []
         spec_specGlyph_id_list = []
@@ -328,10 +334,15 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         spec_position_list = []
         spec_text_position_list = []
         spec_text_dimension_list = []
+        spec_text_content_list = []
+        specRefGlyph_id_list = []
+        specGlyph_specRefGlyph_id_list = []
         allNodes_pos_dict = defaultdict(list)
         allNodes_dim_dict = defaultdict(list)
         floatingNodes_pos_dict = defaultdict(list)
         floatingNodes_dim_dict = defaultdict(list)
+        textGlyph_comp_id_list = []
+        textGlyph_spec_id_list = []
         textGlyph_id_list = []
         text_content_list = []
         text_position_list = []
@@ -348,12 +359,14 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         shape_type = ''
         shape_info = []
         reaction_line_width = 3.0
-        reaction_arrow_head_size = [reaction_line_width*4, reaction_line_width*5]
+        reaction_arrow_head_size = [reaction_line_width*5, reaction_line_width*4]
         reaction_dash = []
+        reaction_line_fill = [255, 255, 255, 255]
         text_content = ''
         text_line_color = [0, 0, 0, 255]
         text_line_width = 1.
-        text_font_size = 12.   
+        text_font_size = 12. 
+        [text_anchor, text_vanchor] = ['middle', 'middle']  
         gen_fill_color = [255, 255, 255, 255]
         gen_border_color = [0, 0, 0, 255]
         gen_border_width = 2.
@@ -388,6 +401,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         compGlyph = layout.getCompartmentGlyph(i)
                         temp_id = compGlyph.getCompartmentId()
                         comp_id_list.append(temp_id)
+                        compGlyph_id = compGlyph.getId()
+                        compGlyph_id_list.append(compGlyph_id)
                         boundingbox = compGlyph.getBoundingBox()
                         height = boundingbox.getHeight()
                         width = boundingbox.getWidth()
@@ -395,8 +410,32 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         pos_y = boundingbox.getY()
                         comp_dimension_list.append([width,height])
                         comp_position_list.append([pos_x,pos_y])
-                        
+                        for j in range(numTextGlyphs):
+                            textGlyph_temp = layout.getTextGlyph(j)
+                            # if textGlyph_temp.isSetOriginOfTextId():
+                            #     temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            if textGlyph_temp.isSetGraphicalObjectId():
+                                temp_compGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                            else:
+                                temp_compGlyph_id = ''
+                            if temp_compGlyph_id == compGlyph_id:
+                                textGlyph = textGlyph_temp
+                                text_content = textGlyph.getText()
+                                temp_id = textGlyph.getId()
+                                textGlyph_comp_id_list.append([compGlyph_id, temp_id])
+                                text_boundingbox = textGlyph.getBoundingBox()
+                                text_pos_x = text_boundingbox.getX()
+                                text_pos_y = text_boundingbox.getY()   
+                                text_dim_w = text_boundingbox.getWidth()
+                                text_dim_h = text_boundingbox.getHeight()                       
+                                comp_text_content_list.append(text_content)
+                                comp_text_position_list.append([text_pos_x, text_pos_y])
+                                comp_text_dimension_list.append([text_dim_w, text_dim_h])
+
+                    #print(comp_text_content_list)
+
                     reaction_id_list = []
+                    reactionGlyph_id_list = []
                     reaction_rev_list = []
                     reaction_center_list = []
                     kinetics_list = []
@@ -419,10 +458,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         reaction_id = reactionGlyph.getReactionId()
                         reaction = model_layout.getReaction(reaction_id)
                         rev = reaction.getReversible()
+                        reactionGlyph_id = reactionGlyph.getId()
                         reaction_id_list.append(reaction_id)
+                        reactionGlyph_id_list.append(reactionGlyph_id)
                         reaction_rev_list.append(rev)
                         reaction = model_layout.getReaction(reaction_id)
-                        kinetics = reaction.getKineticLaw().getFormula()
+                        try:
+                            kinetics = reaction.getKineticLaw().getFormula()
+                        except:
+                            #if reaction.getKineticLaw() == None, or there is no kinetics info
+                            kinetics = ""
                         kinetics_list.append(kinetics)
                         
                         temp_mod_list = []
@@ -442,47 +487,86 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         center_handle = []
                         for j in range(numSpecRefGlyphs):
                             specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
-                            #specRefGlyph_id = specRefGlyph.getSpeciesReferenceGlyphId()
+                            specRefGlyph_id = specRefGlyph.getId()                   
+                            specRefGlyph_id_list.append(specRefGlyph_id)
                                                 
                             curve = specRefGlyph.getCurve()  
                             spec_handle = []                            
-                            for segment in curve.getListOfCurveSegments():
+                            num_curve = curve.getNumCurveSegments()
+                            line_start_list = []
+                            line_end_list = []                           
+                            for segment in curve.getListOfCurveSegments():                    
                                 line_start_x = segment.getStart().getXOffset()
                                 line_start_y = segment.getStart().getYOffset()
                                 line_end_x = segment.getEnd().getXOffset()
                                 line_end_y = segment.getEnd().getYOffset()
-                                line_start_pt =  [line_start_x, line_start_y]
-                                line_end_pt = [line_end_x, line_end_y]
-                                try:
-                                    if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
-                                        #line starts from center
+                                line_start_list.append([line_start_x, line_start_y])
+                                line_end_list.append([line_end_x, line_end_y])
+
+                            try:
+                                line_start_pt =  [line_start_list[0][0], line_start_list[0][1]]
+                                line_end_pt = [line_end_list[num_curve-1][0], line_end_list[num_curve-1][1]]
+                            except:
+                                line_start_pt = []
+                                line_end_pt = []
+
+                            modifier_lineend_pos = []
+                            spec_lineend_pos = []
+
+                            try:
+                                if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                                    #line starts from center
+                                    spec_lineend_pos = line_end_pt
+                                    modifier_lineend_pos = line_start_pt
+                                    try: #bezier 
                                         center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
                                                     segment.getBasePoint1().getYOffset()]                                
                                         spec_handle = [segment.getBasePoint2().getXOffset(),
                                                 segment.getBasePoint2().getYOffset()]
-                                    else:
-                                        #line does not start from center
+                                    except: #straight
+                                        # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                        # .5*(center_pt[1]+line_end_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        spec_handle = center_pt
+                                else:
+                                    #line starts from species
+                                    spec_lineend_pos = line_start_pt
+                                    modifier_lineend_pos = line_end_pt
+                                    try: #bezier
                                         spec_handle = [segment.getBasePoint1().getXOffset(), 
                                                     segment.getBasePoint1().getYOffset()]                                
                                         center_handle_candidate = [segment.getBasePoint2().getXOffset(),
                                                 segment.getBasePoint2().getYOffset()]
-                                except:
-                                    center_handle_candidate = []
-                                    spec_handle = []
+                                    except: #straight
+                                        # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                        # .5*(center_pt[1]+line_start_pt[1])]
+                                        # center_handle_candidate = center_pt
+                                        center_handle_candidate = center_pt
+                                        spec_handle = center_pt
+                            except:
+                                center_handle_candidate = []
+                                spec_handle = []
+
 
                             role = specRefGlyph.getRoleString()
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
+                            specGlyph_specRefGlyph_id_list.append([specGlyph_id, specRefGlyph_id])
                             specGlyph = layout.getSpeciesGlyph(specGlyph_id)
                             
 
-                            for k in range(numSpecGlyphs):
+                            for k in range(numTextGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
-                                if textGlyph_temp.isSetOriginOfTextId():
-                                    temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
-                                elif textGlyph_temp.isSetGraphicalObjectId():
+                                # if textGlyph_temp.isSetOriginOfTextId():
+                                #     temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                if textGlyph_temp.isSetGraphicalObjectId():
                                     temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                                else:
+                                    temp_specGlyph_id = ''
                                 if temp_specGlyph_id == specGlyph_id:
                                     textGlyph = textGlyph_temp
+                                    text_content = textGlyph.getText()
+                                    temp_id = textGlyph.getId()
+                                    textGlyph_spec_id_list.append([specGlyph_id, temp_id])
 
                             spec_id = specGlyph.getSpeciesId()
                             spec_boundingbox = specGlyph.getBoundingBox()
@@ -503,6 +587,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 text_dim_w = width
                                 text_dim_h = height
 
+                            # if text_content == 'Mt-DNA repair':
+                            #         print("node:", [pos_x, pos_y])
+                            #         print("text:", [text_pos_x, text_pos_y])
+
+
                             if specGlyph_id not in specGlyph_id_list:
                                 spec_id_list.append(spec_id)
                                 specGlyph_id_list.append(specGlyph_id)
@@ -511,19 +600,23 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 name_to_id[spec_id] = specGlyph_id
                                 spec_dimension_list.append([width,height])
                                 spec_position_list.append([pos_x,pos_y])
+                                if text_content == '':
+                                    text_content = spec_id
+                                spec_text_content_list.append(text_content)
                                 spec_text_position_list.append([text_pos_x, text_pos_y])
                                 spec_text_dimension_list.append([text_dim_w, text_dim_h])
 
                             if role == "substrate": #it is a rct
                                 #rct_specGlyph_temp_list.append(specGlyph_id)
+                                rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
                                 if center_handle == []:
                                     center_handle.append(center_handle_candidate)
-                                rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
                             elif role == "product": #it is a prd
                                 #prd_specGlyph_temp_list.append(specGlyph_id)
-                                prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle])
-                            elif role == "modifier": #it is a modifier
-                                mod_specGlyph_temp_list.append(specGlyph_id)
+                                prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
+                            elif role == "modifier" or role == 'activator': #it is a modifier
+                                mod_specGlyph_temp_list.append([specGlyph_id, specRefGlyph_id,modifier_lineend_pos])
+                            
                             
                         #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                         #prd_specGlyph_list.append(prd_specGlyph_temp_list)
@@ -557,14 +650,21 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             spec_dimension_list.append([width,height])
                             spec_position_list.append([pos_x,pos_y])
 
-                            for k in range(numSpecGlyphs):
+                            for k in range(numTextGlyphs):
                                 textGlyph_temp = layout.getTextGlyph(k)
-                                if textGlyph_temp.isSetOriginOfTextId():
-                                    temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
-                                elif textGlyph_temp.isSetGraphicalObjectId():
-                                    temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
-                                if temp_specGlyph_id == specGlyph_id:
-                                    textGlyph = textGlyph_temp
+                                if textGlyph_temp != None:
+                                    # if textGlyph_temp.isSetOriginOfTextId():
+                                    #     temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                                    if textGlyph_temp.isSetGraphicalObjectId():
+                                        temp_specGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                                    else:
+                                        temp_specGlyph_id = ''
+                                    if temp_specGlyph_id == specGlyph_id:
+                                        textGlyph = textGlyph_temp
+                                        text_content = textGlyph.getText()
+                                        temp_id = textGlyph.getId()
+                                        textGlyph_spec_id_list.append([specGlyph_id, temp_id])
+
                             try:
                                 text_boundingbox = textGlyph.getBoundingBox()
                                 text_pos_x = text_boundingbox.getX()
@@ -578,15 +678,18 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 text_dim_h = height
                             spec_text_position_list.append([text_pos_x, text_pos_y])
                             spec_text_dimension_list.append([text_dim_w, text_dim_h])
-
-                    #print(reaction_mod_list)
-                    #print(mod_specGlyph_list)
+                            if text_content == '':
+                                text_content = spec_id
+                            spec_text_content_list.append(text_content)
+                    #print(reaction_mod_list) #species_id_list
+                    #print(mod_specGlyph_list) #species_reference_id_list
                     #print(spec_specGlyph_id_list)
 
                     #arbitrary text
                     for i in range(numTextGlyphs):
                         textGlyph = layout.getTextGlyph(i)
-                        if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                        #if not textGlyph.isSetOriginOfTextId() and not textGlyph.isSetGraphicalObjectId():
+                        if not textGlyph.isSetGraphicalObjectId():
                             #if there is no original text id set
                             temp_id = textGlyph.getId()
                             text_content = textGlyph.getText()
@@ -630,32 +733,65 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         spec_render = []
                         rxn_render = []
                         text_render = []
+                        lineEnding_render = []
                         gen_render = []
+                        specRefGlyph_render = []
                         arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                         id_arrowHeadSize = []
+
+                        for  j in range ( 0, info.getNumColorDefinitions()):
+                            color = info.getColorDefinition(j)
+                            color_list.append([color.getId(),color.createValueString()])
+
                         for j in range(0, info.getNumLineEndings()):
                             lineEnding = info.getLineEnding(j)
+                            group = lineEnding.getGroup()
                             temp_id = lineEnding.getId()
                             boundingbox = lineEnding.getBoundingBox()
                             width = boundingbox.getWidth()
                             height= boundingbox.getHeight()
                             pos_x = boundingbox.getX()
                             pos_y = boundingbox.getY()
-                            arrowHeadSize = [width, height]
-                            temp_arrowHeadSize = [width, height]
-                            id_arrowHeadSize.append([temp_id,temp_arrowHeadSize])
-                            # print(lineEnding.getEnableRotationalMapping())
-                            # group = lineEnding.getGroup()
-                            # for element in group.getListOfElements():
-                            #     #name = element.getElementName()
-                            #     NumRenderPoints = element.getListOfElements().getNumRenderPoints()
-                            #     for k in range(NumRenderPoints):
-                            #         x = element.getListOfElements().get(k).getX().getCoordinate()
-                            #         y = element.getListOfElements().get(k).getY().getCoordinate()
-                        
-                        for  j in range ( 0, info.getNumColorDefinitions()):
-                            color = info.getColorDefinition(j)
-                            color_list.append([color.getId(),color.createValueString()])
+                            temp_pos = [pos_x,pos_y]
+                            temp_size = [width, height]
+                            id_arrowHeadSize.append([temp_id,temp_size])
+                            lineEnding_fill_color = []
+                            for k in range(len(color_list)):
+                                if color_list[k][0] == group.getFill():
+                                    lineEnding_fill_color = hex_to_rgb(color_list[k][1])     
+                                    
+                            shape_type=[]
+                            shapeInfo=[]
+                            for k in range(group.getNumElements()):
+                                element = group.getElement(k)
+                                temp_shape_type = element.getElementName()
+                                shape_type.append(temp_shape_type)
+                            
+                                if temp_shape_type == 'ellipse':
+                                    center_x = (element.getCX().getRelativeValue())
+                                    center_y = (element.getCY().getRelativeValue())
+                                    radius_x = (element.getRX().getRelativeValue())
+                                    radius_y = (element.getRY().getRelativeValue())
+                                    if all(v == 0 for v in [radius_x, radius_y]):
+                                        radius_x = element.getRX().getAbsoluteValue()
+                                        radius_y = element.getRY().getAbsoluteValue()
+                                        radius_x = 100*(radius_x)/width
+                                        radius_y = 100*(radius_y)/height                     
+                                    shapeInfo.append([[center_x,center_y],[radius_x,radius_y]])
+
+                                if temp_shape_type == 'polygon':
+                                    NumRenderPoints = element.getListOfElements().getNumRenderPoints()
+                                    temp_shapeInfo = []
+                                    for k in range(NumRenderPoints):
+                                        point_x = float(element.getListOfElements().get(k).getX().getCoordinate().strip('%'))
+                                        point_y = float(element.getListOfElements().get(k).getY().getCoordinate().strip('%'))         
+                                        temp_shapeInfo.append([point_x,point_y])
+                                    shapeInfo.append(temp_shapeInfo)
+                                
+                            lineEnding_render.append([temp_id, temp_pos, temp_size, 
+                            lineEnding_fill_color, shape_type, shapeInfo])
+                        #print(lineEnding_render)
+
                         #print(info.getNumGradientDefinitions())
                         for j in range(0, info.getNumGradientDefinitions()):
                             gradient = info.getGradientDefinition(j)
@@ -686,7 +822,36 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             group = style.getGroup()
                             typeList = style.createTypeString()
                             idList = style.createIdString()
+                                
+                            if typeList == '': 
+                                #if the typeList is not defined, self define it based on idList
+                                #which is the layout id instead of id
+                                if idList in compGlyph_id_list:
+                                    typeList = 'COMPARTMENTGLYPH'
+                                elif idList in specGlyph_id_list:
+                                    typeList = 'SPECIESGLYPH'
+                                elif idList in reactionGlyph_id_list:
+                                    typeList = 'REACTIONGLYPH'
+                                elif idList in textGlyph_id_list:
+                                    typeList = 'TEXTGLYPH'
+                                elif any(idList in sublist for sublist in textGlyph_comp_id_list):
+                                    typeList = 'TEXTGLYPH'
+                                elif any(idList in sublist for sublist in textGlyph_spec_id_list):
+                                    typeList = 'TEXTGLYPH'
+                                elif idList in specRefGlyph_id_list:
+                                    typeList = 'SPECIESREFERENCEGLYPH'
+                                # else:
+                                #     print(idList)
+
                             if 'COMPARTMENTGLYPH' in typeList:
+                                #change layout id to id for later to build the list of render
+                                render_comp_id = idList
+                                for k in range(len(compGlyph_id_list)):    
+                                    if compGlyph_id_list[k] == idList:
+                                        render_comp_id = comp_id_list[k] 
+                                if idList == 'CompG__compartment_default_':
+                                    render_comp_id = '_compartment_default_'                        
+
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
                                         if not color_style.getStyleName():
@@ -698,9 +863,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 comp_border_width = group.getStrokeWidth()
                                 if not color_style.getStyleName():
                                     color_style.setCompBorderWidth(comp_border_width)
-                                comp_render.append([idList, color_style.getCompFillColor(),
+                                comp_render.append([render_comp_id, color_style.getCompFillColor(),
                                                     color_style.getCompBorderColor(),color_style.getCompBorderWidth()])
                             elif 'SPECIESGLYPH' in typeList:
+                                #change layout id to id for later to build the list of render
+                                render_spec_id = idList
+
+                                for k in range(len(spec_specGlyph_id_list)):    
+                                    if spec_specGlyph_id_list[k][1] == idList:
+                                        render_spec_id = spec_specGlyph_id_list[k][0] 
+                                        spec_dimension = spec_dimension_list[k]
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
                                         if not color_style.getStyleName():
@@ -744,6 +916,15 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                             point_x = element.getListOfElements().get(num).getX().getRelativeValue()
                                             point_y = element.getListOfElements().get(num).getY().getRelativeValue()
                                             shapeInfo.append([point_x,point_y]) 
+                                        if all(v == [0.,0.] for v in shapeInfo):
+                                            shapeInfo = []
+                                            spec_width = spec_dimension[0]
+                                            spec_hight = spec_dimension[1]
+                                            for num in range(NumRenderpoints):
+                                                point_x = element.getListOfElements().get(num).getX().getAbsoluteValue()
+                                                point_y = element.getListOfElements().get(num).getY().getAbsoluteValue()
+                                                shapeInfo.append([100.*point_x/spec_width,
+                                                100.*point_y/spec_hight])
                                         if NumRenderpoints == 6: #hexagon:
                                             shapeIdx = 3
                                             shape_name = "hexagon"
@@ -771,16 +952,19 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                 shapeIdx = 9
                                                 shape_name = "rightTriangle"
 
-                                
                                 if spec_fill_color != []:
-                                   spec_render.append([idList,spec_fill_color,color_style.getSpecBorderColor(),
+                                   spec_render.append([render_spec_id,spec_fill_color,color_style.getSpecBorderColor(),
                                    color_style.getSpecBorderWidth(),shapeIdx,shape_name,shape_type,shapeInfo])
                                 else:
-                                    spec_render.append([idList,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
+                                    spec_render.append([render_spec_id,color_style.getSpecFillColor(),color_style.getSpecBorderColor(),
                                     color_style.getSpecBorderWidth(),shapeIdx,shape_name,shape_type,shapeInfo])
                                 
-                                
                             elif 'REACTIONGLYPH' in typeList:
+                                #change layout id to id for later to build the list of render
+                                render_rxn_id = idList
+                                for k in range(len(reactionGlyph_id_list)):    
+                                    if reactionGlyph_id_list[k] == idList:
+                                        render_rxn_id = reaction_id_list[k] 
                                 if group.isSetEndHead():
                                     temp_id = group.getEndHead()
                                 reaction_dash = []
@@ -795,22 +979,41 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
                                             color_style.setReactionLineColor(hex_to_rgb(color_list[k][1]))
+                                    if color_list[k][0] == group.getFill():
+                                        reaction_line_fill = hex_to_rgb(color_list[k][1])
                                 reaction_line_width = group.getStrokeWidth()
-                                rxn_render.append([idList, color_style.getReactionLineColor(), 
-                                reaction_line_width, arrowHeadSize, reaction_dash])
+                                color_style.setReactionLineWidth(reaction_line_width)
+                                rxn_render.append([render_rxn_id, color_style.getReactionLineColor(), 
+                                reaction_line_width, arrowHeadSize, reaction_dash, reaction_line_fill])
                             elif 'TEXTGLYPH' in typeList:
+                                render_text_id = idList
+                                for k in range(len(textGlyph_comp_id_list)):    
+                                    if textGlyph_comp_id_list[k][1] == idList:
+                                        render_text_id = textGlyph_comp_id_list[k][0] 
+                                for k in range(len(textGlyph_spec_id_list)):    
+                                    if textGlyph_spec_id_list[k][1] == idList:
+                                        render_text_id = textGlyph_spec_id_list[k][0]
+                                    
+
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(hex_to_rgb(color_list[k][1]))
                                 text_line_width = group.getStrokeWidth()
+                                if group.isSetTextAnchor():
+                                    text_anchor = group.getTextAnchorAsString()
+                                if group.isSetVTextAnchor():
+                                    text_vanchor = group.getVTextAnchorAsString()
                                 if math.isnan(text_line_width):
                                     text_line_width = 1.
                                 text_font_size = float(group.getFontSize().getCoordinate())
-                                text_render.append([idList,color_style.getTextLineColor(),
-								text_line_width, text_font_size])
+                                if math.isnan(text_font_size):
+                                    text_font_size = 12.
+                                text_render.append([render_text_id,color_style.getTextLineColor(),
+								text_line_width, text_font_size,[text_anchor, text_vanchor]])
 
                             elif 'GENERALGLYPH' in typeList:
+                                render_gen_id = idList
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getFill():
                                         gen_fill_color = hex_to_rgb(color_list[k][1])
@@ -828,8 +1031,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                             point_x = element.getListOfElements().get(num).getX().getRelativeValue()
                                             point_y = element.getListOfElements().get(num).getY().getRelativeValue()
                                             gen_shape_info.append([point_x,point_y]) 
-                                gen_render.append([idList, gen_fill_color, gen_border_color,
+                                gen_render.append([render_gen_id, gen_fill_color, gen_border_color,
                                 gen_border_width, gen_shape_type, gen_shape_info])
+                            elif 'SPECIESREFERENCEGLYPH' in typeList:
+                                render_specRefGlyph_id = idList
+                                # for k in range(len(specGlyph_specRefGlyph_id_list)):    
+                                #     if specGlyph_specRefGlyph_id_list[k][1] == idList:
+                                #         render_specRefGlyph_id = specGlyph_specRefGlyph_id_list[k][0] 
+                                endHead = group.getEndHead()
+                                specRefGlyph_render.append([render_specRefGlyph_id, endHead])
+
         #try: 
             model = simplesbml.loadSBMLStr(sbmlStr)
             numFloatingNodes  = model.getNumFloatingSpecies()
@@ -842,54 +1053,110 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
             Comps_ids = model.getListOfCompartmentIds()
             numNodes = numFloatingNodes + numBoundaryNodes
             comp_node_list = [0]*numComps #Note: numComps is different from numCompGlyphs
+            comp_specs_in_list = []
             for i in range(numComps):
                 comp_node_list[i] = []
+            for i in range(numComps):#only consider the compartment with species in
+                for j in range(numFloatingNodes):
+                    comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[j])
+                    if comp_id not in comp_specs_in_list:
+                        comp_specs_in_list.append(comp_id)
+                for j in range(numBoundaryNodes):
+                    comp_id = model.getCompartmentIdSpeciesIsIn(BoundaryNodes_ids[j])
+                    if comp_id not in comp_specs_in_list:
+                        comp_specs_in_list.append(comp_id)
+
             #if there is layout info:
             if len(spec_id_list) != 0 or len(textGlyph_id_list) != 0 or len(gen_id_list) != 0:
                 for i in range(numComps):
                     temp_id = Comps_ids[i]
-                    vol= model.getCompartmentVolume(i)
-                    if len(comp_id_list) != 0:
-                    #if mplugin is not None:
-                        if temp_id == "_compartment_default_":
+                    if temp_id in comp_specs_in_list:
+                        vol= model.getCompartmentVolume(i)
+                        dimension = imageSize
+                        position = [0.,0.]
+                        comp_fill_color = [255, 255, 255, 255]
+                        comp_border_color = [255, 255, 255, 255]
+                        comp_border_width = 2.0
+                        text_content = ''
+                        text_position = [0.,0.]
+                        text_dimension = [0.,0.]
+                        if len(comp_id_list) != 0:
+                        #if mplugin is not None:
+                            if temp_id == "_compartment_default_":
+                                dimension = imageSize
+                                color_style.setImageSize(dimension)
+                                position = [0, 0]
+                            for j in range(len(comp_id_list)):
+                                if comp_id_list[j] == temp_id:
+                                    dimension = [comp_dimension_list[j][0]*scale,
+                                    comp_dimension_list[j][1]*scale]
+                                    color_style.setImageSize(dimension)
+                                    position = [(comp_position_list[j][0] - topLeftCorner[0])*scale,
+                                    (comp_position_list[j][1] - topLeftCorner[1])*scale]
+                            for j in range(len(comp_text_content_list)):
+                                if comp_id_list[j] == temp_id:
+                                    text_content = comp_text_content_list[j]
+                                    text_position = [(comp_text_position_list[j][0] - topLeftCorner[0])*scale,
+                                    (comp_text_position_list[j][1] - topLeftCorner[1])*scale]
+                                    text_dimension = [comp_text_dimension_list[j][0]*scale,
+                                    comp_text_dimension_list[j][1]*scale]
+                                    #print(dimension, position, text_content, text_position, text_dimension)
+
+                            for j in range(len(comp_render)):
+                                if temp_id == comp_render[j][0]:
+                                    if not color_style.getStyleName():
+                                        color_style.setCompFillColor(comp_render[j][1])
+                                        color_style.setCompBorderColor(comp_render[j][2])
+                                        color_style.setCompBorderWidth(comp_render[j][3])
+
+                            for j in range(len(comp_id_list)):    
+                                if comp_id_list[j] == temp_id:
+                                    tempGlyph_id = compGlyph_id_list[j]                         
+                                    for k in range(len(text_render)):
+                                        if tempGlyph_id == text_render[k][0]:
+                                            text_line_color = text_render[k][1]
+                                            text_line_width = text_render[k][2]
+                                            text_font_size = text_render[k][3]
+                                            [text_anchor, text_vanchor] = text_render[k][4]
+                
+
+                        else:# no layout info about compartment,
+                            # then the whole size of the canvas is the compartment size
                             dimension = imageSize
                             color_style.setImageSize(dimension)
-                            position = [0, 0]
-                        for j in range(numCompGlyphs):
-                            if comp_id_list[j] == temp_id:
-                                dimension = [comp_dimension_list[j][0]*scale,
-                                comp_dimension_list[j][1]*scale]
-                                color_style.setImageSize(dimension)
-                                position = [(comp_position_list[j][0] - topLeftCorner[0])*scale,
-                                (comp_position_list[j][1] - topLeftCorner[1])*scale]
-                        for j in range(len(comp_render)):
-                            if temp_id == comp_render[j][0]:
-                                if not color_style.getStyleName():
-                                    color_style.setCompFillColor(comp_render[j][1])
-                                    color_style.setCompBorderColor(comp_render[j][2])
-                                    color_style.setCompBorderWidth(comp_render[j][3])
-
-                    else:# no layout info about compartment,
-                        # then the whole size of the canvas is the compartment size
-                        dimension = imageSize
-                        color_style.setImageSize(dimension)
-                        position = [0,0]
-                        #allows users to set the color of the "_compartment_default" as the canvas
-                        #color_style.setCompBorderColor((255, 255, 255, 255))
-                        #color_style.setCompFillColor((255, 255, 255, 255)
-                   
-                    drawNetwork.addCompartment(canvas, position, dimension,
-                                            color_style.getCompBorderColor(), color_style.getCompFillColor(),
-                                                color_style.getCompBorderWidth()*scale)
+                            position = [0.,0.]
+                            text_content = ''
+                            text_position = [0.,0.]
+                            text_dimension = [0.,0.]
+                            #allows users to set the color of the "_compartment_default" as the canvas
+                            #color_style.setCompBorderColor((255, 255, 255, 255))
+                            #color_style.setCompFillColor((255, 255, 255, 255)
+                    
+                        #print(temp_id)
+                        #print(color_style.getCompFillColor())
+                        drawNetwork.addCompartment(canvas, position, dimension,
+                                                color_style.getCompBorderColor(), color_style.getCompFillColor(),
+                                                    color_style.getCompBorderWidth()*scale)
+                        if text_content != '':
+                            drawNetwork.addText(canvas, text_content, text_position, text_dimension,
+                        text_line_color, text_line_width*scale, text_font_size*scale, textAnchor = [text_anchor, text_vanchor]) 
+                    
+                
                 #add reactions before adding nodes to help with the line positions
                 numSpec_in_reaction = len(spec_specGlyph_id_list)
                 for i in range (numReactionGlyphs):
                     src_position = []
                     src_dimension = [] 
+                    src_endhead = []
+                    src_lineend_pos = []
                     dst_position = []
                     dst_dimension = []
+                    dst_endhead = []
+                    dst_lineend_pos = []
                     mod_position = []
                     mod_dimension = []
+                    mod_endhead = []
+                    mod_lineend_pos = []
                     src_handle = []
                     dst_handle = []
                     temp_id = reaction_id_list[i]
@@ -900,41 +1167,59 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     rct_num = len(rct_specGlyph_handle_list[i])
                     prd_num = len(prd_specGlyph_handle_list[i])
                     mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                    #mod_num = len(mod_specGlyph_list[i])
 
                     add_rct_cnt = 0
                     for j in range(rct_num):
                         temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
+                        temp_specRefGlyph_id = rct_specGlyph_handle_list[i][j][2]
                         for k in range(numSpec_in_reaction):
                             if temp_specGlyph_id == specGlyph_id_list[k]:
                                 src_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
                                 (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                 src_dimension.append([spec_dimension_list[k][0]*scale,
                                 spec_dimension_list[k][1]*scale])
+                        for k in range(len(specRefGlyph_render)):
+                            if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                src_endhead.append(specRefGlyph_render[k][1])
                         src_handle.append(rct_specGlyph_handle_list[i][j][1])
+                        src_lineend_pos.append(rct_specGlyph_handle_list[i][j][3])
                         add_rct_cnt += 1
                         edges.append([id_to_name[temp_specGlyph_id]])
 
                     for j in range(prd_num):
                         temp_specGlyph_id = prd_specGlyph_handle_list[i][j][0]
+                        temp_specRefGlyph_id = prd_specGlyph_handle_list[i][j][2]
                         for k in range(numSpec_in_reaction):
                             if temp_specGlyph_id == specGlyph_id_list[k]:
                                 dst_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
                                 (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                 dst_dimension.append([spec_dimension_list[k][0]*scale,
                                 spec_dimension_list[k][1]*scale])
+                        for k in range(len(specRefGlyph_render)):
+                            if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                dst_endhead.append(specRefGlyph_render[k][1])
                         dst_handle.append(prd_specGlyph_handle_list[i][j][1])
+                        dst_lineend_pos.append(prd_specGlyph_handle_list[i][j][3])
                         edges[-add_rct_cnt].append(id_to_name[temp_specGlyph_id])
                         add_rct_cnt -= 1
 
                     for j in range(mod_num):
-                        if len(mod_specGlyph_list[i]) != 0:
-                            temp_specGlyph_id = mod_specGlyph_list[i][j]
+                        #if len(mod_specGlyph_list[i]) != 0:
+                        if len(mod_specGlyph_list[i]) == mod_num: 
+                            #all the modifiers are defined as role in the SpecRefGlyph
+                            temp_specGlyph_id = mod_specGlyph_list[i][j][0]      
+                            temp_specRefGlyph_id = mod_specGlyph_list[i][j][1]
+                            mod_lineend_pos.append(mod_specGlyph_list[i][j][2])
                             for k in range(numSpec_in_reaction):
                                 if temp_specGlyph_id == specGlyph_id_list[k]:
                                     mod_position.append([(spec_position_list[k][0]-topLeftCorner[0])*scale,
                                     (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                     mod_dimension.append([spec_dimension_list[k][0]*scale,
                                     spec_dimension_list[k][1]*scale])
+                            for k in range(len(specRefGlyph_render)):
+                                if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                    mod_endhead.append(specRefGlyph_render[k][1])
                         else:
                             for k in range(len(spec_specGlyph_id_list)):
                                 if reaction_mod_list[i][j] == spec_specGlyph_id_list[k][0]:
@@ -945,15 +1230,59 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     (spec_position_list[k][1]-topLeftCorner[1])*scale])
                                     mod_dimension.append([spec_dimension_list[k][0]*scale,
                                     spec_dimension_list[k][1]*scale])
+                            for k in range(len(specRefGlyph_render)):
+                                if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                    mod_endhead.append(specRefGlyph_render[k][1])
 
                     for j in range(len(rxn_render)):
                         if temp_id == rxn_render[j][0]:
                             if not color_style.getStyleName():
                                 color_style.setReactionLineColor(rxn_render[j][1])
+                                color_style.setReactionLineWidth(rxn_render[j][2])
                             reaction_line_width = rxn_render[j][2]
                             reaction_arrow_head_size = rxn_render[j][3]
                             reaction_dash = rxn_render[j][4]
+                            reaction_line_fill = rxn_render[j][5]
                     
+                    src_endhead_render = []
+                    dst_endhead_render = []
+                    mod_endhead_render = []
+                    #print(lineEnding_render)
+                    for j in range(len(src_endhead)):
+                        for k in range(len(lineEnding_render)):
+                            if src_endhead[j] == lineEnding_render[k][0]:
+                                src_endhead_render.append(lineEnding_render[k][1:])
+                    for j in range(len(dst_endhead)):
+                        for k in range(len(lineEnding_render)):
+                            if dst_endhead[j] == lineEnding_render[k][0]:
+                                # if dst_endhead[j] == '_line_ending_default_':
+                                #     dst_endhead_render = []
+                                # else:
+                                dst_endhead_render.append(lineEnding_render[k][1:])
+                    for j in range(len(mod_endhead)):
+                        for k in range(len(lineEnding_render)):
+                            if mod_endhead[j] == lineEnding_render[k][0]:
+                                mod_endhead_render.append(lineEnding_render[k][1:])
+
+                    for j in range(len(src_lineend_pos)):
+                        try:
+                            src_lineend_pos[j] = [(src_lineend_pos[j][0]-topLeftCorner[0])*scale, 
+                            (src_lineend_pos[j][1]-topLeftCorner[1])*scale]
+                        except:
+                            src_lineend_pos[j] = []
+                    for j in range(len(dst_lineend_pos)):
+                        try:
+                            dst_lineend_pos[j] = [(dst_lineend_pos[j][0]-topLeftCorner[0])*scale, 
+                            (dst_lineend_pos[j][1]-topLeftCorner[1])*scale]
+                        except:
+                            dst_lineend_pos[j] = []
+                    for j in range(len(mod_lineend_pos)):
+                        try:
+                            mod_lineend_pos[j] = [(mod_lineend_pos[j][0]-topLeftCorner[0])*scale, 
+                            (mod_lineend_pos[j][1]-topLeftCorner[1])*scale]
+                        except:
+                            mod_lineend_pos[j] = []
+
                     try: 
                         center_position = reaction_center_list[i]
                         center_handle = reaction_center_handle_list[i]
@@ -969,6 +1298,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         for j in range(len(handles)):
                             handles[j] = [(handles[j][0]-topLeftCorner[0])*scale, 
                             (handles[j][1]-topLeftCorner[1])*scale]
+
+                        #print(dst_endhead_render)
                         if drawArrow:
                             drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
                                 center_position, handles, src_dimension, dst_dimension, mod_dimension,
@@ -976,7 +1307,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
+                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible,
+                                rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, mod_endhead_render = mod_endhead_render,
+                                rct_lineend_pos = src_lineend_pos, prd_lineend_pos = dst_lineend_pos, mod_lineend_pos = mod_lineend_pos)
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -1012,7 +1345,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 reaction_line_type = reactionLineType, show_bezier_handles = showBezierHandles,
                                 show_reaction_ids = showReactionIds,
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
-                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible)
+                                scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible,
+                                rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, mod_endhead_render = mod_endhead_render,
+                                rct_lineend_pos = src_lineend_pos, prd_lineend_pos = dst_lineend_pos, mod_lineend_pos = mod_lineend_pos)
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -1032,6 +1367,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     (spec_position_list[i][1]-topLeftCorner[1])*scale]
                     dimension = [spec_dimension_list[i][0]*scale,spec_dimension_list[i][1]*scale]
                     color_style.setNodeDimension(dimension)
+                    text_content = spec_text_content_list[i]
                     text_position = [(spec_text_position_list[i][0]-topLeftCorner[0])*scale,
                     (spec_text_position_list[i][1]-topLeftCorner[1])*scale]
                     text_dimension = [spec_text_dimension_list[i][0]*scale,
@@ -1055,11 +1391,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         shape_type = spec_render[k][6]
                                         shape_info = spec_render[k][7]
                                 for k in range(len(text_render)):
-                                    if temp_id == text_render[k][0]:
+                                    if tempGlyph_id == text_render[k][0]:
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
+                                        [text_anchor, text_vanchor] = text_render[k][4]
                                 floatingNodes_pos_dict[temp_id] = position
                                 floatingNodes_dim_dict[temp_id] = dimension
                                 allNodes_pos_dict[temp_id] = position
@@ -1075,9 +1412,15 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                         color_style.getSpecBorderColor(), gradient_fill_color,
                                                         color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape = complexShape)
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                if text_content == '':
+                                    text_content = temp_id
+                                # if text_content == 'Mt-DNA repair':
+                                #     print("node:", position, dimension)
+                                #     print("text:", text_position, text_dimension)
+
+                                drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													fontSize = text_font_size*scale, 
+													fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
                                                     longText = longText)
                                 id_list.append(temp_id)                    
                             else:
@@ -1096,11 +1439,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         shape_type = spec_render[k][6]
                                         shape_info = spec_render[k][7]
                                 for k in range(len(text_render)):
-                                    if temp_id == text_render[k][0]:
+                                    if tempGlyph_id == text_render[k][0]:
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
+                                        [text_anchor, text_vanchor] = text_render[k][4]
                                 floatingNodes_pos_dict[temp_id] = position
                                 floatingNodes_dim_dict[temp_id] = dimension
                                 allNodes_pos_dict[temp_id] = position
@@ -1115,9 +1459,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                         color_style.getSpecBorderColor(), gradient_fill_color,
                                                         color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape=complexShape)
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                if text_content == '':
+                                    text_content = temp_id
+
+                                drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
-													fontSize = text_font_size*scale, 
+													fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
                                                     longText = longText)
                                 id_list.append(temp_id)
                     for j in range(numBoundaryNodes):
@@ -1138,11 +1485,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         shape_type = spec_render[k][6]
                                         shape_info = spec_render[k][7]
                                 for k in range(len(text_render)):
-                                    if temp_id == text_render[k][0]:
+                                    if tempGlyph_id == text_render[k][0]:
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
+                                        [text_anchor, text_vanchor] = text_render[k][4]
                                 if gradient_fill_color == []:
                                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
@@ -1155,9 +1503,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                         complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                if text_content == '':
+                                    text_content = temp_id
+                                drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													fontSize = text_font_size*scale, 
+													fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
                                                     longText = longText)
                                 id_list.append(temp_id)
                             else:
@@ -1176,11 +1526,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         shape_type = spec_render[k][6]
                                         shape_info = spec_render[k][7]
                                 for k in range(len(text_render)):
-                                    if temp_id == text_render[k][0]:
+                                    if tempGlyph_id == text_render[k][0]:
                                         if not color_style.getStyleName():
                                             color_style.setTextLineColor(text_render[k][1])
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
+                                        [text_anchor, text_vanchor] = text_render[k][4]
                                 if gradient_fill_color == []:
                                     drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
@@ -1193,9 +1544,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                     complex_shape=complexShape)
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
-                                drawNetwork.addText(canvas, temp_id, text_position, text_dimension,
+                                if text_content == '':
+                                    text_content = temp_id
+                                drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
-													fontSize = text_font_size*scale, 
+													fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor], 
                                                     longText = longText)
                                 id_list.append(temp_id)
 
@@ -1244,10 +1597,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     text_position = text_position_list[i]
                     text_dimension = text_dimension_list[i]
                     for k in range(len(text_render)):
-                        if text_content == text_render[k][0]:
+                        if textGlyph_id == text_render[k][0]:
                             text_line_color = text_render[k][1]
                             text_line_width = text_render[k][2]
                             text_font_size = text_render[k][3]
+                            [text_anchor, text_vanchor] = text_render[k][4]
 
                     text_position = [(text_position[0]-topLeftCorner[0])*scale,
                     (text_position[1]-topLeftCorner[1])*scale]
@@ -1255,7 +1609,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     text_line_width = text_line_width*scale
                     text_font_size = text_font_size*scale 
                     drawNetwork.addText(canvas, text_content, text_position, text_dimension,
-                    text_line_color, text_line_width, text_font_size)  
+                    text_line_color, text_line_width, text_font_size, textAnchor = [text_anchor, text_vanchor])  
                         
 
             else: # there is no layout information, assign position randomly and size as default
@@ -1294,6 +1648,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     src_dimension = []
                     dst_dimension = []
                     mod_dimension = []
+                    src_endhead = []
+                    dst_endhead = []
+                    mod_endhead = []
+                    src_lineend_pos = []
+                    dst_lineend_pos = []
+                    mod_lineend_pos = []
                     temp_id = Rxns_ids[i]
                     reaction = model_layout.getReaction(temp_id)
                     rxn_rev = reaction.getReversible()
@@ -1365,6 +1725,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
 
                 for i in range (numFloatingNodes):
                     temp_id = FloatingNodes_ids[i]
+                    text_content = temp_id
                     for k in range(numNodes):
                         if spec_id_list[k] == temp_id:
                             position = [(spec_position_list[k][0]-topLeftCorner[0])*scale,
@@ -1374,8 +1735,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(), color_style.getSpecBorderWidth()*scale,
                                         shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
-                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(), 
-                    text_line_width*scale, fontSize = text_font_size*scale, 
+                    if text_content == '':
+                        text_content = temp_id
+                    drawNetwork.addText(canvas, text_content, position, dimension, color_style.getTextLineColor(), 
+                    text_line_width*scale, fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
                     longText = longText)
                     floatingNodes_pos_dict[temp_id] = position
                     floatingNodes_dim_dict[temp_id] = dimension
@@ -1383,6 +1746,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     allNodes_dim_dict[temp_id] = dimension
                 for i in range (numBoundaryNodes):
                     temp_id = BoundaryNodes_ids[i]
+                    text_content = temp_id
                     for k in range(numNodes):
                         if spec_id_list[k] == temp_id:
                             position = [(spec_position_list[k][0]-topLeftCorner[0])*scale,
@@ -1393,8 +1757,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         shapeIdx, shape_name, shape_type, shape_info, complex_shape=complexShape)
                     allNodes_pos_dict[temp_id] = position
                     allNodes_dim_dict[temp_id] = dimension
-                    drawNetwork.addText(canvas, temp_id, position, dimension, color_style.getTextLineColor(),
-                    text_line_width*scale, fontSize = text_font_size*scale, 
+                    if text_content == '':
+                        text_content = temp_id
+                    drawNetwork.addText(canvas, text_content, position, dimension, color_style.getTextLineColor(),
+                    text_line_width*scale, fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
                     longText = longText)
 
         except Exception as e:
@@ -1490,8 +1856,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
     FloatingNodes_ids = model.getListOfFloatingSpecies()
     numBoundaryNodes  = model.getNumBoundarySpecies()
     BoundaryNodes_ids = model.getListOfBoundarySpecies()
-    numComps  = model.getNumCompartments()
-    Comps_ids = model.getListOfCompartmentIds()
+    #numComps  = model.getNumCompartments()
+    #Comps_ids = model.getListOfCompartmentIds()
     numRxns   = model.getNumReactions()
     Rxns_ids  = model.getListOfReactionIds()
 
@@ -1501,6 +1867,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
     numTexts = len(txt_id)
     shape_name = df.getShapeNameList()
     numShapes = len(shape_name)
+
+    Comps_ids = [] #only considers to visualize the compartments with species in
 
     if numFloatingNodes > 0 :
         position = _getNodePosition(_df, FloatingNodes_ids[0])[0]
@@ -1528,6 +1896,9 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[0] = text_temp_position[j][0]
             if text_temp_position[j][1] < position[1]:
                 position[1] = text_temp_position[j][1]
+        comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[i])
+        if comp_id not in Comps_ids:
+            Comps_ids.append(comp_id)
     for i in range(numBoundaryNodes):
         node_temp_position = _getNodePosition(_df, BoundaryNodes_ids[i])
         text_temp_position = _getNodeTextPosition(_df, BoundaryNodes_ids[i])
@@ -1540,7 +1911,11 @@ def _getNetworkTopLeftCorner(sbmlStr):
                 position[0] = text_temp_position[j][0]
             if text_temp_position[j][1] < position[1]:
                 position[1] = text_temp_position[j][1]
-    for i in range(numComps):
+        comp_id = model.getCompartmentIdSpeciesIsIn(BoundaryNodes_ids[i])
+        if comp_id not in Comps_ids:
+            Comps_ids.append(comp_id)
+
+    for i in range(len(Comps_ids)):
         if Comps_ids[i] != "_compartment_default_":
             comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
             comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
@@ -1551,6 +1926,18 @@ def _getNetworkTopLeftCorner(sbmlStr):
                     position[0] = comp_temp_position[0]
                 if comp_temp_position[1] < position[1]:
                     position[1] = comp_temp_position[1]
+
+    # for i in range(numComps):
+    #     if Comps_ids[i] != "_compartment_default_":
+    #         comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
+    #         comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
+    #         if comp_temp_fill_color[0] != [255,255,255,255] or \
+    #             comp_temp_border_color[0] != [255,255,255,255]:
+    #             comp_temp_position = _getCompartmentPosition(_df, Comps_ids[i])[0]
+    #             if comp_temp_position[0] < position[0]:
+    #                 position[0] = comp_temp_position[0]
+    #             if comp_temp_position[1] < position[1]:
+    #                 position[1] = comp_temp_position[1]
     for i in range(numRxns):
         center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
         handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
@@ -1612,8 +1999,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
     FloatingNodes_ids = model.getListOfFloatingSpecies()
     numBoundaryNodes  = model.getNumBoundarySpecies()
     BoundaryNodes_ids = model.getListOfBoundarySpecies()
-    numComps  = model.getNumCompartments()
-    Comps_ids = model.getListOfCompartmentIds()
+    #numComps  = model.getNumCompartments()
+    #Comps_ids = model.getListOfCompartmentIds()
     numRxns   = model.getNumReactions()
     Rxns_ids  = model.getListOfReactionIds()
 
@@ -1624,6 +2011,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
 
     shape_name = df.getShapeNameList()
     numShapes = len(shape_name)
+
+    Comps_ids = [] #only considers to visualize the compartments with species in
 
     if numFloatingNodes > 0:
         position_list = _getNodePosition(_df, FloatingNodes_ids[0])
@@ -1663,6 +2052,9 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[0] = text_temp_position[0]
             if text_temp_position[1] > position[1]:
                 position[1] = text_temp_position[1]
+        comp_id = model.getCompartmentIdSpeciesIsIn(FloatingNodes_ids[i])
+        if comp_id not in Comps_ids:
+            Comps_ids.append(comp_id)
     for i in range(numBoundaryNodes):
         node_temp_position_list = _getNodePosition(_df, BoundaryNodes_ids[i])
         text_temp_position_list = _getNodeTextPosition(_df, BoundaryNodes_ids[i])
@@ -1681,7 +2073,11 @@ def _getNetworkBottomRightCorner(sbmlStr):
                 position[0] = text_temp_position[0]
             if text_temp_position[1] > position[1]:
                 position[1] = text_temp_position[1]
-    for i in range(numComps):
+
+        comp_id = model.getCompartmentIdSpeciesIsIn(BoundaryNodes_ids[i])
+        if comp_id not in Comps_ids:
+            Comps_ids.append(comp_id)
+    for i in range(len(Comps_ids)):
         if Comps_ids[i] != "_compartment_default_":
             comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
             comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
@@ -1695,6 +2091,20 @@ def _getNetworkBottomRightCorner(sbmlStr):
                     position[0] = comp_temp_position[0]
                 if comp_temp_position[1] > position[1]:
                     position[1] = comp_temp_position[1]
+    # for i in range(numComps):
+    #     if Comps_ids[i] != "_compartment_default_":
+    #         comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
+    #         comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
+    #         if comp_temp_fill_color[0] != [255,255,255,255] or \
+    #         comp_temp_border_color[0] != [255,255,255,255]:
+    #             comp_temp_size = _getCompartmentSize(_df, Comps_ids[i])[0]
+    #             comp_temp_position_list = _getCompartmentPosition(_df, Comps_ids[i])
+    #             comp_temp_position = [comp_temp_position_list[0][0]+comp_temp_size[0],
+    #             comp_temp_position_list[0][1]+comp_temp_size[1]]
+    #             if comp_temp_position[0] > position[0]:
+    #                 position[0] = comp_temp_position[0]
+    #             if comp_temp_position[1] > position[1]:
+    #                 position[1] = comp_temp_position[1]
     for i in range(numRxns):
         center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
         handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
@@ -1798,6 +2208,51 @@ def _getCompartmentSize(df, id):
     size_list =[] 
     for i in range(len(idx_list)):
         size_list.append(df[0].iloc[idx_list[i]]["size"])
+
+    return size_list
+
+
+def _getCompartmentTextPosition(df, id):
+    """
+    Get the text position of a compartment with its certain compartment id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the compartment.
+
+    Returns:
+        position_list: list of position.
+
+        position: list-1*2 matrix-top left-hand corner of the compartment [position_x, position_y].
+    """
+
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    position_list =[] 
+    for i in range(len(idx_list)):
+        position_list.append(df[0].iloc[idx_list[i]]["txt_position"])
+
+    return position_list
+
+def _getCompartmentTextSize(df, id):
+    """
+    Get the text size of a compartment with its certain compartment id.
+
+    Args: 
+        df: tuple-(df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData).
+
+        id: str-the id of the compartment.
+
+    Returns:
+        size_list: list of size.
+
+        size: list-1*2 matrix-size of the compartment [width, height].
+    """
+
+    idx_list = df[0].index[df[0]["id"] == id].tolist()
+    size_list =[] 
+    for i in range(len(idx_list)):
+        size_list.append(df[0].iloc[idx_list[i]]["txt_size"])
 
     return size_list
 
@@ -2027,7 +2482,7 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"
-    #filename = "test_modifier.xml"
+    filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
@@ -2051,7 +2506,9 @@ if __name__ == '__main__':
     #filename = "putida_gb_newgenes.xml"
 
     #filename = "bart2.xml"
-    filename = "newSBML.xml"
+    #filename = "newSBML.xml"
+
+    #filename = filename = "bioinformatics/pdmap-nucleoid.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2062,6 +2519,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output.pDF')
-
+        _draw(sbmlStr,output_fileName='output.png', showReversible='True')
+        #print("finished!")
 

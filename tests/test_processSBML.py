@@ -27,6 +27,7 @@ class TestImportSBML(unittest.TestCase):
     TEST_PATH_mass_action_rxn = os.path.join(TEST_FOLDER, "mass_action_rxn.xml")
     TEST_PATH_test_textGlyph = os.path.join(TEST_FOLDER, "test_textGlyph.xml")
     TEST_PATH_test_genGlyph = os.path.join(TEST_FOLDER, "test_genGlyph.xml")
+    TEST_PATH_test_lineEnding = os.path.join(TEST_FOLDER, "pdmap-nucleoid.xml")
 
     f_test = open(TEST_PATH_test, 'r')
     sbmlStr_test = f_test.read()
@@ -58,26 +59,30 @@ class TestImportSBML(unittest.TestCase):
     f_test_genGlyph = open(TEST_PATH_test_genGlyph, 'r')
     sbmlStr_test_genGlyph = f_test_genGlyph.read()
     f_test_genGlyph.close()
-    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _, _ = _SBMLToDF(sbmlStr_test)
-    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _, _ = \
+    f_test_lineEnding = open(TEST_PATH_test_lineEnding, 'r')
+    sbmlStr_test_lineEnding = f_test_lineEnding.read()
+    f_test_lineEnding.close()
+    self.df_CompartmentData, self.df_NodeData, self.df_ReactionData, _, _, _ = _SBMLToDF(sbmlStr_test)
+    self.df_CompartmentData_feedback, self.df_NodeData_feedback, self.df_ReactionData_feedback, _, _, _ = \
       _SBMLToDF(sbmlStr_feedback)
-    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain, _ , _= \
+    self.df_CompartmentData_LinearChain, self.df_NodeData_LinearChain, self.df_ReactionData_LinearChain, _ , _, _= \
       _SBMLToDF(sbmlStr_LinearChain)
-    self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, self.df_ReactionData_test_no_comp, _, _ = \
+    self.df_CompartmentData_test_no_comp, self.df_NodeData_test_no_comp, self.df_ReactionData_test_no_comp, _, _, _ = \
       _SBMLToDF(sbmlStr_test_no_comp)
-    self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, self.df_ReactionData_test_comp, _, _ = \
+    self.df_CompartmentData_test_comp, self.df_NodeData_test_comp, self.df_ReactionData_test_comp, _, _ , _= \
       _SBMLToDF(sbmlStr_test_comp)
-    self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, self.df_ReactionData_test_modifier, _, _ = \
+    self.df_CompartmentData_test_modifier, self.df_NodeData_test_modifier, self.df_ReactionData_test_modifier, _, _, _ = \
       _SBMLToDF(sbmlStr_test_modifier)
-    self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, self.df_ReactionData_node_grid, _, _ = \
+    self.df_CompartmentData_node_grid, self.df_NodeData_node_grid, self.df_ReactionData_node_grid, _, _, _= \
       _SBMLToDF(sbmlStr_node_grid)
-    self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn, _, _ = \
+    self.df_CompartmentData_mass_action_rxn, self.df_NodeData_mass_action_rxn, self.df_ReactionData_mass_action_rxn, _, _, _ = \
       _SBMLToDF(sbmlStr_mass_action_rxn)
-    _, _, _, self.df_TextData_test_textGlyph, _ = _SBMLToDF(sbmlStr_test_textGlyph)
-    _, _, _, _, self.df_ShapeData_test_genGlyph = _SBMLToDF(sbmlStr_test_genGlyph)
+    _, _, _, self.df_TextData_test_textGlyph, _, _ = _SBMLToDF(sbmlStr_test_textGlyph)
+    _, _, _, _, self.df_ShapeData_test_genGlyph, _ = _SBMLToDF(sbmlStr_test_genGlyph)
     self.df = SBMLDiagrams.load(sbmlStr_test)
     self.df_text = SBMLDiagrams.load(sbmlStr_test_textGlyph)
     self.df_shape = SBMLDiagrams.load(sbmlStr_test_genGlyph)
+    self.df_lineEnding = SBMLDiagrams.load(sbmlStr_test_lineEnding)
 
   def loadInvalidStr(self):
     # an exception raises if load an invalid string
@@ -470,7 +475,7 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(test_node_mass_action_rxn)
 
   def testNode5(self):
-    # Test column 'id' and 'floating node' of df_NodeData is str
+    # Test column 'id', 'floating node' of df_NodeData is str
     if IGNORE_TEST:
       return    
     list_node = []
@@ -962,6 +967,13 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_") == \
      [[255, 255, 255, 255], 'White', '#FFFFFFFF'])
     self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_") == 2.)
+    self.assertTrue(self.df.getCompartmentTextPosition("_compartment_default_").x == 0.)
+    self.assertTrue(self.df.getCompartmentTextSize("_compartment_default_").x == 0.)
+    self.assertTrue(self.df.getCompartmentTextContent("_compartment_default_") == '')
+    self.assertTrue(self.df.getCompartmentTextLineWidth("_compartment_default_") == 1.)
+    self.assertTrue(self.df.getCompartmentTextFontSize("_compartment_default_") == 11.)
+    self.assertTrue(self.df.getCompartmentTextAnchor("_compartment_default_") == 'middle')
+    self.assertTrue(self.df.getCompartmentTextVAnchor("_compartment_default_") == 'middle')
 
   def testGetNode(self):
     # Test all the get functions about node
@@ -982,9 +994,13 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeBorderColor("x_1") == \
       [[255, 108, 9, 255], '', '#FF6C09FF'])
     self.assertTrue(self.df.getNodeBorderWidth("x_1") == 2.)
+    self.assertTrue(self.df.getNodeTextContent("x_1") == 'x_1')
     self.assertTrue(self.df.getNodeTextFontColor("x_1") == \
       [[0, 0, 0, 255], 'Black', '#000000FF'])
     self.assertTrue(self.df.getNodeTextLineWidth("x_1") == 1.)
+    self.assertTrue(self.df.getNodeTextFontSize("x_1") == 11.)
+    self.assertTrue(self.df.getNodeTextAnchor("x_1") == 'middle')
+    self.assertTrue(self.df.getNodeTextVAnchor("x_1") == 'middle')
 
 
   def testGetReaction(self):
@@ -1002,8 +1018,26 @@ class TestImportSBML(unittest.TestCase):
       [[91, 176, 253, 255], '', '#5BB0FDFF'])
     self.assertTrue(self.df.getReactionLineThickness("r_0") == 3.)
     self.assertTrue(self.df._isBezierReactionType("r_0") == True)
-    self.assertTrue(self.df.getReactionArrowHeadSize("r_0").x == [12., 15.][0])
+    #self.assertTrue(self.df.getReactionArrowHeadSize("r_0").x == [12., 15.][0])
     self.assertTrue(self.df.getReactionDashStyle("r_0") == [])
+    self.assertTrue(self.df_lineEnding._getReactionArrowHeadPosition("path_0_re6338").x \
+      == [-12.0, -6.0][0])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadSize("path_0_re6338").x \
+      == [12.0, 12.0][0])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadFillColor("path_0_re6338")[0] \
+      == [0, 0, 0, 255])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadShape("path_0_re6338") \
+      == (['polygon'], [[[0.0, 0.0], [100.0, 50.0], [0.0, 100.0], [0.0, 0.0]]]))
+    self.assertTrue(self.df_lineEnding.getReactionModifierNum("path_0_re6338") == 3)
+    self.assertTrue(self.df_lineEnding._getReactionModifierHeadPosition("path_0_re6338").x 
+    == [-2., 0.][0])
+    self.assertTrue(self.df_lineEnding.getReactionModifierHeadSize("path_0_re6338").x 
+    == [4.0, 4.0][0])
+    self.assertTrue(self.df_lineEnding.getReactionModifierHeadFillColor("path_0_re6338")[0] 
+    == [255, 255, 255, 255])
+    self.assertTrue(self.df_lineEnding.getReactionModifierHeadShape("path_0_re6338") == 
+    (['ellipse'], [[[0.0, 0.0], [100.0, 100.0]]]))
+
 
   def testSetCompartment(self):
     # Test all the set functions about compartment
@@ -1016,12 +1050,28 @@ class TestImportSBML(unittest.TestCase):
     border_color = [255, 255, 254]
     border_width = 2.
     opacity = 0.
+    txt_position = [10, 10]
+    txt_size = [1000, 1000]
+    txt_content = 'comp'
+    txt_font_color = 'Red'
+    txt_line_width = 10.
+    txt_font_size = 10.
+    txt_anchor = "start"
+    txt_vanchor = 'bottom'
 
     self.df.setCompartmentPosition('_compartment_default_', position)
     self.df.setCompartmentSize('_compartment_default_', size)
     self.df.setCompartmentFillColor('_compartment_default_', fill_color, opacity = opacity)
     self.df.setCompartmentBorderColor('_compartment_default_', border_color)
     self.df.setCompartmentBorderWidth('_compartment_default_', border_width)
+    self.df.setCompartmentTextPosition('_compartment_default_', txt_position)
+    self.df.setCompartmentTextSize('_compartment_default_', txt_size)
+    self.df.setCompartmentTextContent('_compartment_default_', txt_content)
+    self.df.setCompartmentTextFontColor('_compartment_default_', txt_font_color)
+    self.df.setCompartmentTextLineWidth('_compartment_default_', txt_line_width)
+    self.df.setCompartmentTextFontSize('_compartment_default_', txt_font_size)
+    self.df.setCompartmentTextAnchor('_compartment_default_', txt_anchor)
+    self.df.setCompartmentTextVAnchor('_compartment_default_', txt_vanchor)
 
     self.assertTrue(self.df.getCompartmentPosition("_compartment_default_").x == position[0])
     self.assertTrue(self.df.getCompartmentSize("_compartment_default_").x == size[0])
@@ -1030,6 +1080,15 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_")[0][0:-1] == border_color)
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_")[0][3] == 255)
     self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_") == border_width)
+    self.assertTrue(self.df.getCompartmentTextPosition("_compartment_default_").x == txt_position[0])
+    self.assertTrue(self.df.getCompartmentTextSize("_compartment_default_").x == txt_size[0])
+    self.assertTrue(self.df.getCompartmentTextContent("_compartment_default_") == txt_content)
+    self.assertTrue(self.df.getCompartmentTextFontColor("_compartment_default_")[1] == txt_font_color)
+    self.assertTrue(self.df.getCompartmentTextLineWidth("_compartment_default_") == txt_line_width)
+    self.assertTrue(self.df.getCompartmentTextFontSize("_compartment_default_") == txt_font_size)
+    self.assertTrue(self.df.getCompartmentTextAnchor("_compartment_default_") == txt_anchor)
+    self.assertTrue(self.df.getCompartmentTextVAnchor("_compartment_default_") == txt_vanchor)
+
 
   def testSetNode(self):
     # Test all the set functions about node
@@ -1052,9 +1111,12 @@ class TestImportSBML(unittest.TestCase):
     fill_color = [255, 204, 154]
     border_color = [255, 109, 9]
     border_width = 3.
+    txt_content = 'x1'
     txt_font_color = "#000000"
     txt_line_width = 1.
     txt_font_size = 12.
+    txt_anchor = 'start'
+    txt_vanchor = 'bottom'
     opacity = 1.
     gradient_linear_info = [[0.0, 0.0], [100.0, 100.0]]
     gradient_radial_info = [[50.0, 50.0], [50.]]
@@ -1074,9 +1136,12 @@ class TestImportSBML(unittest.TestCase):
     self.df.setNodeFillRadialGradient("x_0", gradient_radial_info, stop_info)
     self.df.setNodeBorderColor("x_1", border_color, opacity = opacity)
     self.df.setNodeBorderWidth("x_1", border_width)
+    self.df.setNodeTextContent("x_1", txt_content)
     self.df.setNodeTextFontColor("x_1", txt_font_color)
     self.df.setNodeTextLineWidth("x_1", txt_line_width)
     self.df.setNodeTextFontSize("x_1", txt_font_size)
+    self.df.setNodeTextAnchor("x_1", txt_anchor)
+    self.df.setNodeTextVAnchor("x_1", txt_vanchor)
 
     self.assertTrue(self.df.isFloatingNode("x_1") == floating_node)
     self.assertTrue(self.df.getNodePosition("x_1").x == position[0])
@@ -1094,8 +1159,11 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getNodeBorderWidth("x_1") == border_width)
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][0:-1] == [0,0,0])
     self.assertTrue(self.df.getNodeTextFontColor("x_1")[0][3] == 255)
+    self.assertTrue(self.df.getNodeTextContent("x_1") == txt_content)
     self.assertTrue(self.df.getNodeTextLineWidth("x_1") == txt_line_width)
     self.assertTrue(self.df.getNodeTextFontSize("x_1") == txt_font_size)
+    self.assertTrue(self.df.getNodeTextAnchor("x_1") == txt_anchor)
+    self.assertTrue(self.df.getNodeTextVAnchor("x_1") == txt_vanchor)
 
     self.df.setNodeAndTextPosition("x_1", position_txt_position)
     self.assertTrue(self.df.getNodePosition("x_1").x == position_txt_position[0])
@@ -1154,10 +1222,14 @@ class TestImportSBML(unittest.TestCase):
     center_pos = [334.0, 232.0]
     handles = [[334.0, 232.0], [386.0, 231.0], [282.0, 231.0]]
     fill_color = "orange"
-    opacity = 0.5
+    opacity = 1.
     line_thickness = 2.
     bezier = False
-    arrowHeadSize = [20., 20.]
+    arrowHeadPosition = [-12.,-7.]
+    arrowHeadSize = [12.,13.]
+    arrowHeadFillColor = "BurlyWood"
+    shape_type_list=['polygon']
+    shape_info_list=[[[0.0, 0.0], [100.0, 60.0], [0.0, 100.0], [0.0, 0.0]]]
     rxn_dash = [5, 10]
 
     self.df.setReactionCenterPosition("r_0", center_pos)
@@ -1165,18 +1237,34 @@ class TestImportSBML(unittest.TestCase):
     self.df.setReactionFillColor("r_0", fill_color, opacity = opacity)
     self.df.setReactionLineThickness("r_0", line_thickness)
     self.df._setBezierReactionType("r_0", bezier)
-    self.df.setReactionArrowHeadSize("r_0", arrowHeadSize)
     self.df.setReactionDashStyle("r_0", rxn_dash)
-
+    self.df_lineEnding._setReactionArrowHeadPosition("path_0_re6338", arrowHeadPosition)
+    self.df_lineEnding.setReactionArrowHeadSize("path_0_re6338", arrowHeadSize)
+    self.df_lineEnding.setReactionArrowHeadFillColor("path_0_re6338", arrowHeadFillColor)
+    self.df_lineEnding.setReactionArrowHeadShape("path_0_re6338", 
+    shape_type_list=shape_type_list, shape_info_list=shape_info_list)
+    self.df_lineEnding._setReactionModifierHeadPosition("path_0_re6338", arrowHeadPosition)
+    self.df_lineEnding.setReactionModifierHeadSize("path_0_re6338", arrowHeadSize)
+    self.df_lineEnding.setReactionModifierHeadFillColor("path_0_re6338", arrowHeadFillColor)
+    self.df_lineEnding.setReactionModifierHeadShape("path_0_re6338", 
+    shape_type_list=shape_type_list, shape_info_list=shape_info_list)
     self.assertTrue(self.df.getReactionCenterPosition("r_0").x == center_pos[0])
     self.assertTrue(self.df.getReactionBezierHandles("r_0")[0].x == handles[0][0])
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][0:-1] == [255, 165, 0])
     self.assertTrue(self.df.getReactionFillColor("r_0")[0][3] == int(opacity*255/1.))
     self.assertTrue(self.df.getReactionLineThickness("r_0") == line_thickness)
     self.assertTrue(self.df._isBezierReactionType("r_0") == bezier)
-    self.assertTrue(self.df.getReactionArrowHeadSize("r_0").x == arrowHeadSize[0])
     self.assertTrue(self.df.getReactionDashStyle("r_0")== rxn_dash)
-  
+    self.assertTrue(self.df_lineEnding._getReactionArrowHeadPosition("path_0_re6338").x == arrowHeadPosition[0])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadSize("path_0_re6338").x == arrowHeadSize[0])
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadFillColor("path_0_re6338")[1] == arrowHeadFillColor)
+    self.assertTrue(self.df_lineEnding.getReactionArrowHeadShape("path_0_re6338") == (shape_type_list, shape_info_list))
+    self.assertTrue(self.df_lineEnding._getReactionModifierHeadPosition("path_0_re6338").x == arrowHeadPosition[0])
+    self.assertTrue(self.df_lineEnding.getReactionModifierHeadSize("path_0_re6338").x == arrowHeadSize[0])
+    self.assertTrue(self.df_lineEnding.getReactionModifierHeadFillColor("path_0_re6338")[1] == arrowHeadFillColor)
+    self.assertTrue(self.df_lineEnding.getReactionModifierHeadShape("path_0_re6338") == (shape_type_list, shape_info_list))
+
+
   def testSetReactionDefaultCenterAndHandlePositions(self):
     # Test the function setReactionDefaultCenterAndHandlePositions
 
