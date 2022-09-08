@@ -309,6 +309,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         scale = min(setImageSize[0]/(networkSize[0]+20), setImageSize[1]/(networkSize[1]+20))
 
     color_style = newStyle
+    #print(color_style.getReactionLineColor())
     color_style.setImageSize(imageSize)
 
     def draw_on_canvas(canvas, color_style):

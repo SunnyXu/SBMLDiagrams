@@ -5381,6 +5381,7 @@ class load:
             self.color_style = styleSBML.Style(style_name="default")
         else:
             self.color_style = style
+        #self.lineEnding_fill_color = self.color_style.getReactionLineColor()
 
     def getColorStyle(self):
         """
@@ -5680,20 +5681,20 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    #filename = "test_suite/test.xml" 
-    #filename = "test_suite/feedback.xml"
-    #filename = "test_suite/LinearChain.xml"
-    #filename = "test_suite/test_comp.xml"
-    #filename = "test_suite/test_no_comp.xml"
-    #filename = "test_suite/test_modifier.xml"
-    #filename = "test_suite/node_grid.xml"
-    #filename = "test_suite/mass_action_rxn.xml"
-    #filename = "test_suite/test_textGlyph.xml"
-    #filename = "test_suite/test_genGlyph.xml"
+    filename = "test.xml" 
+    #filename = "feedback.xml"
+    #filename = "LinearChain.xml"
+    #filename = "test_comp.xml"
+    #filename = "test_no_comp.xml"
+    #filename = "test_modifier.xml"
+    #filename = "node_grid.xml"
+    #filename = "mass_action_rxn.xml"
+    #filename = "test_textGlyph.xml"
+    #filename = "test_genGlyph.xml"
 
     #bioinformatics
     #filename = "test_suite/bioinformatics/BIOMD0000000005.xml"
-    filename = "test_suite/BIOMD0000000005/BIOMD0000000005_layout_render.xml"
+    #filename = "test_suite/BIOMD0000000005/BIOMD0000000005_layout_render.xml"
     #filename = "test_suite/bioinformatics/pdmap-nucleoid.xml"
     
     #gradient: can not plot but can export
@@ -5701,7 +5702,7 @@ if __name__ == '__main__':
     #filename = "test_suite/gradient/test_gradientRadial.xml"
 
     #long text and alias nodes
-    #filename = "test_suite/long_text_alias/Jana_WolfGlycolysis.xml"
+    #filename = "test_suite/Jana_WolfGlycolysis/Jana_WolfGlycolysis.xml"
 
     #sbml with errors
     #filename = "test_suite/sbml_error/testbigmodel.xml"
