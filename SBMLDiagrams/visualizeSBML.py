@@ -1947,10 +1947,13 @@ def _getNetworkTopLeftCorner(sbmlStr):
             position[1] = center_position[1]
 
         for j in range(len(handle_positions)):
-            if handle_positions[j][0] < position[0]:
-                position[0] = handle_positions[j][0]
-            if handle_positions[j][1] < position[1]:
-                position[1] = handle_positions[j][1]
+            try:#does not work on colab
+                if handle_positions[j][0] < position[0]:
+                    position[0] = handle_positions[j][0]
+                if handle_positions[j][1] < position[1]:
+                    position[1] = handle_positions[j][1]
+            except:
+                pass
 
     # for i in range(numTexts):
     #     text_position_list = _getTextPosition(_df, txt_id[i])
@@ -2113,10 +2116,13 @@ def _getNetworkBottomRightCorner(sbmlStr):
         if center_position[1] > position[1]:
             position[1] = center_position[1]
         for j in range(len(handle_positions)):
-            if handle_positions[j][0] > position[0]:
-                position[0] = handle_positions[j][0]
-            if handle_positions[j][1] > position[1]:
-                position[1] = handle_positions[j][1]
+            try:#does not work on colab
+                if handle_positions[j][0] > position[0]:
+                    position[0] = handle_positions[j][0]
+                if handle_positions[j][1] > position[1]:
+                    position[1] = handle_positions[j][1]
+            except:
+                pass
 
     # for i in range(numTexts):
     #     text_position_list = _getTextPosition(_df, txt_id[i])
