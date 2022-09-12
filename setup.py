@@ -47,6 +47,8 @@ setup(
         'setuptools',
         'openpyxl',
         'opencv-python',
+        'networkx',
+        'matplotlib'
     ],
 
     #scripts=[''],# The name of your scipt, and also the command you'll be using for calling it
