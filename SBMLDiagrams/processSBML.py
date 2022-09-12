@@ -395,7 +395,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         spec_lineend_pos = []
 
                         try:
-                            if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                            dist_start_center = math.sqrt((line_start_pt[0]-center_pt[0])*(line_start_pt[0]-center_pt[0])+(line_start_pt[1]-center_pt[1])*(line_start_pt[1]-center_pt[1]))
+                            dist_end_center = math.sqrt((line_end_pt[0]-center_pt[0])*(line_end_pt[0]-center_pt[0])+(line_end_pt[1]-center_pt[1])*(line_end_pt[1]-center_pt[1]))
+                            #if math.sqrt(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                            if dist_start_center <= dist_end_center:
                                 #line starts from center
                                 spec_lineend_pos = line_end_pt
                                 modifier_lineend_pos = line_start_pt
@@ -424,6 +427,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     # center_handle_candidate = center_pt
                                     center_handle_candidate = center_pt
                                     spec_handle = center_pt
+
                         except:
                             center_handle_candidate = []
                             spec_handle = []
@@ -5681,7 +5685,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -5708,7 +5712,7 @@ if __name__ == '__main__':
     #filename = "test_suite/sbml_error/testbigmodel.xml"
 
 ##############################
-    #filename = 'output.xml'
+    filename = 'output.xml'
 
     #filename = "Bart/bart_arccenter.xml"
     #filename = "Bart/bart_spRefBezier.xml"

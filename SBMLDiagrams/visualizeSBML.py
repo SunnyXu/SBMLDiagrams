@@ -514,7 +514,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             spec_lineend_pos = []
 
                             try:
-                                if math.dist(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                                dist_start_center = math.sqrt((line_start_pt[0]-center_pt[0])*(line_start_pt[0]-center_pt[0])+(line_start_pt[1]-center_pt[1])*(line_start_pt[1]-center_pt[1]))
+                                dist_end_center = math.sqrt((line_end_pt[0]-center_pt[0])*(line_end_pt[0]-center_pt[0])+(line_end_pt[1]-center_pt[1])*(line_end_pt[1]-center_pt[1]))
+                                #if math.sqrt(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                                if dist_start_center <= dist_end_center:
                                     #line starts from center
                                     spec_lineend_pos = line_end_pt
                                     modifier_lineend_pos = line_start_pt
@@ -1407,6 +1410,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                         color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
                                                         complex_shape = complexShape)
+                                    
                                 else:
                                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                         color_style.getSpecBorderColor(), gradient_fill_color,
@@ -1946,6 +1950,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
         if center_position[1] < position[1]:
             position[1] = center_position[1]
 
+        #print(handle_positions)
+        #print(position)
         for j in range(len(handle_positions)):
             try:#does not work on colab
                 if handle_positions[j][0] < position[0]:
@@ -2488,33 +2494,12 @@ if __name__ == '__main__':
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_comp.xml"
-    filename = "test_modifier.xml"
+    #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml"
-    #filename = "BorisEJB.xml"
-    #filename = "100nodes.sbml"
-    #filename = "E_coli_Millard2016.xml"
-    #filename = "test_arrows.xml"
-    #filename = "test_textGlyph.xml"
-    #filename = "output.xml"
-
-    #filename = "putida_gb_newgenes.xml"
-    #filename = "testbigmodel.xml" #sbml with errors
-
-    #filename = 'test_genGlyph.xml'
-    #filename = "test_gradientLinear.xml"
-    #filename = "test_gradientRadial.xml"
-    #filename = "Coyote/test.xml"
-
-    #filename = "putida_sbml.xml"
-    #filename = "putida_gb_newgenes.xml"
-
-    #filename = "bart2.xml"
-    #filename = "newSBML.xml"
-
-    #filename = filename = "bioinformatics/pdmap-nucleoid.xml"
+    filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -2525,6 +2510,6 @@ if __name__ == '__main__':
         print("empty sbml")
     else:
         #_draw(sbmlStr, showReactionIds=True)
-        _draw(sbmlStr,output_fileName='output.png', showReversible='True')
+        _draw(sbmlStr,output_fileName='output.png')
         #print("finished!")
 

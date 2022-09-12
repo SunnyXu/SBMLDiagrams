@@ -1207,7 +1207,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
 
             #draw bezier
             try:
-                if prd_lineend_pos[i][0] < (c2[0] + s2[0]) and prd_lineend_pos[i][0] > c2[0]  and prd_lineend_pos[i][1] > c2[1] and prd_lineend_pos[i][1] < (c2[1]+s2[1]):
+                if prd_lineend_pos[i][0] < (c2[0] + s2[0]) and prd_lineend_pos[i][0] > c2[0] and prd_lineend_pos[i][1] > c2[1] and prd_lineend_pos[i][1] < (c2[1]+s2[1]):
                     if line_head_pt != None:
                         pts.append(line_head_pt)
                     else:
