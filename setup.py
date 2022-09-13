@@ -56,6 +56,8 @@ setup(
     classifiers=[
        'License :: OSI Approved :: MIT License',
        'Programming Language :: Python :: 3.8',
+       'Programming Language :: Python :: 3.9',
+       'Programming Language :: Python :: 3.10',
        'Operating System :: OS Independent',
     ],
     python_requires='>=3.8',
