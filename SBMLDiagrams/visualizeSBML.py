@@ -372,6 +372,15 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         gen_border_width = 2.
         gen_shape_type = ''
         gen_shape_info = []
+
+        comp_render = []
+        spec_render = []
+        rxn_render = []
+        text_render = []
+        specRefGlyph_render = []
+        gen_render = []
+        lineEnding_render = [] 
+
         edges = []
         id_to_name = defaultdict(lambda:"")
         name_to_id = defaultdict(lambda:"")
@@ -732,13 +741,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         info = rPlugin.getRenderInformation(0)
                         color_list = []
                         gradient_list = []
-                        comp_render = []
-                        spec_render = []
-                        rxn_render = []
-                        text_render = []
-                        lineEnding_render = []
-                        gen_render = []
-                        specRefGlyph_render = []
+                        # comp_render = []
+                        # spec_render = []
+                        # rxn_render = []
+                        # text_render = []
+                        # lineEnding_render = []
+                        # gen_render = []
+                        # specRefGlyph_render = []
                         arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                         id_arrowHeadSize = []
 

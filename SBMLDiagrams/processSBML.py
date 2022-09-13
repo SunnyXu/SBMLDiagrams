@@ -237,13 +237,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     gen_shape_type = ''
     gen_shape_info = []
 
-    #libSBNW
-    #comp_render = []
+    comp_render = []
     spec_render = []
     rxn_render = []
     text_render = []
     specRefGlyph_render = []
-    #gen_render = []
+    gen_render = []
+    lineEnding_render = []          
 
     mplugin = None
     try: #invalid sbml
@@ -259,8 +259,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
             mplugin = model_layout.getPlugin("layout")
         except:
             raise Exception("There is no layout.")
+
         if mplugin is not None:
-            layout = mplugin.getLayout(0)    
+            layout = mplugin.getLayout(0)   
             if layout is not None:
                 numCompGlyphs = layout.getNumCompartmentGlyphs()
                 numSpecGlyphs = layout.getNumSpeciesGlyphs()
@@ -626,12 +627,12 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     info = rPlugin.getRenderInformation(0)
                     color_list = []
                     gradient_list = []
-                    comp_render = []
+                    #comp_render = []
                     #spec_render = []
                     #rxn_render = []
                     #text_render = []
-                    lineEnding_render = []
-                    gen_render = []
+                    #lineEnding_render = []
+                    #gen_render = []
                     #specRefGlyph_render = []
                     arrowHeadSize = reaction_arrow_head_size #default if there is no lineEnding
                     id_arrowHeadSize = []
@@ -5712,7 +5713,7 @@ if __name__ == '__main__':
     #filename = "test_suite/sbml_error/testbigmodel.xml"
 
 ##############################
-    filename = 'output.xml'
+    #filename = 'output.xml'
 
     #filename = "Bart/bart_arccenter.xml"
     #filename = "Bart/bart_spRefBezier.xml"
@@ -5721,7 +5722,7 @@ if __name__ == '__main__':
     #filename = "Bart/newSBML2.xml"
     #filename = "Bart/output.xml"
 
-    #filename = "copasi_global/feedback_AssignRuleGlobalRender.xml"
+    filename = "copasi_global/feedback_AssignRuleGlobalRender.xml"
 
     #filename = "libSBNW/testWithLayout.xml"
 
@@ -5987,10 +5988,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    sbmlStr_layout_render = df.export()
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
