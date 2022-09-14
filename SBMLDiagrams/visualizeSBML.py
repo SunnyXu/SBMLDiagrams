@@ -2508,7 +2508,10 @@ if __name__ == '__main__':
 
     #filename = "Jana_WolfGlycolysis.xml"
     #filename = "Jana_WolfGlycolysis-original.xml"
-    filename = "output.xml"
+    #filename = "output.xml"
+
+    filename = "copasi_global/feedback_AssignRuleGlobalRender.xml"
+
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
