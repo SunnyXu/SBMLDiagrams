@@ -794,7 +794,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if spec_specGlyph_id_list[k][1] == idList:
                                     render_spec_id = spec_specGlyph_id_list[k][0] 
                                     spec_dimension = spec_dimension_list[k]
-
+                            try:#some spec fill color is defined as hex string directly
+                                spec_fill_color = hex_to_rgb(group.getFill())
+                            except:
+                                pass
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getFill():
                                     spec_fill_color = hex_to_rgb(color_list[k][1])
@@ -1099,6 +1102,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     
                     elif 'SPECIESGLYPH' in typeList:
                         render_spec_id = idList
+                        try:#some spec fill color is defined as hex string directly
+                            spec_fill_color = hex_to_rgb(group.getFill())
+                        except:
+                            pass
                         for k in range(len(color_list)):
                             if color_list[k][0] == group.getFill():
                                 spec_fill_color = hex_to_rgb(color_list[k][1])
@@ -5805,8 +5812,6 @@ class load:
         
             circular: positioning nodes on a circle;
 
-            #(comming soon) graphviz: positioning the nodes using Graphiz. 
-
         scale (applies to "spring", "spectral", "circular"): float-Scale factor for positions. 
         The nodes are positioned in a box of size scale in each dim centered at center.
         
@@ -5851,6 +5856,8 @@ class load:
                 pos = nx.random_layout(graph, center=center)
             elif layout == "circular":
                 pos = nx.circular_layout(graph, scale=scale, center=center)
+                
+            #(comming soon) graphviz: positioning the nodes using Graphiz. 
             # elif layout == "graphviz":
             #     pos = nx.nx_agraph.graphviz_layout(graph)
             else:
@@ -6062,7 +6069,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -6098,7 +6105,7 @@ if __name__ == '__main__':
     #filename = "Bart/newSBML2.xml"
     #filename = "Bart/output.xml"
 
-    #filename = "copasi_global/feedback_AssignRuleGlobalRender.xml"
+    filename = "copasi_global/feedback_AssignRuleGlobalRender.xml"
 
     #filename = "libSBNW/testWithLayout.xml"
 
