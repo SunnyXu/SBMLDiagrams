@@ -47,16 +47,18 @@ setup(
         'setuptools',
         'openpyxl',
         'opencv-python',
+        'networkx',
+        'matplotlib'
     ],
 
     #scripts=[''],# The name of your scipt, and also the command you'll be using for calling it
     include_package_data=True,
     classifiers=[
        'License :: OSI Approved :: MIT License',
-       'Programming Language :: Python :: 3.6',
-       'Programming Language :: Python :: 3.7',
        'Programming Language :: Python :: 3.8',
+       'Programming Language :: Python :: 3.9',
+       'Programming Language :: Python :: 3.10',
        'Operating System :: OS Independent',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.8',
 )

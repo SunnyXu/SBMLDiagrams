@@ -178,7 +178,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
         # create the Model
         model = document.createModel()
-        model.setId("Model_layout")
+        model.setId("SBMLDiagrams_model")
         document.setModel(model)
 
         # create the Compartment and species
@@ -242,6 +242,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                         species.setBoundaryCondition(True)
                         species.setConstant(True)
         # create reactions:
+        parameters_create = []
         for i in range(numReactions):
             reaction_id = df_ReactionData.iloc[i]['id']
             rxn_rev = bool(df_ReactionData.iloc[i]['rxn_reversible'])
@@ -286,43 +287,43 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             except:
                 pass
 
-            if str(kinetic_law_from_user) == '' or flag_nan == 1:
-                kinetic_law = ''
-                parameter_list = []
-                kinetic_law = kinetic_law + 'E' + str (i) + '*(k' + str (i) 
-                parameter_list.append('E' + str (i))
-                parameter_list.append('k' + str (i))
-                for j in range(rct_num):
-                    kinetic_law = kinetic_law + '*' + rct[j]
-                    
-                if isReversible:
-                    kinetic_law = kinetic_law + ' - k' + str (i) + 'r'
-                    parameter_list.append('k' + str (i) + 'r')
-                    for j in range(prd_num):
-                        kinetic_law = kinetic_law + '*' + prd[j]
-                kinetic_law = kinetic_law + ')'
-            else:
-                kinetic_law = kinetic_law_from_user
-                parameter_spec_list = getSymbols(kinetic_law_from_user) 
-                parameter_list = []
-                for j in range(len(parameter_spec_list)):
-                    if parameter_spec_list[j] not in spec_id_list:
-                        parameter_list.append(parameter_spec_list[j])
-                if len(parameter_list) == 0: #If the input kinetic law is invalid
-                    kinetic_law = ''
-                    parameter_list = []
-                    kinetic_law = kinetic_law + 'E' + str (i) + '*(k' + str (i) 
-                    parameter_list.append('E' + str (i))
-                    parameter_list.append('k' + str (i))
-                    for j in range(rct_num):
-                        kinetic_law = kinetic_law + '*' + rct[j]
+            #if str(kinetic_law_from_user) == '' or flag_nan == 1:
+            kinetic_law = ''
+            parameter_list = []
+            kinetic_law = kinetic_law + 'E' + str (i) + '*(k' + str (i) 
+            parameter_list.append('E' + str (i))
+            parameter_list.append('k' + str (i))
+            for j in range(rct_num):
+                kinetic_law = kinetic_law + '*' + rct[j]
+                
+            if isReversible:
+                kinetic_law = kinetic_law + ' - k' + str (i) + 'r'
+                parameter_list.append('k' + str (i) + 'r')
+                for j in range(prd_num):
+                    kinetic_law = kinetic_law + '*' + prd[j]
+            kinetic_law = kinetic_law + ')'
+            # else:
+            #     kinetic_law = kinetic_law_from_user
+            #     parameter_spec_list = getSymbols(kinetic_law_from_user) 
+            #     parameter_list = []
+            #     for j in range(len(parameter_spec_list)):
+            #         if parameter_spec_list[j] not in spec_id_list and parameter_spec_list[j] not in comp_id_list and parameter_spec_list[j] not in parameters_create:
+            #             parameter_list.append(parameter_spec_list[j])
+            #     if len(parameter_list) == 0: #If the input kinetic law is invalid
+            #         kinetic_law = ''
+            #         parameter_list = []
+            #         kinetic_law = kinetic_law + 'E' + str (i) + '*(k' + str (i) 
+            #         parameter_list.append('E' + str (i))
+            #         parameter_list.append('k' + str (i))
+            #         for j in range(rct_num):
+            #             kinetic_law = kinetic_law + '*' + rct[j]
                         
-                    if isReversible:
-                        kinetic_law = kinetic_law + ' - k' + str (i) + 'r'
-                        parameter_list.append('k' + str (i) + 'r')
-                        for j in range(prd_num):
-                            kinetic_law = kinetic_law + '*' + prd[j]
-                    kinetic_law = kinetic_law + ')'
+            #         if isReversible:
+            #             kinetic_law = kinetic_law + ' - k' + str (i) + 'r'
+            #             parameter_list.append('k' + str (i) + 'r')
+            #             for j in range(prd_num):
+            #                 kinetic_law = kinetic_law + '*' + prd[j]
+            #         kinetic_law = kinetic_law + ')'
         
             reaction = model.createReaction()
             reaction.setId(df_ReactionData.iloc[i]['id'])
@@ -330,7 +331,9 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             reaction.setFast(False)
             if isReversible:
                 reaction.setReversible(True)
+            
             for j in range(len(parameter_list)):
+                parameters_create.append(parameter_list[j])
                 parameters = model.createParameter()
                 parameters.setId(parameter_list[j])
                 parameters.setValue(0.1) # needs to set as the true parameter value.
@@ -396,7 +399,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         # Creates a Layout object via LayoutModelPlugin object.
         #
         layout = mplugin.createLayout()
-        layout.setId("Layout_1")
+        layout.setId("SBMLDiagrams_layout")
         layout.setDimensions(libsbml.Dimensions(layoutns, 800.0, 800.0))
         # random network (40+800x, 40+800y)
 
@@ -770,10 +773,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
                     [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
                     if line_end_pt == None:
-                            line_end_pt = _cross_point(center_value, 
-                            [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
-                            [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
-                    
+                        line_end_pt = _cross_point(center_value, 
+                        [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
+                        [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
+                
                 try:
                     cb.setStart(libsbml.Point(layoutns, line_end_pt[0], line_end_pt[1]))
                 except:
@@ -838,7 +841,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                         line_head_pt = _cross_point(center_value, 
                         [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
                         [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])
-              
+                
                 try:
                     cb.setEnd(libsbml.Point(layoutns, line_head_pt[0], line_head_pt[1]))
                 except:
@@ -1172,6 +1175,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     spec_border_color_str = '#%02x%02x%02x' % (int(spec_border_color[0]),int(spec_border_color[1]),int(spec_border_color[2]))   
 
                 spec_border_width = float(df_NodeData.iloc[i]['border_width'])
+                if spec_border_width <= 0:
+                    spec_border_color_str = '#ffffffff'
 
                 try:
                     font_color = list(df_NodeData.iloc[i]['txt_font_color'][1:-1].split(","))

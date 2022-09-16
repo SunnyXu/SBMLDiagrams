@@ -676,6 +676,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
         fill = spec_fill_color
     else:
         fill = skia.Color(spec_fill_color[0], spec_fill_color[1], spec_fill_color[2], spec_fill_color[3])
+
     linewidth = spec_border_width  
     if linewidth == 0 or linewidth < 0:
         outline = fill
@@ -991,12 +992,12 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 else:  
                     line_end_pt = rct_lineend_pos[i]
                     pts.append(line_end_pt)
-                    try:
-                        arrow_end_pt = _cross_point(line_end_pt, 
-                            [c1[0]-reaction_line_width, c1[1]-reaction_line_width],
-                            [s1[0]+2.*reaction_line_width, s1[1]+2.*reaction_line_width])
-                    except:
-                        arrow_end_pt = line_end_pt
+                    # try:
+                    #     arrow_end_pt = _cross_point(line_end_pt, 
+                    #         [c1[0]-reaction_line_width, c1[1]-reaction_line_width],
+                    #         [s1[0]+2.*reaction_line_width, s1[1]+2.*reaction_line_width])
+                    # except:
+                    arrow_end_pt = line_end_pt
             except:
                 if reverse and line_end_pt != None:
                     pts.append(line_end_pt)
@@ -1183,8 +1184,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             pts_x_r = pts_x_m + (arrow_end_pt[1]-rct_handle_position[1])*.5*arrow_s2/distance
                             points.append([pts_x_r,pts_y_r])
                             _drawArrow(canvas, points, lineColor)
-
-
+      
         for i in range(nProducts):
             pts = [center_position] 
             pts.append(center_handle_position_prd)
@@ -1207,7 +1207,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
 
             #draw bezier
             try:
-                if prd_lineend_pos[i][0] < (c2[0] + s2[0]) and prd_lineend_pos[i][0] > c2[0]  and prd_lineend_pos[i][1] > c2[1] and prd_lineend_pos[i][1] < (c2[1]+s2[1]):
+                if prd_lineend_pos[i][0] < (c2[0] + s2[0]) and prd_lineend_pos[i][0] > c2[0] and prd_lineend_pos[i][1] > c2[1] and prd_lineend_pos[i][1] < (c2[1]+s2[1]):
                     if line_head_pt != None:
                         pts.append(line_head_pt)
                     else:
@@ -1219,12 +1219,12 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 else: 
                     line_head_pt = prd_lineend_pos[i]     
                     pts.append(line_head_pt)
-                    try:
-                        arrow_head_pt = _cross_point(line_head_pt, 
-                        [c2[0]-reaction_line_width, c2[1]-reaction_line_width],
-                        [s2[0]+2.*reaction_line_width, s2[1]+2.*reaction_line_width])
-                    except:
-                        arrow_head_pt = line_head_pt
+                    # try:
+                    #     arrow_head_pt = _cross_point(line_head_pt, 
+                    #     [c2[0]-reaction_line_width, c2[1]-reaction_line_width],
+                    #     [s2[0]+2.*reaction_line_width, s2[1]+2.*reaction_line_width])
+                    # except:
+                    arrow_head_pt = line_head_pt
             except:
                 if line_head_pt != None:
                     pts.append(line_head_pt)
@@ -1237,6 +1237,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
             _drawBezier(pts, lineColor, linewidth)
 
             #draw the arrow:
+
             if arrow_head_pt != None:
                 if prd_endhead_render == []: #there is no lineending info
                     #print(arrow_s1, arrow_s2)
@@ -1281,6 +1282,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                 outline, fill, linewidth)
 
                     elif prd_endhead_render[0][3] == ['polygon']:
+                    
                         arrow_s1 = prd_endhead_render[0][1][0]*scale
                         arrow_s2 = prd_endhead_render[0][1][1]*scale
                         #print(arrow_s1, arrow_s2)
@@ -1443,12 +1445,12 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     line_end_pt = rct_lineend_pos[i]
                     _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
                         lineColor, linewidth)
-                    try:
-                        arrow_end_pt = _cross_point(line_end_pt, 
-                        [c1[0]-reaction_line_width, c1[1]-reaction_line_width],
-                        [s1[0]+2.*reaction_line_width, s1[1]+2.*reaction_line_width])
-                    except:
-                        arrow_end_pt = line_end_pt
+                    # try:
+                    #     arrow_end_pt = _cross_point(line_end_pt, 
+                    #     [c1[0]-reaction_line_width, c1[1]-reaction_line_width],
+                    #     [s1[0]+2.*reaction_line_width, s1[1]+2.*reaction_line_width])
+                    # except:
+                    arrow_end_pt = line_end_pt
             except:
                 if reverse and line_end_pt != None:
                     _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
@@ -1673,12 +1675,12 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     line_head_pt = prd_lineend_pos[i]
                     _drawLine(canvas, arcCenter[0], arcCenter[1], line_head_pt[0], line_head_pt[1], 
                         lineColor, linewidth)
-                    try:
-                        arrow_head_pt = _cross_point(line_head_pt, 
-                            [c2[0]-reaction_line_width, c2[1]-reaction_line_width],
-                            [s2[0]+2.*reaction_line_width, s2[1]+2.*reaction_line_width])
-                    except:
-                        arrow_head_pt = line_head_pt
+                    # try:
+                    #     arrow_head_pt = _cross_point(line_head_pt, 
+                    #         [c2[0]-reaction_line_width, c2[1]-reaction_line_width],
+                    #         [s2[0]+2.*reaction_line_width, s2[1]+2.*reaction_line_width])
+                    # except:
+                    arrow_head_pt = line_head_pt
             except:
                 if line_head_pt != None:
                     _drawLine(canvas, arcCenter[0], arcCenter[1], line_head_pt[0], line_head_pt[1], 
