@@ -682,7 +682,7 @@
             <render:colorDefinition render:id="EmptySetGradientEnd" render:value="#d3d3d3"/>
             <render:colorDefinition render:id="CompartmentBorder" render:value="#e69600b0"/>
             <render:colorDefinition render:id="CloneMarkerColor" render:value="#ffa500"/>
-            <render:colorDefinition render:id="CurveColor" render:value="#000000a0"/>
+            <render:colorDefinition render:id="CurveColor" render:value="#000000"/>
             <render:colorDefinition render:id="ModulationCurveColor" render:value="#0000a0a0"/>
           </render:listOfColorDefinitions>
           <render:listOfGradientDefinitions>
