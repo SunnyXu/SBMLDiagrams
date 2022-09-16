@@ -6183,8 +6183,8 @@ if __name__ == '__main__':
     filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
     
     #gradient: can not plot but can export
-    #filename = "test_suite/gradient/test_gradientLinear.xml"
-    #filename = "test_suite/gradient/test_gradientRadial.xml"
+    #filename = "test_suite/test_gradientLinear/test_gradientLinear.xml"
+    #filename = "test_suite/test_gradientRadial/test_gradientRadial.xml"
 
     #long text and alias nodes
     #filename = "test_suite/Jana_WolfGlycolysis/Jana_WolfGlycolysis.xml"
@@ -6203,7 +6203,7 @@ if __name__ == '__main__':
     #filename = "Bart/output.xml"
 
     #filename = "copasi_global/feedback_AssignRuleGlobalRender.xml"
-    filename = "copasi_global/oscili_V3COPASI.xml"
+    #filename = "copasi_global/oscili_V3COPASI.xml"
 
     #filename = "libSBNW/testWithLayout.xml"
 
@@ -6225,19 +6225,19 @@ if __name__ == '__main__':
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('output.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    try:
-        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    except:
-        print("did not return shapeData")
-    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('output.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # try:
+    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # except:
+    #     print("did not return shapeData")
+    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -6469,10 +6469,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    sbmlStr_layout_render = df.export()
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   

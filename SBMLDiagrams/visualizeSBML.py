@@ -1414,7 +1414,6 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 allNodes_pos_dict[temp_id] = position
                                 allNodes_dim_dict[temp_id] = dimension
                                 if gradient_fill_color == []:
-                                    #print(color_style.getSpecBorderWidth())
                                     drawNetwork.addNode(canvas, 'floating', '', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                         color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
@@ -1504,6 +1503,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
                                         [text_anchor, text_vanchor] = text_render[k][4]
+                
                                 if gradient_fill_color == []:
                                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
@@ -1546,6 +1546,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         text_font_size = text_render[k][3]
                                         [text_anchor, text_vanchor] = text_render[k][4]
                                 if gradient_fill_color == []:
+                                 
                                     drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
                                                         color_style.getSpecBorderWidth()*scale, shapeIdx, shape_name, shape_type, shape_info,
@@ -2498,7 +2499,7 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     #filename = "test.xml"
-    #filename = "feedback.xml"
+    filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
@@ -2510,7 +2511,7 @@ if __name__ == '__main__':
     #filename = "Jana_WolfGlycolysis-original.xml"
     #filename = "output.xml"
 
-    filename = "copasi_global/feedback_AssignRuleGlobalRender.xml"
+    #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
 
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
