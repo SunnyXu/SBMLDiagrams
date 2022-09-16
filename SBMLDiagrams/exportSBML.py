@@ -178,7 +178,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
         # create the Model
         model = document.createModel()
-        model.setId("Model_layout")
+        model.setId("SBMLDiagrams_model")
         document.setModel(model)
 
         # create the Compartment and species
@@ -399,7 +399,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         # Creates a Layout object via LayoutModelPlugin object.
         #
         layout = mplugin.createLayout()
-        layout.setId("Layout_1")
+        layout.setId("SBMLDiagrams_layout")
         layout.setDimensions(libsbml.Dimensions(layoutns, 800.0, 800.0))
         # random network (40+800x, 40+800y)
 
