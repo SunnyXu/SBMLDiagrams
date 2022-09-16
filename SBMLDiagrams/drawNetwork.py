@@ -676,6 +676,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
         fill = spec_fill_color
     else:
         fill = skia.Color(spec_fill_color[0], spec_fill_color[1], spec_fill_color[2], spec_fill_color[3])
+
     linewidth = spec_border_width  
     if linewidth == 0 or linewidth < 0:
         outline = fill
