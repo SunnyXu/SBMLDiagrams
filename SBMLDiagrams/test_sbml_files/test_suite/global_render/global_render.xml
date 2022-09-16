@@ -1,0 +1,795 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created by COPASI version 4.34 (Build 251) on 2022-09-15 09:15 with libSBML version 5.19.1. -->
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1" xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1" level="3" version="1" layout:required="false" render:required="false">
+  <model metaid="oscli" id="oscli" name="Oscli (Heinrich model)" substanceUnits="substance" timeUnits="time" volumeUnits="volume" areaUnits="area" lengthUnits="length" extentUnits="substance">
+    <annotation>
+      <COPASI xmlns="http://www.copasi.org/static/sbml">
+        <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+          <rdf:Description rdf:about="#oscli">
+            <dcterms:created>
+              <rdf:Description>
+                <dcterms:W3CDTF>2022-09-15T16:14:19Z</dcterms:W3CDTF>
+              </rdf:Description>
+            </dcterms:created>
+          </rdf:Description>
+        </rdf:RDF>
+      </COPASI>
+    </annotation>
+    <listOfFunctionDefinitions>
+      <functionDefinition metaid="COPASI17" id="Function_for_J1" name="Function for J1">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI17"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> J1_k3 </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> compartment_ </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> J1_k3 </ci>
+                <ci> S1 </ci>
+              </apply>
+              <ci> compartment_ </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI18" id="Function_for_J2" name="Function for J2">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI18"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> J2_c </ci>
+            </bvar>
+            <bvar>
+              <ci> J2_k1 </ci>
+            </bvar>
+            <bvar>
+              <ci> J2_k_1 </ci>
+            </bvar>
+            <bvar>
+              <ci> J2_q </ci>
+            </bvar>
+            <bvar>
+              <ci> S1 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> compartment_ </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <apply>
+                  <minus/>
+                  <apply>
+                    <times/>
+                    <ci> J2_k1 </ci>
+                    <ci> S1 </ci>
+                  </apply>
+                  <apply>
+                    <times/>
+                    <ci> J2_k_1 </ci>
+                    <ci> S2 </ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <plus/>
+                  <cn type="integer"> 1 </cn>
+                  <apply>
+                    <times/>
+                    <ci> J2_c </ci>
+                    <apply>
+                      <power/>
+                      <ci> S2 </ci>
+                      <ci> J2_q </ci>
+                    </apply>
+                  </apply>
+                </apply>
+              </apply>
+              <ci> compartment_ </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI19" id="Function_for_J0" name="Function for J0">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI19"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> J0_v0 </ci>
+            </bvar>
+            <bvar>
+              <ci> compartment_ </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <ci> J0_v0 </ci>
+              <ci> compartment_ </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+      <functionDefinition metaid="COPASI20" id="Function_for_J3" name="Function for J3">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI20"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+          <lambda>
+            <bvar>
+              <ci> J3_k2 </ci>
+            </bvar>
+            <bvar>
+              <ci> S2 </ci>
+            </bvar>
+            <bvar>
+              <ci> compartment_ </ci>
+            </bvar>
+            <apply>
+              <divide/>
+              <apply>
+                <times/>
+                <ci> J3_k2 </ci>
+                <ci> S2 </ci>
+              </apply>
+              <ci> compartment_ </ci>
+            </apply>
+          </lambda>
+        </math>
+      </functionDefinition>
+    </listOfFunctionDefinitions>
+    <listOfUnitDefinitions>
+      <unitDefinition id="length" name="length">
+        <listOfUnits>
+          <unit kind="metre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="area" name="area">
+        <listOfUnits>
+          <unit kind="metre" exponent="2" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="volume" name="volume">
+        <listOfUnits>
+          <unit kind="litre" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="time" name="time">
+        <listOfUnits>
+          <unit kind="second" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+      <unitDefinition id="substance" name="substance">
+        <listOfUnits>
+          <unit kind="mole" exponent="1" scale="0" multiplier="1"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment metaid="COPASI0" id="compartment_" name="compartment_" spatialDimensions="3" size="1" units="volume" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI0"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </compartment>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species metaid="COPASI1" id="S1" name="S1" compartment="compartment_" initialConcentration="0" substanceUnits="substance" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI1"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI2" id="S2" name="S2" compartment="compartment_" initialConcentration="1" substanceUnits="substance" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI2"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI3" id="X0" name="X0" compartment="compartment_" initialConcentration="1" substanceUnits="substance" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI3"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI4" id="X1" name="X1" compartment="compartment_" initialConcentration="0" substanceUnits="substance" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI4"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </species>
+      <species metaid="COPASI5" id="X2" name="X2" compartment="compartment_" initialConcentration="0" substanceUnits="substance" hasOnlySubstanceUnits="false" boundaryCondition="true" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI5"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </species>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter metaid="COPASI6" id="J0_v0" name="J0_v0" value="8" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI6"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI7" id="J1_k3" name="J1_k3" value="0" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI7"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI8" id="J2_k1" name="J2_k1" value="1" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI8"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI9" id="J2_k_1" name="J2_k_1" value="0" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI9"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI10" id="J2_c" name="J2_c" value="1" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI10"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI11" id="J2_q" name="J2_q" value="3" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI11"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </parameter>
+      <parameter metaid="COPASI12" id="J3_k2" name="J3_k2" value="5" constant="true">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI12"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+      </parameter>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction metaid="COPASI13" id="J0" name="J0" reversible="false" fast="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI13"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="X0" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S1" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> compartment_ </ci>
+              <apply>
+                <ci> Function_for_J0 </ci>
+                <ci> J0_v0 </ci>
+                <ci> compartment_ </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI14" id="J1" name="J1" reversible="false" fast="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI14"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="S1" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="X1" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> compartment_ </ci>
+              <apply>
+                <ci> Function_for_J1 </ci>
+                <ci> J1_k3 </ci>
+                <ci> S1 </ci>
+                <ci> compartment_ </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI15" id="J2" name="J2" reversible="false" fast="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI15"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="S1" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="S2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> compartment_ </ci>
+              <apply>
+                <ci> Function_for_J2 </ci>
+                <ci> J2_c </ci>
+                <ci> J2_k1 </ci>
+                <ci> J2_k_1 </ci>
+                <ci> J2_q </ci>
+                <ci> S1 </ci>
+                <ci> S2 </ci>
+                <ci> compartment_ </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction metaid="COPASI16" id="J3" name="J3" reversible="false" fast="false">
+        <annotation>
+          <COPASI xmlns="http://www.copasi.org/static/sbml">
+            <rdf:RDF xmlns:dcterms="http://purl.org/dc/terms/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+              <rdf:Description rdf:about="#COPASI16"/>
+            </rdf:RDF>
+          </COPASI>
+        </annotation>
+        <listOfReactants>
+          <speciesReference species="S2" stoichiometry="1" constant="true"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference species="X2" stoichiometry="1" constant="true"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> compartment_ </ci>
+              <apply>
+                <ci> Function_for_J3 </ci>
+                <ci> J3_k2 </ci>
+                <ci> S2 </ci>
+                <ci> compartment_ </ci>
+              </apply>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+    <layout:listOfLayouts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1">
+      <layout:layout layout:id="layout_0" layout:name="COPASI autolayout">
+        <layout:dimensions layout:width="92.8696913269511" layout:height="83.8675311265671"/>
+        <layout:listOfSpeciesGlyphs>
+          <layout:speciesGlyph layout:id="layout_glyph_0" layout:species="S1">
+            <layout:boundingBox>
+              <layout:position layout:x="45.6984348616197" layout:y="131.572609480205"/>
+              <layout:dimensions layout:width="36" layout:height="28"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="layout_glyph_1" layout:species="X1">
+            <layout:boundingBox>
+              <layout:position layout:x="1.11668060450577" layout:y="283.615746495549"/>
+              <layout:dimensions layout:width="36" layout:height="28"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="layout_glyph_2" layout:species="S2">
+            <layout:boundingBox>
+              <layout:position layout:x="25.0530548468455" layout:y="0"/>
+              <layout:dimensions layout:width="36" layout:height="28"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="layout_glyph_3" layout:species="X2">
+            <layout:boundingBox>
+              <layout:position layout:x="183.050462677113" layout:y="64.9396077089883"/>
+              <layout:dimensions layout:width="36" layout:height="28"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="layout_glyph_4" layout:species="X0">
+            <layout:boundingBox>
+              <layout:position layout:x="173.510457080112" layout:y="13.0265073785861"/>
+              <layout:dimensions layout:width="36" layout:height="28"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+        </layout:listOfSpeciesGlyphs>
+        <layout:listOfReactionGlyphs>
+          <layout:reactionGlyph layout:id="layout_glyph_5" layout:reaction="J2">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="4.12907600295484" layout:y="92.8645282205901" layout:z="0"/>
+                  <layout:end layout:x="2.06453800147742" layout:y="79.7072672725696" layout:z="0"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox>
+              <layout:position layout:x="3.09680700221613" layout:y="86.2858977465798"/>
+              <layout:dimensions layout:width="0" layout:height="0"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="layout_glyph_6" layout:speciesGlyph="layout_glyph_0" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="4.12907600295484" layout:y="92.8645282205901" layout:z="0"/>
+                      <layout:end layout:x="40.6984348616197" layout:y="129.753607636415" layout:z="0"/>
+                      <layout:basePoint1 layout:x="6.19361400443226" layout:y="106.021789168611" layout:z="0"/>
+                      <layout:basePoint2 layout:x="23.9621589333954" layout:y="121.177013639518" layout:z="0"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="layout_glyph_7" layout:speciesGlyph="layout_glyph_2" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="2.06453800147742" layout:y="79.7072672725696" layout:z="0"/>
+                      <layout:end layout:x="27.4867761857538" layout:y="33" layout:z="0"/>
+                      <layout:basePoint1 layout:x="0" layout:y="66.5500063245491" layout:z="0"/>
+                      <layout:basePoint2 layout:x="13.2272535925075" layout:y="46.4856879252694" layout:z="0"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="layout_glyph_8" layout:reaction="J0">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="145.212925190474" layout:y="99.347730029503" layout:z="0"/>
+                  <layout:end layout:x="132.431722968625" layout:y="111.202340239665" layout:z="0"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox>
+              <layout:position layout:x="138.82232407955" layout:y="105.275035134584"/>
+              <layout:dimensions layout:width="0" layout:height="0"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="layout_glyph_9" layout:speciesGlyph="layout_glyph_4" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="145.212925190474" layout:y="99.347730029503" layout:z="0"/>
+                      <layout:end layout:x="180.978855622995" layout:y="46.0265073785861" layout:z="0"/>
+                      <layout:basePoint1 layout:x="157.994127412323" layout:y="87.4931198193411" layout:z="0"/>
+                      <layout:basePoint2 layout:x="172.681792073122" layout:y="63.7961610464231" layout:z="0"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="layout_glyph_10" layout:speciesGlyph="layout_glyph_0" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="132.431722968625" layout:y="111.202340239665" layout:z="0"/>
+                      <layout:end layout:x="86.6984348616197" layout:y="136.317187640139" layout:z="0"/>
+                      <layout:basePoint1 layout:x="119.650520746776" layout:y="123.056950449827" layout:z="0"/>
+                      <layout:basePoint2 layout:x="99.9791772487354" layout:y="132.650721597524" layout:z="0"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="layout_glyph_11" layout:reaction="J3">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="118.231480140068" layout:y="17.4343258471404" layout:z="0"/>
+                  <layout:end layout:x="134.031220923094" layout:y="23.9282866180392" layout:z="0"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox>
+              <layout:position layout:x="126.131350531581" layout:y="20.6813062325898"/>
+              <layout:dimensions layout:width="0" layout:height="0"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="layout_glyph_12" layout:speciesGlyph="layout_glyph_2" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="118.231480140068" layout:y="17.4343258471404" layout:z="0"/>
+                      <layout:end layout:x="66.0530548468455" layout:y="12.8148675938693" layout:z="0"/>
+                      <layout:basePoint1 layout:x="102.431739357041" layout:y="10.9403650762415" layout:z="0"/>
+                      <layout:basePoint2 layout:x="80.2924619061864" layout:y="10.2541261423307" layout:z="0"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="layout_glyph_13" layout:speciesGlyph="layout_glyph_3" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="134.031220923094" layout:y="23.9282866180392" layout:z="0"/>
+                      <layout:end layout:x="180.992270887015" layout:y="59.9396077089883" layout:z="0"/>
+                      <layout:basePoint1 layout:x="149.830961706121" layout:y="30.4222473889381" layout:z="0"/>
+                      <layout:basePoint2 layout:x="169.361551492325" layout:y="46.8044177416879" layout:z="0"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="layout_glyph_14" layout:reaction="J1">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="53.7153800709569" layout:y="218.72990945209" layout:z="0"/>
+                  <layout:end layout:x="49.2572046452455" layout:y="233.934223153624" layout:z="0"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox>
+              <layout:position layout:x="51.4862923581012" layout:y="226.332066302857"/>
+              <layout:dimensions layout:width="0" layout:height="0"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="layout_glyph_15" layout:speciesGlyph="layout_glyph_0" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="53.7153800709569" layout:y="218.72990945209" layout:z="0"/>
+                      <layout:end layout:x="61.8870923460783" layout:y="164.572609480205" layout:z="0"/>
+                      <layout:basePoint1 layout:x="58.1735554966683" layout:y="203.525595750556" layout:z="0"/>
+                      <layout:basePoint2 layout:x="61.1448677778011" layout:y="180.248024189997" layout:z="0"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="layout_glyph_16" layout:speciesGlyph="layout_glyph_1" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="49.2572046452455" layout:y="233.934223153624" layout:z="0"/>
+                      <layout:end layout:x="29.1825368554187" layout:y="278.615746495549" layout:z="0"/>
+                      <layout:basePoint1 layout:x="44.7990292195341" layout:y="249.138536855159" layout:z="0"/>
+                      <layout:basePoint2 layout:x="35.8762391810486" layout:y="267.678220100737" layout:z="0"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+        </layout:listOfReactionGlyphs>
+        <layout:listOfTextGlyphs>
+          <layout:textGlyph layout:id="layout_glyph_17" layout:originOfText="S1" layout:graphicalObject="layout_glyph_0">
+            <layout:boundingBox>
+              <layout:position layout:x="45.6984348616197" layout:y="131.572609480205"/>
+              <layout:dimensions layout:width="32" layout:height="24"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="layout_glyph_18" layout:originOfText="X1" layout:graphicalObject="layout_glyph_1">
+            <layout:boundingBox>
+              <layout:position layout:x="1.11668060450577" layout:y="283.615746495549"/>
+              <layout:dimensions layout:width="32" layout:height="24"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="layout_glyph_19" layout:originOfText="S2" layout:graphicalObject="layout_glyph_2">
+            <layout:boundingBox>
+              <layout:position layout:x="25.0530548468455" layout:y="0"/>
+              <layout:dimensions layout:width="32" layout:height="24"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="layout_glyph_20" layout:originOfText="X2" layout:graphicalObject="layout_glyph_3">
+            <layout:boundingBox>
+              <layout:position layout:x="183.050462677113" layout:y="64.9396077089883"/>
+              <layout:dimensions layout:width="32" layout:height="24"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="layout_glyph_21" layout:originOfText="X0" layout:graphicalObject="layout_glyph_4">
+            <layout:boundingBox>
+              <layout:position layout:x="173.510457080112" layout:y="13.0265073785861"/>
+              <layout:dimensions layout:width="32" layout:height="24"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+        </layout:listOfTextGlyphs>
+      </layout:layout>
+      <render:listOfGlobalRenderInformation xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1">
+        <render:renderInformation render:id="GlobalRenderInformation_0" render:name="Copasi simple style" render:backgroundColor="#FFFFFFFF">
+          <render:listOfColorDefinitions>
+            <render:colorDefinition render:id="black" render:value="#000000"/>
+            <render:colorDefinition render:id="white" render:value="#ffffff"/>
+            <render:colorDefinition render:id="transparent" render:value="#ffffff00"/>
+            <render:colorDefinition render:id="EmptySetOutline" render:value="#808080"/>
+            <render:colorDefinition render:id="EmptySetGradientStart" render:value="#ffffff"/>
+            <render:colorDefinition render:id="EmptySetGradientEnd" render:value="#d3d3d3"/>
+            <render:colorDefinition render:id="CompartmentBorder" render:value="#e69600b0"/>
+            <render:colorDefinition render:id="CloneMarkerColor" render:value="#ffa500"/>
+            <render:colorDefinition render:id="CurveColor" render:value="#000000a0"/>
+            <render:colorDefinition render:id="ModulationCurveColor" render:value="#0000a0a0"/>
+          </render:listOfColorDefinitions>
+          <render:listOfGradientDefinitions>
+            <render:linearGradient render:id="cloneMarker" render:x1="50%" render:x2="50%">
+              <render:stop render:offset="0" render:stop-color="transparent"/>
+              <render:stop render:offset="0.75" render:stop-color="transparent"/>
+              <render:stop render:offset="0.76" render:stop-color="CloneMarkerColor"/>
+              <render:stop render:offset="1" render:stop-color="CloneMarkerColor"/>
+            </render:linearGradient>
+            <render:linearGradient render:id="EmptySetGradient">
+              <render:stop render:offset="0" render:stop-color="EmptySetGradientStart"/>
+              <render:stop render:offset="100%" render:stop-color="EmptySetGradientEnd"/>
+            </render:linearGradient>
+          </render:listOfGradientDefinitions>
+          <render:listOfLineEndings>
+            <render:lineEnding render:id="ActivationHead">
+              <layout:boundingBox layout:id="bb">
+                <layout:position layout:x="-12" layout:y="-6"/>
+                <layout:dimensions layout:width="12" layout:height="12"/>
+              </layout:boundingBox>
+              <render:g render:stroke="CurveColor" render:stroke-width="1" render:fill="white" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top">
+                <render:ellipse render:stroke="black" render:stroke-width="1" render:cx="50%" render:cy="50%" render:rx="50%"/>
+              </render:g>
+            </render:lineEnding>
+            <render:lineEnding render:id="TransitionHead">
+              <layout:boundingBox layout:id="bb">
+                <layout:position layout:x="-8" layout:y="-6"/>
+                <layout:dimensions layout:width="12" layout:height="12"/>
+              </layout:boundingBox>
+              <render:g render:stroke="CurveColor" render:stroke-width="0.001" render:fill="CurveColor" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top">
+                <render:polygon render:fill="CurveColor">
+                  <render:listOfElements>
+                    <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                    <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                    <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="33%" render:y="50%"/>
+                    <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                  </render:listOfElements>
+                </render:polygon>
+              </render:g>
+            </render:lineEnding>
+            <render:lineEnding render:id="ModulationHead">
+              <layout:boundingBox layout:id="bb">
+                <layout:position layout:x="-5" layout:y="-5"/>
+                <layout:dimensions layout:width="10" layout:height="10"/>
+              </layout:boundingBox>
+              <render:g render:stroke="ModulationCurveColor" render:stroke-width="1" render:fill="ModulationCurveColor" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top">
+                <render:ellipse render:cx="50%" render:cy="50%" render:rx="45%"/>
+              </render:g>
+            </render:lineEnding>
+            <render:lineEnding render:id="InhibitionHead">
+              <layout:boundingBox layout:id="bb">
+                <layout:position layout:x="-0.5" layout:y="-4"/>
+                <layout:dimensions layout:width="0.6" layout:height="8"/>
+              </layout:boundingBox>
+              <render:g render:stroke="black" render:stroke-width="2" render:fill="black" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top">
+                <render:polygon>
+                  <render:listOfElements>
+                    <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0.3" render:y="0"/>
+                    <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0.3" render:y="8"/>
+                    <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="8"/>
+                  </render:listOfElements>
+                </render:polygon>
+              </render:g>
+            </render:lineEnding>
+          </render:listOfLineEndings>
+          <render:listOfStyles>
+            <render:style render:roleList="invisible">
+              <render:g render:stroke="#ffffff00" render:stroke-width="0" render:fill="#ffffff00" render:fill-rule="nonzero" render:font-family="sans-serif" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top" render:font-size="0"/>
+            </render:style>
+            <render:style render:roleList="defaultText" render:typeList="TEXTGLYPH">
+              <render:g render:stroke="black" render:stroke-width="1" render:fill-rule="nonzero" render:font-family="Verdana" render:font-weight="normal" render:font-style="normal" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="12"/>
+            </render:style>
+            <render:style render:roleList="sidesubstrate substrate" render:typeList="REACTIONGLYPH">
+              <render:g render:stroke="CurveColor" render:stroke-width="3" render:fill-rule="nonzero" render:font-family="sans-serif" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top" render:font-size="0"/>
+            </render:style>
+            <render:style render:roleList="SBO-0000169 inhibition inhibitor">
+              <render:g render:stroke="CurveColor" render:stroke-width="3" render:fill-rule="nonzero" render:endHead="InhibitionHead" render:font-family="sans-serif" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top" render:font-size="0"/>
+            </render:style>
+            <render:style render:roleList="SBO-0000168 modifier">
+              <render:g render:stroke="ModulationCurveColor" render:stroke-width="3" render:fill="white" render:fill-rule="nonzero" render:endHead="ModulationHead" render:font-family="sans-serif" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top" render:font-size="0"/>
+            </render:style>
+            <render:style render:roleList="SBO-0000172 activator catalysis">
+              <render:g render:stroke="CurveColor" render:stroke-width="3" render:fill="white" render:fill-rule="nonzero" render:endHead="ActivationHead" render:font-family="sans-serif" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top" render:font-size="0"/>
+            </render:style>
+            <render:style render:roleList="product sideproduct" render:typeList="product sideproduct">
+              <render:g render:stroke="CurveColor" render:stroke-width="3" render:fill-rule="nonzero" render:endHead="TransitionHead" render:font-family="sans-serif" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top" render:font-size="0"/>
+            </render:style>
+            <render:style render:roleList="NO-SBO SBO-0000285" render:typeList="SPECIESGLYPH">
+              <render:g render:stroke-width="0" render:fill="#a0e0a030" render:fill-rule="nonzero" render:font-family="sans-serif" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top" render:font-size="0">
+                <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+              </render:g>
+            </render:style>
+            <render:style render:roleList="SBO-0000289" render:typeList="COMPARTMENTGLYPH">
+              <render:g render:stroke="CompartmentBorder" render:stroke-width="7" render:fill-rule="nonzero" render:font-family="sans-serif" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top" render:font-size="0">
+                <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%" render:rx="20" render:ry="20"/>
+              </render:g>
+            </render:style>
+            <render:style render:typeList="ANY">
+              <render:g render:stroke="black" render:stroke-width="0" render:fill="#f0707070" render:fill-rule="nonzero" render:font-family="sans-serif" render:font-weight="normal" render:font-style="normal" render:text-anchor="start" render:vtext-anchor="top" render:font-size="0">
+                <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+              </render:g>
+            </render:style>
+          </render:listOfStyles>
+        </render:renderInformation>
+      </render:listOfGlobalRenderInformation>
+    </layout:listOfLayouts>
+  </model>
+</sbml>
