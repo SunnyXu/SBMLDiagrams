@@ -1797,13 +1797,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 temp_id = reaction_id_list[i]
                 rxn_rev = reaction_rev_list[i]
                 kinetics = kinetics_list[i]
-                #rct_num = len(rct_specGlyph_handle_list[i])
-                #prd_num = len(prd_specGlyph_handle_list[i])
-                #mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
-                rct_num = len(reaction_rct_list[i])
-                prd_num = len(reaction_prd_list[i])
-                mod_num = len(reaction_mod_list[i])
-                #print(rct_num, prd_num, mod_num)
+                rct_num = max(len(rct_specGlyph_handle_list[i]),len(reaction_rct_list[i]))
+                prd_num = max(len(prd_specGlyph_handle_list[i]),len(reaction_prd_list[i]))
+                mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
 
                 # for j in range(rct_num):
                 #     temp_specGlyph_id = rct_specGlyph_list[i][j]
@@ -1855,6 +1851,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
                         dst_handle.append(prd_specGlyph_handle_list[i][j][1])
                         dst_lineend_pos.append(prd_specGlyph_handle_list[i][j][3])
+
                     dst_idx_list_corr = []
                     [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
 
@@ -2052,6 +2049,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 except:
                     center_x = 0.
                     center_y = 0.
+
                     for j in range(rct_num):
                         center_x += src_position[j][0]+.5*src_dimension[j][0]
                         center_y += src_position[j][1]+.5*src_dimension[j][1]
@@ -2585,11 +2583,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
         #return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData) 
         return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData, df_ShapeData, df_LineEndingData) 
 
-    # except:
-    #    raise ValueError('Invalid SBML!')
+    except:
+       raise ValueError('Invalid SBML!')
 
-    except Exception as e:
-        raise Exception (e)  
+    # except Exception as e:
+    #     raise Exception (e)  
 
 
 class load:
@@ -6178,11 +6176,11 @@ if __name__ == '__main__':
     #filename = "test_genGlyph.xml"
 
     #bioinformatics
-    #filename = "test_suite/bioinformatics/BIOMD0000000005.xml"
+    #filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005_layout_render.xml"
-    filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
+    #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
     
-    #gradient: can not plot but can export
+    #gradient: 
     #filename = "test_suite/test_gradientLinear/test_gradientLinear.xml"
     #filename = "test_suite/test_gradientRadial/test_gradientRadial.xml"
 
@@ -6191,6 +6189,9 @@ if __name__ == '__main__':
 
     #sbml with errors
     #filename = "test_suite/sbml_error/testbigmodel.xml"
+
+    #global render
+    #filename = "test_suite/global_render/global_render.xml"
 
 ##############################
     #filename = 'output.xml'
@@ -6218,7 +6219,9 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/cycle1-straight2.xml"
     #filename = "Sauro-Coyote/test.xml"
 
-    
+    #filename = "Adel/1.xml"
+    #filename = "Adel/2.xml"
+    #filename = "Adel/3.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -6469,10 +6472,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    # sbmlStr_layout_render = df.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    sbmlStr_layout_render = df.export()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
