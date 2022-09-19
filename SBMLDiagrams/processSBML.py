@@ -95,6 +95,7 @@ color_data = {"decimal_rgb": ['[240,248,255]', '[250,235,215]', '[0,255,255]', '
     "html_name":['AliceBlue', 'AntiqueWhite', 'Aqua', 'Aquamarine', 'Azure', 'Beige', 'Bisque', 'Black', 'BlanchedAlmond', 'Blue', 'BlueViolet', 'Brown', 'BurlyWood', 'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue', 'Cornsilk', 'Crimson', 'Cyan', 'DarkBlue', 'DarkCyan', 'DarkGoldenrod', 'DarkGray', 'DarkGreen', 'DarkKhaki', 'DarkMagenta', 'DarkOliveGreen', 'DarkOrange', 'DarkOrchid', 'DarkRed', 'DarkSalmon', 'DarkSeaGreen', 'DarkSlateBlue', 'DarkSlateGray', 'DarkTurquoise', 'DarkViolet', 'DeepPink', 'DeepSkyBlue', 'DimGray', 'DodgerBlue', 'FireBrick', 'FloralWhite', 'ForestGreen', 'Fuchsia', 'Gainsboro', 'GhostWhite', 'Gold', 'Goldenrod', 'Gray', 'Green', 'GreenYellow', 'Honeydew', 'HotPink', 'IndianRed', 'Indigo', 'Ivory', 'Khaki', 'Lavender', 'LavenderBlush', 'LawnGreen', 'LemonChiffon', 'LightBlue', 'LightCoral', 'LightCyan', 'LightGoldenrodYellow', 'LightGreen', 'LightGrey', 'LightPink', 'LightSalmon', 'LightSeaGreen', 'LightSkyBlue', 'LightSlateGray', 'LightSteelBlue', 'LightYellow', 'Lime', 'LimeGreen', 'Linen', 'Magenta', 'Maroon', 'MediumAquamarine', 'MediumBlue', 'MediumOrchid', 'MediumPurple', 'MediumSeaGreen', 'MediumSlateBlue', 'MediumSpringGreen', 'MediumTurquoise', 'MediumVioletRed', 'MidnightBlue', 'MintCream', 'MistyRose', 'Moccasin', 'NavajoWhite', 'Navy', 'OldLace', 'Olive', 'OliveDrab', 'Orange', 'OrangeRed', 'Orchid', 'PaleGoldenrod', 'PaleGreen', 'PaleTurquoise', 'PaleVioletRed', 'PapayaWhip', 'PeachPuff', 'Peru', 'Pink', 'Plum', 'PowderBlue', 'Purple', 'Red', 'RosyBrown', 'RoyalBlue', 'SaddleBrown', 'Salmon', 'SandyBrown', 'SeaGreen', 'Seashell', 'Sienna', 'Silver', 'SkyBlue', 'SlateBlue', 'SlateGray', 'Snow', 'SpringGreen', 'SteelBlue', 'Tan', 'Teal', 'Thistle', 'Tomato', 'Turquoise', 'Violet', 'Wheat', 'White', 'WhiteSmoke', 'Yellow', 'YellowGreen'],\
     "hex_string":['#F0F8FF', '#FAEBD7', '#00FFFF', '#7FFFD4', '#F0FFFF', '#F5F5DC', '#FFE4C4', '#000000', '#FFEBCD', '#0000FF', '#8A2BE2', '#A52A2A', '#DEB887', '#5F9EA0', '#7FFF00', '#D2691E', '#FF7F50', '#6495ED', '#FFF8DC', '#DC143C', '#00FFFF', '#00008B', '#008B8B', '#B8860B', '#A9A9A9', '#006400', '#BDB76B', '#8B008B', '#556B2F', '#FF8C00', '#9932CC', '#8B0000', '#E9967A', '#8FBC8F', '#483D8B', '#2F4F4F', '#00CED1', '#9400D3', '#FF1493', '#00BFFF', '#696969', '#1E90FF', '#B22222', '#FFFAF0', '#228B22', '#FF00FF', '#DCDCDC', '#F8F8FF', '#FFD700', '#DAA520', '#808080', '#008000', '#ADFF2F', '#F0FFF0', '#FF69B4', '#CD5C5C', '#4B0082', '#FFFFF0', '#F0E68C', '#E6E6FA', '#FFF0F5', '#7CFC00', '#FFFACD', '#ADD8E6', '#F08080', '#E0FFFF', '#FAFAD2', '#90EE90', '#D3D3D3', '#FFB6C1', '#FFA07A', '#20B2AA', '#87CEFA', '#778899', '#B0C4DE', '#FFFFE0', '#00FF00', '#32CD32', '#FAF0E6', '#FF00FF', '#800000', '#66CDAA', '#0000CD', '#BA55D3', '#9370DB', '#3CB371', '#7B68EE', '#00FA9A', '#48D1CC', '#C71585', '#191970', '#F5FFFA', '#FFE4E1', '#FFE4B5', '#FFDEAD', '#000080', '#FDF5E6', '#808000', '#6B8E23', '#FFA500', '#FF4500', '#DA70D6', '#EEE8AA', '#98FB98', '#AFEEEE', '#DB7093', '#FFEFD5', '#FFDAB9', '#CD853F', '#FFC0CB', '#DDA0DD', '#B0E0E6', '#800080', '#FF0000', '#BC8F8F', '#4169E1', '#8B4513', '#FA8072', '#F4A460', '#2E8B57', '#FFF5EE', '#A0522D', '#C0C0C0', '#87CEEB', '#6A5ACD', '#708090', '#FFFAFA', '#00FF7F', '#4682B4', '#D2B48C', '#008080', '#D8BFD8', '#FF6347', '#40E0D0', '#EE82EE', '#F5DEB3', '#FFFFFF', '#F5F5F5', '#FFFF00', '#9ACD32']}
 df_color = pd.DataFrame(color_data)
+df_color["html_name"] = df_color["html_name"].str.lower()
 
 def _rgb_to_color(rgb):
     """
@@ -142,6 +143,7 @@ def _rgb_to_color(rgb):
         color = [[], '', '']
 
     return color
+
 
 def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [1000, 1000]): 
     """
@@ -808,21 +810,37 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if compGlyph_id_list[k] == idList:
                                     render_comp_id = comp_id_list[k]  
                             if idList == 'CompG__compartment_default_':
-                                render_comp_id = '_compartment_default_'                         
-                            #print(render_comp_id)
+                                render_comp_id = '_compartment_default_'                            
 
-                            try:
-                                comp_fill_color = hex_to_rgb(group.getFill())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getFill():
-                                        comp_fill_color = hex_to_rgb(color_list[k][1])
-                            try:
-                                comp_border_color = hex_to_rgb(group.getStroke())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getStroke():
-                                        comp_border_color = hex_to_rgb(color_list[k][1])
+                            fill_color = group.getFill()
+                            if fill_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                comp_fill_color = rgb                 
+                            else:
+                                try:
+                                    comp_fill_color = hex_to_rgb(fill_color)                          
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == fill_color:
+                                            comp_fill_color = hex_to_rgb(color_list[k][1])
+
+                            border_color = group.getStroke()
+                            if border_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                comp_border_color = rgb 
+                            else:
+                                try:
+                                    comp_border_color = hex_to_rgb(border_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == border_color:
+                                            comp_border_color = hex_to_rgb(color_list[k][1])
         
                             comp_border_width = group.getStrokeWidth()
 
@@ -836,19 +854,37 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if spec_specGlyph_id_list[k][1] == idList:
                                     render_spec_id = spec_specGlyph_id_list[k][0] 
                                     spec_dimension = spec_dimension_list[k]
-                            try:#some spec fill color is defined as hex string directly
-                                spec_fill_color = hex_to_rgb(group.getFill())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getFill():
-                                        spec_fill_color = hex_to_rgb(color_list[k][1])
-                            try:
-                                spec_border_color = hex_to_rgb(group.getStroke())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getStroke():
-                                        spec_border_color = hex_to_rgb(color_list[k][1])
-                            
+
+                            fill_color = group.getFill()
+                            if fill_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                spec_fill_color = rgb  
+                            else:
+                                try:#some spec fill color is defined as hex string directly
+                                    spec_fill_color = hex_to_rgb(fill_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == fill_color:
+                                            spec_fill_color = hex_to_rgb(color_list[k][1])
+
+                            border_color = group.getStroke()
+                            if border_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                spec_border_color = rgb 
+                            else:
+                                try:
+                                    spec_border_color = hex_to_rgb(border_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == border_color:
+                                            spec_border_color = hex_to_rgb(color_list[k][1])
+                                
                             for k in range(len(gradient_list)):
                                 if gradient_list[k][0] == group.getFill():
                                     spec_fill_color = gradient_list[k][1:]
@@ -940,19 +976,36 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             for k in range(len(id_arrowHeadSize)):
                                 if temp_id == id_arrowHeadSize[k][0]:
                                     arrowHeadSize = id_arrowHeadSize[k][1]
+
+                            fill_color = group.getFill()
+                            if fill_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                reaction_line_fill = rgb 
                             try:
-                                reaction_line_fill = hex_to_rgb(group.getFill())
+                                reaction_line_fill = hex_to_rgb(fill_color)
                             except:
                                 for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getFill():
+                                    if color_list[k][0] == fill_color:
                                         reaction_line_fill = hex_to_rgb(color_list[k][1])
-                            try:
-                                reaction_line_color = hex_to_rgb(group.getStroke())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getStroke():
-                                        reaction_line_color = hex_to_rgb(color_list[k][1])
-                       
+
+                            stroke_color = group.getStroke()
+                            if stroke_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == stroke_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                reaction_line_color = rgb 
+                            else:
+                                try:
+                                    reaction_line_color = hex_to_rgb(stroke_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == stroke_color:
+                                            reaction_line_color = hex_to_rgb(color_list[k][1])
+                        
                             reaction_line_width = group.getStrokeWidth()
                             rxn_render.append([render_rxn_id, reaction_line_color, reaction_line_width, 
                             arrowHeadSize, reaction_dash, reaction_line_fill])
@@ -964,10 +1017,23 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             for k in range(len(textGlyph_spec_id_list)):    
                                 if textGlyph_spec_id_list[k][1] == idList:
                                     render_text_id = textGlyph_spec_id_list[k][0]
-                                    
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    text_line_color = hex_to_rgb(color_list[k][1])
+
+                            text_color = group.getStroke()
+                            if text_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == text_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                text_line_color = rgb   
+                            else:  
+                                try:
+                                    text_line_color = hex_to_rgb(text_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == text_color:
+                                            text_line_color = hex_to_rgb(color_list[k][1])
+
+                            
                             text_line_width = group.getStrokeWidth()
                             if group.isSetTextAnchor():
                                 text_anchor = group.getTextAnchorAsString()
@@ -983,18 +1049,35 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             #print(render_text_id)
                         elif 'GENERALGLYPH' in typeList:
                             render_gen_id = idList
-                            try:
-                                gen_fill_color = hex_to_rgb(group.getFill())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getFill():
-                                        gen_fill_color = hex_to_rgb(color_list[k][1])
-                            try:
-                                gen_border_color = hex_to_rgb(group.getStroke())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getStroke():
-                                        gen_border_color = hex_to_rgb(color_list[k][1])
+                            fill_color = group.getFill()
+                            if fill_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                gen_fill_color = rgb 
+                            else:
+                                try:
+                                    gen_fill_color = hex_to_rgb(fill_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == fill_color:
+                                            gen_fill_color = hex_to_rgb(color_list[k][1])
+
+                            border_color = group.getStroke()
+                            if border_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                gen_border_color = rgb  
+                            else:
+                                try:
+                                    gen_border_color = hex_to_rgb(border_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == border_color:
+                                            gen_border_color = hex_to_rgb(color_list[k][1])
                  
                             gen_border_width = group.getStrokeWidth()
                             gen_shape_type = ''
@@ -1155,18 +1238,37 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
                     if 'COMPARTMENTGLYPH' in typeList:
                         render_comp_id = idList
-                        try:
-                            comp_fill_color = hex_to_rgb(group.getFill())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getFill():
-                                    comp_fill_color = hex_to_rgb(color_list[k][1])
-                        try:
-                            comp_border_color = hex_to_rgb(group.getStroke())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    comp_border_color = hex_to_rgb(color_list[k][1])
+
+                        fill_color = group.getFill()
+                        if fill_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            comp_fill_color = rgb                 
+                        else:
+                            try:
+                                comp_fill_color = hex_to_rgb(fill_color)                          
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == fill_color:
+                                        comp_fill_color = hex_to_rgb(color_list[k][1])
+
+                        border_color = group.getStroke()
+                        if border_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            comp_border_color = rgb 
+                        else:
+                            try:
+                                comp_border_color = hex_to_rgb(border_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == border_color:
+                                        comp_border_color = hex_to_rgb(color_list[k][1])
+    
     
                         comp_border_width = group.getStrokeWidth()
 
@@ -1174,18 +1276,36 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     
                     elif 'SPECIESGLYPH' in typeList:
                         render_spec_id = idList
-                        try:#some spec fill color is defined as hex string directly
-                            spec_fill_color = hex_to_rgb(group.getFill())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getFill():
-                                    spec_fill_color = hex_to_rgb(color_list[k][1])
-                        try:
-                            spec_border_color = hex_to_rgb(group.getStroke())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    spec_border_color = hex_to_rgb(color_list[k][1])
+                        fill_color = group.getFill()
+                        if fill_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            spec_fill_color = rgb  
+                        else:
+                            try:#some spec fill color is defined as hex string directly
+                                spec_fill_color = hex_to_rgb(fill_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == fill_color:
+                                        spec_fill_color = hex_to_rgb(color_list[k][1])
+
+                        border_color = group.getStroke()
+                        if border_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            spec_border_color = rgb 
+                        else:
+                            try:
+                                spec_border_color = hex_to_rgb(border_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == border_color:
+                                        spec_border_color = hex_to_rgb(color_list[k][1])
+                            
                         
                         for k in range(len(gradient_list)):
                             if gradient_list[k][0] == group.getFill():
@@ -1270,18 +1390,36 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             reaction_num_dash = group.getNumDashes()
                             for num in range(reaction_num_dash):
                                 reaction_dash.append(group.getDashByIndex(num))
+                
+                        fill_color = group.getFill()
+                        if fill_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            reaction_line_fill = rgb 
                         try:
-                            reaction_line_fill = hex_to_rgb(group.getFill())
+                            reaction_line_fill = hex_to_rgb(fill_color)
                         except:
                             for k in range(len(color_list)):
-                                if color_list[k][0] == group.getFill():
+                                if color_list[k][0] == fill_color:
                                     reaction_line_fill = hex_to_rgb(color_list[k][1])
-                        try:
-                            reaction_line_color = hex_to_rgb(group.getStroke())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    reaction_line_color = hex_to_rgb(color_list[k][1])
+
+                        stroke_color = group.getStroke()
+                        if stroke_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == stroke_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            reaction_line_color = rgb 
+                        else:
+                            try:
+                                reaction_line_color = hex_to_rgb(stroke_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == stroke_color:
+                                        reaction_line_color = hex_to_rgb(color_list[k][1])
+                    
                     
                         reaction_line_width = group.getStrokeWidth()
                         rxn_render.append([render_rxn_id, reaction_line_color, reaction_line_width, 
@@ -1289,9 +1427,21 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     elif 'TEXTGLYPH' in typeList:
                         render_text_id = idList
            
-                        for k in range(len(color_list)):
-                            if color_list[k][0] == group.getStroke():
-                                text_line_color = hex_to_rgb(color_list[k][1])
+                        text_color = group.getStroke()
+                        if text_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == text_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            text_line_color = rgb   
+                        else:  
+                            try:
+                                text_line_color = hex_to_rgb(text_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == text_color:
+                                        text_line_color = hex_to_rgb(color_list[k][1])
+
                         text_line_width = group.getStrokeWidth()
                         if group.isSetTextAnchor():
                             text_anchor = group.getTextAnchorAsString()
@@ -1307,18 +1457,36 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         #print(render_text_id)
                     elif 'GENERALGLYPH' in typeList:
                         render_gen_id = idList
-                        try:
-                            gen_fill_color = hex_to_rgb(group.getFill())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getFill():
-                                    gen_fill_color = hex_to_rgb(color_list[k][1])
-                        try:
-                            gen_border_color = hex_to_rgb(group.getStroke())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    gen_border_color = hex_to_rgb(color_list[k][1])
+
+                        fill_color = group.getFill()
+                        if fill_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            gen_fill_color = rgb 
+                        else:
+                            try:
+                                gen_fill_color = hex_to_rgb(fill_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == fill_color:
+                                        gen_fill_color = hex_to_rgb(color_list[k][1])
+
+                        border_color = group.getStroke()
+                        if border_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            gen_border_color = rgb  
+                        else:
+                            try:
+                                gen_border_color = hex_to_rgb(border_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == border_color:
+                                        gen_border_color = hex_to_rgb(color_list[k][1])
                 
                         gen_border_width = group.getStrokeWidth()
                         gen_shape_type = ''
@@ -6472,10 +6640,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    sbmlStr_layout_render = df.export()
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
