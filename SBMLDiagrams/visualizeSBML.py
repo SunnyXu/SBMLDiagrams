@@ -1213,7 +1213,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 dst_endhead.append(specRefGlyph_render[k][1])
                         dst_handle.append(prd_specGlyph_handle_list[i][j][1])
                         dst_lineend_pos.append(prd_specGlyph_handle_list[i][j][3])
-                        edges[-add_rct_cnt].append(id_to_name[temp_specGlyph_id])
+                        try:
+                            edges[-add_rct_cnt].append(id_to_name[temp_specGlyph_id])
+                        except:
+                            pass
                         add_rct_cnt -= 1
 
                     for j in range(mod_num):
