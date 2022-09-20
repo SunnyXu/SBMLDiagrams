@@ -1777,8 +1777,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     text_line_width*scale, fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
                     longText = longText)
 
-        except Exception as e:
-            raise Exception (e)  
+        # except Exception as e:
+        #     raise Exception (e)  
+        except:
+            raise ValueError('Invalid SBML!')
+
 
         #add arbitrary text
         # if len(df_text) != 0:

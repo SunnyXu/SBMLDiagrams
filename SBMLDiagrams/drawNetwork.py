@@ -1886,6 +1886,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
     modifier_lineColor = lineColor
     modifier_linewidth = reaction_line_width
     mod_num = len(mod_position)
+
     for i in range(mod_num):
         mod_start_virtual_x = .5*mod_dimension[i][0] + mod_position[i][0]
         mod_start_virtual_y = .5*mod_dimension[i][1] + mod_position[i][1]

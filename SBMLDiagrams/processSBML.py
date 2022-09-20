@@ -452,6 +452,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             center_handle_candidate = []
                             spec_handle = []
 
+                        #print(spec_lineend_pos)
 
                         role = specRefGlyph.getRoleString()
                         specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -560,6 +561,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 #print(mod_specGlyph_list)
                 # print(specRefGlyph_id_list)
                 # print(specGlyph_specRefGlyph_id_list)
+                #print(rct_specGlyph_handle_list)
 
                 #orphan nodes
                 for i in range(numSpecGlyphs):
@@ -973,6 +975,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 reaction_num_dash = group.getNumDashes()
                                 for num in range(reaction_num_dash):
                                     reaction_dash.append(group.getDashByIndex(num))
+
+                            #print("reaction:", reaction_dash)
                             for k in range(len(id_arrowHeadSize)):
                                 if temp_id == id_arrowHeadSize[k][0]:
                                     arrowHeadSize = id_arrowHeadSize[k][1]
@@ -1046,7 +1050,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 text_font_size = 12.
                             text_render.append([render_text_id,text_line_color,text_line_width,
 							text_font_size, [text_anchor, text_vanchor]])
-                            #print(render_text_id)
+                            #print(text_render)
                         elif 'GENERALGLYPH' in typeList:
                             render_gen_id = idList
                             fill_color = group.getFill()
@@ -1101,8 +1105,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             #     if specGlyph_specRefGlyph_id_list[k][1] == idList:
                             #         render_specRefGlyph_id = specGlyph_specRefGlyph_id_list[k][0] 
                             endHead = group.getEndHead()
-                            specRefGlyph_render.append([render_specRefGlyph_id, endHead])
 
+                            reaction_dash = []
+                            if group.isSetDashArray():
+                                reaction_num_dash = group.getNumDashes()
+                                for num in range(reaction_num_dash):
+                                    reaction_dash.append(group.getDashByIndex(num))
+                        
+                            specRefGlyph_render.append([render_specRefGlyph_id, endHead, reaction_dash])
+
+            #print(specRefGlyph_render)
             
             #global render 
             try: 
@@ -1969,6 +1981,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 prd_num = max(len(prd_specGlyph_handle_list[i]),len(reaction_prd_list[i]))
                 mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
 
+                #print(rct_num, prd_num, mod_num)
+
                 # for j in range(rct_num):
                 #     temp_specGlyph_id = rct_specGlyph_list[i][j]
                 #     for k in range(numSpec_in_reaction):
@@ -1983,7 +1997,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 #             dst_position.append(spec_position_list[k])
                 #             dst_dimension.append(spec_dimension_list[k])
                 
-                if rct_num != 0 and prd_num != 0:
+                if rct_num != 0 or prd_num != 0:
                     for j in range(rct_num):
                         temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
                         temp_specRefGlyph_id = rct_specGlyph_handle_list[i][j][2]
@@ -2026,7 +2040,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     #print(mod_specGlyph_list)
                     for j in range(mod_num):
                         #if len(mod_specGlyph_list[i]) != 0:
-                        if len(mod_specGlyph_list[i]) == mod_num: 
+                        if len(mod_specGlyph_list[i]) == mod_num:
                             #all the modifiers are defined as role in the SpecRefGlyph
                             temp_specGlyph_id = mod_specGlyph_list[i][j][0]
                             temp_specRefGlyph_id = mod_specGlyph_list[i][j][1]
@@ -2178,6 +2192,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
 
                     ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                    if mod_endhead != [] and len(mod_endhead) < len(mod_idx_list):
+                        for j in range(len(mod_idx_list)-len(mod_endhead)):
+                            mod_endhead.append(mod_endhead[0])
                     if mod_endhead == [] and len(mod_idx_list) != 0:
                         for j in range(len(mod_idx_list)):
                             mod_endhead.append('line_ending_modifier_'+temp_id+"_"+str(mod_idx_list[j]))
@@ -2294,6 +2311,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
 
                     ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                    if mod_endhead != [] and len(mod_endhead) < len(mod_idx_list):
+                        for j in range(len(mod_idx_list)-len(mod_endhead)):
+                            mod_endhead.append(mod_endhead[0])
                     if mod_endhead == [] and len(mod_idx_list) != 0:
                         for j in range(len(mod_idx_list)):
                             mod_endhead.append('line_ending_modifier_'+temp_id+"_"+str(mod_idx_list[j]))
@@ -6389,26 +6409,26 @@ if __name__ == '__main__':
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
-    #filename = "Adel/3.xml"
+    filename = "Adel/3.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('output.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # try:
-    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # except:
-    #     print("did not return shapeData")
-    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('output.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    try:
+        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    except:
+        print("did not return shapeData")
+    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
