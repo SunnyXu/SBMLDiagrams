@@ -333,6 +333,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     # for j in range(len(listOfCurveSegments)):
                     #     center_x = curve.getCurveSegment(j).getStart().getXOffset()
                     #     center_y = curve.getCurveSegment(j).getStart().getYOffset()
+                    center_pt = []
                     for segment in curve.getListOfCurveSegments():
                         short_line_start_x = segment.getStart().getXOffset()
                         short_line_start_y = segment.getStart().getYOffset()
@@ -344,7 +345,23 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             center_pt = short_line_start
                         else: #the centroid is a short line
                             center_pt = [.5*(short_line_start_x+short_line_end_x),.5*(short_line_start_y+short_line_end_y)]
-                        reaction_center_list.append(center_pt)
+
+                    if center_pt == []:
+                        try:
+                            rxn_boundingbox = reactionGlyph.getBoundingBox()
+                            width = rxn_boundingbox.getWidth()
+                            height = rxn_boundingbox.getHeight()
+                            pos_x = rxn_boundingbox.getX()
+                            pos_y = rxn_boundingbox.getY()
+                            if pos_x == 0 and pos_y == 0 and width == 0 and height == 0: #LinearChain.xml
+                                center_pt = []
+                            else:
+                                center_pt = [pos_x+.5*width, pos_y+.5*height]
+                        except:
+                            pass
+                    #print(center_pt)
+                    reaction_center_list.append(center_pt)
+
                     reaction_id = reactionGlyph.getReactionId()
                     reactionGlyph_id = reactionGlyph.getId()
                     reaction_id_list.append(reaction_id)
@@ -6354,7 +6371,7 @@ if __name__ == '__main__':
     
     #filename = "test.xml" 
     #filename = "feedback.xml"
-    #filename = "LinearChain.xml"
+    filename = "LinearChain.xml"
     #filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
@@ -6409,26 +6426,26 @@ if __name__ == '__main__':
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
-    filename = "Adel/3.xml"
+    #filename = "Adel/3.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('output.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    try:
-        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    except:
-        print("did not return shapeData")
-    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('output.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # try:
+    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # except:
+    #     print("did not return shapeData")
+    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))

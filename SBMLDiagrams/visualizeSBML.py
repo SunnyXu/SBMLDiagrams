@@ -459,11 +459,36 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     for i in range(numReactionGlyphs):
                         reactionGlyph = layout.getReactionGlyph(i)
                         curve = reactionGlyph.getCurve()
+
+                        center_pt = []
                         for segment in curve.getListOfCurveSegments():
-                            center_x = segment.getStart().getXOffset()
-                            center_y = segment.getStart().getYOffset()
-                            center_pt = [center_x, center_y]
-                            reaction_center_list.append(center_pt)
+                            short_line_start_x = segment.getStart().getXOffset()
+                            short_line_start_y = segment.getStart().getYOffset()
+                            short_line_end_x   = segment.getEnd().getXOffset()
+                            short_line_end_y   = segment.getEnd().getYOffset() 
+                            short_line_start = [short_line_start_x, short_line_start_y]
+                            short_line_end   = [short_line_end_x, short_line_end_y]
+                            if short_line_start == short_line_end: #the centroid is a dot
+                                center_pt = short_line_start
+                            else: #the centroid is a short line
+                                center_pt = [.5*(short_line_start_x+short_line_end_x),.5*(short_line_start_y+short_line_end_y)]
+
+                        if center_pt == []:
+                            try:
+                                rxn_boundingbox = reactionGlyph.getBoundingBox()
+                                width = rxn_boundingbox.getWidth()
+                                height = rxn_boundingbox.getHeight()
+                                pos_x = rxn_boundingbox.getX()
+                                pos_y = rxn_boundingbox.getY()
+                                if pos_x == 0 and pos_y == 0 and width == 0 and height == 0: #LinearChain.xml
+                                    center_pt = []
+                                else:
+                                    center_pt = [pos_x+.5*width, pos_y+.5*height]
+                            except:
+                                pass
+                        
+                        reaction_center_list.append(center_pt)
+
                         reaction_id = reactionGlyph.getReactionId()
                         reaction = model_layout.getReaction(reaction_id)
                         rev = reaction.getReversible()
@@ -1961,10 +1986,13 @@ def _getNetworkTopLeftCorner(sbmlStr):
     for i in range(numRxns):
         center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
         handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
-        if center_position[0] < position[0]:
-            position[0] = center_position[0]
-        if center_position[1] < position[1]:
-            position[1] = center_position[1]
+        try:
+            if center_position[0] < position[0]:
+                position[0] = center_position[0]
+            if center_position[1] < position[1]:
+                position[1] = center_position[1]
+        except:
+            pass
 
         #print(handle_positions)
         #print(position)
@@ -2133,10 +2161,13 @@ def _getNetworkBottomRightCorner(sbmlStr):
     for i in range(numRxns):
         center_position = _getReactionCenterPosition(_df, Rxns_ids[i])[0]
         handle_positions = _getReactionBezierHandles(_df, Rxns_ids[i])[0]
-        if center_position[0] > position[0]:
-            position[0] = center_position[0]
-        if center_position[1] > position[1]:
-            position[1] = center_position[1]
+        try:
+            if center_position[0] > position[0]:
+                position[0] = center_position[0]
+            if center_position[1] > position[1]:
+                position[1] = center_position[1]
+        except:
+            pass
         for j in range(len(handle_positions)):
             try:#does not work on colab
                 if handle_positions[j][0] > position[0]:
@@ -2505,7 +2536,7 @@ if __name__ == '__main__':
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
 
     #filename = "test.xml"
-    filename = "feedback.xml"
+    #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_no_comp.xml"
     #filename = "mass_action_rxn.xml"
@@ -2519,6 +2550,8 @@ if __name__ == '__main__':
 
     #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
 
+    #filename = "Adel/2.xml"
+    #filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()

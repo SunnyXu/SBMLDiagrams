@@ -711,17 +711,17 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 center_value = [float(center_pos[0]),float(center_pos[1])]
             except:
                 center_value = center_position
-            
-            
-            if len(handles_update) < 3: # if updated handles info is invalid
-                center_value = center_position
-            else:
-                if [] not in handles_update:
-                    for i in range(len(handles)):
-                        handles[i] = handles_update[i]
+
+            # if len(handles_update) < 3: # if updated handles info is invalid
+            #     center_value = center_position
+            # else:
+            if [] not in handles_update:
+                for i in range(len(handles)):
+                    handles[i] = handles_update[i]
 
             reactionCurve = reactionGlyph.getCurve()
             ls = reactionCurve.createLineSegment()
+
             ls.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
             ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
 
@@ -858,7 +858,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 speciesReferenceGlyph.setRole(libsbml.SPECIES_ROLE_MODIFIER)
 
                 speciesReferenceCurve = speciesReferenceGlyph.getCurve()
-                ls = speciesReferenceCurve.createLineSegment()
+                mod_ls = speciesReferenceCurve.createLineSegment()
                 try:
                     mod_position = list(df_NodeData.iloc[int(mod_list[j])]['position'][1:-1].split(","))
                     mod_dimension = list(df_NodeData.iloc[int(mod_list[j])]['size'][1:-1].split(","))
@@ -880,7 +880,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 except: 
                     mod_start_x = mod_start_virtual_x
                     mod_start_y = mod_start_virtual_y
-                ls.setStart(libsbml.Point(layoutns, mod_start_x, mod_start_y))
+                mod_ls.setStart(libsbml.Point(layoutns, mod_start_x, mod_start_y))
 
                 try:
                     [mod_end_x, mod_end_y] = mod_lineend_pos_list[j]
@@ -892,9 +892,9 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     except: 
                         [mod_end_x, mod_end_y] = center_value
                 try:
-                    ls.setEnd(libsbml.Point(layoutns, mod_end_x, mod_end_y))
+                    mod_ls.setEnd(libsbml.Point(layoutns, mod_end_x, mod_end_y))
                 except:
-                    ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
+                    mod_ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
 
         for i in range(numArbitraryTexts):
             txt_content = str(df_TextData.iloc[i]['txt_content']) 
