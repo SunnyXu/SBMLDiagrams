@@ -593,7 +593,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         # create the ReactionGlyphs and SpeciesReferenceGlyphs
         for i in range(numReactions):
             reaction_id = df_ReactionData.iloc[i]['id']
-            
+
+            center_size = [0.,0.]
+            try:
+                center_size = list(df_ReactionData.iloc[i]['center_size'][1:-1].split(","))
+            except:
+                center_size = df_ReactionData.iloc[i]['center_size']
+
             reactionGlyph = layout.createReactionGlyph()
             reactionG_id = "ReactionG_" + reaction_id
             reactionGlyph.setId(reactionG_id)
@@ -715,9 +721,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             # if len(handles_update) < 3: # if updated handles info is invalid
             #     center_value = center_position
             # else:
-            if [] not in handles_update:
-                for i in range(len(handles)):
-                    handles[i] = handles_update[i]
+
+            if [] not in handles_update and handles_update != []:
+                try:
+                    for i in range(len(handles)):
+                        handles[i] = handles_update[i]
+                except:
+                    pass
 
             reactionCurve = reactionGlyph.getCurve()
             ls = reactionCurve.createLineSegment()
@@ -725,6 +735,14 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             ls.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
             ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
 
+            if center_size != [0.,0.]:
+                bb_id  = "bb_" + reaction_id
+                width  = float(center_size[0])
+                height = float(center_size[1])
+                pos_x  = center_value[0]-.5*width
+                pos_y  = center_value[1]-.5*height
+                reactionGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+                      
             for j in range(rct_num):
                 ref_id = "SpecRef_" + reaction_id + "_rct" + str(j)
 
@@ -1340,6 +1358,33 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     reaction_stroke_color = list(df_ReactionData.iloc[i]['stroke_color'][1:-1].split(","))
                 except:
                     reaction_stroke_color = df_ReactionData.iloc[i]['stroke_color']
+
+                rxn_shapeType = df_ReactionData.iloc[i]['shape_type']
+                
+                try:
+                    rxn_shapeInfo_list_pre = list(df_ReactionData.iloc[i]['shape_info'][1:-1].split(","))
+                except:
+                    rxn_shapeInfo_list_pre = df_ReactionData.iloc[i]['shape_info']
+                #from excel sheet
+                if rxn_shapeInfo_list_pre == ['']:
+                    rxn_shapeInfo = []
+                elif len(rxn_shapeInfo_list_pre) == 0:
+                    rxn_shapeInfo = []
+                else:
+                    rxn_shapeInfo_pre = []
+                    rxn_shapeInfo = []
+                    if type(rxn_shapeInfo_list_pre[0]) is str:
+                        for ii in range(len(rxn_shapeInfo_list_pre)):
+                            temp = rxn_shapeInfo_list_pre[ii]
+                            if temp.find('[') != -1:
+                                temp_update = temp.replace('[', '')
+                            elif temp.find(']') != -1:
+                                temp_update = temp.replace(']', '')
+                            rxn_shapeInfo_pre.append(float(temp_update))
+                        for ii in range(0,len(rxn_shapeInfo_pre),2):
+                            rxn_shapeInfo.append([rxn_shapeInfo_pre[ii], rxn_shapeInfo_pre[ii+1]])
+                    else:
+                        rxn_shapeInfo = rxn_shapeInfo_list_pre
                 
                 if len(reaction_fill_color) == 4:
                     reaction_fill_color_str = '#%02x%02x%02x%02x' % (int(reaction_fill_color[0]),int(reaction_fill_color[1]),int(reaction_fill_color[2]),int(reaction_fill_color[3]))           
@@ -1374,6 +1419,24 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                 style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
                 style.getGroup().setStrokeWidth(reaction_line_thickness)
+
+                if rxn_shapeType == 'rectangle': #rectangle
+                    rectangle = style.getGroup().createRectangle()
+                    rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+                    libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+
+                elif rxn_shapeType == 'polygon':            
+                    polygon = style.getGroup().createPolygon()
+                    for pts in range(len(rxn_shapeInfo)):
+                        renderPoint = polygon.createPoint()
+                        renderPoint.setCoordinates(libsbml.RelAbsVector(0,rxn_shapeInfo[pts][0]),
+                        libsbml.RelAbsVector(0,rxn_shapeInfo[pts][1]))
+
+                elif rxn_shapeType == 'ellipse':
+                    ellipse = style.getGroup().createEllipse()
+                    ellipse.setCenter2D(libsbml.RelAbsVector(0, 50.), libsbml.RelAbsVector(0, 50.))
+                    ellipse.setRadii(libsbml.RelAbsVector(0, 50.),libsbml.RelAbsVector(0, 50.))
+                
                 if len(reaction_dash) != 0:
                     for pt in range(len(reaction_dash)):
                         try:

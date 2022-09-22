@@ -362,6 +362,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         reaction_arrow_head_size = [reaction_line_width*5, reaction_line_width*4]
         reaction_dash = []
         reaction_line_fill = [255, 255, 255, 255]
+        reaction_shape_name = ''
+        reaction_shape_type = ''
+        reaction_shape_info = []
         text_content = ''
         text_line_color = [0, 0, 0, 255]
         text_line_width = 1.
@@ -447,6 +450,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     reactionGlyph_id_list = []
                     reaction_rev_list = []
                     reaction_center_list = []
+                    reaction_size_list = []
                     kinetics_list = []
                     #rct_specGlyph_list = []
                     #prd_specGlyph_list = []
@@ -461,6 +465,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         curve = reactionGlyph.getCurve()
 
                         center_pt = []
+                        center_sz = []
                         for segment in curve.getListOfCurveSegments():
                             short_line_start_x = segment.getStart().getXOffset()
                             short_line_start_y = segment.getStart().getYOffset()
@@ -473,21 +478,23 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             else: #the centroid is a short line
                                 center_pt = [.5*(short_line_start_x+short_line_end_x),.5*(short_line_start_y+short_line_end_y)]
 
-                        if center_pt == []:
-                            try:
-                                rxn_boundingbox = reactionGlyph.getBoundingBox()
-                                width = rxn_boundingbox.getWidth()
-                                height = rxn_boundingbox.getHeight()
-                                pos_x = rxn_boundingbox.getX()
-                                pos_y = rxn_boundingbox.getY()
+                        try:
+                            rxn_boundingbox = reactionGlyph.getBoundingBox()
+                            width = rxn_boundingbox.getWidth()
+                            height = rxn_boundingbox.getHeight()
+                            pos_x = rxn_boundingbox.getX()
+                            pos_y = rxn_boundingbox.getY()
+                            if center_pt == []:
                                 if pos_x == 0 and pos_y == 0 and width == 0 and height == 0: #LinearChain.xml
                                     center_pt = []
                                 else:
                                     center_pt = [pos_x+.5*width, pos_y+.5*height]
-                            except:
-                                pass
-                        
+                            center_sz = [width, height]
+                        except:
+                            pass
+
                         reaction_center_list.append(center_pt)
+                        reaction_size_list.append(center_sz)
 
                         reaction_id = reactionGlyph.getReactionId()
                         reaction = model_layout.getReaction(reaction_id)
@@ -1020,8 +1027,20 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         reaction_line_fill = hex_to_rgb(color_list[k][1])
                                 reaction_line_width = group.getStrokeWidth()
                                 color_style.setReactionLineWidth(reaction_line_width)
+                                shape_type = ""
+                                shape_name = ""
+                                shapeInfo = []
+                                element = group.getElement(0)
+                                if element != None:
+                                    shape_type = element.getElementName()
+                                    if shape_type == "rectangle":
+                                        shape_name = "rectangle"
+                                    elif shape_type == "ellipse": #ellipse
+                                        shape_name = "ellipse"
+
                                 rxn_render.append([render_rxn_id, color_style.getReactionLineColor(), 
-                                reaction_line_width, arrowHeadSize, reaction_dash, reaction_line_fill])
+                                reaction_line_width, arrowHeadSize, reaction_dash, reaction_line_fill,
+                                shape_name, shape_type, shape_info])
                             elif 'TEXTGLYPH' in typeList:
                                 render_text_id = idList
                                 for k in range(len(textGlyph_comp_id_list)):    
@@ -1283,6 +1302,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             reaction_arrow_head_size = rxn_render[j][3]
                             reaction_dash = rxn_render[j][4]
                             reaction_line_fill = rxn_render[j][5]
+                            reaction_shape_name = rxn_render[j][6]
+                            reaction_shape_type = rxn_render[j][7]
+                            reaction_shape_info = rxn_render[j][8]
                     
                     src_endhead_render = []
                     dst_endhead_render = []
@@ -1324,7 +1346,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             mod_lineend_pos[j] = []
 
                     try: 
+                        center_size = [0.,0.]
                         center_position = reaction_center_list[i]
+                        center_size = reaction_size_list[i]
                         center_handle = reaction_center_handle_list[i]
                         if center_handle != []:
                             handles = [center_handle]
@@ -1339,7 +1363,6 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             handles[j] = [(handles[j][0]-topLeftCorner[0])*scale, 
                             (handles[j][1]-topLeftCorner[1])*scale]
 
-                        #print(dst_endhead_render)
                         if drawArrow:
                             drawNetwork.addReaction(canvas, temp_id, src_position, dst_position, mod_position,
                                 center_position, handles, src_dimension, dst_dimension, mod_dimension,
@@ -1349,7 +1372,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
                                 scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible,
                                 rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, mod_endhead_render = mod_endhead_render,
-                                rct_lineend_pos = src_lineend_pos, prd_lineend_pos = dst_lineend_pos, mod_lineend_pos = mod_lineend_pos)
+                                rct_lineend_pos = src_lineend_pos, prd_lineend_pos = dst_lineend_pos, mod_lineend_pos = mod_lineend_pos,
+                                center_size = center_size, shape_name = shape_name, shape_type = shape_type, shape_info = shape_info,
+                                reaction_line_fill = reaction_line_fill)
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -1387,7 +1412,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 reaction_arrow_head_size = [reaction_arrow_head_size[0]*scale, reaction_arrow_head_size[1]*scale],
                                 scale = scale, reaction_dash = reaction_dash, reverse = rxn_rev, showReversible = showReversible,
                                 rct_endhead_render = src_endhead_render, prd_endhead_render = dst_endhead_render, mod_endhead_render = mod_endhead_render,
-                                rct_lineend_pos = src_lineend_pos, prd_lineend_pos = dst_lineend_pos, mod_lineend_pos = mod_lineend_pos)
+                                rct_lineend_pos = src_lineend_pos, prd_lineend_pos = dst_lineend_pos, mod_lineend_pos = mod_lineend_pos,
+                                center_size = center_size, shape_name = shape_name, shape_type = shape_type, shape_info = shape_info,
+                                reaction_line_fill = reaction_line_fill)
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
@@ -2550,7 +2577,7 @@ if __name__ == '__main__':
 
     #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
 
-    #filename = "Adel/2.xml"
+    filename = "Adel/2.xml"
     #filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')

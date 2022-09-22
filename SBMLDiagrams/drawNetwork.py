@@ -750,7 +750,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 reaction_line_type = 'bezier', show_bezier_handles = False, show_reaction_ids = False,
                 reaction_arrow_head_size = [12., 9.], scale = 1., reaction_dash = [], reverse = False,
                 showReversible = False, rct_endhead_render = [], prd_endhead_render = [], mod_endhead_render = [], 
-                rct_lineend_pos = [], prd_lineend_pos = [], mod_lineend_pos = []):
+                rct_lineend_pos = [], prd_lineend_pos = [], mod_lineend_pos = [], center_size = [0.,0.],
+                shape_name = "", shape_type = "", shape_info = [], reaction_line_fill = [255, 255, 255, 255]):
     
     """
     Add a reaction.
@@ -805,7 +806,14 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
 
         mod_endhead_render: list-render information of the modifier endhead.
 
+        center_size: list-size of the centroid boudning box of the reaction.
 
+        shape_name: str-name of the node shape. 
+
+        shape_type: str-type of the node shape: rectangle, ellipse, polygon.
+
+        shape_info: list-polygon:[[x1,y1],[x2,y2],[x3,y3],etc], ellipse:[[[x1,y1],[r1,r2]]];
+                    where x,y,r are floating numbers from 0 to 100.
     """
     
     def _cross_point(arcCenter, c2, s2):
@@ -1877,8 +1885,27 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         pts_x_r = pts_x_m + (arrow_head_pt[1]-arcCenter[1])*.5*arrow_s2/distance
                         points.append([pts_x_r,pts_y_r])
                         _drawArrow(canvas, points, lineColor)
+    
+    if center_size != [0.,0.]:
+        width = center_size[0]
+        height = center_size[1]
+        x = center_position[0]-.5*width
+        y = center_position[1]-.5*height
+        fill = skia.Color(reaction_line_fill[0], reaction_line_fill[1], reaction_line_fill[2], reaction_line_fill[3])
+        outline = lineColor
+        if shape_type == 'rectangle': #rectangle
+            _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth)
+        
+        elif shape_type == 'polygon':
+            pts = []
+            for ii in range(len(shape_info)):
+                pts.append([x+width*shape_info[ii][0]/100.,y+height*shape_info[ii][1]/100.])
 
+            _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth)
 
+        elif shape_type == 'ellipse':
+            _drawEllipse (canvas, x, y, width, height, 
+                            outline, fill, linewidth)
 
     #draw modifiers:
     #modifier_lineColor = skia.Color(128, 0, 128)

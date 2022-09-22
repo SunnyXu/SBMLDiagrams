@@ -68,6 +68,7 @@ MODIFIERSLINEENDING = 'modifiers_lineending'
 SRCLINEENDPOS = 'src_lineend_position'
 TGTLINEENDPOS = 'tgt_lineend_position'
 MODLINEENDPOS = 'mod_lineend_position'
+CENTERSIZE = 'center_size'
 COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
     POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
     TXTPOSITION, TXTSIZE, TXTCONTENT, \
@@ -79,7 +80,7 @@ COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     STROKECOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV, 
     FILLCOLOR, SOURCESLINEENDING, TARGETSLINEENDING, MODIFIERSLINEENDING, 
-    SRCLINEENDPOS, TGTLINEENDPOS, MODLINEENDPOS]
+    SRCLINEENDPOS, TGTLINEENDPOS, MODLINEENDPOS, CENTERSIZE, SHAPENAME, SHAPETYPE, SHAPEINFO]
 COLUMN_NAME_df_TextData = [TXTCONTENT, TXTPOSITION, TXTSIZE, 
     TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, ID, TXTANCHOR]
 COLUMN_NAME_df_ShapeData = [SHAPENAME, POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
@@ -229,6 +230,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     reaction_line_width = 3.0
     reaction_arrow_head_size = [reaction_line_width*5, reaction_line_width*4]
     reaction_dash = [] 
+    reaction_shape_name = ''
+    reaction_shape_type = ''
+    reaction_shape_info = []
     text_content = ''
     text_line_color = [0, 0, 0, 255]
     text_line_width = 1.
@@ -314,6 +318,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 reactionGlyph_id_list = []
                 reaction_rev_list = []
                 reaction_center_list = []
+                reaction_size_list = []
                 kinetics_list = []
                 #rct_specGlyph_list = []
                 #prd_specGlyph_list = []
@@ -334,6 +339,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     #     center_x = curve.getCurveSegment(j).getStart().getXOffset()
                     #     center_y = curve.getCurveSegment(j).getStart().getYOffset()
                     center_pt = []
+                    center_sz = []
                     for segment in curve.getListOfCurveSegments():
                         short_line_start_x = segment.getStart().getXOffset()
                         short_line_start_y = segment.getStart().getYOffset()
@@ -346,21 +352,23 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         else: #the centroid is a short line
                             center_pt = [.5*(short_line_start_x+short_line_end_x),.5*(short_line_start_y+short_line_end_y)]
 
-                    if center_pt == []:
-                        try:
-                            rxn_boundingbox = reactionGlyph.getBoundingBox()
-                            width = rxn_boundingbox.getWidth()
-                            height = rxn_boundingbox.getHeight()
-                            pos_x = rxn_boundingbox.getX()
-                            pos_y = rxn_boundingbox.getY()
+                    try:
+                        rxn_boundingbox = reactionGlyph.getBoundingBox()
+                        width = rxn_boundingbox.getWidth()
+                        height = rxn_boundingbox.getHeight()
+                        pos_x = rxn_boundingbox.getX()
+                        pos_y = rxn_boundingbox.getY()
+                        if center_pt == []:
                             if pos_x == 0 and pos_y == 0 and width == 0 and height == 0: #LinearChain.xml
                                 center_pt = []
                             else:
                                 center_pt = [pos_x+.5*width, pos_y+.5*height]
-                        except:
-                            pass
-                    #print(center_pt)
+                        center_sz = [width, height]
+                    except:
+                        pass
+
                     reaction_center_list.append(center_pt)
+                    reaction_size_list.append(center_sz)
 
                     reaction_id = reactionGlyph.getReactionId()
                     reactionGlyph_id = reactionGlyph.getId()
@@ -822,6 +830,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 typeList = 'SPECIESREFERENCEGLYPH'
                             # else:
                             #     print(idList)
+
                         if 'COMPARTMENTGLYPH' in typeList:
                             #change layout id to id for later to build the list of render
                             render_comp_id = idList
@@ -1026,10 +1035,23 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     for k in range(len(color_list)):
                                         if color_list[k][0] == stroke_color:
                                             reaction_line_color = hex_to_rgb(color_list[k][1])
-                        
+                            
                             reaction_line_width = group.getStrokeWidth()
+
+                            shape_type = ""
+                            shape_name = ""
+                            shapeInfo = []
+                            element = group.getElement(0)
+                            if element != None:
+                                shape_type = element.getElementName()
+                                if shape_type == "rectangle":
+                                    shape_name = "rectangle"
+                                elif shape_type == "ellipse": #ellipse
+                                    shape_name = "ellipse"
+
                             rxn_render.append([render_rxn_id, reaction_line_color, reaction_line_width, 
-                            arrowHeadSize, reaction_dash, reaction_line_fill])
+                            arrowHeadSize, reaction_dash, reaction_line_fill, shape_name, shape_type, shape_info])
+                        
                         elif 'TEXTGLYPH' in typeList:
                             render_text_id = idList
                             for k in range(len(textGlyph_comp_id_list)):    
@@ -1448,11 +1470,21 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == stroke_color:
                                         reaction_line_color = hex_to_rgb(color_list[k][1])
-                    
-                    
                         reaction_line_width = group.getStrokeWidth()
+                        shape_type = ""
+                        shape_name = ""
+                        shapeInfo = []
+                        element = group.getElement(0)
+                        if element != None:
+                            shape_type = element.getElementName()
+                            if shape_type == "rectangle":
+                                shape_name = "rectangle"
+                            elif shape_type == "ellipse": #ellipse
+                                shape_name = "ellipse"
+
                         rxn_render.append([render_rxn_id, reaction_line_color, reaction_line_width, 
-                        reaction_arrow_head_size, reaction_dash, reaction_line_fill])
+                        arrowHeadSize, reaction_dash, reaction_line_fill, shape_name, shape_type, shape_info])
+
                     elif 'TEXTGLYPH' in typeList:
                         render_text_id = idList
            
@@ -2134,6 +2166,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         reaction_arrow_head_size = rxn_render[j][3]
                         reaction_dash = rxn_render[j][4]
                         reaction_line_fill = rxn_render[j][5]
+                        reaction_shape_name = rxn_render[j][6]
+                        reaction_shape_type = rxn_render[j][7]
+                        reaction_shape_info = rxn_render[j][8]
                     if len(rxn_render) == 1:
                         if rxn_render[0][0] == '':#global render
                             reaction_line_color = rxn_render[0][1]
@@ -2141,9 +2176,14 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             reaction_arrow_head_size = rxn_render[0][3]
                             reaction_dash = rxn_render[0][4]
                             reaction_line_fill = rxn_render[0][5]
+                            reaction_shape_name = rxn_render[j][6]
+                            reaction_shape_type = rxn_render[j][7]
+                            reaction_shape_info = rxn_render[j][8]
 
                 try: 
+                    center_size = [0.,0.]
                     center_position = reaction_center_list[i]
+                    center_size = reaction_size_list[i]
                     center_handle = reaction_center_handle_list[i]
                     if center_handle != []:
                         handles = [center_handle]
@@ -2236,6 +2276,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[SRCLINEENDPOS].append(src_lineend_pos)
                     ReactionData_row_dct[TGTLINEENDPOS].append(dst_lineend_pos)
                     ReactionData_row_dct[MODLINEENDPOS].append(mod_lineend_pos)
+                    ReactionData_row_dct[CENTERSIZE].append(center_size)
+                    ReactionData_row_dct[SHAPENAME].append(reaction_shape_name)
+                    ReactionData_row_dct[SHAPETYPE].append(reaction_shape_type)
+                    ReactionData_row_dct[SHAPEINFO].append(reaction_shape_info)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -2251,6 +2295,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 except:
                     center_x = 0.
                     center_y = 0.
+                    center_size = [0.,0.]
 
                     for j in range(rct_num):
                         center_x += src_position[j][0]+.5*src_dimension[j][0]
@@ -2355,6 +2400,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[SRCLINEENDPOS].append(src_lineend_pos)
                     ReactionData_row_dct[TGTLINEENDPOS].append(dst_lineend_pos)
                     ReactionData_row_dct[MODLINEENDPOS].append(mod_lineend_pos)
+                    ReactionData_row_dct[CENTERSIZE].append(center_size)
+                    ReactionData_row_dct[SHAPENAME].append(reaction_shape_name)
+                    ReactionData_row_dct[SHAPETYPE].append(reaction_shape_type)
+                    ReactionData_row_dct[SHAPEINFO].append(reaction_shape_info)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -2672,6 +2721,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 
                 center_x = 0.
                 center_y = 0.
+                center_size = [0.,0.]
+
                 for j in range(rct_num):
                     center_x += src_position[j][0]+.5*src_dimension[j][0]
                     center_y += src_position[j][1]+.5*src_dimension[j][1]
@@ -2772,6 +2823,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 ReactionData_row_dct[SRCLINEENDPOS].append(src_lineend_pos)
                 ReactionData_row_dct[TGTLINEENDPOS].append(dst_lineend_pos)
                 ReactionData_row_dct[MODLINEENDPOS].append(mod_lineend_pos)
+                ReactionData_row_dct[CENTERSIZE].append(center_size)
+                ReactionData_row_dct[SHAPENAME].append(reaction_shape_name)
+                ReactionData_row_dct[SHAPETYPE].append(reaction_shape_type)
+                ReactionData_row_dct[SHAPEINFO].append(reaction_shape_info)
                 # for j in range(len(COLUMN_NAME_df_ReactionData)):
                 #     try: 
                 #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -6371,11 +6426,11 @@ if __name__ == '__main__':
     
     #filename = "test.xml" 
     #filename = "feedback.xml"
-    filename = "LinearChain.xml"
+    #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
-    #filename = "node_grid.xml"
+    filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_textGlyph.xml"
     #filename = "test_genGlyph.xml"
@@ -6403,7 +6458,7 @@ if __name__ == '__main__':
 
     #filename = "Bart/bart_arccenter.xml"
     #filename = "Bart/bart_spRefBezier.xml"
-    #filename = "Bart/bart2.xml"
+    # filename = "Bart/bart2.xml"
     #filename = "Bart/newSBML.xml"
     #filename = "Bart/newSBML2.xml"
     #filename = "Bart/output.xml"
@@ -6433,19 +6488,19 @@ if __name__ == '__main__':
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('output.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # try:
-    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # except:
-    #     print("did not return shapeData")
-    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('node_grid.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    try:
+        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    except:
+        print("did not return shapeData")
+    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -6690,5 +6745,5 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    df.draw(output_fileName = 'output.png')
+    #df.draw(output_fileName = 'output.png')
 
