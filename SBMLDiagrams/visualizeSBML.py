@@ -1382,6 +1382,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         center_size = [0.,0.]
                         center_position = reaction_center_list[i]
                         center_size = reaction_size_list[i]
+                        center_size = [center_size[0]*scale,center_size[1]*scale]
                         center_handle = reaction_center_handle_list[i]
                         if center_handle != []:
                             handles = [center_handle]
