@@ -842,6 +842,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         group = style.getGroup()
                         typeList = style.createTypeString()
                         idList = style.createIdString()
+                        roleList = style.createRoleString()
 
                         if typeList == '': 
                             #if the typeList is not defined, self define it based on idList
@@ -864,6 +865,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 typeList = 'SPECIESREFERENCEGLYPH'
                             # else:
                             #     print(idList)
+                            # elif idList == "":
+                            #     print(roleList)
 
                         if 'COMPARTMENTGLYPH' in typeList:
                             #change layout id to id for later to build the list of render
@@ -1324,6 +1327,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     roleList = style.createRoleString()
                     idList = ""
 
+                    if roleList == "modifier" or roleList == "product": 
+                        typeList = 'SPECIESREFERENCEGLYPH'
+
                     if 'COMPARTMENTGLYPH' in typeList:
                         render_comp_id = idList
 
@@ -1602,11 +1608,22 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         gen_render.append([render_gen_id, gen_fill_color, gen_border_color,
                         gen_border_width, gen_shape_type, gen_shape_info])
 
-                    elif 'SPECIESREFERENCEGLYPH' in typeList:
-                        render_specRefGlyph_id = idList 
+                    elif 'SPECIESREFERENCEGLYPH' in typeList: 
+                        #render_specRefGlyph_id = idList               
                         endHead = group.getEndHead()
-                        specRefGlyph_render.append([render_specRefGlyph_id, endHead])
+                        if endHead != "none":
+                            for m in range(numReactionGlyphs):
+                                if roleList == "modifier":
+                                    for n in range(len(mod_specGlyph_list[m])):
+                                        idList = mod_specGlyph_list[m][n][1]
+                                        specRefGlyph_render.append([idList, endHead])
+                                
+                                if roleList == "product":
+                                    for n in range(len(prd_specGlyph_handle_list[m])):
+                                        idList = prd_specGlyph_handle_list[m][n][2]
+                                        specRefGlyph_render.append([idList, endHead])
    
+                            
         # print(comp_render)
         # print(spec_render)
         # print(rxn_render)
@@ -6568,29 +6585,29 @@ if __name__ == '__main__':
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
-    #filename = "Adel/3.xml"
+    filename = "Adel/3.xml"
 
-    filename = "MK/sbmld10_2.sbml"
+    #filename = "MK/sbmld10_2.sbml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('output.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # try:
-    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # except:
-    #     print("did not return shapeData")
-    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    # df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('output.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    try:
+        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    except:
+        print("did not return shapeData")
+    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
+    writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -6822,10 +6839,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    # sbmlStr_layout_render = df.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    sbmlStr_layout_render = df.export()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
