@@ -1,0 +1,696 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1" xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1" level="3" version="1" layout:required="false" render:required="false">
+  <model id="SBMLDiagrams_model">
+    <listOfCompartments>
+      <compartment id="_compartment_default_" constant="true"/>
+      <compartment id="City" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="Susceptible" compartment="City" initialConcentration="9979999" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Exposed" compartment="City" initialConcentration="20000" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Infected" compartment="City" initialConcentration="1" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Total_population" compartment="City" initialConcentration="10000000" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Recovered" compartment="City" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Deceased" compartment="City" initialConcentration="0" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="E0" value="0.1" constant="true"/>
+      <parameter id="k0" value="0.1" constant="true"/>
+      <parameter id="E1" value="0.1" constant="true"/>
+      <parameter id="k1" value="0.1" constant="true"/>
+      <parameter id="E2" value="0.1" constant="true"/>
+      <parameter id="k2" value="0.1" constant="true"/>
+      <parameter id="E3" value="0.1" constant="true"/>
+      <parameter id="k3" value="0.1" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="Susceptible_to_Exposed" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference id="SpecRef_Susceptible_to_Exposed_rct0" species="Susceptible" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference id="SpecRef_Susceptible_to_Exposed_prd0" species="Exposed" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference id="SpecRef_Susceptible_to_Exposed_mod0" species="Infected"/>
+          <modifierSpeciesReference id="SpecRef_Susceptible_to_Exposed_mod1" species="Total_population"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E0 </ci>
+              <ci> k0 </ci>
+              <ci> Susceptible </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Exposed_to_Infected" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference id="SpecRef_Exposed_to_Infected_rct0" species="Exposed" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference id="SpecRef_Exposed_to_Infected_prd0" species="Infected" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E1 </ci>
+              <ci> k1 </ci>
+              <ci> Exposed </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Infected_to_Recovered" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference id="SpecRef_Infected_to_Recovered_rct0" species="Infected" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference id="SpecRef_Infected_to_Recovered_prd0" species="Recovered" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E2 </ci>
+              <ci> k2 </ci>
+              <ci> Infected </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Infected_to_Deceased" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference id="SpecRef_Infected_to_Deceased_rct0" species="Infected" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference id="SpecRef_Infected_to_Deceased_prd0" species="Deceased" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E3 </ci>
+              <ci> k3 </ci>
+              <ci> Infected </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+    <layout:listOfLayouts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1">
+      <layout:layout layout:id="SBMLDiagrams_layout">
+        <layout:dimensions layout:width="800" layout:height="800"/>
+        <layout:listOfCompartmentGlyphs>
+          <layout:compartmentGlyph layout:id="CompG_City" layout:compartment="City">
+            <layout:boundingBox layout:id="bb_City">
+              <layout:position layout:x="-71.2297478438928" layout:y="-50.2962795770315"/>
+              <layout:dimensions layout:width="854.756974126713" layout:height="603.555354924378"/>
+            </layout:boundingBox>
+          </layout:compartmentGlyph>
+        </layout:listOfCompartmentGlyphs>
+        <layout:listOfSpeciesGlyphs>
+          <layout:speciesGlyph layout:id="SpecG_Susceptible_idx_0" layout:species="Susceptible">
+            <layout:boundingBox layout:id="bb_Susceptible_idx_0">
+              <layout:position layout:x="-2.1316282072803e-14" layout:y="353.343129152702"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_Exposed_idx_1" layout:species="Exposed">
+            <layout:boundingBox layout:id="bb_Exposed_idx_1">
+              <layout:position layout:x="592.297478438928" layout:y="466.962795770315"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_Infected_idx_2" layout:species="Infected">
+            <layout:boundingBox layout:id="bb_Infected_idx_2">
+              <layout:position layout:x="502.164514150223" layout:y="239.72346253509"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_Total_population_idx_3" layout:species="Total_population">
+            <layout:boundingBox layout:id="bb_Total_population_idx_3">
+              <layout:position layout:x="310.910898131922" layout:y="447.077918219122"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_Recovered_idx_4" layout:species="Recovered">
+            <layout:boundingBox layout:id="bb_Recovered_idx_4">
+              <layout:position layout:x="278.402000815586" layout:y="121.136256045565"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_Deceased_idx_5" layout:species="Deceased">
+            <layout:boundingBox layout:id="bb_Deceased_idx_5">
+              <layout:position layout:x="583.805492996697" layout:y="0"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+        </layout:listOfSpeciesGlyphs>
+        <layout:listOfReactionGlyphs>
+          <layout:reactionGlyph layout:id="ReactionG_Susceptible_to_Exposed" layout:reaction="Susceptible_to_Exposed">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="493.611329676963" layout:y="416.409611297054"/>
+                  <layout:end layout:x="493.611329676963" layout:y="416.409611297054"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox layout:id="bb_Susceptible_to_Exposed">
+              <layout:position layout:x="479.111329676963" layout:y="401.909611297054"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Susceptible_to_Exposed_rct0" layout:speciesReference="SpecRef_Susceptible_to_Exposed_rct0" layout:speciesGlyph="SpecG_Susceptible_idx_0" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="120.291797511007" layout:y="377.609430399962"/>
+                      <layout:end layout:x="493.611329676963" layout:y="416.409611297054"/>
+                      <layout:basePoint1 layout:x="493.611329676963" layout:y="416.409611297054"/>
+                      <layout:basePoint2 layout:x="493.611329676963" layout:y="416.409611297054"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Susceptible_to_Exposed_prd0" layout:speciesReference="SpecRef_Susceptible_to_Exposed_prd0" layout:speciesGlyph="SpecG_Exposed_idx_1" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="493.611329676963" layout:y="416.409611297054"/>
+                      <layout:end layout:x="600.985696949988" layout:y="462.795857764027"/>
+                      <layout:basePoint1 layout:x="493.611329676963" layout:y="416.409611297054"/>
+                      <layout:basePoint2 layout:x="493.611329676963" layout:y="416.409611297054"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Susceptible_to_Exposed_mod0" layout:speciesReference="SpecRef_Susceptible_to_Exposed_mod0" layout:speciesGlyph="SpecG_Infected_idx_2" layout:role="modifier">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                      <layout:start layout:x="552.66" layout:y="279.72"/>
+                      <layout:end layout:x="503.440005192867" layout:y="393.658302557224"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Susceptible_to_Exposed_mod1" layout:speciesReference="SpecRef_Susceptible_to_Exposed_mod1" layout:speciesGlyph="SpecG_Total_population_idx_3" layout:role="modifier">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                      <layout:start layout:x="426.38" layout:y="443.08"/>
+                      <layout:end layout:x="470.273741327069" layout:y="425.666309894863"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="ReactionG_Exposed_to_Infected" layout:reaction="Exposed_to_Infected">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="720.850662912188" layout:y="326.27664700835"/>
+                  <layout:end layout:x="720.850662912188" layout:y="326.27664700835"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox layout:id="bb_Exposed_to_Infected">
+              <layout:position layout:x="706.350662912188" layout:y="311.77664700835"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Exposed_to_Infected_rct0" layout:speciesReference="SpecRef_Exposed_to_Infected_rct0" layout:speciesGlyph="SpecG_Exposed_idx_1" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="660.161400361961" layout:y="466.759476789303"/>
+                      <layout:end layout:x="720.850662912188" layout:y="326.27664700835"/>
+                      <layout:basePoint1 layout:x="720.850662912188" layout:y="326.27664700835"/>
+                      <layout:basePoint2 layout:x="720.850662912188" layout:y="326.27664700835"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Exposed_to_Infected_prd0" layout:speciesReference="SpecRef_Exposed_to_Infected_prd0" layout:speciesGlyph="SpecG_Infected_idx_2" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="720.850662912188" layout:y="326.27664700835"/>
+                      <layout:end layout:x="613.476295639164" layout:y="279.890400541377"/>
+                      <layout:basePoint1 layout:x="720.850662912188" layout:y="326.27664700835"/>
+                      <layout:basePoint2 layout:x="720.850662912188" layout:y="326.27664700835"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="ReactionG_Infected_to_Recovered" layout:reaction="Infected_to_Recovered">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="449.269149933996" layout:y="234.900159716814"/>
+                  <layout:end layout:x="449.269149933996" layout:y="234.900159716814"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox layout:id="bb_Infected_to_Recovered">
+              <layout:position layout:x="434.769149933996" layout:y="220.400159716814"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Infected_to_Recovered_rct0" layout:speciesReference="SpecRef_Infected_to_Recovered_rct0" layout:speciesGlyph="SpecG_Infected_idx_2" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="502.080841635294" layout:y="245.576747195956"/>
+                      <layout:end layout:x="449.269149933996" layout:y="234.900159716814"/>
+                      <layout:basePoint1 layout:x="449.269149933996" layout:y="234.900159716814"/>
+                      <layout:basePoint2 layout:x="449.269149933996" layout:y="234.900159716814"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Infected_to_Recovered_prd0" layout:speciesReference="SpecRef_Infected_to_Recovered_prd0" layout:speciesGlyph="SpecG_Recovered_idx_4" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="449.269149933996" layout:y="234.900159716814"/>
+                      <layout:end layout:x="367.409598714982" layout:y="164.192197621236"/>
+                      <layout:basePoint1 layout:x="449.269149933996" layout:y="234.900159716814"/>
+                      <layout:basePoint2 layout:x="449.269149933996" layout:y="234.900159716814"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="ReactionG_Infected_to_Deceased" layout:reaction="Infected_to_Deceased">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="628.721888742699" layout:y="163.721429044286"/>
+                  <layout:end layout:x="628.721888742699" layout:y="163.721429044286"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox layout:id="bb_Infected_to_Deceased">
+              <layout:position layout:x="614.221888742699" layout:y="149.221429044286"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Infected_to_Deceased_rct0" layout:speciesReference="SpecRef_Infected_to_Deceased_rct0" layout:speciesGlyph="SpecG_Infected_idx_2" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="574.997445445245" layout:y="239.598924949796"/>
+                      <layout:end layout:x="628.721888742699" layout:y="163.721429044286"/>
+                      <layout:basePoint1 layout:x="628.721888742699" layout:y="163.721429044286"/>
+                      <layout:basePoint2 layout:x="628.721888742699" layout:y="163.721429044286"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Infected_to_Deceased_prd0" layout:speciesReference="SpecRef_Infected_to_Deceased_prd0" layout:speciesGlyph="SpecG_Deceased_idx_5" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="628.721888742699" layout:y="163.721429044286"/>
+                      <layout:end layout:x="640.889083687237" layout:y="46.1751844649416"/>
+                      <layout:basePoint1 layout:x="628.721888742699" layout:y="163.721429044286"/>
+                      <layout:basePoint2 layout:x="628.721888742699" layout:y="163.721429044286"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+        </layout:listOfReactionGlyphs>
+        <layout:listOfTextGlyphs>
+          <layout:textGlyph layout:id="TextG_City" layout:graphicalObject="CompG_City">
+            <layout:boundingBox layout:id="bb_comp_text_City">
+              <layout:position layout:x="-71.2297478438928" layout:y="553.259075347346"/>
+              <layout:dimensions layout:width="120" layout:height="18"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Susceptible_idx_0" layout:text="Susceptible" layout:graphicalObject="SpecG_Susceptible_idx_0">
+            <layout:boundingBox layout:id="bb_spec_text_Susceptible_idx_0">
+              <layout:position layout:x="-2.1316282072803e-14" layout:y="353.343129152702"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Exposed_idx_1" layout:text="Exposed" layout:graphicalObject="SpecG_Exposed_idx_1">
+            <layout:boundingBox layout:id="bb_spec_text_Exposed_idx_1">
+              <layout:position layout:x="592.297478438928" layout:y="466.962795770315"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Infected_idx_2" layout:text="Infected" layout:graphicalObject="SpecG_Infected_idx_2">
+            <layout:boundingBox layout:id="bb_spec_text_Infected_idx_2">
+              <layout:position layout:x="502.164514150223" layout:y="239.72346253509"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Total_population_idx_3" layout:text="Total" layout:graphicalObject="SpecG_Total_population_idx_3">
+            <layout:boundingBox layout:id="bb_spec_text_Total_population_idx_3">
+              <layout:position layout:x="310.910898131922" layout:y="447.077918219122"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Recovered_idx_4" layout:text="Recovered" layout:graphicalObject="SpecG_Recovered_idx_4">
+            <layout:boundingBox layout:id="bb_spec_text_Recovered_idx_4">
+              <layout:position layout:x="278.402000815586" layout:y="121.136256045565"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Deceased_idx_5" layout:text="Deceased" layout:graphicalObject="SpecG_Deceased_idx_5">
+            <layout:boundingBox layout:id="bb_spec_text_Deceased_idx_5">
+              <layout:position layout:x="583.805492996697" layout:y="0"/>
+              <layout:dimensions layout:width="120" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Infected_to_Deceased_idx_TextGlyph_8" layout:graphicalObject="ReactionG_Infected_to_Deceased">
+            <layout:boundingBox layout:id="bb_text_R1_idx_0">
+              <layout:position layout:x="614.221888742699" layout:y="149.221429044286"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+        </layout:listOfTextGlyphs>
+        <render:listOfRenderInformation xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1">
+          <render:renderInformation render:id="info" render:name="Render Information" render:programName="RenderInformation" render:programVersion="1.0">
+            <render:listOfColorDefinitions>
+              <render:colorDefinition render:id="lineEnding_fill_color_productHead" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_sideProductHead" render:value="#ffffff"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_modifierHead" render:value="#ffffff"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_activatorHead" render:value="#ffffff"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_inhibitorHead" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_modifierHead_1" render:value="#4169e1"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_productHead_1" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_Susceptible_to_Exposed" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_Exposed_to_Infected" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_Infected_to_Recovered" render:value="#000000"/>
+              <render:colorDefinition render:id="comp_fill_color_City" render:value="#ba55d3"/>
+              <render:colorDefinition render:id="comp_border_color_City" render:value="#696969"/>
+              <render:colorDefinition render:id="spec_fill_color_Susceptible" render:value="#d2b48c"/>
+              <render:colorDefinition render:id="spec_border_color_Susceptible" render:value="#ffff00"/>
+              <render:colorDefinition render:id="text_line_color_Susceptible" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_Exposed" render:value="#d2b48c"/>
+              <render:colorDefinition render:id="spec_border_color_Exposed" render:value="#ffff00"/>
+              <render:colorDefinition render:id="text_line_color_Exposed" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_Infected" render:value="#d2b48c"/>
+              <render:colorDefinition render:id="spec_border_color_Infected" render:value="#ffff00"/>
+              <render:colorDefinition render:id="text_line_color_Infected" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_Total_population" render:value="#ffffff"/>
+              <render:colorDefinition render:id="spec_border_color_Total_population" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_Total_population" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_Recovered" render:value="#ffffff"/>
+              <render:colorDefinition render:id="spec_border_color_Recovered" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_Recovered" render:value="#9400d3"/>
+              <render:colorDefinition render:id="spec_fill_color_Deceased" render:value="#ffffff"/>
+              <render:colorDefinition render:id="spec_border_color_Deceased" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_Deceased" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_Susceptible_to_Exposed" render:value="#ffffff"/>
+              <render:colorDefinition render:id="reaction_stroke_color_Susceptible_to_Exposed" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_Exposed_to_Infected" render:value="#ffffff"/>
+              <render:colorDefinition render:id="reaction_stroke_color_Exposed_to_Infected" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_Infected_to_Recovered" render:value="#ffffff"/>
+              <render:colorDefinition render:id="reaction_stroke_color_Infected_to_Recovered" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_Infected_to_Deceased" render:value="#ffffff"/>
+              <render:colorDefinition render:id="reaction_stroke_color_Infected_to_Deceased" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_TextG_Infected_to_Deceased_idx_TextGlyph_8" render:value="#ff4500"/>
+            </render:listOfColorDefinitions>
+            <render:listOfLineEndings>
+              <render:lineEnding render:id="productHead">
+                <layout:boundingBox layout:id="bb_productHead">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_productHead">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="sideProductHead">
+                <layout:boundingBox layout:id="bb_sideProductHead">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_sideProductHead">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="modifierHead">
+                <layout:boundingBox layout:id="bb_modifierHead">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_modifierHead">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="50%" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="50%" render:y="100%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="activatorHead">
+                <layout:boundingBox layout:id="bb_activatorHead">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_activatorHead">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="inhibitorHead">
+                <layout:boundingBox layout:id="bb_inhibitorHead">
+                  <layout:position layout:x="-2" layout:y="-6"/>
+                  <layout:dimensions layout:width="2" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_inhibitorHead">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="modifierHead_1">
+                <layout:boundingBox layout:id="bb_modifierHead_1">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_modifierHead_1">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="50%" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="50%" render:y="100%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="productHead_1">
+                <layout:boundingBox layout:id="bb_productHead_1">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_productHead_1">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="_line_ending_default_NONE_">
+                <layout:boundingBox>
+                  <layout:position layout:x="0" layout:y="0"/>
+                  <layout:dimensions layout:width="0" layout:height="0"/>
+                </layout:boundingBox>
+                <render:g/>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_Susceptible_to_Exposed">
+                <layout:boundingBox layout:id="bb_line_ending_Susceptible_to_Exposed">
+                  <layout:position layout:x="-15" layout:y="-6"/>
+                  <layout:dimensions layout:width="15" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_Susceptible_to_Exposed">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_Exposed_to_Infected">
+                <layout:boundingBox layout:id="bb_line_ending_Exposed_to_Infected">
+                  <layout:position layout:x="-15" layout:y="-6"/>
+                  <layout:dimensions layout:width="15" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_Exposed_to_Infected">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_Infected_to_Recovered">
+                <layout:boundingBox layout:id="bb_line_ending_Infected_to_Recovered">
+                  <layout:position layout:x="-15" layout:y="-6"/>
+                  <layout:dimensions layout:width="15" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_Infected_to_Recovered">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+            </render:listOfLineEndings>
+            <render:listOfStyles>
+              <render:style render:id="compStyle_City" render:typeList="COMPARTMENTGLYPH" render:idList="CompG_City">
+                <render:g render:stroke="comp_border_color_City" render:stroke-width="2" render:fill="comp_fill_color_City">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_City" render:typeList="TEXTGLYPH" render:idList="TextG_City">
+                <render:g render:stroke="text_line_color_City" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="24"/>
+              </render:style>
+              <render:style render:id="specStyle_Susceptible" render:typeList="SPECIESGLYPH" render:idList="SpecG_Susceptible_idx_0">
+                <render:g render:stroke="spec_border_color_Susceptible" render:stroke-width="4" render:fill="spec_fill_color_Susceptible">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_Susceptible" render:typeList="TEXTGLYPH" render:idList="TextG_Susceptible_idx_0">
+                <render:g render:stroke="text_line_color_Susceptible" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="16"/>
+              </render:style>
+              <render:style render:id="specStyle_Exposed" render:typeList="SPECIESGLYPH" render:idList="SpecG_Exposed_idx_1">
+                <render:g render:stroke="spec_border_color_Exposed" render:stroke-width="4" render:fill="spec_fill_color_Exposed">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_Exposed" render:typeList="TEXTGLYPH" render:idList="TextG_Exposed_idx_1">
+                <render:g render:stroke="text_line_color_Exposed" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="16"/>
+              </render:style>
+              <render:style render:id="specStyle_Infected" render:typeList="SPECIESGLYPH" render:idList="SpecG_Infected_idx_2">
+                <render:g render:stroke="spec_border_color_Infected" render:stroke-width="4" render:fill="spec_fill_color_Infected">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_Infected" render:typeList="TEXTGLYPH" render:idList="TextG_Infected_idx_2">
+                <render:g render:stroke="text_line_color_Infected" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="20"/>
+              </render:style>
+              <render:style render:id="specStyle_Total_population" render:typeList="SPECIESGLYPH" render:idList="SpecG_Total_population_idx_3">
+                <render:g render:stroke="spec_border_color_Total_population" render:stroke-width="2" render:fill="spec_fill_color_Total_population">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_Total_population" render:typeList="TEXTGLYPH" render:idList="TextG_Total_population_idx_3">
+                <render:g render:stroke="text_line_color_Total_population" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="28"/>
+              </render:style>
+              <render:style render:id="specStyle_Recovered" render:typeList="SPECIESGLYPH" render:idList="SpecG_Recovered_idx_4">
+                <render:g render:stroke="spec_border_color_Recovered" render:stroke-width="2" render:fill="spec_fill_color_Recovered">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_Recovered" render:typeList="TEXTGLYPH" render:idList="TextG_Recovered_idx_4">
+                <render:g render:stroke="text_line_color_Recovered" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="12"/>
+              </render:style>
+              <render:style render:id="specStyle_Deceased" render:typeList="SPECIESGLYPH" render:idList="SpecG_Deceased_idx_5">
+                <render:g render:stroke="spec_border_color_Deceased" render:stroke-width="2" render:fill="spec_fill_color_Deceased">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_Deceased" render:typeList="TEXTGLYPH" render:idList="TextG_Deceased_idx_5">
+                <render:g render:stroke="text_line_color_Deceased" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="20"/>
+              </render:style>
+              <render:style render:id="reactionStyle_Susceptible_to_Exposed" render:typeList="REACTIONGLYPH" render:idList="ReactionG_Susceptible_to_Exposed">
+                <render:g render:stroke="reaction_stroke_color_Susceptible_to_Exposed" render:stroke-width="2" render:fill="reaction_fill_color_Susceptible_to_Exposed">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleSusceptible_to_Exposed_rct0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Susceptible_to_Exposed_rct0">
+                <render:g render:stroke="reaction_stroke_color_Susceptible_to_Exposed" render:stroke-width="2" render:fill="reaction_fill_color_Susceptible_to_Exposed" render:endHead="_line_ending_default_NONE_"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleSusceptible_to_Exposed_prd0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Susceptible_to_Exposed_prd0">
+                <render:g render:stroke="reaction_stroke_color_Susceptible_to_Exposed" render:stroke-width="2" render:fill="reaction_fill_color_Susceptible_to_Exposed" render:endHead="line_ending_Susceptible_to_Exposed"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleSusceptible_to_Exposed_mod0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Susceptible_to_Exposed_mod0">
+                <render:g render:stroke="reaction_stroke_color_Susceptible_to_Exposed" render:stroke-width="2" render:fill="reaction_fill_color_Susceptible_to_Exposed" render:endHead="modifierHead_1"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleSusceptible_to_Exposed_mod1" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Susceptible_to_Exposed_mod1">
+                <render:g render:stroke="reaction_stroke_color_Susceptible_to_Exposed" render:stroke-width="2" render:fill="reaction_fill_color_Susceptible_to_Exposed" render:endHead="modifierHead_1"/>
+              </render:style>
+              <render:style render:id="reactionStyle_Exposed_to_Infected" render:typeList="REACTIONGLYPH" render:idList="ReactionG_Exposed_to_Infected">
+                <render:g render:stroke="reaction_stroke_color_Exposed_to_Infected" render:stroke-width="2" render:fill="reaction_fill_color_Exposed_to_Infected">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleExposed_to_Infected_rct0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Exposed_to_Infected_rct0">
+                <render:g render:stroke="reaction_stroke_color_Exposed_to_Infected" render:stroke-width="2" render:fill="reaction_fill_color_Exposed_to_Infected" render:endHead="_line_ending_default_NONE_"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleExposed_to_Infected_prd0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Exposed_to_Infected_prd0">
+                <render:g render:stroke="reaction_stroke_color_Exposed_to_Infected" render:stroke-width="2" render:fill="reaction_fill_color_Exposed_to_Infected" render:endHead="line_ending_Exposed_to_Infected"/>
+              </render:style>
+              <render:style render:id="reactionStyle_Infected_to_Recovered" render:typeList="REACTIONGLYPH" render:idList="ReactionG_Infected_to_Recovered">
+                <render:g render:stroke="reaction_stroke_color_Infected_to_Recovered" render:stroke-width="2" render:fill="reaction_fill_color_Infected_to_Recovered">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleInfected_to_Recovered_rct0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Infected_to_Recovered_rct0">
+                <render:g render:stroke="reaction_stroke_color_Infected_to_Recovered" render:stroke-width="2" render:fill="reaction_fill_color_Infected_to_Recovered" render:endHead="_line_ending_default_NONE_"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleInfected_to_Recovered_prd0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Infected_to_Recovered_prd0">
+                <render:g render:stroke="reaction_stroke_color_Infected_to_Recovered" render:stroke-width="2" render:fill="reaction_fill_color_Infected_to_Recovered" render:endHead="line_ending_Infected_to_Recovered"/>
+              </render:style>
+              <render:style render:id="reactionStyle_Infected_to_Deceased" render:typeList="REACTIONGLYPH" render:idList="ReactionG_Infected_to_Deceased">
+                <render:g render:stroke="reaction_stroke_color_Infected_to_Deceased" render:stroke-width="2" render:fill="reaction_fill_color_Infected_to_Deceased">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleInfected_to_Deceased_rct0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Infected_to_Deceased_rct0">
+                <render:g render:stroke="reaction_stroke_color_Infected_to_Deceased" render:stroke-width="2" render:fill="reaction_fill_color_Infected_to_Deceased" render:endHead="_line_ending_default_NONE_"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleInfected_to_Deceased_prd0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Infected_to_Deceased_prd0">
+                <render:g render:stroke="reaction_stroke_color_Infected_to_Deceased" render:stroke-width="2" render:fill="reaction_fill_color_Infected_to_Deceased" render:endHead="productHead_1"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_Infected_to_Deceased_idx_TextGlyph_8" render:typeList="TEXTGLYPH" render:idList="TextG_Infected_to_Deceased_idx_TextGlyph_8">
+                <render:g render:stroke="text_line_color_TextG_Infected_to_Deceased_idx_TextGlyph_8" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="12"/>
+              </render:style>
+            </render:listOfStyles>
+          </render:renderInformation>
+        </render:listOfRenderInformation>
+      </layout:layout>
+    </layout:listOfLayouts>
+  </model>
+</sbml>

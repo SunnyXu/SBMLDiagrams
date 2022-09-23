@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1" xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1" level="3" version="1" layout:required="false" render:required="false">
+  <model id="SBMLDiagrams_model">
+    <listOfCompartments>
+      <compartment id="_compartment_default_" constant="true"/>
+      <compartment id="compartment" constant="true"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species id="Gp" compartment="compartment" initialConcentration="1" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="A" compartment="compartment" initialConcentration="1" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="Gi" compartment="compartment" initialConcentration="1" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+      <species id="B" compartment="compartment" initialConcentration="100000000000" hasOnlySubstanceUnits="false" boundaryCondition="false" constant="false"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter id="E0" value="0.1" constant="true"/>
+      <parameter id="k0" value="0.1" constant="true"/>
+      <parameter id="E1" value="0.1" constant="true"/>
+      <parameter id="k1" value="0.1" constant="true"/>
+      <parameter id="E2" value="0.1" constant="true"/>
+      <parameter id="k2" value="0.1" constant="true"/>
+      <parameter id="E3" value="0.1" constant="true"/>
+      <parameter id="k3" value="0.1" constant="true"/>
+      <parameter id="E4" value="0.1" constant="true"/>
+      <parameter id="k4" value="0.1" constant="true"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction id="The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" reversible="false" fast="false">
+        <listOfProducts>
+          <speciesReference id="SpecRef_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_prd0" species="Gp" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference id="SpecRef_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_mod0" species="A"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E0 </ci>
+              <ci> k0 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Diffusion_of_glutamate" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference id="SpecRef_Diffusion_of_glutamate_rct0" species="Gp" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference id="SpecRef_Diffusion_of_glutamate_prd0" species="Gi" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E1 </ci>
+              <ci> k1 </ci>
+              <ci> Gp </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Consumption_of_glutamate_to_produce_ammonia" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference id="SpecRef_Consumption_of_glutamate_to_produce_ammonia_rct0" species="Gi" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <listOfProducts>
+          <speciesReference id="SpecRef_Consumption_of_glutamate_to_produce_ammonia_prd0" species="A" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E2 </ci>
+              <ci> k2 </ci>
+              <ci> Gi </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="Diffusion_of_ammonia" reversible="false" fast="false">
+        <listOfReactants>
+          <speciesReference id="SpecRef_Diffusion_of_ammonia_rct0" species="A" stoichiometry="1" constant="false"/>
+        </listOfReactants>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E3 </ci>
+              <ci> k3 </ci>
+              <ci> A </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+      <reaction id="The_synthesis_of_biomass_from_ammonia_and_glutamate" reversible="false" fast="false">
+        <listOfProducts>
+          <speciesReference id="SpecRef_The_synthesis_of_biomass_from_ammonia_and_glutamate_prd0" species="B" stoichiometry="1" constant="false"/>
+        </listOfProducts>
+        <listOfModifiers>
+          <modifierSpeciesReference id="SpecRef_The_synthesis_of_biomass_from_ammonia_and_glutamate_mod0" species="A"/>
+          <modifierSpeciesReference id="SpecRef_The_synthesis_of_biomass_from_ammonia_and_glutamate_mod1" species="Gp"/>
+        </listOfModifiers>
+        <kineticLaw>
+          <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+              <times/>
+              <ci> E4 </ci>
+              <ci> k4 </ci>
+            </apply>
+          </math>
+        </kineticLaw>
+      </reaction>
+    </listOfReactions>
+    <layout:listOfLayouts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:layout="http://www.sbml.org/sbml/level3/version1/layout/version1">
+      <layout:layout layout:id="SBMLDiagrams_layout">
+        <layout:dimensions layout:width="800" layout:height="800"/>
+        <layout:listOfCompartmentGlyphs>
+          <layout:compartmentGlyph layout:id="CompG_compartment" layout:compartment="compartment">
+            <layout:boundingBox layout:id="bb_compartment">
+              <layout:position layout:x="-33" layout:y="-15"/>
+              <layout:dimensions layout:width="470" layout:height="400"/>
+            </layout:boundingBox>
+          </layout:compartmentGlyph>
+        </layout:listOfCompartmentGlyphs>
+        <layout:listOfSpeciesGlyphs>
+          <layout:speciesGlyph layout:id="SpecG_Gp_idx_0" layout:species="Gp">
+            <layout:boundingBox layout:id="bb_Gp_idx_0">
+              <layout:position layout:x="98.2602915093857" layout:y="278.899565415237"/>
+              <layout:dimensions layout:width="58" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_A_idx_1" layout:species="A">
+            <layout:boundingBox layout:id="bb_A_idx_1">
+              <layout:position layout:x="282.319218711332" layout:y="137.699782707619"/>
+              <layout:dimensions layout:width="44" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_Gi_idx_2" layout:species="Gi">
+            <layout:boundingBox layout:id="bb_Gi_idx_2">
+              <layout:position layout:x="7.105427357601e-15" layout:y="74.8599676625627"/>
+              <layout:dimensions layout:width="58" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+          <layout:speciesGlyph layout:id="SpecG_B_idx_3" layout:species="B">
+            <layout:boundingBox layout:id="bb_B_idx_3">
+              <layout:position layout:x="286.396912251643" layout:y="324.425376100296"/>
+              <layout:dimensions layout:width="44" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:speciesGlyph>
+        </layout:listOfSpeciesGlyphs>
+        <layout:listOfReactionGlyphs>
+          <layout:reactionGlyph layout:id="ReactionG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" layout:reaction="The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="249.788870876922" layout:y="42.4663486669358"/>
+                  <layout:end layout:x="249.788870876922" layout:y="42.4663486669358"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox layout:id="bb_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia">
+              <layout:position layout:x="235.288870876922" layout:y="27.9663486669358"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_prd0" layout:speciesReference="SpecRef_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_prd0" layout:speciesGlyph="SpecG_Gp_idx_0" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="249.788870876922" layout:y="42.4663486669358"/>
+                      <layout:end layout:x="140.325404822375" layout:y="269.769578072174"/>
+                      <layout:basePoint1 layout:x="249.788870876922" layout:y="42.4663486669358"/>
+                      <layout:basePoint2 layout:x="249.788870876922" layout:y="42.4663486669358"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_mod0" layout:speciesReference="SpecRef_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_mod0" layout:speciesGlyph="SpecG_A_idx_1" layout:role="modifier">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                      <layout:start layout:x="293.72" layout:y="133.7"/>
+                      <layout:end layout:x="260.596657678377" layout:y="64.9089492097497"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="ReactionG_Diffusion_of_glutamate" layout:reaction="Diffusion_of_glutamate">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="127.260291509386" layout:y="14.5"/>
+                  <layout:end layout:x="127.260291509386" layout:y="14.5"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox layout:id="bb_Diffusion_of_glutamate">
+              <layout:position layout:x="112.760291509386" layout:y="0"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Diffusion_of_glutamate_rct0" layout:speciesReference="SpecRef_Diffusion_of_glutamate_rct0" layout:speciesGlyph="SpecG_Gp_idx_0" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="127.260291509386" layout:y="278.804609004349"/>
+                      <layout:end layout:x="127.260291509386" layout:y="14.5"/>
+                      <layout:basePoint1 layout:x="127.260291509386" layout:y="14.5"/>
+                      <layout:basePoint2 layout:x="127.260291509386" layout:y="14.5"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Diffusion_of_glutamate_prd0" layout:speciesReference="SpecRef_Diffusion_of_glutamate_prd0" layout:speciesGlyph="SpecG_Gi_idx_2" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="127.260291509386" layout:y="14.5"/>
+                      <layout:end layout:x="59.6591931820222" layout:y="68.4100769752952"/>
+                      <layout:basePoint1 layout:x="127.260291509386" layout:y="14.5"/>
+                      <layout:basePoint2 layout:x="127.260291509386" layout:y="14.5"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="ReactionG_Consumption_of_glutamate_to_produce_ammonia" layout:reaction="Consumption_of_glutamate_to_produce_ammonia">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="29" layout:y="218.539597752675"/>
+                  <layout:end layout:x="29" layout:y="218.539597752675"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox layout:id="bb_Consumption_of_glutamate_to_produce_ammonia">
+              <layout:position layout:x="14.5" layout:y="204.039597752675"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Consumption_of_glutamate_to_produce_ammonia_rct0" layout:speciesReference="SpecRef_Consumption_of_glutamate_to_produce_ammonia_rct0" layout:speciesGlyph="SpecG_Gi_idx_2" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="29" layout:y="110.866794403256"/>
+                      <layout:end layout:x="29" layout:y="218.539597752675"/>
+                      <layout:basePoint1 layout:x="29" layout:y="218.539597752675"/>
+                      <layout:basePoint2 layout:x="29" layout:y="218.539597752675"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Consumption_of_glutamate_to_produce_ammonia_prd0" layout:speciesReference="SpecRef_Consumption_of_glutamate_to_produce_ammonia_prd0" layout:speciesGlyph="SpecG_A_idx_1" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="29" layout:y="218.539597752675"/>
+                      <layout:end layout:x="271.936289152199" layout:y="163.090975061127"/>
+                      <layout:basePoint1 layout:x="29" layout:y="218.539597752675"/>
+                      <layout:basePoint2 layout:x="29" layout:y="218.539597752675"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="ReactionG_Diffusion_of_ammonia" layout:reaction="Diffusion_of_ammonia">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="390.819218711332" layout:y="155.699782707619"/>
+                  <layout:end layout:x="390.819218711332" layout:y="155.699782707619"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox layout:id="bb_Diffusion_of_ammonia">
+              <layout:position layout:x="376.319218711332" layout:y="141.199782707619"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_Diffusion_of_ammonia_rct0" layout:speciesReference="SpecRef_Diffusion_of_ammonia_rct0" layout:speciesGlyph="SpecG_A_idx_1" layout:role="substrate">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="326.595118061975" layout:y="155.699782707619"/>
+                      <layout:end layout:x="390.819218711332" layout:y="155.699782707619"/>
+                      <layout:basePoint1 layout:x="390.819218711332" layout:y="155.699782707619"/>
+                      <layout:basePoint2 layout:x="390.819218711332" layout:y="155.699782707619"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+          <layout:reactionGlyph layout:id="ReactionG_The_synthesis_of_biomass_from_ammonia_and_glutamate" layout:reaction="The_synthesis_of_biomass_from_ammonia_and_glutamate">
+            <layout:curve>
+              <layout:listOfCurveSegments>
+                <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                  <layout:start layout:x="249.788870876922" layout:y="268.933216748301"/>
+                  <layout:end layout:x="249.788870876922" layout:y="268.933216748301"/>
+                </layout:curveSegment>
+              </layout:listOfCurveSegments>
+            </layout:curve>
+            <layout:boundingBox layout:id="bb_The_synthesis_of_biomass_from_ammonia_and_glutamate">
+              <layout:position layout:x="235.288870876922" layout:y="254.433216748301"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+            <layout:listOfSpeciesReferenceGlyphs>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_The_synthesis_of_biomass_from_ammonia_and_glutamate_prd0" layout:speciesReference="SpecRef_The_synthesis_of_biomass_from_ammonia_and_glutamate_prd0" layout:speciesGlyph="SpecG_B_idx_3" layout:role="product">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="CubicBezier">
+                      <layout:start layout:x="249.788870876922" layout:y="268.933216748301"/>
+                      <layout:end layout:x="287.357072030278" layout:y="316.042250951943"/>
+                      <layout:basePoint1 layout:x="249.788870876922" layout:y="268.933216748301"/>
+                      <layout:basePoint2 layout:x="249.788870876922" layout:y="268.933216748301"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_The_synthesis_of_biomass_from_ammonia_and_glutamate_mod0" layout:speciesReference="SpecRef_The_synthesis_of_biomass_from_ammonia_and_glutamate_mod0" layout:speciesGlyph="SpecG_A_idx_1" layout:role="modifier">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                      <layout:start layout:x="293.72" layout:y="177.7"/>
+                      <layout:end layout:x="260.596657678377" layout:y="246.490616205487"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+              <layout:speciesReferenceGlyph layout:id="SpecRefG_The_synthesis_of_biomass_from_ammonia_and_glutamate_mod1" layout:speciesReference="SpecRef_The_synthesis_of_biomass_from_ammonia_and_glutamate_mod1" layout:speciesGlyph="SpecG_Gp_idx_0" layout:role="modifier">
+                <layout:curve>
+                  <layout:listOfCurveSegments>
+                    <layout:curveSegment xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="LineSegment">
+                      <layout:start layout:x="160.26" layout:y="289.37"/>
+                      <layout:end layout:x="225.571590437585" layout:y="274.460652976056"/>
+                    </layout:curveSegment>
+                  </layout:listOfCurveSegments>
+                </layout:curve>
+              </layout:speciesReferenceGlyph>
+            </layout:listOfSpeciesReferenceGlyphs>
+          </layout:reactionGlyph>
+        </layout:listOfReactionGlyphs>
+        <layout:listOfTextGlyphs>
+          <layout:textGlyph layout:id="TextG_compartment" layout:graphicalObject="CompG_compartment">
+            <layout:boundingBox layout:id="bb_comp_text_compartment">
+              <layout:position layout:x="-33.0396912251643" layout:y="388.98191694407"/>
+              <layout:dimensions layout:width="120" layout:height="18"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Gp_idx_0" layout:text="Gp" layout:graphicalObject="SpecG_Gp_idx_0">
+            <layout:boundingBox layout:id="bb_spec_text_Gp_idx_0">
+              <layout:position layout:x="98.2602915093857" layout:y="278.899565415237"/>
+              <layout:dimensions layout:width="58" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_A_idx_1" layout:text="A" layout:graphicalObject="SpecG_A_idx_1">
+            <layout:boundingBox layout:id="bb_spec_text_A_idx_1">
+              <layout:position layout:x="282.319218711332" layout:y="137.699782707619"/>
+              <layout:dimensions layout:width="44" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Gi_idx_2" layout:text="Gi" layout:graphicalObject="SpecG_Gi_idx_2">
+            <layout:boundingBox layout:id="bb_spec_text_Gi_idx_2">
+              <layout:position layout:x="7.105427357601e-15" layout:y="74.8599676625627"/>
+              <layout:dimensions layout:width="58" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_B_idx_3" layout:text="B" layout:graphicalObject="SpecG_B_idx_3">
+            <layout:boundingBox layout:id="bb_spec_text_B_idx_3">
+              <layout:position layout:x="286.396912251643" layout:y="324.425376100296"/>
+              <layout:dimensions layout:width="44" layout:height="36"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_7" layout:text="R" layout:graphicalObject="ReactionG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia">
+            <layout:boundingBox layout:id="bb_text_R_idx_0">
+              <layout:position layout:x="235.288870876922" layout:y="27.9663486669358"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_18" layout:text="The uptake of glutamate" layout:graphicalObject="ReactionG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia">
+            <layout:boundingBox>
+              <layout:position layout:x="175.3" layout:y="5"/>
+              <layout:dimensions layout:width="150" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_6" layout:text="R" layout:graphicalObject="ReactionG_Diffusion_of_glutamate">
+            <layout:boundingBox layout:id="bb_text_R_idx_2">
+              <layout:position layout:x="112.760291509386" layout:y="1.24344978758018e-14"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_11" layout:text="Diffusion of glutamate" layout:graphicalObject="ReactionG_Diffusion_of_glutamate">
+            <layout:boundingBox>
+              <layout:position layout:x="25.8" layout:y="-20"/>
+              <layout:dimensions layout:width="200" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_8" layout:text="R" layout:graphicalObject="ReactionG_Consumption_of_glutamate_to_produce_ammonia">
+            <layout:boundingBox layout:id="bb_text_R_idx_4">
+              <layout:position layout:x="14.5" layout:y="204.039597752675"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_16" layout:text="Consumption of glutamate" layout:graphicalObject="ReactionG_Consumption_of_glutamate_to_produce_ammonia">
+            <layout:boundingBox>
+              <layout:position layout:x="-40.5" layout:y="224"/>
+              <layout:dimensions layout:width="150" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_10" layout:text="R" layout:graphicalObject="ReactionG_Diffusion_of_ammonia">
+            <layout:boundingBox layout:id="bb_text_R_idx_6">
+              <layout:position layout:x="376.319218711332" layout:y="141.199782707619"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_19" layout:text="Diffusion of ammonia" layout:graphicalObject="ReactionG_Diffusion_of_ammonia">
+            <layout:boundingBox>
+              <layout:position layout:x="325.3" layout:y="165.2"/>
+              <layout:dimensions layout:width="120" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_9" layout:text="R" layout:graphicalObject="ReactionG_The_synthesis_of_biomass_from_ammonia_and_glutamate">
+            <layout:boundingBox layout:id="bb_text_R_idx_8">
+              <layout:position layout:x="235.288870876922" layout:y="254.433216748301"/>
+              <layout:dimensions layout:width="29" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+          <layout:textGlyph layout:id="TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_17" layout:text="The synthesis of biomass" layout:graphicalObject="ReactionG_The_synthesis_of_biomass_from_ammonia_and_glutamate">
+            <layout:boundingBox>
+              <layout:position layout:x="245.3" layout:y="254.4"/>
+              <layout:dimensions layout:width="150" layout:height="29"/>
+            </layout:boundingBox>
+          </layout:textGlyph>
+        </layout:listOfTextGlyphs>
+        <render:listOfRenderInformation xmlns:render="http://www.sbml.org/sbml/level3/version1/render/version1">
+          <render:renderInformation render:id="info" render:name="Render Information" render:programName="RenderInformation" render:programVersion="1.0">
+            <render:listOfColorDefinitions>
+              <render:colorDefinition render:id="lineEnding_fill_color_productHead" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_sideProductHead" render:value="#ffffff"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_modifierHead" render:value="#ffffff"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_activatorHead" render:value="#ffffff"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_inhibitorHead" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_modifier_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_1" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_Diffusion_of_glutamate" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_Consumption_of_glutamate_to_produce_ammonia" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_Diffusion_of_ammonia" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_1" render:value="#000000"/>
+              <render:colorDefinition render:id="lineEnding_fill_color_line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_0" render:value="#000000"/>
+              <render:colorDefinition render:id="comp_fill_color__compartment_default_" render:value="#ffffff"/>
+              <render:colorDefinition render:id="comp_border_color__compartment_default_" render:value="#ffffff"/>
+              <render:colorDefinition render:id="comp_fill_color_compartment" render:value="#9acd32"/>
+              <render:colorDefinition render:id="comp_border_color_compartment" render:value="#008b8b"/>
+              <render:colorDefinition render:id="spec_fill_color_Gp" render:value="#ffffff"/>
+              <render:colorDefinition render:id="spec_border_color_Gp" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_Gp" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_A" render:value="#ffffff"/>
+              <render:colorDefinition render:id="spec_border_color_A" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_A" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_Gi" render:value="#ffffff"/>
+              <render:colorDefinition render:id="spec_border_color_Gi" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_Gi" render:value="#000000"/>
+              <render:colorDefinition render:id="spec_fill_color_B" render:value="#ffffff"/>
+              <render:colorDefinition render:id="spec_border_color_B" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_B" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:value="#ffffff"/>
+              <render:colorDefinition render:id="reaction_stroke_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_Diffusion_of_glutamate" render:value="#ffffff"/>
+              <render:colorDefinition render:id="reaction_stroke_color_Diffusion_of_glutamate" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_Consumption_of_glutamate_to_produce_ammonia" render:value="#ffffff"/>
+              <render:colorDefinition render:id="reaction_stroke_color_Consumption_of_glutamate_to_produce_ammonia" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_Diffusion_of_ammonia" render:value="#ffffff"/>
+              <render:colorDefinition render:id="reaction_stroke_color_Diffusion_of_ammonia" render:value="#000000"/>
+              <render:colorDefinition render:id="reaction_fill_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:value="#ffffff"/>
+              <render:colorDefinition render:id="reaction_stroke_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_7" render:value="#32cd32"/>
+              <render:colorDefinition render:id="text_line_color_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_18" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_6" render:value="#32cd32"/>
+              <render:colorDefinition render:id="text_line_color_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_11" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_8" render:value="#32cd32"/>
+              <render:colorDefinition render:id="text_line_color_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_16" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_10" render:value="#32cd32"/>
+              <render:colorDefinition render:id="text_line_color_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_19" render:value="#000000"/>
+              <render:colorDefinition render:id="text_line_color_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_9" render:value="#32cd32"/>
+              <render:colorDefinition render:id="text_line_color_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_17" render:value="#000000"/>
+            </render:listOfColorDefinitions>
+            <render:listOfLineEndings>
+              <render:lineEnding render:id="productHead">
+                <layout:boundingBox layout:id="bb_productHead">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_productHead">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="sideProductHead">
+                <layout:boundingBox layout:id="bb_sideProductHead">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_sideProductHead">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="modifierHead">
+                <layout:boundingBox layout:id="bb_modifierHead">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_modifierHead">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="50%" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="50%" render:y="100%"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="activatorHead">
+                <layout:boundingBox layout:id="bb_activatorHead">
+                  <layout:position layout:x="-12" layout:y="-6"/>
+                  <layout:dimensions layout:width="12" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_activatorHead">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="inhibitorHead">
+                <layout:boundingBox layout:id="bb_inhibitorHead">
+                  <layout:position layout:x="-2" layout:y="-6"/>
+                  <layout:dimensions layout:width="2" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_inhibitorHead">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="_line_ending_default_NONE_">
+                <layout:boundingBox>
+                  <layout:position layout:x="0" layout:y="0"/>
+                  <layout:dimensions layout:width="0" layout:height="0"/>
+                </layout:boundingBox>
+                <render:g/>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia">
+                <layout:boundingBox layout:id="bb_line_ending_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia">
+                  <layout:position layout:x="-15" layout:y="-6"/>
+                  <layout:dimensions layout:width="15" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_modifier_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_1">
+                <layout:boundingBox layout:id="bb_line_ending_modifier_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_1">
+                  <layout:position layout:x="-2" layout:y="0"/>
+                  <layout:dimensions layout:width="4" layout:height="4"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_modifier_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_1">
+                  <render:ellipse render:cx="0" render:cy="0" render:cz="50%" render:rx="100%"/>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_Diffusion_of_glutamate">
+                <layout:boundingBox layout:id="bb_line_ending_Diffusion_of_glutamate">
+                  <layout:position layout:x="-15" layout:y="-6"/>
+                  <layout:dimensions layout:width="15" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_Diffusion_of_glutamate">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_Consumption_of_glutamate_to_produce_ammonia">
+                <layout:boundingBox layout:id="bb_line_ending_Consumption_of_glutamate_to_produce_ammonia">
+                  <layout:position layout:x="-15" layout:y="-6"/>
+                  <layout:dimensions layout:width="15" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_Consumption_of_glutamate_to_produce_ammonia">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_Diffusion_of_ammonia">
+                <layout:boundingBox layout:id="bb_line_ending_Diffusion_of_ammonia">
+                  <layout:position layout:x="-15" layout:y="-6"/>
+                  <layout:dimensions layout:width="15" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_Diffusion_of_ammonia">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_The_synthesis_of_biomass_from_ammonia_and_glutamate">
+                <layout:boundingBox layout:id="bb_line_ending_The_synthesis_of_biomass_from_ammonia_and_glutamate">
+                  <layout:position layout:x="-15" layout:y="-6"/>
+                  <layout:dimensions layout:width="15" layout:height="12"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_The_synthesis_of_biomass_from_ammonia_and_glutamate">
+                  <render:polygon>
+                    <render:listOfElements>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="100%" render:y="50%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="100%"/>
+                      <render:element xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RenderPoint" render:x="0" render:y="0"/>
+                    </render:listOfElements>
+                  </render:polygon>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_1">
+                <layout:boundingBox layout:id="bb_line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_1">
+                  <layout:position layout:x="-2" layout:y="0"/>
+                  <layout:dimensions layout:width="4" layout:height="4"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_1">
+                  <render:ellipse render:cx="0" render:cy="0" render:cz="50%" render:rx="100%"/>
+                </render:g>
+              </render:lineEnding>
+              <render:lineEnding render:id="line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_0">
+                <layout:boundingBox layout:id="bb_line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_0">
+                  <layout:position layout:x="-2" layout:y="0"/>
+                  <layout:dimensions layout:width="4" layout:height="4"/>
+                </layout:boundingBox>
+                <render:g render:fill="lineEnding_fill_color_line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_0">
+                  <render:ellipse render:cx="0" render:cy="0" render:cz="50%" render:rx="100%"/>
+                </render:g>
+              </render:lineEnding>
+            </render:listOfLineEndings>
+            <render:listOfStyles>
+              <render:style render:id="compStyle__compartment_default_" render:typeList="COMPARTMENTGLYPH" render:idList="CompG__compartment_default_">
+                <render:g render:stroke="comp_border_color__compartment_default_" render:stroke-width="2" render:fill="comp_fill_color__compartment_default_">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle__compartment_default_" render:typeList="TEXTGLYPH" render:idList="TextG__compartment_default_">
+                <render:g render:stroke="text_line_color__compartment_default_" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="7"/>
+              </render:style>
+              <render:style render:id="compStyle_compartment" render:typeList="COMPARTMENTGLYPH" render:idList="CompG_compartment">
+                <render:g render:stroke="comp_border_color_compartment" render:stroke-width="2" render:fill="comp_fill_color_compartment">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_compartment" render:typeList="TEXTGLYPH" render:idList="TextG_compartment">
+                <render:g render:stroke="text_line_color_compartment" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="bottom" render:font-size="12"/>
+              </render:style>
+              <render:style render:id="specStyle_Gp" render:typeList="SPECIESGLYPH" render:idList="SpecG_Gp_idx_0">
+                <render:g render:stroke="spec_border_color_Gp" render:stroke-width="2" render:fill="spec_fill_color_Gp">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_Gp" render:typeList="TEXTGLYPH" render:idList="TextG_Gp_idx_0">
+                <render:g render:stroke="text_line_color_Gp" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="15"/>
+              </render:style>
+              <render:style render:id="specStyle_A" render:typeList="SPECIESGLYPH" render:idList="SpecG_A_idx_1">
+                <render:g render:stroke="spec_border_color_A" render:stroke-width="2" render:fill="spec_fill_color_A">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_A" render:typeList="TEXTGLYPH" render:idList="TextG_A_idx_1">
+                <render:g render:stroke="text_line_color_A" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="15"/>
+              </render:style>
+              <render:style render:id="specStyle_Gi" render:typeList="SPECIESGLYPH" render:idList="SpecG_Gi_idx_2">
+                <render:g render:stroke="spec_border_color_Gi" render:stroke-width="2" render:fill="spec_fill_color_Gi">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_Gi" render:typeList="TEXTGLYPH" render:idList="TextG_Gi_idx_2">
+                <render:g render:stroke="text_line_color_Gi" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="15"/>
+              </render:style>
+              <render:style render:id="specStyle_B" render:typeList="SPECIESGLYPH" render:idList="SpecG_B_idx_3">
+                <render:g render:stroke="spec_border_color_B" render:stroke-width="2" render:fill="spec_fill_color_B">
+                  <render:rectangle render:x="0" render:y="0" render:width="100%" render:height="100%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="textStyle_B" render:typeList="TEXTGLYPH" render:idList="TextG_B_idx_3">
+                <render:g render:stroke="text_line_color_B" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="15"/>
+              </render:style>
+              <render:style render:id="reactionStyle_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:typeList="REACTIONGLYPH" render:idList="ReactionG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia">
+                <render:g render:stroke="reaction_stroke_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleThe_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_rct0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_rct0">
+                <render:g render:stroke="reaction_stroke_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:endHead="_line_ending_default_NONE_"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleThe_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_prd0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_prd0">
+                <render:g render:stroke="reaction_stroke_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:endHead="line_ending_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleThe_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_mod0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_mod0">
+                <render:g render:stroke="reaction_stroke_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia" render:endHead="line_ending_modifier_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_1"/>
+              </render:style>
+              <render:style render:id="reactionStyle_Diffusion_of_glutamate" render:typeList="REACTIONGLYPH" render:idList="ReactionG_Diffusion_of_glutamate">
+                <render:g render:stroke="reaction_stroke_color_Diffusion_of_glutamate" render:stroke-width="2" render:fill="reaction_fill_color_Diffusion_of_glutamate">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleDiffusion_of_glutamate_rct0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Diffusion_of_glutamate_rct0">
+                <render:g render:stroke="reaction_stroke_color_Diffusion_of_glutamate" render:stroke-width="2" render:fill="reaction_fill_color_Diffusion_of_glutamate" render:endHead="_line_ending_default_NONE_"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleDiffusion_of_glutamate_prd0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Diffusion_of_glutamate_prd0">
+                <render:g render:stroke="reaction_stroke_color_Diffusion_of_glutamate" render:stroke-width="2" render:fill="reaction_fill_color_Diffusion_of_glutamate" render:endHead="line_ending_Diffusion_of_glutamate"/>
+              </render:style>
+              <render:style render:id="reactionStyle_Consumption_of_glutamate_to_produce_ammonia" render:typeList="REACTIONGLYPH" render:idList="ReactionG_Consumption_of_glutamate_to_produce_ammonia">
+                <render:g render:stroke="reaction_stroke_color_Consumption_of_glutamate_to_produce_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_Consumption_of_glutamate_to_produce_ammonia">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleConsumption_of_glutamate_to_produce_ammonia_rct0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Consumption_of_glutamate_to_produce_ammonia_rct0">
+                <render:g render:stroke="reaction_stroke_color_Consumption_of_glutamate_to_produce_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_Consumption_of_glutamate_to_produce_ammonia" render:endHead="_line_ending_default_NONE_"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleConsumption_of_glutamate_to_produce_ammonia_prd0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Consumption_of_glutamate_to_produce_ammonia_prd0">
+                <render:g render:stroke="reaction_stroke_color_Consumption_of_glutamate_to_produce_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_Consumption_of_glutamate_to_produce_ammonia" render:endHead="line_ending_Consumption_of_glutamate_to_produce_ammonia"/>
+              </render:style>
+              <render:style render:id="reactionStyle_Diffusion_of_ammonia" render:typeList="REACTIONGLYPH" render:idList="ReactionG_Diffusion_of_ammonia">
+                <render:g render:stroke="reaction_stroke_color_Diffusion_of_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_Diffusion_of_ammonia">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleDiffusion_of_ammonia_rct0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Diffusion_of_ammonia_rct0">
+                <render:g render:stroke="reaction_stroke_color_Diffusion_of_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_Diffusion_of_ammonia" render:endHead="_line_ending_default_NONE_"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleDiffusion_of_ammonia_prd0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_Diffusion_of_ammonia_prd0">
+                <render:g render:stroke="reaction_stroke_color_Diffusion_of_ammonia" render:stroke-width="2" render:fill="reaction_fill_color_Diffusion_of_ammonia" render:endHead="line_ending_Diffusion_of_ammonia"/>
+              </render:style>
+              <render:style render:id="reactionStyle_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:typeList="REACTIONGLYPH" render:idList="ReactionG_The_synthesis_of_biomass_from_ammonia_and_glutamate">
+                <render:g render:stroke="reaction_stroke_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:stroke-width="2" render:fill="reaction_fill_color_The_synthesis_of_biomass_from_ammonia_and_glutamate">
+                  <render:ellipse render:cx="50%" render:cy="50%" render:cz="50%" render:rx="50%"/>
+                </render:g>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleThe_synthesis_of_biomass_from_ammonia_and_glutamate_rct0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_The_synthesis_of_biomass_from_ammonia_and_glutamate_rct0">
+                <render:g render:stroke="reaction_stroke_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:stroke-width="2" render:fill="reaction_fill_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:endHead="_line_ending_default_NONE_"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleThe_synthesis_of_biomass_from_ammonia_and_glutamate_prd0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_The_synthesis_of_biomass_from_ammonia_and_glutamate_prd0">
+                <render:g render:stroke="reaction_stroke_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:stroke-width="2" render:fill="reaction_fill_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:endHead="line_ending_The_synthesis_of_biomass_from_ammonia_and_glutamate"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleThe_synthesis_of_biomass_from_ammonia_and_glutamate_mod0" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_The_synthesis_of_biomass_from_ammonia_and_glutamate_mod0">
+                <render:g render:stroke="reaction_stroke_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:stroke-width="2" render:fill="reaction_fill_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:endHead="line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_1"/>
+              </render:style>
+              <render:style render:id="specRefGlyphStyleThe_synthesis_of_biomass_from_ammonia_and_glutamate_mod1" render:typeList="SPECIESREFERENCEGLYPH" render:idList="SpecRefG_The_synthesis_of_biomass_from_ammonia_and_glutamate_mod1">
+                <render:g render:stroke="reaction_stroke_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:stroke-width="2" render:fill="reaction_fill_color_The_synthesis_of_biomass_from_ammonia_and_glutamate" render:endHead="line_ending_modifier_The_synthesis_of_biomass_from_ammonia_and_glutamate_0"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_7" render:typeList="TEXTGLYPH" render:idList="TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_7">
+                <render:g render:stroke="text_line_color_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_7" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="24"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_18" render:typeList="TEXTGLYPH" render:idList="TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_18">
+                <render:g render:stroke="text_line_color_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextG_The_uptake_of_glutamate_and_Consumption_of_glutamate_and_ammonia_idx_TextGlyph_18" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="7"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_6" render:typeList="TEXTGLYPH" render:idList="TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_6">
+                <render:g render:stroke="text_line_color_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_6" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="24"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_11" render:typeList="TEXTGLYPH" render:idList="TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_11">
+                <render:g render:stroke="text_line_color_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextG_Diffusion_of_glutamate_idx_TextGlyph_11" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="6"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_8" render:typeList="TEXTGLYPH" render:idList="TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_8">
+                <render:g render:stroke="text_line_color_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_8" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="24"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_16" render:typeList="TEXTGLYPH" render:idList="TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_16">
+                <render:g render:stroke="text_line_color_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextG_Consumption_of_glutamate_to_produce_ammonia_idx_TextGlyph_16" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="7"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_10" render:typeList="TEXTGLYPH" render:idList="TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_10">
+                <render:g render:stroke="text_line_color_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_10" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="24"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_19" render:typeList="TEXTGLYPH" render:idList="TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_19">
+                <render:g render:stroke="text_line_color_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextG_Diffusion_of_ammonia_idx_TextGlyph_19" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="7"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_9" render:typeList="TEXTGLYPH" render:idList="TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_9">
+                <render:g render:stroke="text_line_color_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_9" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="24"/>
+              </render:style>
+              <render:style render:id="textStyle_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_17" render:typeList="TEXTGLYPH" render:idList="TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_17">
+                <render:g render:stroke="text_line_color_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextG_The_synthesis_of_biomass_from_ammonia_and_glutamate_idx_TextGlyph_17" render:stroke-width="2" render:text-anchor="middle" render:vtext-anchor="middle" render:font-size="7"/>
+              </render:style>
+            </render:listOfStyles>
+          </render:renderInformation>
+        </render:listOfRenderInformation>
+      </layout:layout>
+    </layout:listOfLayouts>
+  </model>
+</sbml>
