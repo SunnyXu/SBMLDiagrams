@@ -1251,10 +1251,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     kinetics = kinetics_list[i]
                     #rct_num = len(rct_specGlyph_list[i])
                     #prd_num = len(prd_specGlyph_list[i])
+                    #rct_num = max(len(rct_specGlyph_handle_list[i]),len(reaction_rct_list[i]))
+                    # prd_num = max(len(prd_specGlyph_handle_list[i]),len(reaction_prd_list[i]))
+                    # mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
                     rct_num = len(rct_specGlyph_handle_list[i])
                     prd_num = len(prd_specGlyph_handle_list[i])
-                    mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
-                    #mod_num = len(mod_specGlyph_list[i])
+                    mod_num = len(mod_specGlyph_list[i])
 
                     add_rct_cnt = 0
                     for j in range(rct_num):
