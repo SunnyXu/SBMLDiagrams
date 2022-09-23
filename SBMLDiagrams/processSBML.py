@@ -2063,9 +2063,12 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 temp_id = reaction_id_list[i]
                 rxn_rev = reaction_rev_list[i]
                 kinetics = kinetics_list[i]
-                rct_num = max(len(rct_specGlyph_handle_list[i]),len(reaction_rct_list[i]))
-                prd_num = max(len(prd_specGlyph_handle_list[i]),len(reaction_prd_list[i]))
-                mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                # rct_num = max(len(rct_specGlyph_handle_list[i]),len(reaction_rct_list[i]))
+                # prd_num = max(len(prd_specGlyph_handle_list[i]),len(reaction_prd_list[i]))
+                # mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                rct_num = len(rct_specGlyph_handle_list[i])
+                prd_num = len(prd_specGlyph_handle_list[i])
+                mod_num = len(mod_specGlyph_list[i])
 
                 #print(rct_num, prd_num, mod_num)
 
@@ -2082,7 +2085,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 #         if temp_specGlyph_id == specGlyph_id_list[k]:
                 #             dst_position.append(spec_position_list[k])
                 #             dst_dimension.append(spec_dimension_list[k])
-                
+
                 if rct_num != 0 or prd_num != 0:
                     for j in range(rct_num):
                         temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
@@ -6532,8 +6535,13 @@ if __name__ == '__main__':
     #global render
     #filename = "test_suite/global_render/global_render.xml"
 
+    #complex
+    #filename = "test_suite/Carcione2020/Carcione2020.xml"
+    #filename = "test_suite/Garde2020/Garde2020.xml"
+    #filename = "test_suite/test_centroid/test_centroid.xml"
+
 ##############################
-    filename = 'output.xml'
+    #filename = 'output.xml'
 
     #filename = "Bart/bart_arccenter.xml"
     #filename = "Bart/bart_spRefBezier.xml"
@@ -6562,25 +6570,27 @@ if __name__ == '__main__':
     #filename = "Adel/2.xml"
     #filename = "Adel/3.xml"
 
+    filename = "MK/sbmld10_2.sbml"
+
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('output.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    try:
-        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    except:
-        print("did not return shapeData")
-    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('output.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # try:
+    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # except:
+    #     print("did not return shapeData")
+    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    # df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -6812,10 +6822,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    sbmlStr_layout_render = df.export()
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
