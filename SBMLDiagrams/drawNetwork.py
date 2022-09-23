@@ -1065,6 +1065,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                     outline, fill, linewidth)
 
                         elif prd_endhead_render[0][3] == ['polygon']:
+                            
                             arrow_s1 = prd_endhead_render[0][1][0]*scale
                             arrow_s2 = prd_endhead_render[0][1][1]*scale
                             #print(arrow_s1, arrow_s2)

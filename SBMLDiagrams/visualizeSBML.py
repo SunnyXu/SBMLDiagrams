@@ -343,6 +343,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         floatingNodes_dim_dict = defaultdict(list)
         textGlyph_comp_id_list = []
         textGlyph_spec_id_list = []
+        textGlyph_rxn_id_list = []
+        rxn_text_position_list = []
+        rxn_text_dimension_list = []
+        rxn_text_content_list = []
         textGlyph_id_list = []
         text_content_list = []
         text_position_list = []
@@ -462,6 +466,33 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     
                     for i in range(numReactionGlyphs):
                         reactionGlyph = layout.getReactionGlyph(i)
+
+                        reaction_id = reactionGlyph.getReactionId()
+                        reactionGlyph_id = reactionGlyph.getId()
+
+                        for j in range(numTextGlyphs):
+                            textGlyph_temp = layout.getTextGlyph(j)
+                            # if textGlyph_temp.isSetOriginOfTextId():
+                            #     temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                            if textGlyph_temp.isSetGraphicalObjectId():
+                                temp_rxnGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                            else:
+                                temp_rxnGlyph_id = ''
+                            if temp_rxnGlyph_id == reactionGlyph_id:
+                                textGlyph = textGlyph_temp
+                                text_content = textGlyph.getText()
+                                temp_id = textGlyph.getId()
+                                textGlyph_rxn_id_list.append([reactionGlyph_id, temp_id])
+                                text_boundingbox = textGlyph.getBoundingBox()
+                                text_pos_x = text_boundingbox.getX()
+                                text_pos_y = text_boundingbox.getY()   
+                                text_dim_w = text_boundingbox.getWidth()
+                                text_dim_h = text_boundingbox.getHeight()                       
+                                rxn_text_content_list.append(text_content)
+                                rxn_text_position_list.append([text_pos_x, text_pos_y])
+                                rxn_text_dimension_list.append([text_dim_w, text_dim_h])
+
+
                         curve = reactionGlyph.getCurve()
 
                         center_pt = []
@@ -496,10 +527,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         reaction_center_list.append(center_pt)
                         reaction_size_list.append(center_sz)
 
-                        reaction_id = reactionGlyph.getReactionId()
                         reaction = model_layout.getReaction(reaction_id)
                         rev = reaction.getReversible()
-                        reactionGlyph_id = reactionGlyph.getId()
                         reaction_id_list.append(reaction_id)
                         reactionGlyph_id_list.append(reactionGlyph_id)
                         reaction_rev_list.append(rev)
@@ -750,7 +779,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             except:
                                 text_position_list.append([])
                                 text_dimension_list.append([])
-                                                        
+                                    
                     #arbitrary shape
                     for i in range(numGenGlyphs):
                         genGlyph = layout.getGeneralGlyph(i)
@@ -881,6 +910,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 elif any(idList in sublist for sublist in textGlyph_comp_id_list):
                                     typeList = 'TEXTGLYPH'
                                 elif any(idList in sublist for sublist in textGlyph_spec_id_list):
+                                    typeList = 'TEXTGLYPH'
+                                elif any(idList in sublist for sublist in textGlyph_rxn_id_list):
                                     typeList = 'TEXTGLYPH'
                                 elif idList in specRefGlyph_id_list:
                                     typeList = 'SPECIESREFERENCEGLYPH'
@@ -1066,7 +1097,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 if math.isnan(text_font_size):
                                     text_font_size = 12.
                                 text_render.append([render_text_id,color_style.getTextLineColor(),
-								text_line_width, text_font_size,[text_anchor, text_vanchor]])
+								text_line_width, text_font_size,[text_anchor, text_vanchor],idList])
 
                             elif 'GENERALGLYPH' in typeList:
                                 render_gen_id = idList
@@ -1679,7 +1710,28 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     text_font_size = text_font_size*scale 
                     drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                     text_line_color, text_line_width, text_font_size, textAnchor = [text_anchor, text_vanchor])  
-                        
+
+                #reaction text
+                for i in range(len(textGlyph_rxn_id_list)):
+                    textGlyph_id = textGlyph_rxn_id_list[i][1]
+                    text_content = rxn_text_content_list[i]
+                    text_position = rxn_text_position_list[i]
+                    text_dimension = rxn_text_dimension_list[i]
+
+                    for k in range(len(text_render)):
+                        if textGlyph_id == text_render[k][5]:
+                            text_line_color = text_render[k][1]
+                            text_line_width = text_render[k][2]
+                            text_font_size = text_render[k][3]
+                            [text_anchor, text_vanchor] = text_render[k][4]
+
+                    text_position = [(text_position[0]-topLeftCorner[0])*scale,
+                    (text_position[1]-topLeftCorner[1])*scale]
+                    text_dimension = [text_dimension[0]*scale,text_dimension[1]*scale]
+                    text_line_width = text_line_width*scale
+                    text_font_size = text_font_size*scale 
+                    drawNetwork.addText(canvas, text_content, text_position, text_dimension,
+                    text_line_color, text_line_width, text_font_size, textAnchor = [text_anchor, text_vanchor])  
 
             else: # there is no layout information, assign position randomly and size as default
                 comp_id_list = Comps_ids

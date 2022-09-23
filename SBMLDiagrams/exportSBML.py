@@ -147,6 +147,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             df_LineEndingData = df[5]
         except:
             df_LineEndingData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_LineEndingData)
+        try:
+            df_ReactionTextData = df[6]
+        except:
+            df_ReactionTextData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_ReactionTextData)
+  
     except Exception as err:
         raise Exception (err)
 
@@ -156,6 +161,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
     numArbitraryTexts = len(df_TextData)
     numArbitraryShapes = len(df_ShapeData)
     numlineEndings = len(df_LineEndingData)
+    numReactionTexts = len(df_ReactionTextData)
 
     if numNodes != 0 or numArbitraryTexts != 0 or numArbitraryShapes != 0:
         numCompartments = len(df_CompartmentData)      
@@ -913,7 +919,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     mod_ls.setEnd(libsbml.Point(layoutns, mod_end_x, mod_end_y))
                 except:
                     mod_ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
-
+        #arbitrary texts
         for i in range(numArbitraryTexts):
             txt_content = str(df_TextData.iloc[i]['txt_content']) 
             try:
@@ -933,6 +939,30 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             width_text  = float(size_list[0])
             height_text = float(size_list[1])
             textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
+
+        for i in range(numReactionTexts):
+            rxn_id = str(df_ReactionTextData.iloc[i]['rxn_id'])
+            reactionG_id = "ReactionG_" + rxn_id
+            txt_id = str(df_ReactionTextData.iloc[i]['txt_id'])
+            txt_content = str(df_ReactionTextData.iloc[i]['txt_content']) 
+            try:
+                position_list = list(df_ReactionTextData.iloc[i]['txt_position'][1:-1].split(","))
+                size_list = list(df_ReactionTextData.iloc[i]['txt_size'][1:-1].split(","))
+            except:
+                position_list = df_ReactionTextData.iloc[i]['txt_position']
+                size_list = df_ReactionTextData.iloc[i]['txt_size'] 
+
+            textGlyph = layout.createTextGlyph()
+            textG_id = "TextG_" + rxn_id + '_idx_' + str(txt_id)
+            textGlyph.setId(textG_id)
+            textGlyph.setText(txt_content)
+            bb_id  = "bb_text_" + txt_content + '_idx_' + str(i)
+            pos_x_text  = float(position_list[0])
+            pos_y_text  = float(position_list[1])
+            width_text  = float(size_list[0])
+            height_text = float(size_list[1])
+            textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
+            textGlyph.setGraphicalObjectId(reactionG_id)
 
         #arbitrary shape
         for i in range(numArbitraryShapes):
@@ -1492,10 +1522,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 try: 
                     try:
                         font_color = list(df_TextData.iloc[i]['txt_font_color'][1:-1].split(","))
-                        text_anchor_list = list(df_NodeData.iloc[i]['txt_anchor'][1:-1].split(","))
+                        text_anchor_list = list(df_TextData.iloc[i]['txt_anchor'][1:-1].split(","))
                     except:
-                        font_color = df_NodeData.iloc[i]['txt_font_color']
-                        text_anchor_list = df_NodeData.iloc[i]['txt_anchor']
+                        font_color = df_TextData.iloc[i]['txt_font_color']
+                        text_anchor_list = df_TextData.iloc[i]['txt_anchor']
 
                     if len(font_color) == 4:
                         text_line_color_str =  '#%02x%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]),int(font_color[3]))
@@ -1511,7 +1541,46 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     [text_anchor, text_vanchor] = ['middle', 'middle']
 
                 color = rInfo.createColorDefinition()
-                color.setId("text_line_color" + "_" + text_content)
+                color.setId("text_line_color" + "_" + textG_id)
+                color.setColorValue(text_line_color_str)
+                
+                style = rInfo.createStyle("textStyle" + "_" + textG_id)
+                style.getGroup().setStroke("text_line_color" + "_" + textG_id)
+                style.getGroup().setStrokeWidth(text_line_width)
+                style.getGroup().setFontSize(libsbml.RelAbsVector(text_font_size,0))
+                style.getGroup().setTextAnchor(text_anchor)
+                style.getGroup().setVTextAnchor(text_vanchor)
+                style.addType("TEXTGLYPH")
+                style.addId(textG_id)
+
+        if numReactionTexts != 0:
+            for i in range(numReactionTexts):
+                rxn_id = df_ReactionTextData.iloc[i]['rxn_id']
+                txt_id = df_ReactionTextData.iloc[i]['txt_id']
+                textG_id = "TextG_" + rxn_id + '_idx_' + str(txt_id)
+                try: 
+                    try:
+                        font_color = list(df_ReactionTextData.iloc[i]['txt_font_color'][1:-1].split(","))
+                        text_anchor_list = list(df_ReactionTextData.iloc[i]['txt_anchor'][1:-1].split(","))
+                    except:
+                        font_color = df_ReactionTextData.iloc[i]['txt_font_color']
+                        text_anchor_list = df_ReactionTextData.iloc[i]['txt_anchor']
+
+                    if len(font_color) == 4:
+                        text_line_color_str =  '#%02x%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]),int(font_color[3]))
+                    elif len(font_color) == 3:
+                        text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
+                    text_line_width = float(df_ReactionTextData.iloc[i]['txt_line_width'])
+                    text_font_size = float(df_ReactionTextData.iloc[i]['txt_font_size'])
+                    [text_anchor, text_vanchor] = text_anchor_list
+                except: #text-only: set default species/node with white color
+                    text_line_color_str = '#000000ff'
+                    text_line_width = 1.
+                    text_font_size = 12.
+                    [text_anchor, text_vanchor] = ['middle', 'middle']
+
+                color = rInfo.createColorDefinition()
+                color.setId("text_line_color" + "_" + textG_id)
                 color.setColorValue(text_line_color_str)
                 
                 style = rInfo.createStyle("textStyle" + "_" + textG_id)

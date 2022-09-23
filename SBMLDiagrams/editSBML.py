@@ -81,7 +81,7 @@ def _setCompartmentPosition(df, id, position):
         position = [position.x, position.y]
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"position"] = position
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -118,7 +118,7 @@ def _setCompartmentSize(df, id, size):
         size = [size.x, size.y]
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"size"] = size
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -147,7 +147,7 @@ def _setCompartmentFillColor(df, id, fill_color, opacity):
     fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"fill_color"] = fill_color
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -177,7 +177,7 @@ def _setCompartmentBorderColor(df, id, border_color, opacity):
     border_color = _color_to_rgb(border_color, opacity)
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"border_color"] = border_color
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -203,7 +203,7 @@ def _setCompartmentBorderWidth(df, id, border_width):
         raise Exception("This is not a valid id.")  
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"border_width"] = border_width  
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -241,7 +241,7 @@ def _setCompartmentTextPosition(df, id, position):
         position = [position.x, position.y]
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"txt_position"] = position
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -278,7 +278,7 @@ def _setCompartmentTextSize(df, id, size):
         size = [size.x, size.y]
     for i in range(len(idx_list)):
         df_CompartmentData_temp.at[idx_list[i],"txt_size"] = size
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -305,7 +305,7 @@ def _setCompartmentTextContent(df, id, txt_content):
     else:
         df_CompartmentData_temp.at[idx_list[0],"txt_content"] = txt_content
 
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -335,7 +335,7 @@ def _setCompartmentTextFontColor(df, id, txt_font_color, opacity):
         txt_font_color = _color_to_rgb(txt_font_color, opacity)
         df_CompartmentData_temp.at[idx_list[0],"txt_font_color"] = txt_font_color
 
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -362,7 +362,7 @@ def _setCompartmentTextLineWidth(df, id, txt_line_width):
     else:
         df_CompartmentData_temp.at[idx_list[0],"txt_line_width"] = txt_line_width
 
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -390,7 +390,7 @@ def _setCompartmentTextFontSize(df, id, txt_font_size):
     else:
         df_CompartmentData_temp.at[idx_list[0],"txt_font_size"] = txt_font_size
 
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -422,7 +422,7 @@ def _setCompartmentTextAnchor(df, id, txt_anchor):
     if txt_anchor not in ['start', 'middle', 'end']:
         raise Exception("Please enter a valid horizontal anchor.")
 
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -456,7 +456,7 @@ def _setCompartmentTextVAnchor(df, id, txt_vanchor):
         raise Exception("Please enter a valid vertical anchor.")
 
 
-    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5])
+    df_temp = (df_CompartmentData_temp, df[1], df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -489,7 +489,7 @@ def _setFloatingBoundaryNode(df, id, floating_node, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
     
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -532,7 +532,7 @@ def _setNodePosition(df, id, position, alias = 0):
         df_NodeData_temp.at[idx_list[alias],"position"] = position
     else:
         raise Exception("Alias index is beyond number of alias.")
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -576,7 +576,7 @@ def _setNodeSize(df, id, size, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -710,7 +710,7 @@ def _setNodeShape(df, id, shape, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -770,7 +770,7 @@ def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -819,7 +819,7 @@ def _setNodeArbitraryPolygonShape(df, id, shape_name, shape_info, alias = 0):
 #     for i in range(len(idx_list)):
 #         df_NodeData_temp.at[idx_list[i],"shape_idx"] = shape_idx
 #         df_NodeData_temp.at[idx_list[i],"shape_type"] = 'ellipse'
-#     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+#     df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
 #     return df_temp
 
@@ -864,7 +864,7 @@ def _setNodeTextPosition(df, id, txt_position, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -925,7 +925,7 @@ def _setNodeTextPositionCenter(df, id, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -966,7 +966,7 @@ def _setNodeTextPositionLeftCenter(df, id, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1007,7 +1007,7 @@ def _setNodeTextPositionRightCenter(df, id, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1048,7 +1048,7 @@ def _setNodeTextPositionUpperCenter(df, id, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1089,7 +1089,7 @@ def _setNodeTextPositionLowerCenter(df, id, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1130,7 +1130,7 @@ def _setNodeTextPositionUpperLeft(df, id, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1171,7 +1171,7 @@ def _setNodeTextPositionUpperRight(df, id, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1211,7 +1211,7 @@ def _setNodeTextPositionLowerLeft(df, id, alias = 0):
         df_NodeData_temp.at[idx_list[i],"txt_size"] = node_size     
     else:
         raise Exception("Alias index is beyond number of alias.")
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
     return df_temp
 
 def _setNodeTextPositionLowerRight(df, id, alias = 0):
@@ -1251,7 +1251,7 @@ def _setNodeTextPositionLowerRight(df, id, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
 
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1295,7 +1295,7 @@ def _setNodeTextSize(df, id, txt_size, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
     
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1332,7 +1332,7 @@ def _setNodeFillColor(df, id, fill_color, opacity, alias = 0 ):
     else:
         raise Exception("Alias index is beyond number of alias.")
     
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1412,7 +1412,7 @@ def _setNodeFillLinearGradient(df, id, gradient_info, stop_info, alias = 0):
         else:
             raise Exception("Alias index is beyond number of alias.")
         
-        df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+        df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
         return df_temp
 
 def _setNodeFillRadialGradient(df, id, gradient_info, stop_info, alias = 0):
@@ -1499,7 +1499,7 @@ def _setNodeFillRadialGradient(df, id, gradient_info, stop_info, alias = 0):
         else:
             raise Exception("Alias index is beyond number of alias.")
         
-        df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+        df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
         return df_temp
 
@@ -1535,7 +1535,7 @@ def _setNodeBorderColor(df, id, border_color, opacity, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
     
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1568,7 +1568,7 @@ def _setNodeBorderWidth(df, id, border_width, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
     
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1601,7 +1601,7 @@ def _setNodeTextContent(df, id, txt_content, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
    
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1637,7 +1637,7 @@ def _setNodeTextFontColor(df, id, txt_font_color, opacity, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
     
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1670,7 +1670,7 @@ def _setNodeTextLineWidth(df, id, txt_line_width, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
    
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1704,7 +1704,7 @@ def _setNodeTextFontSize(df, id, txt_font_size, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
     
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1741,7 +1741,7 @@ def _setNodeTextAnchor(df, id, txt_anchor, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
    
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1779,7 +1779,7 @@ def _setNodeTextVAnchor(df, id, txt_vanchor, alias = 0):
     else:
         raise Exception("Alias index is beyond number of alias.")
    
-    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5])
+    df_temp = (df[0], df_NodeData_temp, df[2], df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1815,7 +1815,7 @@ def _setReactionCenterPosition(df, id, position):
         position = [position.x, position.y]
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"center_pos"] = position
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5], df[6])
     
     return df_temp
 
@@ -1861,7 +1861,7 @@ def _setReactionBezierHandles(df, id, position):
             raise Exception("Please enter a valid position type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"handles"] = position
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5], df[6])
     
     return df_temp
 
@@ -1890,7 +1890,7 @@ def _setReactionFillColor(df, id, fill_color, opacity):
     fill_color = _color_to_rgb(fill_color, opacity)
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"stroke_color"] = fill_color
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5], df[6])
     
     return df_temp
 
@@ -1916,7 +1916,7 @@ def _setReactionLineThickness(df, id, line_thickness):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"line_thickness"] = line_thickness
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1942,7 +1942,7 @@ def _setBezierReactionType(df, id, bezier):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"bezier"] = bezier
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -1974,7 +1974,7 @@ def _setReactionDashStyle(df, id, dash):
         raise Exception("Please enter a valid dash type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"rxn_dash"] = dash
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5])
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5], df[6])
 
     return df_temp
 
@@ -2036,7 +2036,7 @@ def _setReactionArrowHeadPosition(df, id, position):
     else:
         raise Exception("This is not a valid id.")
 
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp, df[6])
 
     return df_temp
 
@@ -2096,7 +2096,7 @@ def _setReactionArrowHeadSize(df, id, size):
     else:
         raise Exception("This is not a valid id.")
 
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp, df[6])
 
     return df_temp
 
@@ -2132,7 +2132,7 @@ def _setReactionArrowHeadSize(df, id, size):
 #         size = [size.x, size.y]
 #     for i in range(len(idx_list)):
 #         df_ReactionData_temp.at[idx_list[i],"arrow_head_size"] = size
-#     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5])
+#     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5], df[6])
 #     # df_ReactionData_temp = df[2].copy()
 #     # for i in range(len(df_ReactionData_temp)):
 #     #     df_ReactionData_temp.at[i,"arrow_head_size"] = size
@@ -2191,7 +2191,7 @@ def _setReactionArrowHeadFillColor(df, id, fill_color, opacity = 1.):
     else:
         raise Exception("This is not a valid id.")
 
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp, df[6])
 
     return df_temp
 
@@ -2291,7 +2291,7 @@ def _setReactionArrowHeadShape(df, id, shape_type_list, shape_info_list):
     else:
         raise Exception("This is not a valid id.")
 
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp, df[6])
 
     return df_temp
 
@@ -2355,7 +2355,7 @@ def _setReactionModifierHeadPosition(df, id, position, mod_idx = 0):
     else:
         raise Exception("This is not a valid id.")
 
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp, df[6])
 
     return df_temp
 
@@ -2417,7 +2417,7 @@ def _setReactionModifierHeadSize(df, id, size, mod_idx = 0):
     else:
         raise Exception("This is not a valid id.")
 
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp, df[6])
 
     return df_temp
 
@@ -2473,7 +2473,7 @@ def _setReactionModifierHeadFillColor(df, id, fill_color, opacity = 1., mod_idx 
     else:
         raise Exception("This is not a valid id.")
 
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp, df[6])
 
     return df_temp
 
@@ -2574,7 +2574,7 @@ def _setReactionModifierHeadShape(df, id, shape_type_list, shape_info_list, mod_
     else:
         raise Exception("This is not a valid id.")
 
-    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp)
+    df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df_LineEndingData_temp, df[6])
 
     return df_temp
 
@@ -2653,7 +2653,7 @@ def _setTextContent(df, txt_id, txt_content):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_content"] = txt_content
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5], df[6])
 
     return df_temp
 
@@ -2690,7 +2690,7 @@ def _setTextPosition(df, txt_id, txt_position):
         txt_position = [txt_position.x, txt_position.y]
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_position"] = txt_position
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5], df[6])
 
     return df_temp
 
@@ -2727,7 +2727,7 @@ def _setTextSize(df, txt_id, txt_size):
         txt_size = [txt_size.x, txt_size.y]
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_size"] = txt_size
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5], df[6])
 
     return df_temp
 
@@ -2756,7 +2756,7 @@ def _setTextFontColor(df, txt_id, txt_font_color, opacity):
     txt_font_color = _color_to_rgb(txt_font_color, opacity)
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_font_color"] = txt_font_color
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5], df[6])
 
     return df_temp
 
@@ -2782,7 +2782,7 @@ def _setTextLineWidth(df, txt_id, txt_line_width):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_line_width"] = txt_line_width
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5], df[6])
 
     return df_temp
 
@@ -2809,7 +2809,7 @@ def _setTextFontSize(df, txt_id, txt_font_size):
         raise Exception("This is not a valid id.")
     for i in range(len(idx_list)):
         df_TextData_temp.at[idx_list[i],"txt_font_size"] = txt_font_size
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5], df[6])
 
     return df_temp
 
@@ -2880,7 +2880,7 @@ def _addText(df, txt_id, txt_content, txt_position, txt_size,
         df_TextData_temp = pd.concat([df_TextData_temp,\
             pd.DataFrame(text_row_dct)], ignore_index=True)
 
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5], df[6])
     return df_temp
 
 
@@ -2897,7 +2897,7 @@ def _removeText(df, txt_id):
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     df_TextData_temp = df_TextData_temp.drop(idx_list)
-    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5])
+    df_temp = (df[0], df[1], df[2], df_TextData_temp, df[4], df[5], df[6])
 
     return df_temp
 
@@ -2966,7 +2966,7 @@ def _addRectangle(df, shape_name, position, size, fill_color=[255,255,255], fill
         df_ShapeData_temp = pd.concat([df_ShapeData_temp,\
             pd.DataFrame(shape_row_dct)], ignore_index=True)
 
-    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp, df[5])
+    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp, df[5], df[6])
     return df_temp
 
 def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill_opacity = 1., border_color = [0,0,0], 
@@ -3034,7 +3034,7 @@ def _addEllipse(df, shape_name, position, size, fill_color = [255,255,255], fill
         df_ShapeData_temp = pd.concat([df_ShapeData_temp,\
             pd.DataFrame(shape_row_dct)], ignore_index=True)
 
-    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp, df[5])
+    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp, df[5], df[6])
     return df_temp
 
 def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,255], fill_opacity = 1., 
@@ -3105,7 +3105,7 @@ def _addPolygon(df, shape_name, shape_info, position, size, fill_color=[255,255,
         df_ShapeData_temp = pd.concat([df_ShapeData_temp,\
             pd.DataFrame(shape_row_dct)], ignore_index=True)
 
-    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp, df[5])
+    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp, df[5], df[6])
     return df_temp
 
 
@@ -3122,6 +3122,6 @@ def _removeShape(df, shape_name_str):
     if len(idx_list) == 0:
         raise Exception("This is not a valid id.")
     df_ShapeData_temp = df_ShapeData_temp.drop(idx_list)
-    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp, df[5])
+    df_temp = (df[0], df[1], df[2], df[3], df_ShapeData_temp, df[5], df[6])
 
     return df_temp
