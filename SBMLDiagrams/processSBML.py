@@ -40,6 +40,8 @@ ORIGINALIDX = 'original_idx'
 FLOATINGNODE = 'floating_node'
 CONCENTRATION = 'concentration'
 SHAPEIDX = 'shape_idx'
+RXNID = 'rxn_id'
+TXTID = 'txt_id'
 TXTCONTENT = 'txt_content'
 TXTPOSITION = 'txt_position'
 TXTSIZE = 'txt_size'
@@ -68,6 +70,7 @@ MODIFIERSLINEENDING = 'modifiers_lineending'
 SRCLINEENDPOS = 'src_lineend_position'
 TGTLINEENDPOS = 'tgt_lineend_position'
 MODLINEENDPOS = 'mod_lineend_position'
+CENTERSIZE = 'center_size'
 COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
     POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
     TXTPOSITION, TXTSIZE, TXTCONTENT, \
@@ -79,12 +82,14 @@ COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
 COLUMN_NAME_df_ReactionData = [NETIDX, IDX, ID, SOURCES, TARGETS, RATELAW, MODIFIERS, \
     STROKECOLOR, LINETHICKNESS, CENTERPOS, HANDLES, BEZIER, ARROWHEADSIZE, RXNDASH, RXNREV, 
     FILLCOLOR, SOURCESLINEENDING, TARGETSLINEENDING, MODIFIERSLINEENDING, 
-    SRCLINEENDPOS, TGTLINEENDPOS, MODLINEENDPOS]
+    SRCLINEENDPOS, TGTLINEENDPOS, MODLINEENDPOS, CENTERSIZE, SHAPENAME, SHAPETYPE, SHAPEINFO]
 COLUMN_NAME_df_TextData = [TXTCONTENT, TXTPOSITION, TXTSIZE, 
     TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, ID, TXTANCHOR]
 COLUMN_NAME_df_ShapeData = [SHAPENAME, POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
                         SHAPETYPE, SHAPEINFO]
 COLUMN_NAME_df_LineEndingData = [ID, POSITION, SIZE, FILLCOLOR, SHAPETYPE, SHAPEINFO]
+COLUMN_NAME_df_ReactionTextData = [RXNID, TXTID, TXTCONTENT, TXTPOSITION, TXTSIZE, 
+    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, TXTANCHOR]
 # #This is not supported by SBML
 # COLUMN_NAME_df_text = [TXTCONTENT, TXTPOSITION, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE]
 
@@ -95,6 +100,7 @@ color_data = {"decimal_rgb": ['[240,248,255]', '[250,235,215]', '[0,255,255]', '
     "html_name":['AliceBlue', 'AntiqueWhite', 'Aqua', 'Aquamarine', 'Azure', 'Beige', 'Bisque', 'Black', 'BlanchedAlmond', 'Blue', 'BlueViolet', 'Brown', 'BurlyWood', 'CadetBlue', 'Chartreuse', 'Chocolate', 'Coral', 'CornflowerBlue', 'Cornsilk', 'Crimson', 'Cyan', 'DarkBlue', 'DarkCyan', 'DarkGoldenrod', 'DarkGray', 'DarkGreen', 'DarkKhaki', 'DarkMagenta', 'DarkOliveGreen', 'DarkOrange', 'DarkOrchid', 'DarkRed', 'DarkSalmon', 'DarkSeaGreen', 'DarkSlateBlue', 'DarkSlateGray', 'DarkTurquoise', 'DarkViolet', 'DeepPink', 'DeepSkyBlue', 'DimGray', 'DodgerBlue', 'FireBrick', 'FloralWhite', 'ForestGreen', 'Fuchsia', 'Gainsboro', 'GhostWhite', 'Gold', 'Goldenrod', 'Gray', 'Green', 'GreenYellow', 'Honeydew', 'HotPink', 'IndianRed', 'Indigo', 'Ivory', 'Khaki', 'Lavender', 'LavenderBlush', 'LawnGreen', 'LemonChiffon', 'LightBlue', 'LightCoral', 'LightCyan', 'LightGoldenrodYellow', 'LightGreen', 'LightGrey', 'LightPink', 'LightSalmon', 'LightSeaGreen', 'LightSkyBlue', 'LightSlateGray', 'LightSteelBlue', 'LightYellow', 'Lime', 'LimeGreen', 'Linen', 'Magenta', 'Maroon', 'MediumAquamarine', 'MediumBlue', 'MediumOrchid', 'MediumPurple', 'MediumSeaGreen', 'MediumSlateBlue', 'MediumSpringGreen', 'MediumTurquoise', 'MediumVioletRed', 'MidnightBlue', 'MintCream', 'MistyRose', 'Moccasin', 'NavajoWhite', 'Navy', 'OldLace', 'Olive', 'OliveDrab', 'Orange', 'OrangeRed', 'Orchid', 'PaleGoldenrod', 'PaleGreen', 'PaleTurquoise', 'PaleVioletRed', 'PapayaWhip', 'PeachPuff', 'Peru', 'Pink', 'Plum', 'PowderBlue', 'Purple', 'Red', 'RosyBrown', 'RoyalBlue', 'SaddleBrown', 'Salmon', 'SandyBrown', 'SeaGreen', 'Seashell', 'Sienna', 'Silver', 'SkyBlue', 'SlateBlue', 'SlateGray', 'Snow', 'SpringGreen', 'SteelBlue', 'Tan', 'Teal', 'Thistle', 'Tomato', 'Turquoise', 'Violet', 'Wheat', 'White', 'WhiteSmoke', 'Yellow', 'YellowGreen'],\
     "hex_string":['#F0F8FF', '#FAEBD7', '#00FFFF', '#7FFFD4', '#F0FFFF', '#F5F5DC', '#FFE4C4', '#000000', '#FFEBCD', '#0000FF', '#8A2BE2', '#A52A2A', '#DEB887', '#5F9EA0', '#7FFF00', '#D2691E', '#FF7F50', '#6495ED', '#FFF8DC', '#DC143C', '#00FFFF', '#00008B', '#008B8B', '#B8860B', '#A9A9A9', '#006400', '#BDB76B', '#8B008B', '#556B2F', '#FF8C00', '#9932CC', '#8B0000', '#E9967A', '#8FBC8F', '#483D8B', '#2F4F4F', '#00CED1', '#9400D3', '#FF1493', '#00BFFF', '#696969', '#1E90FF', '#B22222', '#FFFAF0', '#228B22', '#FF00FF', '#DCDCDC', '#F8F8FF', '#FFD700', '#DAA520', '#808080', '#008000', '#ADFF2F', '#F0FFF0', '#FF69B4', '#CD5C5C', '#4B0082', '#FFFFF0', '#F0E68C', '#E6E6FA', '#FFF0F5', '#7CFC00', '#FFFACD', '#ADD8E6', '#F08080', '#E0FFFF', '#FAFAD2', '#90EE90', '#D3D3D3', '#FFB6C1', '#FFA07A', '#20B2AA', '#87CEFA', '#778899', '#B0C4DE', '#FFFFE0', '#00FF00', '#32CD32', '#FAF0E6', '#FF00FF', '#800000', '#66CDAA', '#0000CD', '#BA55D3', '#9370DB', '#3CB371', '#7B68EE', '#00FA9A', '#48D1CC', '#C71585', '#191970', '#F5FFFA', '#FFE4E1', '#FFE4B5', '#FFDEAD', '#000080', '#FDF5E6', '#808000', '#6B8E23', '#FFA500', '#FF4500', '#DA70D6', '#EEE8AA', '#98FB98', '#AFEEEE', '#DB7093', '#FFEFD5', '#FFDAB9', '#CD853F', '#FFC0CB', '#DDA0DD', '#B0E0E6', '#800080', '#FF0000', '#BC8F8F', '#4169E1', '#8B4513', '#FA8072', '#F4A460', '#2E8B57', '#FFF5EE', '#A0522D', '#C0C0C0', '#87CEEB', '#6A5ACD', '#708090', '#FFFAFA', '#00FF7F', '#4682B4', '#D2B48C', '#008080', '#D8BFD8', '#FF6347', '#40E0D0', '#EE82EE', '#F5DEB3', '#FFFFFF', '#F5F5F5', '#FFFF00', '#9ACD32']}
 df_color = pd.DataFrame(color_data)
+df_color["html_name"] = df_color["html_name"].str.lower()
 
 def _rgb_to_color(rgb):
     """
@@ -143,6 +149,7 @@ def _rgb_to_color(rgb):
 
     return color
 
+
 def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [1000, 1000]): 
     """
     Save the information of an SBML file to a set of dataframe.
@@ -179,6 +186,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     df_TextData = pd.DataFrame(columns = COLUMN_NAME_df_TextData)
     df_ShapeData = pd.DataFrame(columns = COLUMN_NAME_df_ShapeData)
     df_LineEndingData = pd.DataFrame(columns = COLUMN_NAME_df_LineEndingData)
+    df_ReactionTextData = pd.DataFrame(columns = COLUMN_NAME_df_ReactionTextData)
 
     comp_id_list = []
     compGlyph_id_list = []
@@ -200,6 +208,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     specGlyph_specRefGlyph_id_list = []
     textGlyph_comp_id_list = []
     textGlyph_spec_id_list = []
+    textGlyph_rxn_id_list = []
+    rxn_text_position_list = []
+    rxn_text_dimension_list = []
+    rxn_text_content_list = []
     textGlyph_id_list = []
     text_content_list = []
     text_position_list = []
@@ -227,6 +239,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     reaction_line_width = 3.0
     reaction_arrow_head_size = [reaction_line_width*5, reaction_line_width*4]
     reaction_dash = [] 
+    reaction_shape_name = ''
+    reaction_shape_type = ''
+    reaction_shape_info = []
     text_content = ''
     text_line_color = [0, 0, 0, 255]
     text_line_width = 1.
@@ -312,6 +327,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 reactionGlyph_id_list = []
                 reaction_rev_list = []
                 reaction_center_list = []
+                reaction_size_list = []
                 kinetics_list = []
                 #rct_specGlyph_list = []
                 #prd_specGlyph_list = []
@@ -326,11 +342,38 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 
                 for i in range(numReactionGlyphs):
                     reactionGlyph = layout.getReactionGlyph(i)
+                    reaction_id = reactionGlyph.getReactionId()
+                    reactionGlyph_id = reactionGlyph.getId()
+
+                    for j in range(numTextGlyphs):
+                        textGlyph_temp = layout.getTextGlyph(j)
+                        # if textGlyph_temp.isSetOriginOfTextId():
+                        #     temp_specGlyph_id = textGlyph_temp.getOriginOfTextId()
+                        if textGlyph_temp.isSetGraphicalObjectId():
+                            temp_rxnGlyph_id = textGlyph_temp.getGraphicalObjectId()
+                        else:
+                            temp_rxnGlyph_id = ''
+                        if temp_rxnGlyph_id == reactionGlyph_id:
+                            textGlyph = textGlyph_temp
+                            text_content = textGlyph.getText()
+                            temp_id = textGlyph.getId()
+                            textGlyph_rxn_id_list.append([reactionGlyph_id, temp_id])
+                            text_boundingbox = textGlyph.getBoundingBox()
+                            text_pos_x = text_boundingbox.getX()
+                            text_pos_y = text_boundingbox.getY()   
+                            text_dim_w = text_boundingbox.getWidth()
+                            text_dim_h = text_boundingbox.getHeight()                       
+                            rxn_text_content_list.append(text_content)
+                            rxn_text_position_list.append([text_pos_x, text_pos_y])
+                            rxn_text_dimension_list.append([text_dim_w, text_dim_h])
+
                     curve = reactionGlyph.getCurve()
                     # listOfCurveSegments = curve.getListOfCurveSegments()
                     # for j in range(len(listOfCurveSegments)):
                     #     center_x = curve.getCurveSegment(j).getStart().getXOffset()
                     #     center_y = curve.getCurveSegment(j).getStart().getYOffset()
+                    center_pt = []
+                    center_sz = []
                     for segment in curve.getListOfCurveSegments():
                         short_line_start_x = segment.getStart().getXOffset()
                         short_line_start_y = segment.getStart().getYOffset()
@@ -342,9 +385,25 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             center_pt = short_line_start
                         else: #the centroid is a short line
                             center_pt = [.5*(short_line_start_x+short_line_end_x),.5*(short_line_start_y+short_line_end_y)]
-                        reaction_center_list.append(center_pt)
-                    reaction_id = reactionGlyph.getReactionId()
-                    reactionGlyph_id = reactionGlyph.getId()
+
+                    try:
+                        rxn_boundingbox = reactionGlyph.getBoundingBox()
+                        width = rxn_boundingbox.getWidth()
+                        height = rxn_boundingbox.getHeight()
+                        pos_x = rxn_boundingbox.getX()
+                        pos_y = rxn_boundingbox.getY()
+                        if center_pt == []:
+                            if pos_x == 0 and pos_y == 0 and width == 0 and height == 0: #LinearChain.xml
+                                center_pt = []
+                            else:
+                                center_pt = [pos_x+.5*width, pos_y+.5*height]
+                        center_sz = [width, height]
+                    except:
+                        pass
+
+                    reaction_center_list.append(center_pt)
+                    reaction_size_list.append(center_sz)
+
                     reaction_id_list.append(reaction_id)
                     reactionGlyph_id_list.append(reactionGlyph_id)
                     reaction = model_layout.getReaction(reaction_id)
@@ -450,6 +509,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             center_handle_candidate = []
                             spec_handle = []
 
+                        #print(spec_lineend_pos)
 
                         role = specRefGlyph.getRoleString()
                         specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -558,6 +618,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 #print(mod_specGlyph_list)
                 # print(specRefGlyph_id_list)
                 # print(specGlyph_specRefGlyph_id_list)
+                #print(rct_specGlyph_handle_list)
 
                 #orphan nodes
                 for i in range(numSpecGlyphs):
@@ -797,10 +858,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 typeList = 'TEXTGLYPH'
                             elif any(idList in sublist for sublist in textGlyph_spec_id_list):
                                 typeList = 'TEXTGLYPH'
+                            elif any(idList in sublist for sublist in textGlyph_rxn_id_list):
+                                typeList = 'TEXTGLYPH'
                             elif idList in specRefGlyph_id_list:
                                 typeList = 'SPECIESREFERENCEGLYPH'
                             # else:
                             #     print(idList)
+
                         if 'COMPARTMENTGLYPH' in typeList:
                             #change layout id to id for later to build the list of render
                             render_comp_id = idList
@@ -808,21 +872,37 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if compGlyph_id_list[k] == idList:
                                     render_comp_id = comp_id_list[k]  
                             if idList == 'CompG__compartment_default_':
-                                render_comp_id = '_compartment_default_'                         
-                            #print(render_comp_id)
+                                render_comp_id = '_compartment_default_'                            
 
-                            try:
-                                comp_fill_color = hex_to_rgb(group.getFill())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getFill():
-                                        comp_fill_color = hex_to_rgb(color_list[k][1])
-                            try:
-                                comp_border_color = hex_to_rgb(group.getStroke())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getStroke():
-                                        comp_border_color = hex_to_rgb(color_list[k][1])
+                            fill_color = group.getFill()
+                            if fill_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                comp_fill_color = rgb                 
+                            else:
+                                try:
+                                    comp_fill_color = hex_to_rgb(fill_color)                          
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == fill_color:
+                                            comp_fill_color = hex_to_rgb(color_list[k][1])
+
+                            border_color = group.getStroke()
+                            if border_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                comp_border_color = rgb 
+                            else:
+                                try:
+                                    comp_border_color = hex_to_rgb(border_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == border_color:
+                                            comp_border_color = hex_to_rgb(color_list[k][1])
         
                             comp_border_width = group.getStrokeWidth()
 
@@ -836,19 +916,37 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if spec_specGlyph_id_list[k][1] == idList:
                                     render_spec_id = spec_specGlyph_id_list[k][0] 
                                     spec_dimension = spec_dimension_list[k]
-                            try:#some spec fill color is defined as hex string directly
-                                spec_fill_color = hex_to_rgb(group.getFill())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getFill():
-                                        spec_fill_color = hex_to_rgb(color_list[k][1])
-                            try:
-                                spec_border_color = hex_to_rgb(group.getStroke())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getStroke():
-                                        spec_border_color = hex_to_rgb(color_list[k][1])
-                            
+
+                            fill_color = group.getFill()
+                            if fill_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                spec_fill_color = rgb  
+                            else:
+                                try:#some spec fill color is defined as hex string directly
+                                    spec_fill_color = hex_to_rgb(fill_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == fill_color:
+                                            spec_fill_color = hex_to_rgb(color_list[k][1])
+
+                            border_color = group.getStroke()
+                            if border_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                spec_border_color = rgb 
+                            else:
+                                try:
+                                    spec_border_color = hex_to_rgb(border_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == border_color:
+                                            spec_border_color = hex_to_rgb(color_list[k][1])
+                                
                             for k in range(len(gradient_list)):
                                 if gradient_list[k][0] == group.getFill():
                                     spec_fill_color = gradient_list[k][1:]
@@ -937,25 +1035,57 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 reaction_num_dash = group.getNumDashes()
                                 for num in range(reaction_num_dash):
                                     reaction_dash.append(group.getDashByIndex(num))
+
+                            #print("reaction:", reaction_dash)
                             for k in range(len(id_arrowHeadSize)):
                                 if temp_id == id_arrowHeadSize[k][0]:
                                     arrowHeadSize = id_arrowHeadSize[k][1]
+
+                            fill_color = group.getFill()
+                            if fill_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                reaction_line_fill = rgb 
                             try:
-                                reaction_line_fill = hex_to_rgb(group.getFill())
+                                reaction_line_fill = hex_to_rgb(fill_color)
                             except:
                                 for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getFill():
+                                    if color_list[k][0] == fill_color:
                                         reaction_line_fill = hex_to_rgb(color_list[k][1])
-                            try:
-                                reaction_line_color = hex_to_rgb(group.getStroke())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getStroke():
-                                        reaction_line_color = hex_to_rgb(color_list[k][1])
-                       
+
+                            stroke_color = group.getStroke()
+                            if stroke_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == stroke_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                reaction_line_color = rgb 
+                            else:
+                                try:
+                                    reaction_line_color = hex_to_rgb(stroke_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == stroke_color:
+                                            reaction_line_color = hex_to_rgb(color_list[k][1])
+                            
                             reaction_line_width = group.getStrokeWidth()
+
+                            shape_type = ""
+                            shape_name = ""
+                            shapeInfo = []
+                            element = group.getElement(0)
+                            if element != None:
+                                shape_type = element.getElementName()
+                                if shape_type == "rectangle":
+                                    shape_name = "rectangle"
+                                elif shape_type == "ellipse": #ellipse
+                                    shape_name = "ellipse"
+
                             rxn_render.append([render_rxn_id, reaction_line_color, reaction_line_width, 
-                            arrowHeadSize, reaction_dash, reaction_line_fill])
+                            arrowHeadSize, reaction_dash, reaction_line_fill, shape_name, shape_type, shape_info])
+                        
                         elif 'TEXTGLYPH' in typeList:
                             render_text_id = idList
                             for k in range(len(textGlyph_comp_id_list)):    
@@ -964,10 +1094,26 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             for k in range(len(textGlyph_spec_id_list)):    
                                 if textGlyph_spec_id_list[k][1] == idList:
                                     render_text_id = textGlyph_spec_id_list[k][0]
-                                    
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    text_line_color = hex_to_rgb(color_list[k][1])
+                            for k in range(len(textGlyph_rxn_id_list)):    
+                                if textGlyph_rxn_id_list[k][1] == idList:
+                                    render_text_id = textGlyph_rxn_id_list[k][0]
+
+                            text_color = group.getStroke()
+                            if text_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == text_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                text_line_color = rgb   
+                            else:  
+                                try:
+                                    text_line_color = hex_to_rgb(text_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == text_color:
+                                            text_line_color = hex_to_rgb(color_list[k][1])
+
+                            
                             text_line_width = group.getStrokeWidth()
                             if group.isSetTextAnchor():
                                 text_anchor = group.getTextAnchorAsString()
@@ -979,22 +1125,39 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             if math.isnan(text_font_size):
                                 text_font_size = 12.
                             text_render.append([render_text_id,text_line_color,text_line_width,
-							text_font_size, [text_anchor, text_vanchor]])
-                            #print(render_text_id)
+							text_font_size, [text_anchor, text_vanchor], idList])
+                            #print(text_render)
                         elif 'GENERALGLYPH' in typeList:
                             render_gen_id = idList
-                            try:
-                                gen_fill_color = hex_to_rgb(group.getFill())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getFill():
-                                        gen_fill_color = hex_to_rgb(color_list[k][1])
-                            try:
-                                gen_border_color = hex_to_rgb(group.getStroke())
-                            except:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getStroke():
-                                        gen_border_color = hex_to_rgb(color_list[k][1])
+                            fill_color = group.getFill()
+                            if fill_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                gen_fill_color = rgb 
+                            else:
+                                try:
+                                    gen_fill_color = hex_to_rgb(fill_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == fill_color:
+                                            gen_fill_color = hex_to_rgb(color_list[k][1])
+
+                            border_color = group.getStroke()
+                            if border_color.lower() in df_color.values:
+                                index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                                rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                                rgb_pre = rgb_pre[1:-1].split(",")
+                                rgb = [int(x) for x in rgb_pre]
+                                gen_border_color = rgb  
+                            else:
+                                try:
+                                    gen_border_color = hex_to_rgb(border_color)
+                                except:
+                                    for k in range(len(color_list)):
+                                        if color_list[k][0] == border_color:
+                                            gen_border_color = hex_to_rgb(color_list[k][1])
                  
                             gen_border_width = group.getStrokeWidth()
                             gen_shape_type = ''
@@ -1018,8 +1181,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             #     if specGlyph_specRefGlyph_id_list[k][1] == idList:
                             #         render_specRefGlyph_id = specGlyph_specRefGlyph_id_list[k][0] 
                             endHead = group.getEndHead()
-                            specRefGlyph_render.append([render_specRefGlyph_id, endHead])
 
+                            reaction_dash = []
+                            if group.isSetDashArray():
+                                reaction_num_dash = group.getNumDashes()
+                                for num in range(reaction_num_dash):
+                                    reaction_dash.append(group.getDashByIndex(num))
+                        
+                            specRefGlyph_render.append([render_specRefGlyph_id, endHead, reaction_dash])
+
+            #print(specRefGlyph_render)
             
             #global render 
             try: 
@@ -1155,18 +1326,37 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
                     if 'COMPARTMENTGLYPH' in typeList:
                         render_comp_id = idList
-                        try:
-                            comp_fill_color = hex_to_rgb(group.getFill())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getFill():
-                                    comp_fill_color = hex_to_rgb(color_list[k][1])
-                        try:
-                            comp_border_color = hex_to_rgb(group.getStroke())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    comp_border_color = hex_to_rgb(color_list[k][1])
+
+                        fill_color = group.getFill()
+                        if fill_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            comp_fill_color = rgb                 
+                        else:
+                            try:
+                                comp_fill_color = hex_to_rgb(fill_color)                          
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == fill_color:
+                                        comp_fill_color = hex_to_rgb(color_list[k][1])
+
+                        border_color = group.getStroke()
+                        if border_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            comp_border_color = rgb 
+                        else:
+                            try:
+                                comp_border_color = hex_to_rgb(border_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == border_color:
+                                        comp_border_color = hex_to_rgb(color_list[k][1])
+    
     
                         comp_border_width = group.getStrokeWidth()
 
@@ -1174,18 +1364,36 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     
                     elif 'SPECIESGLYPH' in typeList:
                         render_spec_id = idList
-                        try:#some spec fill color is defined as hex string directly
-                            spec_fill_color = hex_to_rgb(group.getFill())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getFill():
-                                    spec_fill_color = hex_to_rgb(color_list[k][1])
-                        try:
-                            spec_border_color = hex_to_rgb(group.getStroke())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    spec_border_color = hex_to_rgb(color_list[k][1])
+                        fill_color = group.getFill()
+                        if fill_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            spec_fill_color = rgb  
+                        else:
+                            try:#some spec fill color is defined as hex string directly
+                                spec_fill_color = hex_to_rgb(fill_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == fill_color:
+                                        spec_fill_color = hex_to_rgb(color_list[k][1])
+
+                        border_color = group.getStroke()
+                        if border_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            spec_border_color = rgb 
+                        else:
+                            try:
+                                spec_border_color = hex_to_rgb(border_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == border_color:
+                                        spec_border_color = hex_to_rgb(color_list[k][1])
+                            
                         
                         for k in range(len(gradient_list)):
                             if gradient_list[k][0] == group.getFill():
@@ -1270,28 +1478,68 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             reaction_num_dash = group.getNumDashes()
                             for num in range(reaction_num_dash):
                                 reaction_dash.append(group.getDashByIndex(num))
+                
+                        fill_color = group.getFill()
+                        if fill_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            reaction_line_fill = rgb 
                         try:
-                            reaction_line_fill = hex_to_rgb(group.getFill())
+                            reaction_line_fill = hex_to_rgb(fill_color)
                         except:
                             for k in range(len(color_list)):
-                                if color_list[k][0] == group.getFill():
+                                if color_list[k][0] == fill_color:
                                     reaction_line_fill = hex_to_rgb(color_list[k][1])
-                        try:
-                            reaction_line_color = hex_to_rgb(group.getStroke())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    reaction_line_color = hex_to_rgb(color_list[k][1])
-                    
+
+                        stroke_color = group.getStroke()
+                        if stroke_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == stroke_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            reaction_line_color = rgb 
+                        else:
+                            try:
+                                reaction_line_color = hex_to_rgb(stroke_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == stroke_color:
+                                        reaction_line_color = hex_to_rgb(color_list[k][1])
                         reaction_line_width = group.getStrokeWidth()
+                        shape_type = ""
+                        shape_name = ""
+                        shapeInfo = []
+                        element = group.getElement(0)
+                        if element != None:
+                            shape_type = element.getElementName()
+                            if shape_type == "rectangle":
+                                shape_name = "rectangle"
+                            elif shape_type == "ellipse": #ellipse
+                                shape_name = "ellipse"
+
                         rxn_render.append([render_rxn_id, reaction_line_color, reaction_line_width, 
-                        reaction_arrow_head_size, reaction_dash, reaction_line_fill])
+                        arrowHeadSize, reaction_dash, reaction_line_fill, shape_name, shape_type, shape_info])
+
                     elif 'TEXTGLYPH' in typeList:
                         render_text_id = idList
            
-                        for k in range(len(color_list)):
-                            if color_list[k][0] == group.getStroke():
-                                text_line_color = hex_to_rgb(color_list[k][1])
+                        text_color = group.getStroke()
+                        if text_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == text_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            text_line_color = rgb   
+                        else:  
+                            try:
+                                text_line_color = hex_to_rgb(text_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == text_color:
+                                        text_line_color = hex_to_rgb(color_list[k][1])
+
                         text_line_width = group.getStrokeWidth()
                         if group.isSetTextAnchor():
                             text_anchor = group.getTextAnchorAsString()
@@ -1303,22 +1551,40 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         if math.isnan(text_font_size):
                             text_font_size = 12.
                         text_render.append([render_text_id,text_line_color,text_line_width,
-                        text_font_size, [text_anchor, text_vanchor]])
+                        text_font_size, [text_anchor, text_vanchor], idList])
                         #print(render_text_id)
                     elif 'GENERALGLYPH' in typeList:
                         render_gen_id = idList
-                        try:
-                            gen_fill_color = hex_to_rgb(group.getFill())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getFill():
-                                    gen_fill_color = hex_to_rgb(color_list[k][1])
-                        try:
-                            gen_border_color = hex_to_rgb(group.getStroke())
-                        except:
-                            for k in range(len(color_list)):
-                                if color_list[k][0] == group.getStroke():
-                                    gen_border_color = hex_to_rgb(color_list[k][1])
+
+                        fill_color = group.getFill()
+                        if fill_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == fill_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            gen_fill_color = rgb 
+                        else:
+                            try:
+                                gen_fill_color = hex_to_rgb(fill_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == fill_color:
+                                        gen_fill_color = hex_to_rgb(color_list[k][1])
+
+                        border_color = group.getStroke()
+                        if border_color.lower() in df_color.values:
+                            index = df_color.index[df_color["html_name"] == border_color.lower()].tolist()[0] #row index 
+                            rgb_pre = df_color.iloc[index]["decimal_rgb"]
+                            rgb_pre = rgb_pre[1:-1].split(",")
+                            rgb = [int(x) for x in rgb_pre]
+                            gen_border_color = rgb  
+                        else:
+                            try:
+                                gen_border_color = hex_to_rgb(border_color)
+                            except:
+                                for k in range(len(color_list)):
+                                    if color_list[k][0] == border_color:
+                                        gen_border_color = hex_to_rgb(color_list[k][1])
                 
                         gen_border_width = group.getStrokeWidth()
                         gen_shape_type = ''
@@ -1797,12 +2063,13 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 temp_id = reaction_id_list[i]
                 rxn_rev = reaction_rev_list[i]
                 kinetics = kinetics_list[i]
-                #rct_num = len(rct_specGlyph_handle_list[i])
-                #prd_num = len(prd_specGlyph_handle_list[i])
-                #mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
-                rct_num = len(reaction_rct_list[i])
-                prd_num = len(reaction_prd_list[i])
-                mod_num = len(reaction_mod_list[i])
+                # rct_num = max(len(rct_specGlyph_handle_list[i]),len(reaction_rct_list[i]))
+                # prd_num = max(len(prd_specGlyph_handle_list[i]),len(reaction_prd_list[i]))
+                # mod_num = max(len(mod_specGlyph_list[i]),len(reaction_mod_list[i]))
+                rct_num = len(rct_specGlyph_handle_list[i])
+                prd_num = len(prd_specGlyph_handle_list[i])
+                mod_num = len(mod_specGlyph_list[i])
+
                 #print(rct_num, prd_num, mod_num)
 
                 # for j in range(rct_num):
@@ -1818,8 +2085,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 #         if temp_specGlyph_id == specGlyph_id_list[k]:
                 #             dst_position.append(spec_position_list[k])
                 #             dst_dimension.append(spec_dimension_list[k])
-                
-                if rct_num != 0 and prd_num != 0:
+
+                if rct_num != 0 or prd_num != 0:
                     for j in range(rct_num):
                         temp_specGlyph_id = rct_specGlyph_handle_list[i][j][0]
                         temp_specRefGlyph_id = rct_specGlyph_handle_list[i][j][2]
@@ -1855,13 +2122,14 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
                         dst_handle.append(prd_specGlyph_handle_list[i][j][1])
                         dst_lineend_pos.append(prd_specGlyph_handle_list[i][j][3])
+
                     dst_idx_list_corr = []
                     [dst_idx_list_corr.append(x) for x in dst_idx_list if x not in dst_idx_list_corr]
 
                     #print(mod_specGlyph_list)
                     for j in range(mod_num):
                         #if len(mod_specGlyph_list[i]) != 0:
-                        if len(mod_specGlyph_list[i]) == mod_num: 
+                        if len(mod_specGlyph_list[i]) == mod_num:
                             #all the modifiers are defined as role in the SpecRefGlyph
                             temp_specGlyph_id = mod_specGlyph_list[i][j][0]
                             temp_specRefGlyph_id = mod_specGlyph_list[i][j][1]
@@ -1938,6 +2206,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         reaction_arrow_head_size = rxn_render[j][3]
                         reaction_dash = rxn_render[j][4]
                         reaction_line_fill = rxn_render[j][5]
+                        reaction_shape_name = rxn_render[j][6]
+                        reaction_shape_type = rxn_render[j][7]
+                        reaction_shape_info = rxn_render[j][8]
                     if len(rxn_render) == 1:
                         if rxn_render[0][0] == '':#global render
                             reaction_line_color = rxn_render[0][1]
@@ -1945,9 +2216,55 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             reaction_arrow_head_size = rxn_render[0][3]
                             reaction_dash = rxn_render[0][4]
                             reaction_line_fill = rxn_render[0][5]
+                            reaction_shape_name = rxn_render[j][6]
+                            reaction_shape_type = rxn_render[j][7]
+                            reaction_shape_info = rxn_render[j][8]
 
+                
+                for j in range(len(reaction_id_list)):    
+                    if reaction_id_list[j] == temp_id:
+                        tempGlyph_id = reactionGlyph_id_list[j]  
+                        for m in range(len(textGlyph_rxn_id_list)):
+                            if textGlyph_rxn_id_list[m][0] == tempGlyph_id: #reactionGlyph_id
+                                textGlyph_id = textGlyph_rxn_id_list[m][1]
+                                text_content = rxn_text_content_list[m]
+                                text_position = rxn_text_position_list[m]
+                                text_dimension = rxn_text_dimension_list[m]
+
+                                for k in range(len(text_render)):
+                                    if textGlyph_id == text_render[k][5]:
+                                        text_line_color = text_render[k][1]
+                                        text_line_width = text_render[k][2]
+                                        text_font_size = text_render[k][3]
+                                        [text_anchor, text_vanchor] = text_render[k][4]
+                                    
+                                if len(text_render) == 1:
+                                    if text_render[0][0] == '':#global render
+                                        text_line_color = text_render[0][1]
+                                        text_line_width = text_render[0][2]
+                                        text_font_size = text_render[0][3]
+                                        [text_anchor, text_vanchor] = text_render[0][4]
+
+                                ReactionTextData_row_dct = {k:[] for k in COLUMN_NAME_df_ReactionTextData}
+                                ReactionTextData_row_dct[RXNID].append(temp_id)
+                                ReactionTextData_row_dct[TXTID].append(textGlyph_id)
+                                ReactionTextData_row_dct[TXTCONTENT].append(text_content)
+                                ReactionTextData_row_dct[TXTPOSITION].append(text_position)
+                                ReactionTextData_row_dct[TXTSIZE].append(text_dimension)
+                                ReactionTextData_row_dct[TXTFONTCOLOR].append(text_line_color)
+                                ReactionTextData_row_dct[TXTLINEWIDTH].append(text_line_width)
+                                ReactionTextData_row_dct[TXTFONTSIZE].append(text_font_size)
+                                ReactionTextData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
+                                if len(df_ReactionTextData) == 0:
+                                    df_ReactionTextData = pd.DataFrame(ReactionTextData_row_dct)
+                                else:
+                                    df_ReactionTextData = pd.concat([df_ReactionTextData,\
+                                        pd.DataFrame(ReactionTextData_row_dct)], ignore_index=True)
+       
                 try: 
+                    center_size = [0.,0.]
                     center_position = reaction_center_list[i]
+                    center_size = reaction_size_list[i]
                     center_handle = reaction_center_handle_list[i]
                     if center_handle != []:
                         handles = [center_handle]
@@ -2013,6 +2330,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
 
                     ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                    if mod_endhead != [] and len(mod_endhead) < len(mod_idx_list):
+                        for j in range(len(mod_idx_list)-len(mod_endhead)):
+                            mod_endhead.append(mod_endhead[0])
                     if mod_endhead == [] and len(mod_idx_list) != 0:
                         for j in range(len(mod_idx_list)):
                             mod_endhead.append('line_ending_modifier_'+temp_id+"_"+str(mod_idx_list[j]))
@@ -2037,6 +2357,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[SRCLINEENDPOS].append(src_lineend_pos)
                     ReactionData_row_dct[TGTLINEENDPOS].append(dst_lineend_pos)
                     ReactionData_row_dct[MODLINEENDPOS].append(mod_lineend_pos)
+                    ReactionData_row_dct[CENTERSIZE].append(center_size)
+                    ReactionData_row_dct[SHAPENAME].append(reaction_shape_name)
+                    ReactionData_row_dct[SHAPETYPE].append(reaction_shape_type)
+                    ReactionData_row_dct[SHAPEINFO].append(reaction_shape_info)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -2052,6 +2376,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 except:
                     center_x = 0.
                     center_y = 0.
+                    center_size = [0.,0.]
+
                     for j in range(rct_num):
                         center_x += src_position[j][0]+.5*src_dimension[j][0]
                         center_y += src_position[j][1]+.5*src_dimension[j][1]
@@ -2128,6 +2454,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     pd.DataFrame(LineEndingData_row_dct)], ignore_index=True)
 
                     ReactionData_row_dct[TARGETSLINEENDING].append(dst_endhead)
+                    if mod_endhead != [] and len(mod_endhead) < len(mod_idx_list):
+                        for j in range(len(mod_idx_list)-len(mod_endhead)):
+                            mod_endhead.append(mod_endhead[0])
                     if mod_endhead == [] and len(mod_idx_list) != 0:
                         for j in range(len(mod_idx_list)):
                             mod_endhead.append('line_ending_modifier_'+temp_id+"_"+str(mod_idx_list[j]))
@@ -2152,6 +2481,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[SRCLINEENDPOS].append(src_lineend_pos)
                     ReactionData_row_dct[TGTLINEENDPOS].append(dst_lineend_pos)
                     ReactionData_row_dct[MODLINEENDPOS].append(mod_lineend_pos)
+                    ReactionData_row_dct[CENTERSIZE].append(center_size)
+                    ReactionData_row_dct[SHAPENAME].append(reaction_shape_name)
+                    ReactionData_row_dct[SHAPETYPE].append(reaction_shape_type)
+                    ReactionData_row_dct[SHAPEINFO].append(reaction_shape_info)
                     # for j in range(len(COLUMN_NAME_df_ReactionData)):
                     #     try: 
                     #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -2469,6 +2802,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 
                 center_x = 0.
                 center_y = 0.
+                center_size = [0.,0.]
+
                 for j in range(rct_num):
                     center_x += src_position[j][0]+.5*src_dimension[j][0]
                     center_y += src_position[j][1]+.5*src_dimension[j][1]
@@ -2569,6 +2904,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 ReactionData_row_dct[SRCLINEENDPOS].append(src_lineend_pos)
                 ReactionData_row_dct[TGTLINEENDPOS].append(dst_lineend_pos)
                 ReactionData_row_dct[MODLINEENDPOS].append(mod_lineend_pos)
+                ReactionData_row_dct[CENTERSIZE].append(center_size)
+                ReactionData_row_dct[SHAPENAME].append(reaction_shape_name)
+                ReactionData_row_dct[SHAPETYPE].append(reaction_shape_type)
+                ReactionData_row_dct[SHAPEINFO].append(reaction_shape_info)
                 # for j in range(len(COLUMN_NAME_df_ReactionData)):
                 #     try: 
                 #         ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]] = ReactionData_row_dct[COLUMN_NAME_df_ReactionData[j]][0]
@@ -2583,13 +2922,14 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
 
         #return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData) 
-        return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData, df_ShapeData, df_LineEndingData) 
+        return (df_CompartmentData, df_NodeData, df_ReactionData, df_TextData, df_ShapeData, 
+        df_LineEndingData, df_ReactionTextData) 
 
-    # except:
-    #    raise ValueError('Invalid SBML!')
+    except:
+       raise ValueError('Invalid SBML!')
 
-    except Exception as e:
-        raise Exception (e)  
+    # except Exception as e:
+    #     raise Exception (e)  
 
 
 class load:
@@ -6178,11 +6518,11 @@ if __name__ == '__main__':
     #filename = "test_genGlyph.xml"
 
     #bioinformatics
-    #filename = "test_suite/bioinformatics/BIOMD0000000005.xml"
+    #filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005_layout_render.xml"
-    filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
+    #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
     
-    #gradient: can not plot but can export
+    #gradient: 
     #filename = "test_suite/test_gradientLinear/test_gradientLinear.xml"
     #filename = "test_suite/test_gradientRadial/test_gradientRadial.xml"
 
@@ -6192,12 +6532,20 @@ if __name__ == '__main__':
     #sbml with errors
     #filename = "test_suite/sbml_error/testbigmodel.xml"
 
+    #global render
+    #filename = "test_suite/global_render/global_render.xml"
+
+    #complex
+    #filename = "test_suite/Carcione2020/Carcione2020.xml"
+    #filename = "test_suite/Garde2020/Garde2020.xml"
+    #filename = "test_suite/test_centroid/test_centroid.xml"
+
 ##############################
     #filename = 'output.xml'
 
     #filename = "Bart/bart_arccenter.xml"
     #filename = "Bart/bart_spRefBezier.xml"
-    #filename = "Bart/bart2.xml"
+    # filename = "Bart/bart2.xml"
     #filename = "Bart/newSBML.xml"
     #filename = "Bart/newSBML2.xml"
     #filename = "Bart/output.xml"
@@ -6218,7 +6566,11 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/cycle1-straight2.xml"
     #filename = "Sauro-Coyote/test.xml"
 
-    
+    #filename = "Adel/1.xml"
+    #filename = "Adel/2.xml"
+    #filename = "Adel/3.xml"
+
+    filename = "MK/sbmld10_2.sbml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -6237,6 +6589,7 @@ if __name__ == '__main__':
     # except:
     #     print("did not return shapeData")
     # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    # df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
     # writer.save()
 
     df = load(sbmlStr)

@@ -147,6 +147,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             df_LineEndingData = df[5]
         except:
             df_LineEndingData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_LineEndingData)
+        try:
+            df_ReactionTextData = df[6]
+        except:
+            df_ReactionTextData = pd.DataFrame(columns = processSBML.COLUMN_NAME_df_ReactionTextData)
+  
     except Exception as err:
         raise Exception (err)
 
@@ -156,6 +161,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
     numArbitraryTexts = len(df_TextData)
     numArbitraryShapes = len(df_ShapeData)
     numlineEndings = len(df_LineEndingData)
+    numReactionTexts = len(df_ReactionTextData)
 
     if numNodes != 0 or numArbitraryTexts != 0 or numArbitraryShapes != 0:
         numCompartments = len(df_CompartmentData)      
@@ -593,7 +599,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         # create the ReactionGlyphs and SpeciesReferenceGlyphs
         for i in range(numReactions):
             reaction_id = df_ReactionData.iloc[i]['id']
-            
+
+            center_size = [0.,0.]
+            try:
+                center_size = list(df_ReactionData.iloc[i]['center_size'][1:-1].split(","))
+            except:
+                center_size = df_ReactionData.iloc[i]['center_size']
+
             reactionGlyph = layout.createReactionGlyph()
             reactionG_id = "ReactionG_" + reaction_id
             reactionGlyph.setId(reactionG_id)
@@ -711,20 +723,32 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 center_value = [float(center_pos[0]),float(center_pos[1])]
             except:
                 center_value = center_position
-            
-            
-            if len(handles_update) < 3: # if updated handles info is invalid
-                center_value = center_position
-            else:
-                if [] not in handles_update:
+
+            # if len(handles_update) < 3: # if updated handles info is invalid
+            #     center_value = center_position
+            # else:
+
+            if [] not in handles_update and handles_update != []:
+                try:
                     for i in range(len(handles)):
                         handles[i] = handles_update[i]
+                except:
+                    pass
 
             reactionCurve = reactionGlyph.getCurve()
             ls = reactionCurve.createLineSegment()
+
             ls.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
             ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
 
+            if center_size != [0.,0.]:
+                bb_id  = "bb_" + reaction_id
+                width  = float(center_size[0])
+                height = float(center_size[1])
+                pos_x  = center_value[0]-.5*width
+                pos_y  = center_value[1]-.5*height
+                reactionGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+                      
             for j in range(rct_num):
                 ref_id = "SpecRef_" + reaction_id + "_rct" + str(j)
 
@@ -858,7 +882,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 speciesReferenceGlyph.setRole(libsbml.SPECIES_ROLE_MODIFIER)
 
                 speciesReferenceCurve = speciesReferenceGlyph.getCurve()
-                ls = speciesReferenceCurve.createLineSegment()
+                mod_ls = speciesReferenceCurve.createLineSegment()
                 try:
                     mod_position = list(df_NodeData.iloc[int(mod_list[j])]['position'][1:-1].split(","))
                     mod_dimension = list(df_NodeData.iloc[int(mod_list[j])]['size'][1:-1].split(","))
@@ -880,7 +904,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 except: 
                     mod_start_x = mod_start_virtual_x
                     mod_start_y = mod_start_virtual_y
-                ls.setStart(libsbml.Point(layoutns, mod_start_x, mod_start_y))
+                mod_ls.setStart(libsbml.Point(layoutns, mod_start_x, mod_start_y))
 
                 try:
                     [mod_end_x, mod_end_y] = mod_lineend_pos_list[j]
@@ -892,10 +916,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     except: 
                         [mod_end_x, mod_end_y] = center_value
                 try:
-                    ls.setEnd(libsbml.Point(layoutns, mod_end_x, mod_end_y))
+                    mod_ls.setEnd(libsbml.Point(layoutns, mod_end_x, mod_end_y))
                 except:
-                    ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
-
+                    mod_ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
+        #arbitrary texts
         for i in range(numArbitraryTexts):
             txt_content = str(df_TextData.iloc[i]['txt_content']) 
             try:
@@ -915,6 +939,30 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             width_text  = float(size_list[0])
             height_text = float(size_list[1])
             textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
+
+        for i in range(numReactionTexts):
+            rxn_id = str(df_ReactionTextData.iloc[i]['rxn_id'])
+            reactionG_id = "ReactionG_" + rxn_id
+            txt_id = str(df_ReactionTextData.iloc[i]['txt_id'])
+            txt_content = str(df_ReactionTextData.iloc[i]['txt_content']) 
+            try:
+                position_list = list(df_ReactionTextData.iloc[i]['txt_position'][1:-1].split(","))
+                size_list = list(df_ReactionTextData.iloc[i]['txt_size'][1:-1].split(","))
+            except:
+                position_list = df_ReactionTextData.iloc[i]['txt_position']
+                size_list = df_ReactionTextData.iloc[i]['txt_size'] 
+
+            textGlyph = layout.createTextGlyph()
+            textG_id = "TextG_" + rxn_id + '_idx_' + str(txt_id)
+            textGlyph.setId(textG_id)
+            textGlyph.setText(txt_content)
+            bb_id  = "bb_text_" + txt_content + '_idx_' + str(i)
+            pos_x_text  = float(position_list[0])
+            pos_y_text  = float(position_list[1])
+            width_text  = float(size_list[0])
+            height_text = float(size_list[1])
+            textGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x_text, pos_y_text, width_text, height_text))
+            textGlyph.setGraphicalObjectId(reactionG_id)
 
         #arbitrary shape
         for i in range(numArbitraryShapes):
@@ -1340,6 +1388,33 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     reaction_stroke_color = list(df_ReactionData.iloc[i]['stroke_color'][1:-1].split(","))
                 except:
                     reaction_stroke_color = df_ReactionData.iloc[i]['stroke_color']
+
+                rxn_shapeType = df_ReactionData.iloc[i]['shape_type']
+                
+                try:
+                    rxn_shapeInfo_list_pre = list(df_ReactionData.iloc[i]['shape_info'][1:-1].split(","))
+                except:
+                    rxn_shapeInfo_list_pre = df_ReactionData.iloc[i]['shape_info']
+                #from excel sheet
+                if rxn_shapeInfo_list_pre == ['']:
+                    rxn_shapeInfo = []
+                elif len(rxn_shapeInfo_list_pre) == 0:
+                    rxn_shapeInfo = []
+                else:
+                    rxn_shapeInfo_pre = []
+                    rxn_shapeInfo = []
+                    if type(rxn_shapeInfo_list_pre[0]) is str:
+                        for ii in range(len(rxn_shapeInfo_list_pre)):
+                            temp = rxn_shapeInfo_list_pre[ii]
+                            if temp.find('[') != -1:
+                                temp_update = temp.replace('[', '')
+                            elif temp.find(']') != -1:
+                                temp_update = temp.replace(']', '')
+                            rxn_shapeInfo_pre.append(float(temp_update))
+                        for ii in range(0,len(rxn_shapeInfo_pre),2):
+                            rxn_shapeInfo.append([rxn_shapeInfo_pre[ii], rxn_shapeInfo_pre[ii+1]])
+                    else:
+                        rxn_shapeInfo = rxn_shapeInfo_list_pre
                 
                 if len(reaction_fill_color) == 4:
                     reaction_fill_color_str = '#%02x%02x%02x%02x' % (int(reaction_fill_color[0]),int(reaction_fill_color[1]),int(reaction_fill_color[2]),int(reaction_fill_color[3]))           
@@ -1374,6 +1449,24 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                 style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
                 style.getGroup().setStrokeWidth(reaction_line_thickness)
+
+                if rxn_shapeType == 'rectangle': #rectangle
+                    rectangle = style.getGroup().createRectangle()
+                    rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+                    libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+
+                elif rxn_shapeType == 'polygon':            
+                    polygon = style.getGroup().createPolygon()
+                    for pts in range(len(rxn_shapeInfo)):
+                        renderPoint = polygon.createPoint()
+                        renderPoint.setCoordinates(libsbml.RelAbsVector(0,rxn_shapeInfo[pts][0]),
+                        libsbml.RelAbsVector(0,rxn_shapeInfo[pts][1]))
+
+                elif rxn_shapeType == 'ellipse':
+                    ellipse = style.getGroup().createEllipse()
+                    ellipse.setCenter2D(libsbml.RelAbsVector(0, 50.), libsbml.RelAbsVector(0, 50.))
+                    ellipse.setRadii(libsbml.RelAbsVector(0, 50.),libsbml.RelAbsVector(0, 50.))
+                
                 if len(reaction_dash) != 0:
                     for pt in range(len(reaction_dash)):
                         try:
@@ -1429,10 +1522,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 try: 
                     try:
                         font_color = list(df_TextData.iloc[i]['txt_font_color'][1:-1].split(","))
-                        text_anchor_list = list(df_NodeData.iloc[i]['txt_anchor'][1:-1].split(","))
+                        text_anchor_list = list(df_TextData.iloc[i]['txt_anchor'][1:-1].split(","))
                     except:
-                        font_color = df_NodeData.iloc[i]['txt_font_color']
-                        text_anchor_list = df_NodeData.iloc[i]['txt_anchor']
+                        font_color = df_TextData.iloc[i]['txt_font_color']
+                        text_anchor_list = df_TextData.iloc[i]['txt_anchor']
 
                     if len(font_color) == 4:
                         text_line_color_str =  '#%02x%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]),int(font_color[3]))
@@ -1448,7 +1541,46 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     [text_anchor, text_vanchor] = ['middle', 'middle']
 
                 color = rInfo.createColorDefinition()
-                color.setId("text_line_color" + "_" + text_content)
+                color.setId("text_line_color" + "_" + textG_id)
+                color.setColorValue(text_line_color_str)
+                
+                style = rInfo.createStyle("textStyle" + "_" + textG_id)
+                style.getGroup().setStroke("text_line_color" + "_" + textG_id)
+                style.getGroup().setStrokeWidth(text_line_width)
+                style.getGroup().setFontSize(libsbml.RelAbsVector(text_font_size,0))
+                style.getGroup().setTextAnchor(text_anchor)
+                style.getGroup().setVTextAnchor(text_vanchor)
+                style.addType("TEXTGLYPH")
+                style.addId(textG_id)
+
+        if numReactionTexts != 0:
+            for i in range(numReactionTexts):
+                rxn_id = df_ReactionTextData.iloc[i]['rxn_id']
+                txt_id = df_ReactionTextData.iloc[i]['txt_id']
+                textG_id = "TextG_" + rxn_id + '_idx_' + str(txt_id)
+                try: 
+                    try:
+                        font_color = list(df_ReactionTextData.iloc[i]['txt_font_color'][1:-1].split(","))
+                        text_anchor_list = list(df_ReactionTextData.iloc[i]['txt_anchor'][1:-1].split(","))
+                    except:
+                        font_color = df_ReactionTextData.iloc[i]['txt_font_color']
+                        text_anchor_list = df_ReactionTextData.iloc[i]['txt_anchor']
+
+                    if len(font_color) == 4:
+                        text_line_color_str =  '#%02x%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]),int(font_color[3]))
+                    elif len(font_color) == 3:
+                        text_line_color_str =  '#%02x%02x%02x' % (int(font_color[0]),int(font_color[1]),int(font_color[2]))
+                    text_line_width = float(df_ReactionTextData.iloc[i]['txt_line_width'])
+                    text_font_size = float(df_ReactionTextData.iloc[i]['txt_font_size'])
+                    [text_anchor, text_vanchor] = text_anchor_list
+                except: #text-only: set default species/node with white color
+                    text_line_color_str = '#000000ff'
+                    text_line_width = 1.
+                    text_font_size = 12.
+                    [text_anchor, text_vanchor] = ['middle', 'middle']
+
+                color = rInfo.createColorDefinition()
+                color.setId("text_line_color" + "_" + textG_id)
                 color.setColorValue(text_line_color_str)
                 
                 style = rInfo.createStyle("textStyle" + "_" + textG_id)
