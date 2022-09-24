@@ -970,6 +970,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 if shape_type == "rectangle":
                                     shapeIdx = 1
                                     shape_name = "rectangle"
+                                    radius_x = element.getRX().getRelativeValue()
+                                    radius_y = element.getRY().getRelativeValue()
+                                    shapeInfo.append([radius_x, radius_y])
                                 elif shape_type == "ellipse": #ellipse
                                     shapeIdx = 2
                                     shape_name = "ellipse"
@@ -1421,6 +1424,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             if shape_type == "rectangle":
                                 shapeIdx = 1
                                 shape_name = "rectangle"
+                                radius_x = element.getRX().getRelativeValue()
+                                radius_y = element.getRY().getRelativeValue()
+                                shapeInfo.append([radius_x, radius_y])
                             elif shape_type == "ellipse": #ellipse
                                 shapeIdx = 2
                                 shape_name = "ellipse"
@@ -1625,7 +1631,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
    
                             
         # print(comp_render)
-        # print(spec_render)
+        #print(spec_render)
         # print(rxn_render)
         # print(text_render)
         #print(gen_render)
@@ -1780,6 +1786,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     if temp_id == FloatingNodes_ids[j]:
                         if temp_id not in id_list:
                             #spec_render
+                            flag_local = 0
                             for k in range(len(spec_render)):
                                 if temp_id == spec_render[k][0]:
                                     spec_fill_color = spec_render[k][1]
@@ -1789,6 +1796,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shape_name = spec_render[k][5]
                                     shape_type = spec_render[k][6]
                                     shape_info = spec_render[k][7]
+                                    flag_local = 1
+                            if flag_local == 0 and len(spec_render) != 1:
+                                for k in range(len(spec_render)):
+                                    if spec_render[k][0] == '': #global render but not for all
+                                        spec_fill_color = spec_render[k][1]
+                                        spec_border_color = spec_render[k][2]
+                                        spec_border_width = spec_render[k][3]
+                                        shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_type = spec_render[k][6]
+                                        shape_info = spec_render[k][7]
                             if len(spec_render) == 1:
                                 if spec_render[0][0] == '': #global render
                                     spec_fill_color = spec_render[0][1]
@@ -1851,6 +1869,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     
                         else:
                             original_idx = id_list.index(temp_id)
+                            #spec_render
+                            flag_local = 0
                             for k in range(len(spec_render)):
                                 if temp_id == spec_render[k][0]:
                                     spec_fill_color = spec_render[k][1]
@@ -1860,6 +1880,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shape_name = spec_render[k][5]
                                     shape_type = spec_render[k][6]
                                     shape_info = spec_render[k][7]
+                                    flag_local = 1
+                            if flag_local == 0 and len(spec_render) != 1:
+                                for k in range(len(spec_render)):
+                                    if spec_render[k][0] == '': #global render but not for all
+                                        spec_fill_color = spec_render[k][1]
+                                        spec_border_color = spec_render[k][2]
+                                        spec_border_width = spec_render[k][3]
+                                        shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_type = spec_render[k][6]
+                                        shape_info = spec_render[k][7]
                             if len(spec_render) == 1:
                                 if spec_render[0][0] == '': #global render
                                     spec_fill_color = spec_render[0][1]
@@ -1921,6 +1952,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 for j in range(numBoundaryNodes):
                     if temp_id == BoundaryNodes_ids[j]:
                         if temp_id not in id_list:
+                            #spec_render
+                            flag_local = 0
                             for k in range(len(spec_render)):
                                 if temp_id == spec_render[k][0]:
                                     spec_fill_color = spec_render[k][1]
@@ -1930,6 +1963,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shape_name = spec_render[k][5]
                                     shape_type = spec_render[k][6]
                                     shape_info = spec_render[k][7]
+                                    flag_local = 1
+                            if flag_local == 0 and len(spec_render) != 1:
+                                for k in range(len(spec_render)):
+                                    if spec_render[k][0] == '': #global render but not for all
+                                        spec_fill_color = spec_render[k][1]
+                                        spec_border_color = spec_render[k][2]
+                                        spec_border_width = spec_render[k][3]
+                                        shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_type = spec_render[k][6]
+                                        shape_info = spec_render[k][7]
                             if len(spec_render) == 1:
                                 if spec_render[0][0] == '': #global render
                                     spec_fill_color = spec_render[0][1]
@@ -1990,6 +2034,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 df_NodeData = pd.concat([df_NodeData,\
                                     pd.DataFrame(NodeData_row_dct)], ignore_index=True)
                         else:
+                            #spec_render
+                            flag_local = 0
                             for k in range(len(spec_render)):
                                 if temp_id == spec_render[k][0]:
                                     spec_fill_color = spec_render[k][1]
@@ -1999,6 +2045,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     shape_name = spec_render[k][5]
                                     shape_type = spec_render[k][6]
                                     shape_info = spec_render[k][7]
+                                    flag_local = 1
+                            if flag_local == 0 and len(spec_render) != 1:
+                                for k in range(len(spec_render)):
+                                    if spec_render[k][0] == '': #global render but not for all
+                                        spec_fill_color = spec_render[k][1]
+                                        spec_border_color = spec_render[k][2]
+                                        spec_border_width = spec_render[k][3]
+                                        shapeIdx = spec_render[k][4]
+                                        shape_name = spec_render[k][5]
+                                        shape_type = spec_render[k][6]
+                                        shape_info = spec_render[k][7]
                             if len(spec_render) == 1:
                                 if spec_render[0][0] == '': #global render
                                     spec_fill_color = spec_render[0][1]
@@ -6550,7 +6607,7 @@ if __name__ == '__main__':
     #filename = "test_suite/sbml_error/testbigmodel.xml"
 
     #global render
-    #filename = "test_suite/global_render/global_render.xml"
+    filename = "test_suite/global_render/global_render.xml"
 
     #complex
     #filename = "test_suite/Carcione2020/Carcione2020.xml"
@@ -6585,7 +6642,7 @@ if __name__ == '__main__':
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
-    filename = "Adel/3.xml"
+    #filename = "Adel/3.xml"
 
     #filename = "MK/sbmld10_2.sbml"
 

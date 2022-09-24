@@ -89,7 +89,7 @@ def _drawRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash 
         )  
     canvas.drawRect(rect, paintStroke)
 
-def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = False):
+def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = False, radius = [0.,0.]):
 
     """
     Draw a rounded rectangle on canvas.
@@ -108,8 +108,13 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
         linewidth: float-line width.
         dash: bool-dashline (True) or not (False as default).
     """
+    radius_percentage = radius
+    if radius_percentage == [0.,0.]:
+        radius_x = 1.*linewidth
+        radius_y = 1.*linewidth
+    else:
+        [radius_x, radius_y] = [radius_percentage[0]*width, radius_percentage[1]*height]
 
-    radius = 1.*linewidth
     rect = skia.Rect(x, y, x+width, y+height)
 
     if type(fill) == int:
@@ -146,7 +151,7 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
                 positions = stop_positions)
                 )
 
-    canvas.drawRoundRect(rect, radius, radius, paintFill)
+    canvas.drawRoundRect(rect, radius_x, radius_y, paintFill)
     if dash:
         paintStroke = skia.Paint(
         AntiAlias=True,
@@ -162,7 +167,7 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
         Style = skia.Paint.kStroke_Style,
         Color =  outline
         )    
-    canvas.drawRoundRect(rect, radius, radius, paintStroke);   
+    canvas.drawRoundRect(rect, radius_x, radius_y, paintStroke);   
 
 def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = False):
 
@@ -686,10 +691,11 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
         #Pls note that shapeIdx is different from Coyote
         #shapeIdx = 0 
         if shape_type == 'rectangle' or shapeIdx == 1: #rectangle
+            radius = [shape_info[0][0]/100., shape_info[0][0]/100.]
             if alias_node == 'alias':
-                _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = True)
+                _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = True, radius=radius)
             else:
-                _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth)
+                _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, radius = radius)
         
         elif shape_type == 'polygon':
             pts = []

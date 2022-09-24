@@ -294,8 +294,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         The visualization info object containing the drawing information of the plot
     """
 
-    df = processSBML.load(sbmlStr)
-    sbmlStr = df.export()
+    # df = processSBML.load(sbmlStr)
+    # sbmlStr = df.export()
     
     topLeftCorner = _getNetworkTopLeftCorner(sbmlStr)
     networkSize = _getNetworkSize(sbmlStr)
@@ -977,6 +977,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     if shape_type == "rectangle":
                                         shapeIdx = 1
                                         shape_name = "rectangle"
+                                        radius_x = element.getRX().getRelativeValue()
+                                        radius_y = element.getRY().getRelativeValue()
+                                        shapeInfo.append([radius_x, radius_y])
                                     elif shape_type == "ellipse": #ellipse
                                         shapeIdx = 2
                                         shape_name = "ellipse"
@@ -2632,7 +2635,7 @@ if __name__ == '__main__':
 
     #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
 
-    filename = "Adel/2.xml"
+    filename = "Adel/3.xml"
     #filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')

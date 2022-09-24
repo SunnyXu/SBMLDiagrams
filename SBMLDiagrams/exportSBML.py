@@ -1339,7 +1339,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             if spec_shapeIdx == 1 or spec_shapeType == 'rectangle': #rectangle
                 rectangle = style.getGroup().createRectangle()
                 rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
-                libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+                libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100.),libsbml.RelAbsVector(0,100.))
+                try:
+                    rectangle.setRadiusX(libsbml.RelAbsVector(0,spec_shapeInfo[0][0]))
+                    rectangle.setRadiusY(libsbml.RelAbsVector(0,spec_shapeInfo[0][0]))
+                except:
+                    pass
+
 
             elif spec_shapeType == 'polygon':            
                 polygon = style.getGroup().createPolygon()
