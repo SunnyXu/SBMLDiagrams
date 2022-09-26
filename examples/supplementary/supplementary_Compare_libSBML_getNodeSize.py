@@ -20,7 +20,6 @@ print("Get node size by SBMLDiagrams (width, hight):", sd.getNodeSize("x_0").x, 
 #### use libSBML only ###
 
 import libsbml
-import pandas as pd
 
 class Point:
     def __init__(self,x_init=0,y_init=0):
@@ -41,18 +40,8 @@ class Load:
         """
         self.sbmlStr = sbmlStr
 
-        def hex_to_rgb(value):
-            """
-            Change color format from hex string to rgb. 
-            """
-            value = value.lstrip('#')
-            if len(value) == 6:
-                value = value + 'ff'
-            return [int(value[i:i+2], 16) for i in (0, 2, 4, 6)]
-
         self.spec_specGlyph_id_list = []
         self.spec_dimension_list = []
-        self.spec_render = []
 
         mplugin = None
         try: 

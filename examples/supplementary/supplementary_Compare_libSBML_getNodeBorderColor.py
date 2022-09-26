@@ -41,8 +41,6 @@ class Load:
                 value = value + 'ff'
             return [int(value[i:i+2], 16) for i in (0, 2, 4, 6)]
 
-        self.spec_specGlyph_id_list = []
-        self.spec_dimension_list = []
         self.spec_render = []
 
         mplugin = None
@@ -77,8 +75,7 @@ class Load:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
                                         spec_border_color = hex_to_rgb(color_list[k][1])
-                                spec_border_width = group.getStrokeWidth()
-                                self.spec_render.append([idList, spec_border_width, spec_border_color])
+                                self.spec_render.append([idList, spec_border_color])
                         
         except Exception as e:
             raise Exception (e)   
@@ -152,7 +149,7 @@ class Load:
         border_color_list = []  
         for i in range(len(self.spec_render)):
             if id == self.spec_render[i][0]:
-                rgb = self.spec_render[i][2]
+                rgb = self.spec_render[i][1]
                 color = _rgb_to_color(rgb)
                 border_color_list.append(color)
         
