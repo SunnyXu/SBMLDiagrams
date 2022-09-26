@@ -1445,6 +1445,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
 
                     else: #no the shape is not covered by the above cases
                         points = [arrow_head_pt]
+                        arrow_s1 = prd_endhead_render[0][1][0]*scale
+                        arrow_s2 = prd_endhead_render[0][1][1]*scale
                         distance = math.sqrt((arrow_head_pt[0]-prd_handle_position[0])**2 + (arrow_head_pt[1]-prd_handle_position[1])**2)
                         if distance == 0:
                             distance = 0.001
