@@ -1019,13 +1019,14 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 fill_color = list(df_LineEndingData.iloc[i]['fill_color'][1:-1].split(","))
                 shape_type_list = list(df_LineEndingData.iloc[i]['shape_type'][1:-1].split(","))
                 shape_info_list = list(df_LineEndingData.iloc[i]['shape_info'][1:-1].split(","))
+                border_color = list(df_LineEndingData.iloc[i]['border_color'][1:-1].split(","))
             except:    
                 position = df_LineEndingData.iloc[i]['position']
                 size = df_LineEndingData.iloc[i]['size']
                 fill_color = df_LineEndingData.iloc[i]['fill_color'] 
                 shape_type_list = df_LineEndingData.iloc[i]['shape_type']
                 shape_info_list = df_LineEndingData.iloc[i]['shape_info']
-
+                border_color = df_LineEndingData.iloc[i]['border_color']
 
             lineEnding = rInfo.createLineEnding()
             lineEnding.setId(lineEnding_id)
@@ -1036,7 +1037,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 if size != [0.,0.]:
                     lineEnding.setEnableRotationalMapping(True)
                     lineEnding.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
-                    #print(fill_color)
+
                     if len(fill_color) == 4:
                         fill_color_str    = '#%02x%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]),int(fill_color[3]))
                         color = rInfo.createColorDefinition()
@@ -1050,6 +1051,21 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                         color.setId("lineEnding_fill_color" + "_" + lineEnding_id)
                         color.setColorValue(fill_color_str)
                         lineEnding.getGroup().setFill('lineEnding_fill_color' + '_' + lineEnding_id)
+
+                    if len(border_color) == 4:
+                        border_color_str    = '#%02x%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]),int(border_color[3]))
+                        color = rInfo.createColorDefinition()
+                        color.setId("lineEnding_border_color" + "_" + lineEnding_id)
+                        color.setColorValue(border_color_str)
+                        lineEnding.getGroup().setStroke('lineEnding_border_color' + '_' + lineEnding_id)
+
+                    elif len(border_color) == 3:
+                        border_color_str    = '#%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]))     
+                        color = rInfo.createColorDefinition()
+                        color.setId("lineEnding_border_color" + "_" + lineEnding_id)
+                        color.setColorValue(border_color_str)
+                        lineEnding.getGroup().setStroke('lineEnding_border_color' + '_' + lineEnding_id)
+
 
                     for j in range(len(shape_type_list)):
                         if shape_type_list[j] == 'polygon':
@@ -1492,6 +1508,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     dst_lineending = list(df_ReactionData.iloc[i]['targets_lineending'])
                     mod_lineending = list(df_ReactionData.iloc[i]['modifiers_lineending'])
 
+                try:
+                    src_dash = list(df_ReactionData.iloc[i]['src_dash'][1:-1].split(","))
+                    dst_dash = list(df_ReactionData.iloc[i]['tgt_dash'][1:-1].split(","))
+                except:
+                    src_dash = list(df_ReactionData.iloc[i]['src_dash'])
+                    dst_dash = list(df_ReactionData.iloc[i]['tgt_dash'])
+
                 for j in range(len(src_lineending)):
                     specsRefG_id = "SpecRefG_" + rxn_id + "_rct" + str(j)
                     style = rInfo.createStyle("specRefGlyphStyle" + rxn_id + "_rct" + str(j))
@@ -1499,6 +1522,19 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                     style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
                     style.getGroup().setStrokeWidth(reaction_line_thickness)
+                    if len(src_dash) != 0:
+                        for pt in range(len(src_dash)):
+                            try:
+                                style.getGroup().addDash(int(src_dash[pt]))
+                            except:
+                                pass
+                    else:
+                        if len(reaction_dash) != 0:
+                            for pt in range(len(reaction_dash)):
+                                try:
+                                    style.getGroup().addDash(int(reaction_dash[pt]))
+                                except:
+                                    pass
                     style.addType('SPECIESREFERENCEGLYPH')
                     style.addId(specsRefG_id)
                 for j in range(len(dst_lineending)):
@@ -1508,6 +1544,19 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                     style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
                     style.getGroup().setStrokeWidth(reaction_line_thickness)
+                    if len(dst_dash) != 0:
+                        for pt in range(len(dst_dash)):
+                            try:
+                                style.getGroup().addDash(int(dst_dash[pt]))
+                            except:
+                                pass
+                    else:
+                        if len(reaction_dash) != 0:
+                            for pt in range(len(reaction_dash)):
+                                try:
+                                    style.getGroup().addDash(int(reaction_dash[pt]))
+                                except:
+                                    pass
                     style.addType('SPECIESREFERENCEGLYPH')
                     style.addId(specsRefG_id)
                 for j in range(len(mod_lineending)):

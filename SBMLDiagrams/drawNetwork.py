@@ -1061,12 +1061,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-rct_handle_position[0])*arrow_s1/distance
                             x = pts_x_m
                             y = pts_y_m
-                            outline = lineColor
                             if prd_endhead_render[0][2] != 0: #there is fill info 
                                 cl = prd_endhead_render[0][2]
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                             else:
-                                fill = lineColor               
+                                fill = lineColor  
+                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                                cl = prd_endhead_render[0][5]
+                                outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                            else:
+                                outline = lineColor               
                             _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
                                     outline, fill, linewidth)
 
@@ -1080,13 +1084,17 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             distance = math.sqrt((arrow_end_pt[0]-rct_handle_position[0])**2 + (arrow_end_pt[1]-rct_handle_position[1])**2)
                             if distance == 0:
                                 distance = 0.001
-    
-                            outline = lineColor
+
                             if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                                 cl = prd_endhead_render[0][2]
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
                                 fill = lineColor 
+                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                                cl = prd_endhead_render[0][5]
+                                outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                            else:
+                                outline = lineColor 
                             sinTheta = (-arrow_end_pt[1]+rct_handle_position[1])/distance
                             cosTheta = (arrow_end_pt[0]-rct_handle_position[0])/distance
 
@@ -1118,12 +1126,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             if distance == 0:
                                 distance = 0.001
 
-                            outline = lineColor
                             if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                                 cl = prd_endhead_render[0][2]
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
-                                fill = lineColor 
+                                fill = lineColor
+                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                                cl = prd_endhead_render[0][5]
+                                outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                            else:
+                                outline = lineColor  
                             sinTheta = (-arrow_end_pt[1]+rct_handle_position[1])/distance
                             cosTheta = (arrow_end_pt[0]-rct_handle_position[0])/distance
 
@@ -1157,12 +1169,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                 if distance == 0:
                                     distance = 0.001
 
-                                outline = lineColor
                                 if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                                     cl = prd_endhead_render[0][2]
                                     fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                                 else:
                                     fill = lineColor 
+                                if prd_endhead_render[0][5] != 0: #there is stroke info 
+                                    cl = prd_endhead_render[0][5]
+                                    outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                                else:
+                                    outline = lineColor 
                                 sinTheta = (-arrow_end_pt[1]+rct_handle_position[1])/distance
                                 cosTheta = (arrow_end_pt[0]-rct_handle_position[0])/distance
 
@@ -1287,12 +1303,17 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-prd_handle_position[0])*arrow_s1/distance
                         x = pts_x_m
                         y = pts_y_m
-                        outline = lineColor
+                        
                         if prd_endhead_render[0][2] != 0: #there is fill info 
                             cl = prd_endhead_render[0][2]
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
-                            fill = lineColor               
+                            fill = lineColor 
+                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            cl = prd_endhead_render[0][5]
+                            outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            outline = lineColor               
                         _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
                                 outline, fill, linewidth)
 
@@ -1307,12 +1328,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         if distance == 0:
                             distance = 0.001
  
-                        outline = lineColor
                         if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                             cl = prd_endhead_render[0][2]
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor 
+                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            cl = prd_endhead_render[0][5]
+                            outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            outline = lineColor 
                         sinTheta = (-arrow_head_pt[1]+prd_handle_position[1])/distance
                         cosTheta = (arrow_head_pt[0]-prd_handle_position[0])/distance
 
@@ -1344,12 +1369,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         if distance == 0:
                             distance = 0.001
 
-                        outline = lineColor
                         if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                             cl = prd_endhead_render[0][2]
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor 
+                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            cl = prd_endhead_render[0][5]
+                            outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            outline = lineColor 
                         sinTheta = (-arrow_head_pt[1]+prd_handle_position[1])/distance
                         cosTheta = (arrow_head_pt[0]-prd_handle_position[0])/distance
 
@@ -1383,12 +1412,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             if distance == 0:
                                 distance = 0.001
 
-                            outline = lineColor
                             if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                                 cl = prd_endhead_render[0][2]
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
                                 fill = lineColor 
+                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                                cl = prd_endhead_render[0][5]
+                                outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                            else:
+                                outline = lineColor 
                             sinTheta = (-arrow_head_pt[1]+prd_handle_position[1])/distance
                             cosTheta = (arrow_head_pt[0]-prd_handle_position[0])/distance
 
@@ -1524,12 +1557,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         pts_x_m = arrow_end_pt[0] - (arrow_end_pt[0]-arcCenter[0])*arrow_s1/distance
                         x = pts_x_m
                         y = pts_y_m
-                        outline = lineColor
                         if prd_endhead_render[0][2] != 0: #there is fill info 
                             cl = prd_endhead_render[0][2]
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
-                            fill = lineColor               
+                            fill = lineColor  
+                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            cl = prd_endhead_render[0][5]
+                            outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            outline = lineColor              
                         _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
                                 outline, fill, linewidth)
 
@@ -1543,12 +1580,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         if distance == 0:
                             distance = 0.001
 
-                        outline = lineColor
                         if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                             cl = prd_endhead_render[0][2]
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor 
+                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            cl = prd_endhead_render[0][5]
+                            outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            outline = lineColor 
                         sinTheta = (-arrow_end_pt[1]+arcCenter[1])/distance
                         cosTheta = (arrow_end_pt[0]-arcCenter[0])/distance
 
@@ -1580,12 +1621,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         if distance == 0:
                             distance = 0.001
 
-                        outline = lineColor
                         if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                             cl = prd_endhead_render[0][2]
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
-                            fill = lineColor 
+                            fill = lineColor
+                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            cl = prd_endhead_render[0][5]
+                            outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            outline = lineColor  
                         sinTheta = (-arrow_end_pt[1]+arcCenter[1])/distance
                         cosTheta = (arrow_end_pt[0]-arcCenter[0])/distance
 
@@ -1619,12 +1664,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             if distance == 0:
                                 distance = 0.001
 
-                            outline = lineColor
                             if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                                 cl = prd_endhead_render[0][2]
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
                                 fill = lineColor 
+                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                                cl = prd_endhead_render[0][5]
+                                outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                            else:
+                                outline = lineColor 
                             sinTheta = (-arrow_end_pt[1]+arcCenter[1])/distance
                             cosTheta = (arrow_end_pt[0]-arcCenter[0])/distance
 
@@ -1755,12 +1804,17 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         pts_x_m = arrow_head_pt[0] - (arrow_head_pt[0]-arcCenter[0])*arrow_s1/distance
                         x = pts_x_m
                         y = pts_y_m
-                        outline = lineColor
+
                         if prd_endhead_render[0][2] != 0: #there is fill info 
                             cl = prd_endhead_render[0][2]
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
-                            fill = lineColor               
+                            fill = lineColor
+                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            cl = prd_endhead_render[0][5]
+                            outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            outline = lineColor                
                         _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
                                 outline, fill, linewidth)
 
@@ -1774,12 +1828,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         if distance == 0:
                             distance = 0.001
  
-                        outline = lineColor
                         if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                             cl = prd_endhead_render[0][2]
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor 
+                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            cl = prd_endhead_render[0][5]
+                            outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            outline = lineColor 
                         sinTheta = (-arrow_head_pt[1]+arcCenter[1])/distance
                         cosTheta = (arrow_head_pt[0]-arcCenter[0])/distance
 
@@ -1811,12 +1869,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         if distance == 0:
                             distance = 0.001
 
-                        outline = lineColor
                         if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                             cl = prd_endhead_render[0][2]
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
-                            fill = lineColor 
+                            fill = lineColor
+                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            cl = prd_endhead_render[0][5]
+                            outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                        else:
+                            outline = lineColor  
                         sinTheta = (-arrow_head_pt[1]+arcCenter[1])/distance
                         cosTheta = (arrow_head_pt[0]-arcCenter[0])/distance
 
@@ -1850,12 +1912,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             if distance == 0:
                                 distance = 0.001
 
-                            outline = lineColor
                             if len(prd_endhead_render[0][2]) != 0: #there is fill info 
                                 cl = prd_endhead_render[0][2]
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
                                 fill = lineColor 
+                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                                cl = prd_endhead_render[0][5]
+                                outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                            else:
+                                outline = lineColor 
                             sinTheta = (-arrow_head_pt[1]+arcCenter[1])/distance
                             cosTheta = (arrow_head_pt[0]-arcCenter[0])/distance
 
@@ -1958,12 +2024,17 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 #ry = 0.5*height
                 x = mod_end_x
                 y = mod_end_y
-                outline = lineColor
+                
                 if mod_endhead_render[i][2] != 0: #there is fill info 
                     cl = mod_endhead_render[i][2]
                     fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                 else:
-                    fill = lineColor               
+                    fill = lineColor  
+                if prd_endhead_render[0][5] != 0: #there is stroke info 
+                    cl = prd_endhead_render[0][5]
+                    outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                else:
+                    outline = lineColor             
                 _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
                         outline, fill, linewidth)
 
@@ -1975,12 +2046,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 if distance == 0:
                     distance = 0.001
 
-                outline = lineColor
                 if len(mod_endhead_render[i][2]) != 0: #there is fill info 
                     cl = mod_endhead_render[i][2]
                     fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                 else:
                     fill = lineColor 
+                if prd_endhead_render[0][5] != 0: #there is stroke info 
+                    cl = prd_endhead_render[0][5]
+                    outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                else:
+                    outline = lineColor 
                 sinTheta = (-mod_end_y + mod_start_y)/distance
                 cosTheta = ( mod_end_x - mod_start_x)/distance
 
@@ -2011,12 +2086,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 if distance == 0:
                     distance = 0.001
 
-                outline = lineColor
                 if len(mod_endhead_render[i][2]) != 0: #there is fill info 
                     cl = mod_endhead_render[i][2]
                     fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                 else:
                     fill = lineColor 
+                if prd_endhead_render[0][5] != 0: #there is stroke info 
+                    cl = prd_endhead_render[0][5]
+                    outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                else:
+                    outline = lineColor 
 
                 sinTheta = (-mod_end_y + mod_start_y)/distance
                 cosTheta = ( mod_end_x - mod_start_x)/distance
@@ -2050,12 +2129,16 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     if distance == 0:
                         distance = 0.001
 
-                    outline = lineColor
                     if len(mod_endhead_render[i][2]) != 0: #there is fill info 
                         cl = mod_endhead_render[i][2]
                         fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                     else:
                         fill = lineColor 
+                    if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        cl = prd_endhead_render[0][5]
+                        outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                    else:
+                        outline = lineColor 
                    
                     sinTheta = (-mod_end_y + mod_start_y)/distance
                     cosTheta = ( mod_end_x - mod_start_x)/distance

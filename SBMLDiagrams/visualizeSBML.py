@@ -294,8 +294,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         The visualization info object containing the drawing information of the plot
     """
 
-    # df = processSBML.load(sbmlStr)
-    # sbmlStr = df.export()
+    df = processSBML.load(sbmlStr)
+    sbmlStr = df.export()
     
     topLeftCorner = _getNetworkTopLeftCorner(sbmlStr)
     networkSize = _getNetworkSize(sbmlStr)
@@ -831,7 +831,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             lineEnding_fill_color = []
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getFill():
-                                    lineEnding_fill_color = hex_to_rgb(color_list[k][1])     
+                                    lineEnding_fill_color = hex_to_rgb(color_list[k][1])  
+                            lineEnding_border_color = []
+                            for k in range(len(color_list)):
+                                if color_list[k][0] == group.getStroke():
+                                    lineEnding_border_color = hex_to_rgb(color_list[k][1])
+                        
                                     
                             shape_type=[]
                             shapeInfo=[]
@@ -862,7 +867,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     shapeInfo.append(temp_shapeInfo)
                                 
                             lineEnding_render.append([temp_id, temp_pos, temp_size, 
-                            lineEnding_fill_color, shape_type, shapeInfo])
+                            lineEnding_fill_color, shape_type, shapeInfo, lineEnding_border_color])
                         #print(lineEnding_render)
 
                         #print(info.getNumGradientDefinitions())
@@ -1129,7 +1134,14 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 #     if specGlyph_specRefGlyph_id_list[k][1] == idList:
                                 #         render_specRefGlyph_id = specGlyph_specRefGlyph_id_list[k][0] 
                                 endHead = group.getEndHead()
-                                specRefGlyph_render.append([render_specRefGlyph_id, endHead])
+                                reaction_dash = []
+                                if group.isSetDashArray():
+                                    reaction_num_dash = group.getNumDashes()
+                                    for num in range(reaction_num_dash):
+                                        reaction_dash.append(group.getDashByIndex(num))
+
+                                specRefGlyph_render.append([render_specRefGlyph_id, endHead, reaction_dash])
+
 
         #try: 
             model = simplesbml.loadSBMLStr(sbmlStr)
@@ -1238,10 +1250,12 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     src_position = []
                     src_dimension = [] 
                     src_endhead = []
+                    src_dash = []
                     src_lineend_pos = []
                     dst_position = []
                     dst_dimension = []
                     dst_endhead = []
+                    dst_dash = []
                     dst_lineend_pos = []
                     mod_position = []
                     mod_dimension = []
@@ -1274,6 +1288,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         for k in range(len(specRefGlyph_render)):
                             if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
                                 src_endhead.append(specRefGlyph_render[k][1])
+                        for k in range(len(specRefGlyph_render)):
+                            if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                src_dash = specRefGlyph_render[k][2]
                         src_handle.append(rct_specGlyph_handle_list[i][j][1])
                         src_lineend_pos.append(rct_specGlyph_handle_list[i][j][3])
                         add_rct_cnt += 1
@@ -1291,6 +1308,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         for k in range(len(specRefGlyph_render)):
                             if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
                                 dst_endhead.append(specRefGlyph_render[k][1])
+                        for k in range(len(specRefGlyph_render)):
+                            if temp_specRefGlyph_id == specRefGlyph_render[k][0]:
+                                dst_dash = specRefGlyph_render[k][2]
                         dst_handle.append(prd_specGlyph_handle_list[i][j][1])
                         dst_lineend_pos.append(prd_specGlyph_handle_list[i][j][3])
                         try:
@@ -1341,6 +1361,13 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             reaction_shape_name = rxn_render[j][6]
                             reaction_shape_type = rxn_render[j][7]
                             reaction_shape_info = rxn_render[j][8]
+
+                    try:
+                        if reaction_dash == [] and src_dash != []:
+                            reaction_dash = src_dash
+                    except:
+                        if reaction_dash == [] and dst_dash != []:
+                            reaction_dash = dst_dash
                     
                     src_endhead_render = []
                     dst_endhead_render = []
@@ -1781,6 +1808,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     src_lineend_pos = []
                     dst_lineend_pos = []
                     mod_lineend_pos = []
+                    src_dash = []
+                    dst_dash = []
                     temp_id = Rxns_ids[i]
                     reaction = model_layout.getReaction(temp_id)
                     rxn_rev = reaction.getReversible()
@@ -2635,7 +2664,7 @@ if __name__ == '__main__':
 
     #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
 
-    filename = "Adel/3.xml"
+    filename = "Adel/1.xml"
     #filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
