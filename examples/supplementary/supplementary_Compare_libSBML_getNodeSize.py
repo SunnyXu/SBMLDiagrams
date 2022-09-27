@@ -43,6 +43,7 @@ class Load:
         self.spec_specGlyph_id_list = []
         self.spec_dimension_list = []
 
+
         mplugin = None
         try: 
             #check the validity of the sbml files.
