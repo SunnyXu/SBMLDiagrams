@@ -6628,7 +6628,7 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_textGlyph.xml"
-    filename = "test_genGlyph.xml"
+    #filename = "test_genGlyph.xml"
 
     #bioinformatics
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
@@ -6651,7 +6651,7 @@ if __name__ == '__main__':
     #complex
     #filename = "test_suite/Carcione2020/Carcione2020.xml"
     #filename = "test_suite/Garde2020/Garde2020.xml"
-    #filename = "test_suite/test_centroid/test_centroid.xml"
+    filename = "test_suite/test_centroid/test_centroid.xml"
 
 ##############################
     #filename = 'output.xml'
@@ -6690,20 +6690,20 @@ if __name__ == '__main__':
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('test_genGlyph.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    try:
-        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    except:
-        print("did not return shapeData")
-    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('output.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # try:
+    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # except:
+    #     print("did not return shapeData")
+    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    # df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -6948,5 +6948,5 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    # df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png')
 

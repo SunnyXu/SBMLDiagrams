@@ -1066,7 +1066,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                             else:
                                 fill = lineColor  
-                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            if prd_endhead_render[0][5] != []: #there is stroke info 
                                 cl = prd_endhead_render[0][5]
                                 outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                             else:
@@ -1090,7 +1090,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
                                 fill = lineColor 
-                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            if prd_endhead_render[0][5] != []: #there is stroke info 
                                 cl = prd_endhead_render[0][5]
                                 outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                             else:
@@ -1131,7 +1131,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
                                 fill = lineColor
-                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            if prd_endhead_render[0][5] != []: #there is stroke info 
                                 cl = prd_endhead_render[0][5]
                                 outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                             else:
@@ -1174,7 +1174,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                     fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                                 else:
                                     fill = lineColor 
-                                if prd_endhead_render[0][5] != 0: #there is stroke info 
+                                if prd_endhead_render[0][5] != []: #there is stroke info 
                                     cl = prd_endhead_render[0][5]
                                     outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                                 else:
@@ -1309,7 +1309,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
                             fill = lineColor 
-                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        if prd_endhead_render[0][5] != []: #there is stroke info 
                             cl = prd_endhead_render[0][5]
                             outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
@@ -1333,7 +1333,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor 
-                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        if prd_endhead_render[0][5] != []: #there is stroke info 
                             cl = prd_endhead_render[0][5]
                             outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
@@ -1374,7 +1374,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor 
-                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        if prd_endhead_render[0][5] != []: #there is stroke info 
                             cl = prd_endhead_render[0][5]
                             outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
@@ -1417,7 +1417,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
                                 fill = lineColor 
-                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            if prd_endhead_render[0][5] != []: #there is stroke info 
                                 cl = prd_endhead_render[0][5]
                                 outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                             else:
@@ -1564,7 +1564,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
                             fill = lineColor  
-                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        if prd_endhead_render[0][5] != []: #there is stroke info 
                             cl = prd_endhead_render[0][5]
                             outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
@@ -1587,7 +1587,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor 
-                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        if prd_endhead_render[0][5] != []: #there is stroke info 
                             cl = prd_endhead_render[0][5]
                             outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
@@ -1628,7 +1628,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor
-                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        if prd_endhead_render[0][5] != []: #there is stroke info 
                             cl = prd_endhead_render[0][5]
                             outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
@@ -1671,7 +1671,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
                                 fill = lineColor 
-                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            if prd_endhead_render[0][5] != []: #there is stroke info 
                                 cl = prd_endhead_render[0][5]
                                 outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                             else:
@@ -1812,7 +1812,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
                             fill = lineColor
-                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        if prd_endhead_render[0][5] != []: #there is stroke info 
                             cl = prd_endhead_render[0][5]
                             outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
@@ -1835,7 +1835,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor 
-                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        if prd_endhead_render[0][5] != []: #there is stroke info 
                             cl = prd_endhead_render[0][5]
                             outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
@@ -1876,7 +1876,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                         else:
                             fill = lineColor
-                        if prd_endhead_render[0][5] != 0: #there is stroke info 
+                        if prd_endhead_render[0][5] != []: #there is stroke info 
                             cl = prd_endhead_render[0][5]
                             outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                         else:
@@ -1919,7 +1919,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                                 fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                             else:
                                 fill = lineColor 
-                            if prd_endhead_render[0][5] != 0: #there is stroke info 
+                            if prd_endhead_render[0][5] != []: #there is stroke info 
                                 cl = prd_endhead_render[0][5]
                                 outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                             else:
@@ -2032,7 +2032,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                 else:
                     fill = lineColor  
-                if prd_endhead_render[0][5] != 0: #there is stroke info 
+                if prd_endhead_render[0][5] != []: #there is stroke info 
                     cl = prd_endhead_render[0][5]
                     outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                 else:
@@ -2053,7 +2053,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                 else:
                     fill = lineColor 
-                if prd_endhead_render[0][5] != 0: #there is stroke info 
+                if prd_endhead_render[0][5] != []: #there is stroke info 
                     cl = prd_endhead_render[0][5]
                     outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                 else:
@@ -2093,7 +2093,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                 else:
                     fill = lineColor 
-                if prd_endhead_render[0][5] != 0: #there is stroke info 
+                if prd_endhead_render[0][5] != []: #there is stroke info 
                     cl = prd_endhead_render[0][5]
                     outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                 else:
@@ -2136,7 +2136,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         fill = skia.Color(cl[0], cl[1], cl[2], cl[3])  
                     else:
                         fill = lineColor 
-                    if prd_endhead_render[0][5] != 0: #there is stroke info 
+                    if prd_endhead_render[0][5] != []: #there is stroke info 
                         cl = prd_endhead_render[0][5]
                         outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                     else:
