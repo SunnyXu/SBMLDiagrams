@@ -21,7 +21,6 @@ print("Get node border width by SBMLDiagrams:", sd.getNodeBorderWidth("x_0"))
 #### use libSBML only ###
 
 import libsbml
-import pandas as pd
 
 
 class Load:
@@ -34,17 +33,6 @@ class Load:
         """
         self.sbmlStr = sbmlStr
 
-        def hex_to_rgb(value):
-            """
-            Change color format from hex string to rgb. 
-            """
-            value = value.lstrip('#')
-            if len(value) == 6:
-                value = value + 'ff'
-            return [int(value[i:i+2], 16) for i in (0, 2, 4, 6)]
-
-        self.spec_specGlyph_id_list = []
-        self.spec_dimension_list = []
         self.spec_render = []
 
         mplugin = None
@@ -63,35 +51,21 @@ class Load:
             if mplugin is not None:
                 layout = mplugin.getLayout(0)    
                 if layout is not None:
-                    self.numSpecGlyphs = layout.getNumSpeciesGlyphs()
-                    for i in range(self.numSpecGlyphs):
-                        specGlyph = layout.getSpeciesGlyph(i)
-                        specGlyph_id = specGlyph.getId()
-                        spec_id = specGlyph.getSpeciesId()
-                        self.spec_specGlyph_id_list.append([spec_id,specGlyph_id])
-                        boundingbox = specGlyph.getBoundingBox()
-                        height = boundingbox.getHeight()
-                        width = boundingbox.getWidth()
-                        self.spec_dimension_list.append([width,height])
+
                     ### from here for render ###
                     rPlugin = layout.getPlugin("render")
                     if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
                         info = rPlugin.getRenderInformation(0)
-                        color_list = []
-                        for  j in range(0, info.getNumColorDefinitions()):
-                            color = info.getColorDefinition(j)
-                            color_list.append([color.getId(),color.createValueString()])
+
                         for j in range (0, info.getNumStyles()):
                             style = info.getStyle(j)
                             group = style.getGroup()
                             typeList = style.createTypeString()
                             idList = style.createIdString()
                             if 'SPECIESGLYPH' in typeList:
-                                for k in range(len(color_list)):
-                                    if color_list[k][0] == group.getStroke():
-                                        spec_border_color = hex_to_rgb(color_list[k][1])
                                 spec_border_width = group.getStrokeWidth()
-                                self.spec_render.append([idList, spec_border_width, spec_border_color])
+                                self.spec_render.append([idList, spec_border_width])
+
                         
         except Exception as e:
             raise Exception (e) 
