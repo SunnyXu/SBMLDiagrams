@@ -1974,6 +1974,8 @@ def _setReactionDashStyle(df, id, dash):
         raise Exception("Please enter a valid dash type.")
     for i in range(len(idx_list)):
         df_ReactionData_temp.at[idx_list[i],"rxn_dash"] = dash
+        df_ReactionData_temp.at[idx_list[i],"src_dash"] = dash
+        df_ReactionData_temp.at[idx_list[i],"tgt_dash"] = dash
     df_temp = (df[0], df[1], df_ReactionData_temp, df[3], df[4], df[5], df[6])
 
     return df_temp

@@ -6651,7 +6651,7 @@ if __name__ == '__main__':
     #complex
     #filename = "test_suite/Carcione2020/Carcione2020.xml"
     #filename = "test_suite/Garde2020/Garde2020.xml"
-    filename = "test_suite/test_centroid/test_centroid.xml"
+    #filename = "test_suite/test_centroid/test_centroid.xml"
 
 ##############################
     #filename = 'output.xml'
@@ -6681,9 +6681,9 @@ if __name__ == '__main__':
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
-    #filename = "Adel/3.xml"
+    filename = "Adel/3.xml"
 
-    #filename = "MK/sbmld10_2.sbml"
+    # filename = "MK/sbmld10_2.sbml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
