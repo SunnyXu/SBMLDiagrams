@@ -75,9 +75,7 @@ class Load:
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
                                         spec_border_color = hex_to_rgb(color_list[k][1])
-
                                 self.spec_render.append([idList, spec_border_color])
-
                         
         except Exception as e:
             raise Exception (e)   
@@ -151,9 +149,7 @@ class Load:
         border_color_list = []  
         for i in range(len(self.spec_render)):
             if id == self.spec_render[i][0]:
-
                 rgb = self.spec_render[i][1]
-
                 color = _rgb_to_color(rgb)
                 border_color_list.append(color)
         

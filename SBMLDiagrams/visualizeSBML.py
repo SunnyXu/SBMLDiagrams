@@ -52,6 +52,8 @@ def loadColorStyle(filename):
                                         tuple(d.get('species_fill_color')),
                                         tuple(d.get('species_border_color')),
                                         tuple(d.get('reaction_line_color')),
+                                        tuple(d.get('lineending_fill_color')),
+                                        tuple(d.get('lineending_border_color')),
                                         tuple(d.get('font_color')),
                                         tuple(d.get('progress_bar_fill_color')),
                                         tuple(d.get('progress_bar_full_fill_color')),
@@ -67,6 +69,8 @@ def loadColorStyle(filename):
                                     tuple(data.get('species_fill_color')),
                                     tuple(data.get('species_border_color')),
                                     tuple(data.get('reaction_line_color')),
+                                    tuple(data.get('lineending_fill_color')),
+                                    tuple(data.get('lineending_border_color')),
                                     tuple(data.get('font_color')),
                                     tuple(data.get('progress_bar_fill_color')),
                                     tuple(data.get('progress_bar_full_fill_color')),
@@ -309,7 +313,6 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
         scale = min(setImageSize[0]/(networkSize[0]+20), setImageSize[1]/(networkSize[1]+20))
 
     color_style = newStyle
-    #print(color_style.getReactionLineColor())
     color_style.setImageSize(imageSize)
 
     def draw_on_canvas(canvas, color_style):
@@ -831,12 +834,17 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             lineEnding_fill_color = []
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getFill():
-                                    lineEnding_fill_color = hex_to_rgb(color_list[k][1])  
+                                    lineEnding_fill_color = hex_to_rgb(color_list[k][1]) 
+                            if not color_style.getStyleName():
+                                color_style.setLineEndingFillColor(lineEnding_fill_color)
+                                
                             lineEnding_border_color = []
                             for k in range(len(color_list)):
                                 if color_list[k][0] == group.getStroke():
                                     lineEnding_border_color = hex_to_rgb(color_list[k][1])
-                        
+                            if not color_style.getStyleName():
+                                color_style.setLineEndingBorderColor(lineEnding_border_color)
+
                                     
                             shape_type=[]
                             shapeInfo=[]
@@ -867,8 +875,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     shapeInfo.append(temp_shapeInfo)
                                 
                             lineEnding_render.append([temp_id, temp_pos, temp_size, 
-                            lineEnding_fill_color, shape_type, shapeInfo, lineEnding_border_color])
-                        #print(lineEnding_render)
+                            color_style.getLineEndingFillColor(), shape_type, shapeInfo, color_style.getLineEndingBorderColor()])
 
                         #print(info.getNumGradientDefinitions())
                         for j in range(0, info.getNumGradientDefinitions()):
@@ -1078,7 +1085,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         shape_name = "ellipse"
 
                                 rxn_render.append([render_rxn_id, color_style.getReactionLineColor(), 
-                                reaction_line_width, arrowHeadSize, reaction_dash, reaction_line_fill,
+                                color_style.getReactionLineWidth(), arrowHeadSize, reaction_dash, reaction_line_fill,
                                 shape_name, shape_type, shape_info])
                             elif 'TEXTGLYPH' in typeList:
                                 render_text_id = idList
@@ -1376,18 +1383,27 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     for j in range(len(src_endhead)):
                         for k in range(len(lineEnding_render)):
                             if src_endhead[j] == lineEnding_render[k][0]:
-                                src_endhead_render.append(lineEnding_render[k][1:])
+                                temp_lineending_render = lineEnding_render[k][1:]
+                                color_style.setLineEndingFillColor(temp_lineending_render[2]) 
+                                color_style.setLineEndingBorderColor(temp_lineending_render[5])
+                                src_endhead_render.append(temp_lineending_render)
                     for j in range(len(dst_endhead)):
                         for k in range(len(lineEnding_render)):
                             if dst_endhead[j] == lineEnding_render[k][0]:
                                 # if dst_endhead[j] == '_line_ending_default_':
                                 #     dst_endhead_render = []
                                 # else:
-                                dst_endhead_render.append(lineEnding_render[k][1:])
+                                temp_lineending_render = lineEnding_render[k][1:]
+                                color_style.setLineEndingFillColor(temp_lineending_render[2]) 
+                                color_style.setLineEndingBorderColor(temp_lineending_render[5])
+                                dst_endhead_render.append(temp_lineending_render)
                     for j in range(len(mod_endhead)):
                         for k in range(len(lineEnding_render)):
                             if mod_endhead[j] == lineEnding_render[k][0]:
-                                mod_endhead_render.append(lineEnding_render[k][1:])
+                                temp_lineending_render = lineEnding_render[k][1:]
+                                color_style.setLineEndingFillColor(temp_lineending_render[2]) 
+                                color_style.setLineEndingBorderColor(temp_lineending_render[5])
+                                mod_endhead_render.append(temp_lineending_render)
 
                     for j in range(len(src_lineend_pos)):
                         try:
@@ -1482,7 +1498,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         arrow_info.append(
                             [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                              dst_dimension, mod_dimension,
-                             color_style.getReactionLineColor(), color_style.getReactionLineWidth() * scale, reactionLineType,
+                             color_style.getReactionLineColor(), color_style.getReactionLineWidth()*scale, reactionLineType,
                              showBezierHandles, showReactionIds,
                              [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale],
                              scale, reaction_dash, rxn_rev, showReversible])
@@ -1874,7 +1890,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     arrow_info.append(
                         [temp_id, src_position, dst_position, mod_position, center_position, handles, src_dimension,
                          dst_dimension, mod_dimension,
-                         color_style.getReactionLineColor(), color_style.getReactionLineWidth() * scale, reactionLineType,
+                         color_style.getReactionLineColor(), color_style.getReactionLineWidth()*scale, reactionLineType,
                          showBezierHandles, showReactionIds,
                          [reaction_arrow_head_size[0] * scale, reaction_arrow_head_size[1] * scale],
                          scale, reaction_dash, rxn_rev, showReversible])

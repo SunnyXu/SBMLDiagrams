@@ -22,7 +22,6 @@ print("Get node border width by SBMLDiagrams:", sd.getNodeBorderWidth("x_0"))
 
 import libsbml
 
-
 class Load:
     def __init__(self, sbmlStr = ''):
         """
@@ -32,7 +31,7 @@ class Load:
             sbmlStr: str-the SBML string.
         """
         self.sbmlStr = sbmlStr
-
+        
         self.spec_render = []
 
         mplugin = None
@@ -51,12 +50,10 @@ class Load:
             if mplugin is not None:
                 layout = mplugin.getLayout(0)    
                 if layout is not None:
-
                     ### from here for render ###
                     rPlugin = layout.getPlugin("render")
                     if (rPlugin != None and rPlugin.getNumLocalRenderInformationObjects() > 0):
                         info = rPlugin.getRenderInformation(0)
-
                         for j in range (0, info.getNumStyles()):
                             style = info.getStyle(j)
                             group = style.getGroup()
@@ -65,7 +62,6 @@ class Load:
                             if 'SPECIESGLYPH' in typeList:
                                 spec_border_width = group.getStrokeWidth()
                                 self.spec_render.append([idList, spec_border_width])
-
                         
         except Exception as e:
             raise Exception (e) 

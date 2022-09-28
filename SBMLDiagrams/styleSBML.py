@@ -11,6 +11,8 @@ class Style:
                  species_fill_color=None,
                  species_border_color=None,
                  reaction_line_color=None,
+                 lineending_fill_color = None,
+                 lineending_border_color = None,
                  font_color=None,
                  progress_bar_fill_color=None,
                  progress_bar_full_fill_color=None,
@@ -27,6 +29,8 @@ class Style:
             species_fill_color: species nodes filled color
             species_border_color: species nodes border color
             reaction_line_color: reaction line color
+            lineending_fill_color: lineending filled color
+            lineending_border_color: lineending border color
             font_color: font color
             progress_bar_fill_color: progress bar filled color
             progress_bar_full_fill_color: progress bar full filled color
@@ -38,6 +42,8 @@ class Style:
         self.species_fill_color = species_fill_color
         self.species_border_color = species_border_color
         self.reaction_line_color = reaction_line_color
+        self.lineending_fill_color = lineending_fill_color
+        self.lineending_border_color = lineending_border_color
         self.font_color = font_color
 
         self.progress_bar_fill_color = progress_bar_fill_color
@@ -60,8 +66,12 @@ class Style:
             # for node's color
             self.species_fill_color = (255, 204, 153, 200)
             self.species_border_color = (255, 108, 9, 255)
-            self.reaction_line_color = (91, 176, 253, 255)
             self.font_color = (0, 0, 0, 255)
+
+            # for rxn's color
+            self.reaction_line_color = (91, 176, 253, 255)
+            self.lineending_fill_color = (91, 176, 253, 255)
+            self.lineending_border_color = (91, 176, 253, 255)
 
             # for node's dimension
             self.node_dimension = [40,60]
@@ -259,7 +269,23 @@ class Style:
 
         '''
         return self.reaction_line_color if self.reaction_line_color else (91, 176, 253, 255)
-        
+
+    def getLineEndingFillColor(self):
+        '''
+
+        Returns: lineending fill color or the default lineending fill color
+
+        '''
+        return self.lineending_fill_color if self.lineending_fill_color else []
+
+    def getLineEndingBorderColor(self):
+        '''
+
+        Returns: lineending border color or the default lineending fill color
+
+        '''
+        return self.lineending_border_color if self.lineending_border_color else []
+    
     def getTextLineColor(self):
         '''
 
@@ -317,6 +343,27 @@ class Style:
 
         '''
         self.reaction_line_color = color
+    
+    
+    def setLineEndingFillColor(self, color):
+        '''
+        set lineending fill color
+
+        Args:
+            color: color
+
+        '''
+        self.lineending_fill_color = color
+    
+    def setLineEndingBorderColor(self, color):
+        '''
+        set lineending border color
+
+        Args:
+            color: color
+
+        '''
+        self.lineending_border_color = color
 
     def setTextLineColor(self, color):
         '''
