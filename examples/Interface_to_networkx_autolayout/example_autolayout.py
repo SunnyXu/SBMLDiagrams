@@ -89,3 +89,6 @@ df.draw(output_fileName="spectral.png")
 
 df.autolayout(layout="spring", scale = 500, k = 2)
 df.draw(output_fileName="spring.png")
+
+df.autolayout(layout="graphviz")
+df.draw(output_fileName="graphviz.png")

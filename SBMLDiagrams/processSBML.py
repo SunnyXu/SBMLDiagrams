@@ -6347,7 +6347,7 @@ class load:
         return json.dumps(self.color_style.__dict__)
 
 
-    def autolayout(self, layout="spring", scale=200, k=1, iterations=100):
+    def autolayout(self, layout="spring", scale=200., k=1., iterations=100, graphvizProgram = "dot"):
 
         """
         Autolayout the node positions using networkX library.
@@ -6362,6 +6362,8 @@ class load:
         
             circular: positioning nodes on a circle;
 
+            graphviz: positioning the nodes using Graphiz.
+
         scale (applies to "spring", "spectral", "circular"): float-Scale factor for positions. 
         The nodes are positioned in a box of size scale in each dim centered at center.
         
@@ -6370,7 +6372,39 @@ class load:
 
         iterations (applies to "spring"): int-maximum number of iterations to use during the calculation.             
         
+        graphvizProgram (applies to "graphviz"): str-name of Graphviz layout program.
+            
+            dot (default): "hierarchical" or layered drawings of directed graphs. This is the default tool 
+            to use if edges have directionality.
+            
+            neato: "spring model'' layouts. This is the default tool to use if the graph is not 
+            too large (about 100 nodes) and you don't know anything else about it. Neato attempts 
+            to minimize a global energy function, which is equivalent to statistical 
+            multi-dimensional scaling.
+            
+            fdp: "spring model'' layouts similar to those of neato, but does this by reducing 
+            forces rather than working with energy.
+            
+            sfdp: multiscale version of fdp for the layout of large graphs.
+            
+            twopi: radial layouts, after Graham Wills 97. Nodes are placed on concentric circles 
+            depending their distance from a given root node.
+            
+            circo: circular layout, after Six and Tollis 99, Kauffman and Wiese 02. This is 
+            suitable for certain diagrams of multiple cyclic structures, such as certain 
+            telecommunications networks.
+
         """
+        #warnings:
+        if type(float(scale)) is not float or scale <= 0:
+            raise Exception("Not valid scale")
+
+        if type(float(k)) is not float or k <= 0:
+            raise Exception("Not valid k")
+
+        if type(iterations) is not int or iterations <= 0:
+            raise Exception("Not valid iterations")
+
         if not self.hasLayout():
             sbmlStr = self.export()
             v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyle=self.color_style)
@@ -6406,17 +6440,19 @@ class load:
                 pos = nx.random_layout(graph, center=center)
             elif layout == "circular":
                 pos = nx.circular_layout(graph, scale=scale, center=center)
-                
-            #(comming soon) graphviz: positioning the nodes using Graphiz. 
-            # elif layout == "graphviz":
-            #     pos = nx.nx_agraph.graphviz_layout(graph)
+                 
+            elif layout == "graphviz":
+                pos = nx.nx_agraph.graphviz_layout(graph, prog=graphvizProgram)
             else:
                 raise Exception("no such layout")
 
             for n, p in pos.items():
                 if layout == "random":
                     p *= scale
-                p = p.tolist()
+                if type(p) is tuple:
+                    p = list(p)
+                else:
+                    p = p.tolist()
                 self.setNodeAndTextPosition(n, p)
 
             for id in reaction_ids:
@@ -6631,7 +6667,7 @@ if __name__ == '__main__':
     #filename = "test_genGlyph.xml"
 
     #bioinformatics
-    #filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
+    filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005_layout_render.xml"
     #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
     
@@ -6658,7 +6694,7 @@ if __name__ == '__main__':
 
     #filename = "Bart/bart_arccenter.xml"
     #filename = "Bart/bart_spRefBezier.xml"
-    # filename = "Bart/bart2.xml"
+    #filename = "Bart/bart2.xml"
     #filename = "Bart/newSBML.xml"
     #filename = "Bart/newSBML2.xml"
     #filename = "Bart/output.xml"
@@ -6944,7 +6980,8 @@ if __name__ == '__main__':
     #   f.write(sbmlStr_layout_render)   
 
     #df.draw(reactionLineType='bezier', scale = 2.)
-    #df.autolayout(layout = 'spring')
+    #df.autolayout(layout = 'graphviz', graphvizProgram = 'dot')
+    #df.autolayout()
     #df.autolayout(scale = 400, k = 2)
 
     
