@@ -20,7 +20,7 @@ Here is a figure example visualized by SBMLDiagrams below:
 <img src="https://github.com/SunnyXu/SBMLDiagrams/blob/main/docs/Figures/Introduction/Jana_WolfGlycolysis.png" width="350" height="450">
 
 
-![](https://raw.githubusercontent.com/SunnyXu/SBMLDiagrams/main/docs/Figures/Introduction/Jana_WolfGlycolysis.png)
+![](https://raw.githubusercontent.com/SunnyXu/SBMLDiagrams/main/docs/Figures/Introduction/Jana_WolfGlycolysis.png =350x450)
 
 Its animation is also available at https://youtu.be/zF3_fkDp2Xk. 
 Please see more figure examples in the documentation.
