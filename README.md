@@ -17,7 +17,7 @@ We also have an interface of SBMLDiagrams to NetworkX to exploit the variety of 
 
 Here is a figure example visualized by SBMLDiagrams below:
 
-<img src="https://raw.githubusercontent.com/SunnyXu/SBMLDiagrams/blob/main/docs/Figures/Introduction/Jana_WolfGlycolysis.png" width="350" height="450">
+<img src="https://raw.githubusercontent.com/SunnyXu/SBMLDiagrams/main/docs/Figures/Introduction/Jana_WolfGlycolysis.png" width="350" height="450">
 
 
 Its animation is also available at https://youtu.be/zF3_fkDp2Xk. 
