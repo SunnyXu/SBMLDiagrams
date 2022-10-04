@@ -2235,7 +2235,7 @@ def addText(canvas, txt_str, position, dimension,
                 # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
                 fontSize = fontSize - 1.
             count_while += 1
-            if count_while > 20:
+            if count_while > 50:
                 stop_flag_1 = True
                 position = [position[0], position[1] + theight] #adjust of the text position
                 [position_x,position_y] = position
@@ -2290,7 +2290,7 @@ def addText(canvas, txt_str, position, dimension,
                 txt_str = txt_str[:txt_str_len] + '....'
 
             count_while += 1
-            if count_while > 20:
+            if count_while > 50:
                 stop_flag_1 = True
                 position = [position[0], position[1] + theight] #adjust of the text position
                 [position_x,position_y] = position

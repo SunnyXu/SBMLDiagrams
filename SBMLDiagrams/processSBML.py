@@ -6920,6 +6920,9 @@ if __name__ == '__main__':
     # print('size:', df.getReactionModifierHeadSize('path_0_re6338'))
     # df.setReactionModifierHeadSize('path_0_re6338', [12.,13.], 2)
     # print("size_after:", df.getReactionModifierHeadSize('path_0_re6338', 2))
+    # print('size:', df.getReactionModifierHeadSize('r_0'))
+    # df.setReactionModifierHeadSize('r_0', [12.,12.])
+    # print("size_after:", df.getReactionModifierHeadSize('r_0'))
     # print("position_after:", df._getReactionModifierHeadPosition('path_0_re6338'))
     # print(df._getReactionModifierHeadPosition('path_0_re6338'))
     # print(df.getReactionModifierHeadFillColor('path_0_re6338', 2))
@@ -6985,5 +6988,6 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png', longText = 'ellipsis')
+    #df.draw(output_fileName = 'output.png', longText = 'auto-font')
 
