@@ -856,7 +856,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                         if line_head_pt == None:
                             line_head_pt = _cross_point(center_value, 
                             [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 
-                            [width+2*reaction_line_thickness,height+2*reaction_line_thickness])            
+                            [width+2.*reaction_line_thickness,height+2.*reaction_line_thickness])            
                 except:
                     line_head_pt = _cross_point(handle2, 
                     [pos_x-reaction_line_thickness, pos_y-reaction_line_thickness], 

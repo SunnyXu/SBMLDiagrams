@@ -6655,7 +6655,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -6667,7 +6667,7 @@ if __name__ == '__main__':
     #filename = "test_genGlyph.xml"
 
     #bioinformatics
-    filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
+    #filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005_layout_render.xml"
     #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
     
@@ -6988,6 +6988,6 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
-    df.draw(output_fileName = 'output.png', longText = 'ellipsis')
-    #df.draw(output_fileName = 'output.png', longText = 'auto-font')
+    #df.draw(output_fileName = 'output.png', longText = 'ellipsis')
+    df.draw(output_fileName = 'output.png')
 

@@ -1983,7 +1983,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
     baseImageArray = []
     
     surface = skia.Surface(int(imageSize[0]), int(imageSize[1]))
-    canvas = surface.getCanvas()
+    canvas = surface.getCanvas()   
     pos_dict, dim_dict, all_pos_dict, all_dim_dict, edges, arrow_info, name_to_id = draw_on_canvas(canvas, color_style)
     baseImageArray = drawNetwork.showPlot(surface, save=save, fileName = fileName, file_format = fileFormat, showImage=showImage)
     
