@@ -602,7 +602,8 @@ def addProgressBar(canvas, position, dimension, fill_percent, process_broder_wid
     _drawRectangle(canvas, x, y, -f_width, -f_height, outline, process_fill, 0)
 
 
-def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_color, comp_border_width):
+def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_color, comp_border_width,
+    comp_shape_type = '', comp_shape_info = []):
     """
     Add a compartment.
 
@@ -618,6 +619,11 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
         comp_fill_color: list-rgba 1*4 matrix-compartment fill color.
 
         comp_border_width: float-compartment border line width.
+
+        comp_shape_type: str-type of the compartment shape: rectangle, ellipse, polygon.
+
+        comp_shape_info: shape_info: list-rectangle: [[rx, ry]], polygon:[[x1,y1],[x2,y2],[x3,y3],etc], ellipse:[[[x1,y1],[r1,r2]]];
+        where x,y,r are floating numbers from 0 to 100.
         
     """   
 
@@ -628,9 +634,10 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
     linewidth = comp_border_width  
     if linewidth == 0 or linewidth < 0:
         outline = fill  
-    # _drawRectangle (canvas, x, y, width, height, 
-    #               outline=outline, fill = fill, linewidth=linewidth)
-    _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth)
+
+    radius = [comp_shape_info[0][0]/100., comp_shape_info[0][0]/100.]
+    _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, radius = radius)
+        
   
     
 def addNode(canvas, floating_boundary_node, alias_node, position, dimension, 
@@ -667,8 +674,8 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 
         shape_type: str-type of the node shape: rectangle, ellipse, polygon.
 
-        shape_info: list-polygon:[[x1,y1],[x2,y2],[x3,y3],etc], ellipse:[[[x1,y1],[r1,r2]]];
-                    where x,y,r are floating numbers from 0 to 100.
+        shape_info: list-rectangle: [[rx, ry]], polygon:[[x1,y1],[x2,y2],[x3,y3],etc], ellipse:[[[x1,y1],[r1,r2]]];
+        where x,y,r are floating numbers from 0 to 100.
 
         complex_shape: str-''(default), 'monomer', 'dimer', 'trimer', or 'tetramer'.
 

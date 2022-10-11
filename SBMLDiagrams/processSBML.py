@@ -76,7 +76,8 @@ TGTDASH = 'tgt_dash'
 COLUMN_NAME_df_CompartmentData = [NETIDX, IDX, ID,\
     POSITION, SIZE, FILLCOLOR, BORDERCOLOR, BORDERWIDTH, 
     TXTPOSITION, TXTSIZE, TXTCONTENT, \
-    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, TXTANCHOR]
+    TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, TXTANCHOR,\
+    SHAPENAME, SHAPETYPE, SHAPEINFO]
 COLUMN_NAME_df_NodeData = [NETIDX, COMPIDX, IDX, ORIGINALIDX, ID, FLOATINGNODE,\
     CONCENTRATION, POSITION, SIZE, SHAPEIDX, TXTPOSITION, TXTSIZE, \
     FILLCOLOR, BORDERCOLOR, BORDERWIDTH, TXTFONTCOLOR, TXTLINEWIDTH, TXTFONTSIZE, 
@@ -230,6 +231,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     comp_fill_color = [255, 255, 255, 255]
     comp_border_color = [255, 255, 255, 255]
     comp_border_width = 2.0
+    comp_shape_name = ''
+    comp_shape_type = ''
+    comp_shape_info = []
     spec_fill_color = [255, 204, 153, 200]
     spec_border_color = [255, 108, 9, 255]
     spec_border_width = 2.0
@@ -916,7 +920,21 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
         
                             comp_border_width = group.getStrokeWidth()
 
-                            comp_render.append([render_comp_id,comp_fill_color,comp_border_color,comp_border_width])
+                            shape_type = ""
+                            #print(group.getNumElements())# There is only one element
+                            #for element in group.getListOfElements():
+                            element = group.getElement(0)
+                            shape_name = ""
+                            shapeInfo = []
+                            if element != None:
+                                shape_type = element.getElementName()
+                                if shape_type == "rectangle":
+                                    shape_name = "rectangle"
+                                    radius_x = element.getRX().getRelativeValue()
+                                    radius_y = element.getRY().getRelativeValue()
+                                    shapeInfo.append([radius_x, radius_y])
+                            comp_render.append([render_comp_id,comp_fill_color,comp_border_color,comp_border_width, 
+                            shape_name, shape_type, shapeInfo])
                         
                         elif 'SPECIESGLYPH' in typeList:
                             #change layout id to id for later to build the list of render
@@ -1380,8 +1398,22 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     
                         comp_border_width = group.getStrokeWidth()
 
-                        comp_render.append([render_comp_id,comp_fill_color,comp_border_color,comp_border_width])
-                    
+                        shape_type = ""
+                        #print(group.getNumElements())# There is only one element
+                        #for element in group.getListOfElements():
+                        element = group.getElement(0)
+                        shape_name = ""
+                        shapeInfo = []
+                        if element != None:
+                            shape_type = element.getElementName()
+                            if shape_type == "rectangle":
+                                shape_name = "rectangle"
+                                radius_x = element.getRX().getRelativeValue()
+                                radius_y = element.getRY().getRelativeValue()
+                                shapeInfo.append([radius_x, radius_y])
+                        comp_render.append([render_comp_id,comp_fill_color,comp_border_color,comp_border_width, 
+                        shape_name, shape_type, shapeInfo])
+       
                     elif 'SPECIESGLYPH' in typeList:
                         render_spec_id = idList
                         fill_color = group.getFill()
@@ -1704,11 +1736,18 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             comp_fill_color = comp_render[j][1]
                             comp_border_color = comp_render[j][2]
                             comp_border_width = comp_render[j][3]
+                            comp_shape_name = comp_render[j][4]
+                            comp_shape_type = comp_render[j][5]
+                            comp_shape_info = comp_render[j][6]
+
                     if len(comp_render) == 1:
                         if comp_render[0][0] == '': #global render
                             comp_fill_color = comp_render[0][1]
                             comp_border_color = comp_render[0][2]
                             comp_border_width = comp_render[0][3]
+                            comp_shape_name = comp_render[j][4]
+                            comp_shape_type = comp_render[j][5]
+                            comp_shape_info = comp_render[j][6]
                     for j in range(len(comp_id_list)):    
                         if comp_id_list[j] == temp_id:
                             tempGlyph_id = compGlyph_id_list[j]                         
@@ -1738,6 +1777,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         text_content = ''
                         text_position = [0., 0.]
                         text_dimension = [0, 0.]
+                        comp_shape_name = ''
+                        comp_shape_type = ''
+                        comp_shape_info = []
                         #If there is no render info about the compartments given from sbml,
                         #they will be set as white. 
                         #comp_fill_color = [255, 255, 255, 255]
@@ -1761,6 +1803,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 CompartmentData_row_dct[TXTLINEWIDTH].append(text_line_width)
                 CompartmentData_row_dct[TXTFONTSIZE].append(text_font_size)
                 CompartmentData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
+                CompartmentData_row_dct[SHAPENAME].append(comp_shape_name)
+                CompartmentData_row_dct[SHAPETYPE].append(comp_shape_type)
+                CompartmentData_row_dct[SHAPEINFO].append(comp_shape_info)
                 # for j in range(len(COLUMN_NAME_df_CompartmentData)):
                 #     try: 
                 #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
@@ -2688,6 +2733,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 text_content = ''
                 text_position = [0.,0.]
                 text_dimension = [0.,0.]
+                comp_shape_name = ''
+                comp_shape_type = ''
+                comp_shape_info = []
 
                 CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
                 CompartmentData_row_dct[NETIDX].append(netIdx)
@@ -2706,6 +2754,9 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 CompartmentData_row_dct[TXTLINEWIDTH].append(text_line_width)
                 CompartmentData_row_dct[TXTFONTSIZE].append(text_font_size)
                 CompartmentData_row_dct[TXTANCHOR].append([text_anchor, text_vanchor])
+                CompartmentData_row_dct[SHAPENAME].append(comp_shape_name)
+                CompartmentData_row_dct[SHAPETYPE].append(comp_shape_type)
+                CompartmentData_row_dct[SHAPEINFO].append(comp_shape_info)
                 # for j in range(len(COLUMN_NAME_df_CompartmentData)):
                 #     try: 
                 #         CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]] = CompartmentData_row_dct[COLUMN_NAME_df_CompartmentData[j]][0]
@@ -6655,7 +6706,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -6726,20 +6777,20 @@ if __name__ == '__main__':
     f.close()
 
 
-    # df_excel = _SBMLToDF(sbmlStr)
-    # writer = pd.ExcelWriter('output.xlsx')
-    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    # df_excel[1].to_excel(writer, sheet_name='NodeData')
-    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # try:
-    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    # except:
-    #     print("did not return shapeData")
-    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    # df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
-    # writer.save()
+    df_excel = _SBMLToDF(sbmlStr)
+    writer = pd.ExcelWriter('output.xlsx')
+    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    df_excel[1].to_excel(writer, sheet_name='NodeData')
+    df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    try:
+        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    except:
+        print("did not return shapeData")
+    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
+    writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -6989,5 +7040,5 @@ if __name__ == '__main__':
 
     
     #df.draw(output_fileName = 'output.png', longText = 'ellipsis')
-    df.draw(output_fileName = 'output.png')
+    # df.draw(output_fileName = 'output.png')
 

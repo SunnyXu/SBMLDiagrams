@@ -1097,6 +1097,33 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 textG_id = "TextG_" + comp_id
                 #print(comp_id)
                 #if comp_id != '_compartment_default':
+
+                comp_shapeType = df_CompartmentData.iloc[i]['shape_type']
+
+                try:
+                    comp_shapeInfo_list_pre = list(df_CompartmentData.iloc[i]['shape_info'][1:-1].split(","))
+                except:
+                    comp_shapeInfo_list_pre = df_CompartmentData.iloc[i]['shape_info']
+                if comp_shapeInfo_list_pre == ['']:
+                    comp_shapeInfo = []
+                elif len(comp_shapeInfo_list_pre) == 0:
+                    comp_shapeInfo = []
+                else:
+                    comp_shapeInfo_pre = []
+                    comp_shapeInfo = []
+                    if type(comp_shapeInfo_list_pre[0]) is str:
+                        for ii in range(len(comp_shapeInfo_list_pre)):
+                            temp = comp_shapeInfo_list_pre[ii]
+                            if temp.find('[') != -1:
+                                temp_update = temp.replace('[', '')
+                            elif temp.find(']') != -1:
+                                temp_update = temp.replace(']', '')
+                            comp_shapeInfo_pre.append(float(temp_update))
+                        for ii in range(0,len(comp_shapeInfo_pre),2):
+                            comp_shapeInfo.append([comp_shapeInfo_pre[ii], comp_shapeInfo_pre[ii+1]])
+                    else:
+                        comp_shapeInfo = comp_shapeInfo_list_pre
+
                 try:
                     fill_color   = list(df_CompartmentData.iloc[i]['fill_color'][1:-1].split(","))
                     border_color = list(df_CompartmentData.iloc[i]['border_color'][1:-1].split(","))
@@ -1148,6 +1175,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 rectangle = style.getGroup().createRectangle()
                 rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
                 libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+                try:
+                    rectangle.setRadiusX(libsbml.RelAbsVector(0,comp_shapeInfo[0][0]))
+                    rectangle.setRadiusY(libsbml.RelAbsVector(0,comp_shapeInfo[0][0]))
+                except:
+                    pass
 
                 style = rInfo.createStyle("textStyle" + "_" + comp_id)
                 style.getGroup().setStroke("text_line_color" + "_" + comp_id)
@@ -1183,6 +1215,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             rectangle = style.getGroup().createRectangle()
             rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
             libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+
 
         for i in range(numNodes):
             gradient_type = ''

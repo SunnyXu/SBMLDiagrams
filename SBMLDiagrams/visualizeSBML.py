@@ -950,8 +950,23 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 comp_border_width = group.getStrokeWidth()
                                 if not color_style.getStyleName():
                                     color_style.setCompBorderWidth(comp_border_width)
+                                
+                                shape_type = ""
+                                #print(group.getNumElements())# There is only one element
+                                #for element in group.getListOfElements():
+                                element = group.getElement(0)
+                                shape_name = ""
+                                shapeInfo = []
+                                if element != None:
+                                    shape_type = element.getElementName()
+                                    if shape_type == "rectangle":
+                                        shape_name = "rectangle"
+                                        radius_x = element.getRX().getRelativeValue()
+                                        radius_y = element.getRY().getRelativeValue()
+                                        shapeInfo.append([radius_x, radius_y])
                                 comp_render.append([render_comp_id, color_style.getCompFillColor(),
-                                                    color_style.getCompBorderColor(),color_style.getCompBorderWidth()])
+                                                    color_style.getCompBorderColor(),color_style.getCompBorderWidth(),
+                                                    shape_name, shape_type, shapeInfo])
                             elif 'SPECIESGLYPH' in typeList:
                                 #change layout id to id for later to build the list of render
                                 render_spec_id = idList
@@ -1219,6 +1234,9 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         color_style.setCompFillColor(comp_render[j][1])
                                         color_style.setCompBorderColor(comp_render[j][2])
                                         color_style.setCompBorderWidth(comp_render[j][3])
+                                    comp_shape_name = comp_render[j][4]
+                                    comp_shape_type = comp_render[j][5]
+                                    comp_shape_info = comp_render[j][6]
 
                             for j in range(len(comp_id_list)):    
                                 if comp_id_list[j] == temp_id:
@@ -1239,15 +1257,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             text_content = ''
                             text_position = [0.,0.]
                             text_dimension = [0.,0.]
+                            comp_shape_name = ''
+                            comp_shape_type = ''
+                            comp_shape_info = []
                             #allows users to set the color of the "_compartment_default" as the canvas
                             #color_style.setCompBorderColor((255, 255, 255, 255))
                             #color_style.setCompFillColor((255, 255, 255, 255)
-                    
-                        #print(temp_id)
-                        #print(color_style.getCompFillColor())
                         drawNetwork.addCompartment(canvas, position, dimension,
-                                                color_style.getCompBorderColor(), color_style.getCompFillColor(),
-                                                    color_style.getCompBorderWidth()*scale)
+                        color_style.getCompBorderColor(), color_style.getCompFillColor(),color_style.getCompBorderWidth()*scale, 
+                        comp_shape_type=comp_shape_type, comp_shape_info=comp_shape_info)
+
                         if text_content != '':
                             drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                         text_line_color, text_line_width*scale, text_font_size*scale, textAnchor = [text_anchor, text_vanchor]) 
@@ -1793,8 +1812,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                     dimension = imageSize
                     position = [0,0]
                     drawNetwork.addCompartment(canvas, position, dimension,
-                                                color_style.getCompBorderColor(), color_style.getCompFillColor(),
-                                               color_style.getCompBorderWidth()*scale)
+                    color_style.getCompBorderColor(), color_style.getCompFillColor(), color_style.getCompBorderWidth()*scale,
+                    comp_shape_type=comp_shape_type, comp_shape_info=comp_shape_info)
                 spec_id_list = [] 
                 spec_dimension_list = []
                 spec_position_list = []
@@ -2682,7 +2701,7 @@ if __name__ == '__main__':
 
     #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
 
-    filename = "Adel/3.xml"
+    filename = "Adel/1.xml"
     #filename = "output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
