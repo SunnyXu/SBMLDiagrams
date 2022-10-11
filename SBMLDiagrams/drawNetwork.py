@@ -89,7 +89,8 @@ def _drawRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash 
         )  
     canvas.drawRect(rect, paintStroke)
 
-def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = False, radius = [0.,0.]):
+def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = False, 
+                            radius = [0.,0.], border_dash = []):
 
     """
     Draw a rounded rectangle on canvas.
@@ -107,6 +108,11 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
         and setNodeFillRadialGradient.
         linewidth: float-line width.
         dash: bool-dashline (True) or not (False as default).
+        radius: list-[rx, ry] in percentage. 
+        border_dash: list-border line in dash.[] means solid; 
+        [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+        [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+        drawing a c-point line followed by a d-point gap.
     """
     radius_percentage = radius
     if radius_percentage == [0.,0.]:
@@ -161,15 +167,24 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
         Color =  outline
         )    
     else:
-        paintStroke = skia.Paint(
-        AntiAlias=True,
-        StrokeWidth=linewidth,
-        Style = skia.Paint.kStroke_Style,
-        Color =  outline
-        )    
+        if type(border_dash) == list and border_dash != []:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            PathEffect=skia.DashPathEffect.Make(border_dash, 0.0),
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )
+        else:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )    
     canvas.drawRoundRect(rect, radius_x, radius_y, paintStroke);   
 
-def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = False):
+def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = False, border_dash = []):
 
     """
     Draw an ellipse on canvas.
@@ -187,6 +202,10 @@ def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = 
         and setNodeFillRadialGradient.
         linewidth: float-line width.
         dash: bool-dashline (True) or not (False as default).
+        border_dash: list-border line in dash.[] means solid; 
+        [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+        [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+        drawing a c-point line followed by a d-point gap.
     """
 
     rect = skia.Rect(x, y, x+width, y+height)    
@@ -234,16 +253,25 @@ def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = 
         Color = outline
         )  
     else:  
-        paintStroke = skia.Paint(
-        AntiAlias=True,
-        StrokeWidth=linewidth,
-        Style = skia.Paint.kStroke_Style,
-        Color = outline
-        )  
+        if type(border_dash) == list and border_dash != []:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            PathEffect=skia.DashPathEffect.Make(border_dash, 0.0),
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )
+        else:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            Style = skia.Paint.kStroke_Style,
+            Color = outline
+            )  
     canvas.drawOval(rect, paintStroke)
  
     
-def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
+def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False, border_dash = []):
     
     """
     Draw a circle within a certain size of rectangle on canvas.
@@ -261,6 +289,10 @@ def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
         and setNodeFillRadialGradient.
         linewidth: float-line width.
         dash: bool-dashline (True) or not (False as default).
+        border_dash: list-border line in dash.[] means solid; 
+        [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+        [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+        drawing a c-point line followed by a d-point gap.
     """
 
     centerX = x1 + w/2
@@ -310,12 +342,21 @@ def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
         Color = outline
         ) 
     else:
-        paint = skia.Paint(
-        AntiAlias=True,
-        Style = skia.Paint.kStroke_Style,
-        StrokeWidth=linewidth,
-        Color = outline
-        )   
+        if type(border_dash) == list and border_dash != []:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            PathEffect=skia.DashPathEffect.Make(border_dash, 0.0),
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )
+        else:
+            paint = skia.Paint(
+            AntiAlias=True,
+            Style = skia.Paint.kStroke_Style,
+            StrokeWidth=linewidth,
+            Color = outline
+            )   
     canvas.drawCircle (centerX, centerY, radius, paint)
 
 def _drawDimer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
@@ -474,7 +515,8 @@ def _drawTetramer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False)
     canvas.drawCircle (centerX3, centerY3, radius, paint)
     canvas.drawCircle (centerX4, centerY4, radius, paint)
 
-def _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, dash = False):
+def _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, 
+                    dash = False, border_dash = []):
     
     """
     Draw a polygon.
@@ -493,6 +535,10 @@ def _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, da
         and setNodeFillRadialGradient.
         linewidth: float-line width.
         dash: bool-dashline (True) or not (False as default).
+        border_dash: list-border line in dash.[] means solid; 
+        [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+        [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+        drawing a c-point line followed by a d-point gap.
     """
 
 
@@ -538,12 +584,21 @@ def _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, da
             Color = outline
         ) 
     else:
-        paintStroke = skia.Paint(
+        if type(border_dash) == list and border_dash != []:
+            paintStroke = skia.Paint(
             AntiAlias=True,
-            Style = skia.Paint.kStroke_Style,
             StrokeWidth=linewidth,
-            Color = outline
-        ) 
+            PathEffect=skia.DashPathEffect.Make(border_dash, 0.0),
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )
+        else:
+            paintStroke = skia.Paint(
+                AntiAlias=True,
+                Style = skia.Paint.kStroke_Style,
+                StrokeWidth=linewidth,
+                Color = outline
+            ) 
     paintFill.setColor (fill)
     path = skia.Path()
     path.moveTo (pts[0][0],pts[0][1])
@@ -642,7 +697,7 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
     
 def addNode(canvas, floating_boundary_node, alias_node, position, dimension, 
         spec_border_color, spec_fill_color, spec_border_width, 
-        shapeIdx, shape_name, shape_type, shape_info, complex_shape = ''):
+        shapeIdx, shape_name, shape_type, shape_info, spec_dash, complex_shape = ''):
     
     """
     Add a node.
@@ -702,7 +757,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
             if alias_node == 'alias':
                 _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = True, radius=radius)
             else:
-                _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, radius = radius)
+                _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, radius = radius, border_dash = spec_dash)
         
         elif shape_type == 'polygon':
             pts = []
@@ -711,7 +766,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
             if alias_node == 'alias':
                 _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, dash=True)
             else:
-                _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth)
+                _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, border_dash = spec_dash)
 
         elif shape_type == 'ellipse' or shapeIdx == 2:
             #circle
@@ -726,7 +781,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
                             outline, fill, linewidth, dash=True)
             else:
                 _drawEllipse (canvas, x, y, width, height, 
-                            outline, fill, linewidth)
+                            outline, fill, linewidth, border_dash = spec_dash)
 
 
     elif complex_shape == 'monomer':
@@ -933,7 +988,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         """
 
         src = pts[0]; h1 = pts[1]; h2 = pts[2]; dest = pts[3]
-        if len(reaction_dash) != 0:
+        if type(reaction_dash) == list and reaction_dash != []:
             paint = skia.Paint(
             AntiAlias=True,
             PathEffect=skia.DashPathEffect.Make(reaction_dash, 0.0),

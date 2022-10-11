@@ -1227,6 +1227,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
 
             try:
+                spec_dash = list(df_NodeData.iloc[i]['spec_dash'][1:-1].split(","))
+            except:
+                spec_dash = list(df_NodeData.iloc[i]['spec_dash'])
+
+            try:
                 spec_shapeInfo_list_pre = list(df_NodeData.iloc[i]['shape_info'][1:-1].split(","))
             except:
                 spec_shapeInfo_list_pre = df_NodeData.iloc[i]['shape_info']
@@ -1292,6 +1297,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 spec_fill_color_str = '#ffffffff'
                 spec_border_color_str = '#ffffffff'
                 spec_border_width = 2.
+                spec_dash = []
                 text_line_color_str = '#000000ff'
                 text_line_width = 1.
                 text_font_size = 12.
@@ -1421,6 +1427,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 #     ellipse.setRadii(libsbml.RelAbsVector(0, spec_shapeInfo[1][0]),
                 #     libsbml.RelAbsVector(0, spec_shapeInfo[1][1]))
 
+            if len(spec_dash) != 0:
+                for pt in range(len(spec_dash)):
+                    try:
+                        style.getGroup().addDash(int(spec_dash[pt]))
+                    except:
+                        pass
             
             style = rInfo.createStyle("textStyle" + "_" + spec_id)
             style.getGroup().setStroke("text_line_color" + "_" + spec_id)
