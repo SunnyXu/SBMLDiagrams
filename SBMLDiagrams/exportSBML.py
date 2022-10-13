@@ -1087,8 +1087,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 
                         elif shape_type_list[j] == 'rectangle':
                             rectangle = lineEnding.getGroup().createRectangle()
-                            rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
-                            libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,100),libsbml.RelAbsVector(0,100))
+                            w = shape_info_list[j][0]
+                            h = shape_info_list[j][1]  
+                            rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),
+                            libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+                            libsbml.RelAbsVector(0,w),libsbml.RelAbsVector(0,h))
 
         if numCompartments != 0:  
             for i in range(numCompartments):

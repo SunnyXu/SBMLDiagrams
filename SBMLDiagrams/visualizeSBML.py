@@ -874,6 +874,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         point_y = float(element.getListOfElements().get(k).getY().getCoordinate().strip('%'))         
                                         temp_shapeInfo.append([point_x,point_y])
                                     shapeInfo.append(temp_shapeInfo)
+                                    
+                                if temp_shape_type == 'rectangle':
+                                    width = element.getWidth().getRelativeValue()
+                                    height = element.getHeight().getRelativeValue()
+                                    shapeInfo.append([width, height])
                                 
                             lineEnding_render.append([temp_id, temp_pos, temp_size, 
                             color_style.getLineEndingFillColor(), shape_type, shapeInfo, color_style.getLineEndingBorderColor()])

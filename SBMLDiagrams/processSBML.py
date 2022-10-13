@@ -794,6 +794,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                     point_y = float(element.getListOfElements().get(k).getY().getCoordinate().strip('%'))         
                                     temp_shapeInfo.append([point_x,point_y])
                                 shapeInfo.append(temp_shapeInfo)
+                            
+                            if temp_shape_type == 'rectangle':
+                                width = element.getWidth().getRelativeValue()
+                                height = element.getHeight().getRelativeValue()
+                                shapeInfo.append([width, height])
                         # print(temp_id)
                         # print(shape_type)
                         # print(shapeInfo)
@@ -1304,6 +1309,11 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 point_y = float(element.getListOfElements().get(k).getY().getCoordinate().strip('%'))         
                                 temp_shapeInfo.append([point_x,point_y])
                             shapeInfo.append(temp_shapeInfo)
+
+                        if temp_shape_type == 'rectangle':
+                            width = element.getWidth().getRelativeValue()
+                            height = element.getHeight().getRelativeValue()
+                            shapeInfo.append([width, height])
                     # print(temp_id)
                     # print(shape_type)
                     # print(shapeInfo)
@@ -5850,10 +5860,10 @@ class load:
             if ellipse:
             [[cx, cy], [rx, ry]], where each number is a floating number from 0 to 100.
             c represent the center of the ellipse, and r represents its radii.
-            
+
             if rectangle:
             []
-                        
+
             mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
             
         """
@@ -6746,7 +6756,7 @@ if __name__ == '__main__':
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_textGlyph.xml"
-    filename = "test_genGlyph.xml"
+    #filename = "test_genGlyph.xml"
 
     #bioinformatics
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
@@ -6799,7 +6809,7 @@ if __name__ == '__main__':
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
-    #filename = "Adel/3.xml"
+    filename = "Adel/3.xml"
 
     #filename = "MK/sbmld10_2.sbml"
 
@@ -6809,7 +6819,7 @@ if __name__ == '__main__':
 
 
     df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('test_genGlyph.xlsx')
+    writer = pd.ExcelWriter('output.xlsx')
     df_excel[0].to_excel(writer, sheet_name='CompartmentData')
     df_excel[1].to_excel(writer, sheet_name='NodeData')
     df_excel[2].to_excel(writer, sheet_name='ReactionData')
@@ -7056,10 +7066,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    # sbmlStr_layout_render = df.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    sbmlStr_layout_render = df.export()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
@@ -7071,5 +7081,5 @@ if __name__ == '__main__':
 
     
     #df.draw(output_fileName = 'output.png', longText = 'ellipsis')
-    # df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png')
 
