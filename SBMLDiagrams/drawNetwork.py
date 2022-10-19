@@ -689,8 +689,11 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
     linewidth = comp_border_width  
     if linewidth == 0 or linewidth < 0:
         outline = fill  
-
-    radius = [comp_shape_info[0][0]/100., comp_shape_info[0][0]/100.]
+    
+    try:
+        radius = [comp_shape_info[0][0]/100., comp_shape_info[0][0]/100.]
+    except:
+        radius = [0., 0.]
     _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, radius = radius)
         
   

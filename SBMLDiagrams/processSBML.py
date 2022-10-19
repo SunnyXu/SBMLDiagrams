@@ -518,7 +518,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             center_handle_candidate = []
                             spec_handle = []
 
-                        #print(spec_lineend_pos)
+                        #print("process:", spec_handle)
 
                         role = specRefGlyph.getRoleString()
                         specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -584,19 +584,19 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         if center_handle == []:
                                 center_handle.append(center_handle_candidate)
 
-                        #some "role" assigned wrongly
-                        for k in range(len(spec_specGlyph_id_list)):
-                            if specGlyph_id == spec_specGlyph_id_list[k][1]:
-                                if spec_specGlyph_id_list[k][0] in temp_rct_list:
-                                    role = "substrate"
-                        for k in range(len(spec_specGlyph_id_list)):
-                            if specGlyph_id == spec_specGlyph_id_list[k][1]:
-                                if spec_specGlyph_id_list[k][0] in temp_prd_list:
-                                    role = "product"
-                        for k in range(len(spec_specGlyph_id_list)):
-                            if specGlyph_id == spec_specGlyph_id_list[k][1]:
-                                if spec_specGlyph_id_list[k][0] in temp_mod_list:
-                                    role = "modifier"
+                        # #some "role" assigned wrongly
+                        # for k in range(len(spec_specGlyph_id_list)):
+                        #     if specGlyph_id == spec_specGlyph_id_list[k][1]:
+                        #         if spec_specGlyph_id_list[k][0] in temp_rct_list:
+                        #             role = "substrate"
+                        # for k in range(len(spec_specGlyph_id_list)):
+                        #     if specGlyph_id == spec_specGlyph_id_list[k][1]:
+                        #         if spec_specGlyph_id_list[k][0] in temp_prd_list:
+                        #             role = "product"
+                        # for k in range(len(spec_specGlyph_id_list)):
+                        #     if specGlyph_id == spec_specGlyph_id_list[k][1]:
+                        #         if spec_specGlyph_id_list[k][0] in temp_mod_list:
+                        #             role = "modifier"
 
                         if role == "substrate": #it is a rct
                             #rct_specGlyph_temp_list.append(specGlyph_id)
@@ -6547,10 +6547,88 @@ class load:
                     p = p.tolist()
                 self.setNodeAndTextPosition(n, p)
 
+            center_list = []
+            handles_list = []
+            line_width_list = []
             for id in reaction_ids:
                 self.setReactionDefaultCenterAndHandlePositions(id)
-
-
+                center_position = self.getReactionCenterPosition(id)
+                handles = self.getReactionBezierHandles(id)
+                center_list.append([center_position.x, center_position.y])
+                handles_list_pre = []
+                for i in range(len(handles)):
+                    handles_list_pre.append([handles[i].x, handles[i].y])
+                handles_list.append(handles_list_pre)
+                line_width_list.append(self.getReactionLineThickness(id))
+            
+            #overlap of centroids from different reactions
+            overlap_center_idx_list = []
+            for i in range(len(center_list)):
+                for j in [x for x in range(len(center_list)) if x != i]:
+                    if [(center_list[i][0]-center_list[j][0])**2+(center_list[i][1]-center_list[j][1])**2]<=2*line_width_list[i]**2:
+                        if [i,j] not in overlap_center_idx_list and [j,i] not in overlap_center_idx_list:
+                            overlap_center_idx_list.append([i,j])
+            
+            for i in range(len(overlap_center_idx_list)):
+                idx = overlap_center_idx_list[i][0]
+                idx2 = overlap_center_idx_list[i][1]
+                id = reaction_ids[idx]
+                id2 = reaction_ids[idx2]
+                center_position = center_list[idx]
+                center_position2 = center_list[idx2]
+                handle_rct1 = handles_list[idx][1]
+                handle_rct1_2 = handles_list[idx2][1]
+                handles = handles_list[idx]
+                handles2 = handles_list[idx2]
+                line_width = line_width_list[idx]
+                radius = math.dist(center_position, handle_rct1)
+                theta = line_width/radius
+                x = center_position[0] + theta*center_position[1]
+                y = center_position[1] - theta*center_position[0]
+                center_position_update = [x, y]
+                handles_update = [center_position_update] + handles[1:]
+                radius2 = math.dist(center_position2, handle_rct1_2)
+                theta2 = line_width/radius2
+                x2 = center_position2[0] - theta2*center_position2[1]
+                y2 = center_position2[1] + theta2*center_position2[0]
+                center_position_2_update = [x2, y2]
+                handles_update2 = [center_position_2_update] + handles2[1:]
+                self.setReactionCenterPosition(id, center_position_update)
+                self.setReactionBezierHandles(id, handles_update)
+                self.setReactionCenterPosition(id2, center_position_2_update)
+                self.setReactionBezierHandles(id2, handles_update2)
+            #overlap of handles from one reaction
+            for k in range(len(handles_list)):
+                overlap_handles_idx_list = []
+                for i in range(len(handles_list[k])):
+                    for j in [x for x in range(len(handles_list[k])) if x != i]:
+                        if [(handles_list[k][i][0]-handles_list[k][j][0])**2+(handles_list[k][i][1]-handles_list[k][j][1])**2]<=2*line_width_list[k]**2:
+                            if [i,j] not in overlap_handles_idx_list and [j,i] not in overlap_handles_idx_list:
+                                overlap_handles_idx_list.append([i,j])
+                for i in range(len(overlap_handles_idx_list)):
+                    idx = overlap_handles_idx_list[i][0]
+                    idx2 = overlap_handles_idx_list[i][1]
+                    center_position = center_list[k]
+                    handle = handles_list[k][idx]
+                    handle2 = handles_list[k][idx2]
+                    id = reaction_ids[k]
+                    line_width = line_width_list[k]
+                    #print(center_position, handle, handle2, id, line_width)
+                    radius = math.dist(center_position, handle)
+                    theta = line_width/radius
+                    x = handle[0] + theta*handle[1]
+                    y = handle[1] - theta*handle[0]
+                    handle_update = [x, y]
+                    radius2 = math.dist(center_position, handle2)
+                    theta2 = line_width/radius
+                    x2 = handle2[0] - theta2*handle2[1]
+                    y2 = handle2[1] + theta2*handle2[0]
+                    handle2_update = [x2, y2]
+                    handles_update = handles_list[k]
+                    handles_update[idx] = handle_update
+                    handles_update[idx2] = handle2_update
+                    self.setReactionBezierHandles(id, handles_update)
+                 
     def draw(self, setImageSize = '', scale = 1., output_fileName = '', 
         reactionLineType = 'bezier', showBezierHandles = False, 
         showReactionIds = False, showReversible = False, longText = 'auto-font'):
@@ -6809,29 +6887,34 @@ if __name__ == '__main__':
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
-    filename = "Adel/3.xml"
+    #filename = "Adel/3.xml"
 
     #filename = "MK/sbmld10_2.sbml"
+
+    #autolayout
+    #filename = "overlap_edge/output-1.xml"
+    #filename = "overlap_edge/output-2.xml"
+    filename = "overlap_edge/output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
 
 
-    df_excel = _SBMLToDF(sbmlStr)
-    writer = pd.ExcelWriter('output.xlsx')
-    df_excel[0].to_excel(writer, sheet_name='CompartmentData')
-    df_excel[1].to_excel(writer, sheet_name='NodeData')
-    df_excel[2].to_excel(writer, sheet_name='ReactionData')
-    df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
-    #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    try:
-        df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
-    except:
-        print("did not return shapeData")
-    df_excel[5].to_excel(writer, sheet_name='LineEndingData')
-    df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
-    writer.save()
+    # df_excel = _SBMLToDF(sbmlStr)
+    # writer = pd.ExcelWriter('output.xlsx')
+    # df_excel[0].to_excel(writer, sheet_name='CompartmentData')
+    # df_excel[1].to_excel(writer, sheet_name='NodeData')
+    # df_excel[2].to_excel(writer, sheet_name='ReactionData')
+    # df_excel[3].to_excel(writer, sheet_name='ArbitraryTextData')
+    # #df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # try:
+    #     df_excel[4].to_excel(writer, sheet_name='ArbitraryShapeData')
+    # except:
+    #     print("did not return shapeData")
+    # df_excel[5].to_excel(writer, sheet_name='LineEndingData')
+    # df_excel[6].to_excel(writer, sheet_name='ReactionTextData')
+    # writer.save()
 
     df = load(sbmlStr)
     #df = load(os.path.join(TEST_FOLDER, filename))
@@ -7066,10 +7149,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    sbmlStr_layout_render = df.export()
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
@@ -7080,6 +7163,27 @@ if __name__ == '__main__':
     #df.autolayout(scale = 400, k = 2)
 
     
+    # import tellurium as te
+
+    # r = te.loada ('''
+    # A -> B; v; B -> A; v;
+    # v = 0
+    # ''')
+
+    # # r = te.loada ('''
+    # # S1 + S2 -> S2; v;
+    # # v = 0
+    # # ''')
+
+    # df = load(r.getSBML())
+    # df.autolayout()
+    # # df.draw(output_fileName = 'output.png')
+
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
+
     #df.draw(output_fileName = 'output.png', longText = 'ellipsis')
     df.draw(output_fileName = 'output.png')
 

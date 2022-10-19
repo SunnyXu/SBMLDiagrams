@@ -559,11 +559,11 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         mod_specGlyph_temp_list = []
 
                         center_handle = []
+
                         for j in range(numSpecRefGlyphs):
                             specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)
                             specRefGlyph_id = specRefGlyph.getId()                   
-                            specRefGlyph_id_list.append(specRefGlyph_id)
-                                                
+                            specRefGlyph_id_list.append(specRefGlyph_id)                     
                             curve = specRefGlyph.getCurve()  
                             spec_handle = []                            
                             num_curve = curve.getNumCurveSegments()
@@ -623,7 +623,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             except:
                                 center_handle_candidate = []
                                 spec_handle = []
-
+                            #print("visualize:", spec_handle)
 
                             role = specRefGlyph.getRoleString()
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -1471,7 +1471,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             handles = [center_position]
                         handles.extend(src_handle)
                         handles.extend(dst_handle)
-                        #print("visualize:",handles)
+                    
                         center_position = [(center_position[0]-topLeftCorner[0])*scale, 
                         (center_position[1]-topLeftCorner[1])*scale]
                         for j in range(len(handles)):
@@ -2719,8 +2719,10 @@ if __name__ == '__main__':
 
     #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
 
-    filename = "Adel/1.xml"
+    #filename = "Adel/1.xml"
     #filename = "output.xml"
+
+    filename = "overlap_edge/output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
