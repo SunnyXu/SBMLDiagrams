@@ -6825,7 +6825,7 @@ class load:
 
         return flag
 
-    def _exportGraphML(self, output_fileName = 'output'):
+    def exportGraphML(self, output_fileName = 'output'):
         """
         Export an output file in the basic GraphML format.
         
@@ -6838,12 +6838,10 @@ class load:
         """
     
         sbmlStr = self.export()
-        v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyle=self.color_style)
-        edges = v_info.edges
         model = simplesbml.loadSBMLStr(sbmlStr)
 
-        graph = nx.Graph()
-        g = defaultdict(list)
+        graph = nx.DiGraph() #directed edges
+        # g = defaultdict(list)
         nodes = model.getListOfAllSpecies()
         reaction_ids = model.getListOfReactionIds()
 
@@ -6854,12 +6852,16 @@ class load:
             #position = [pos_pt.x,pos_pt.y]
             graph.add_node(node)
 
-        # for edge in edges: #wrong
-        #     src = edge[0]
-        #     dests = edge[1:]
-        #     for dest in dests:
-        #         graph.add_edge(src, dest)
-        #         g[src].append(dest)
+        for rxn_id in reaction_ids:
+            graph.add_node(rxn_id) #represent the reaction centroid as a node
+            num_rct = model.getNumReactants(rxn_id)
+            num_prd = model.getNumProducts(rxn_id)
+            for i in range(num_rct):
+                rct = model.getReactant(rxn_id, i)
+                graph.add_edge(rct, rxn_id)
+            for i in range(num_prd):
+                prd = model.getProduct(rxn_id, i)
+                graph.add_edge(rxn_id, prd)
 
         nx.write_graphml_lxml(graph, output_fileName + ".graphml")
 
@@ -6867,10 +6869,10 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
-    #filename = "test_comp.xml"
+    filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
     #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
@@ -7224,5 +7226,5 @@ if __name__ == '__main__':
     #df.draw(output_fileName = 'output.png', longText = 'ellipsis')
     #df.draw(output_fileName = 'output.png')
 
-    #df._exportGraphML()
+    df.exportGraphML()
 
