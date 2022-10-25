@@ -23,6 +23,7 @@ import simplesbml
 import networkx as nx
 from collections import defaultdict
 import json
+import numpy as np
 
 #create datafames for NodeData, ReactionData, CompartmentData:
 # Column names
@@ -6582,21 +6583,23 @@ class load:
                 handles2 = handles_list[idx2]
                 line_width = line_width_list[idx]
                 radius = math.dist(center_position, handle_rct1)
-                theta = line_width/radius
-                x = center_position[0] + theta*center_position[1]
-                y = center_position[1] - theta*center_position[0]
-                center_position_update = [x, y]
-                handles_update = [center_position_update] + handles[1:]
-                radius2 = math.dist(center_position2, handle_rct1_2)
-                theta2 = line_width/radius2
-                x2 = center_position2[0] - theta2*center_position2[1]
-                y2 = center_position2[1] + theta2*center_position2[0]
-                center_position_2_update = [x2, y2]
-                handles_update2 = [center_position_2_update] + handles2[1:]
-                self.setReactionCenterPosition(id, center_position_update)
-                self.setReactionBezierHandles(id, handles_update)
-                self.setReactionCenterPosition(id2, center_position_2_update)
-                self.setReactionBezierHandles(id2, handles_update2)
+                if radius != 0:
+                    theta = line_width/radius
+                    x = center_position[0] + theta*center_position[1]
+                    y = center_position[1] - theta*center_position[0]
+                    center_position_update = [x, y]
+                    handles_update = [center_position_update] + handles[1:]
+                    self.setReactionCenterPosition(id, center_position_update)
+                    self.setReactionBezierHandles(id, handles_update)
+                    radius2 = math.dist(center_position2, handle_rct1_2)
+                    if radius2 !=0 :
+                        theta2 = line_width/radius2
+                        x2 = center_position2[0] - theta2*center_position2[1]
+                        y2 = center_position2[1] + theta2*center_position2[0]
+                        center_position_2_update = [x2, y2]
+                        handles_update2 = [center_position_2_update] + handles2[1:]
+                        self.setReactionCenterPosition(id2, center_position_2_update)
+                        self.setReactionBezierHandles(id2, handles_update2)
             #overlap of handles from one reaction
             for k in range(len(handles_list)):
                 overlap_handles_idx_list = []
@@ -6615,20 +6618,22 @@ class load:
                     line_width = line_width_list[k]
                     #print(center_position, handle, handle2, id, line_width)
                     radius = math.dist(center_position, handle)
-                    theta = line_width/radius
-                    x = handle[0] + theta*handle[1]
-                    y = handle[1] - theta*handle[0]
-                    handle_update = [x, y]
-                    radius2 = math.dist(center_position, handle2)
-                    theta2 = line_width/radius
-                    x2 = handle2[0] - theta2*handle2[1]
-                    y2 = handle2[1] + theta2*handle2[0]
-                    handle2_update = [x2, y2]
-                    handles_update = handles_list[k]
-                    handles_update[idx] = handle_update
-                    handles_update[idx2] = handle2_update
-                    self.setReactionBezierHandles(id, handles_update)
-                 
+                    if radius != 0:
+                        theta = line_width/radius
+                        x = handle[0] + theta*handle[1]
+                        y = handle[1] - theta*handle[0]
+                        handle_update = [x, y]
+                        radius2 = math.dist(center_position, handle2)   
+                        if radius2 != 0:
+                            theta2 = line_width/radius
+                            x2 = handle2[0] - theta2*handle2[1]
+                            y2 = handle2[1] + theta2*handle2[0]
+                            handle2_update = [x2, y2]
+                            handles_update = handles_list[k]
+                            handles_update[idx] = handle_update
+                            handles_update[idx2] = handle2_update
+                            self.setReactionBezierHandles(id, handles_update)
+                
     def draw(self, setImageSize = '', scale = 1., output_fileName = '', 
         reactionLineType = 'bezier', showBezierHandles = False, 
         showReactionIds = False, showReversible = False, longText = 'auto-font'):
@@ -6819,13 +6824,50 @@ class load:
             flag = False
 
         return flag
-  
+
+    def _exportGraphML(self, output_fileName = 'output'):
+        """
+        Export an output file in the basic GraphML format.
+        
+        Args:
+            output_fileName: str - the exported GraphML file name (default: 'output').
+
+        Returns:
+            GraphML file. 
+
+        """
+    
+        sbmlStr = self.export()
+        v_info = visualizeSBML._draw(sbmlStr,showImage=False,newStyle=self.color_style)
+        edges = v_info.edges
+        model = simplesbml.loadSBMLStr(sbmlStr)
+
+        graph = nx.Graph()
+        g = defaultdict(list)
+        nodes = model.getListOfAllSpecies()
+        reaction_ids = model.getListOfReactionIds()
+
+        pos = defaultdict(list)
+        graph.add_nodes_from(pos.keys())
+        for node in nodes:
+            #pos_pt = self.getNodePosition(node)
+            #position = [pos_pt.x,pos_pt.y]
+            graph.add_node(node)
+
+        # for edge in edges: #wrong
+        #     src = edge[0]
+        #     dests = edge[1:]
+        #     for dest in dests:
+        #         graph.add_edge(src, dest)
+        #         g[src].append(dest)
+
+        nx.write_graphml_lxml(graph, output_fileName + ".graphml")
 
 if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -6890,11 +6932,6 @@ if __name__ == '__main__':
     #filename = "Adel/3.xml"
 
     #filename = "MK/sbmld10_2.sbml"
-
-    #autolayout
-    #filename = "overlap_edge/output-1.xml"
-    #filename = "overlap_edge/output-2.xml"
-    filename = "overlap_edge/output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
@@ -7170,14 +7207,14 @@ if __name__ == '__main__':
     # v = 0
     # ''')
 
-    # # r = te.loada ('''
-    # # S1 + S2 -> S2; v;
-    # # v = 0
-    # # ''')
+    # r = te.loada ('''
+    # S1 + S2 -> S2; v;
+    # v = 0
+    # ''')
 
     # df = load(r.getSBML())
     # df.autolayout()
-    # # df.draw(output_fileName = 'output.png')
+    # df.draw(output_fileName = 'output.png')
 
     # sbmlStr_layout_render = df.export()
     # f = open("output.xml", "w")
@@ -7185,5 +7222,7 @@ if __name__ == '__main__':
     # f.close()
 
     #df.draw(output_fileName = 'output.png', longText = 'ellipsis')
-    df.draw(output_fileName = 'output.png')
+    #df.draw(output_fileName = 'output.png')
+
+    #df._exportGraphML()
 
