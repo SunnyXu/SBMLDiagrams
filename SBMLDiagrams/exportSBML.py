@@ -1296,6 +1296,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 text_line_width = float(df_NodeData.iloc[i]['txt_line_width'])
                 text_font_size = float(df_NodeData.iloc[i]['txt_font_size'])
                 [text_anchor, text_vanchor] = text_anchor_list
+                text_font_family = (df_NodeData.iloc[i]['txt_font_family'])
             except: #text-only: set default species/node with white color
                 spec_fill_color_str = '#ffffffff'
                 spec_border_color_str = '#ffffffff'
@@ -1304,6 +1305,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 text_line_color_str = '#000000ff'
                 text_line_width = 1.
                 text_font_size = 12.
+                text_font_family = ""
                 [text_anchor, text_vanchor] = ['middle', 'middle']
 
             if gradient_type == '':
@@ -1443,6 +1445,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             style.getGroup().setFontSize(libsbml.RelAbsVector(text_font_size,0))
             style.getGroup().setTextAnchor(text_anchor)
             style.getGroup().setVTextAnchor(text_vanchor)
+            try:
+                style.getGroup().setFontFamily(text_font_family)
+            except:
+                pass
             style.addType("TEXTGLYPH")
             style.addId(textG_id)
 

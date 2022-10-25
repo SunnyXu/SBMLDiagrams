@@ -2258,7 +2258,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
 
 def addText(canvas, txt_str, position, dimension, 
     text_line_color = [0, 0, 0, 255], text_line_width = 1., fontSize = 12., 
-    textAnchor = ['middle', 'middle'], longText='auto-font'):
+    textAnchor = ['middle', 'middle'], text_font_family = "",
+    longText='auto-font'):
 
     """
     Add the text.
@@ -2277,11 +2278,17 @@ def addText(canvas, txt_str, position, dimension,
         text_line_width: float-text line width.
 
     """ 
+    if text_font_family != "":
+        text_family = text_font_family
+    else:
+        text_family = "Arial"
     #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
     fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
-    paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
-    font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
-
+    paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)
+    try:    
+        font = skia.Font(skia.Typeface(text_family, skia.FontStyle.Bold()), fontSize)
+    except:
+        font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
     text = skia.TextBlob.MakeFromString(txt_str, font)
     twidth = font.measureText(txt_str)
     #fontSize = font.getSize() 
@@ -2294,9 +2301,11 @@ def addText(canvas, txt_str, position, dimension,
         while stop_flag_1 == False and stop_flag_2 == False:
             #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
             fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
-            paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
-            font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
-
+            paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width) 
+            try:   
+                font = skia.Font(skia.Typeface(text_family, skia.FontStyle.Bold()), fontSize)
+            except:
+                font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
             text = skia.TextBlob.MakeFromString(txt_str, font)
             twidth = font.measureText(txt_str)
             #fontSize = font.getSize() 
@@ -2346,9 +2355,11 @@ def addText(canvas, txt_str, position, dimension,
         count_while = 0
         while stop_flag_1 == False and stop_flag_2 == False:
             fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
-            paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
-            font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
-
+            paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)  
+            try:  
+                font = skia.Font(skia.Typeface(text_family, skia.FontStyle.Bold()), fontSize)
+            except:    
+                font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
             text = skia.TextBlob.MakeFromString(txt_str, font)
             twidth = font.measureText(txt_str)
             #fontSize = font.getSize() 

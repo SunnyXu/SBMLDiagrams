@@ -1127,7 +1127,6 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     if textGlyph_spec_id_list[k][1] == idList:
                                         render_text_id = textGlyph_spec_id_list[k][0]
                                     
-
                                 for k in range(len(color_list)):
                                     if color_list[k][0] == group.getStroke():
                                         if not color_style.getStyleName():
@@ -1142,8 +1141,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 text_font_size = float(group.getFontSize().getCoordinate())
                                 if math.isnan(text_font_size):
                                     text_font_size = 12.
+                                text_font_family = group.getFontFamily()
                                 text_render.append([render_text_id,color_style.getTextLineColor(),
-								text_line_width, text_font_size,[text_anchor, text_vanchor],idList])
+								text_line_width, text_font_size,[text_anchor, text_vanchor],
+                                idList, text_font_family])
 
                             elif 'GENERALGLYPH' in typeList:
                                 render_gen_id = idList
@@ -1261,6 +1262,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                             text_line_width = text_render[k][2]
                                             text_font_size = text_render[k][3]
                                             [text_anchor, text_vanchor] = text_render[k][4]
+                                            text_font_family = text_render[k][6]
                 
 
                         else:# no layout info about compartment,
@@ -1580,6 +1582,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
                                         [text_anchor, text_vanchor] = text_render[k][4]
+                                        text_font_family = text_render[k][6]
                                 floatingNodes_pos_dict[temp_id] = position
                                 floatingNodes_dim_dict[temp_id] = dimension
                                 allNodes_pos_dict[temp_id] = position
@@ -1604,7 +1607,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
-                                                    longText = longText)
+                                                    text_font_family = text_font_family, longText = longText)
                                 id_list.append(temp_id)                    
                             else:
                                 for k in range(len(spec_render)):
@@ -1629,6 +1632,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
                                         [text_anchor, text_vanchor] = text_render[k][4]
+                                        text_font_family = text_render[k][6]
                                 floatingNodes_pos_dict[temp_id] = position
                                 floatingNodes_dim_dict[temp_id] = dimension
                                 allNodes_pos_dict[temp_id] = position
@@ -1649,7 +1653,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale,
 													fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
-                                                    longText = longText)
+                                                    text_font_family = text_font_family, longText = longText)
                                 id_list.append(temp_id)
                     for j in range(numBoundaryNodes):
                         if temp_id == BoundaryNodes_ids[j]:
@@ -1676,7 +1680,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
                                         [text_anchor, text_vanchor] = text_render[k][4]
-                
+                                        text_font_family = text_render[k][6]
                                 if gradient_fill_color == []:
                                     drawNetwork.addNode(canvas, 'boundary', '', position, dimension,
                                                         color_style.getSpecBorderColor(), color_style.getSpecFillColor(),
@@ -1694,7 +1698,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
-                                                    longText = longText)
+                                                    text_font_family = text_font_family, longText = longText)
                                 id_list.append(temp_id)
                             else:
                                 for k in range(len(spec_render)):
@@ -1719,6 +1723,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                         text_line_width = text_render[k][2]
                                         text_font_size = text_render[k][3]
                                         [text_anchor, text_vanchor] = text_render[k][4]
+                                        text_font_family = text_render[k][6]
                                 if gradient_fill_color == []:
                                  
                                     drawNetwork.addNode(canvas, 'boundary', 'alias', position, dimension,
@@ -1737,7 +1742,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 drawNetwork.addText(canvas, text_content, text_position, text_dimension,
                                                     color_style.getTextLineColor(), text_line_width*scale, 
 													fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor], 
-                                                    longText = longText)
+                                                    text_font_family = text_font_family, longText = longText)
                                 id_list.append(temp_id)
 
                 #arbitrary shape
@@ -1790,6 +1795,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             text_line_width = text_render[k][2]
                             text_font_size = text_render[k][3]
                             [text_anchor, text_vanchor] = text_render[k][4]
+                            text_font_family = text_render[k][6]
 
                     text_position = [(text_position[0]-topLeftCorner[0])*scale,
                     (text_position[1]-topLeftCorner[1])*scale]
@@ -1812,6 +1818,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             text_line_width = text_render[k][2]
                             text_font_size = text_render[k][3]
                             [text_anchor, text_vanchor] = text_render[k][4]
+                            text_font_family = text_render[k][6]
 
                     text_position = [(text_position[0]-topLeftCorner[0])*scale,
                     (text_position[1]-topLeftCorner[1])*scale]
@@ -1950,7 +1957,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         text_content = temp_id
                     drawNetwork.addText(canvas, text_content, position, dimension, color_style.getTextLineColor(), 
                     text_line_width*scale, fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
-                    longText = longText)
+                    text_font_family = text_font_family, longText = longText)
                     floatingNodes_pos_dict[temp_id] = position
                     floatingNodes_dim_dict[temp_id] = dimension
                     allNodes_pos_dict[temp_id] = position
@@ -1972,7 +1979,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         text_content = temp_id
                     drawNetwork.addText(canvas, text_content, position, dimension, color_style.getTextLineColor(),
                     text_line_width*scale, fontSize = text_font_size*scale, textAnchor = [text_anchor, text_vanchor],
-                    longText = longText)
+                    text_font_family = text_font_family, longText = longText)
 
         # except Exception as e:
         #     raise Exception (e)  
@@ -2719,10 +2726,8 @@ if __name__ == '__main__':
 
     #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
 
-    #filename = "Adel/1.xml"
+    filename = "Adel/1.xml"
     #filename = "output.xml"
-
-    filename = "overlap_edge/output.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
