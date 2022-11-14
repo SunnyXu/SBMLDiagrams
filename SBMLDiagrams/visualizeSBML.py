@@ -1071,8 +1071,10 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                             color_style.setReactionLineColor(hex_to_rgb(color_list[k][1]))
                                     if color_list[k][0] == group.getFill():
                                         reaction_line_fill = hex_to_rgb(color_list[k][1])
+                                        
                                 reaction_line_width = group.getStrokeWidth()
-                                color_style.setReactionLineWidth(reaction_line_width)
+                                if not color_style.getStyleName():
+                                    color_style.setReactionLineWidth(reaction_line_width)
                                 shape_type = ""
                                 shape_name = ""
                                 shapeInfo = []

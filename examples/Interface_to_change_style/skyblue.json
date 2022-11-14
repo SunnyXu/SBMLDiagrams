@@ -74,7 +74,7 @@
             60.0,
             40.0
       ],
-      "reaction_line_width": 3.0,
+      "reaction_line_width": null,
       "species_border_width": null,
       "compartment_border_width": null
 }
