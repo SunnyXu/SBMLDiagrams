@@ -89,7 +89,8 @@ def _drawRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash 
         )  
     canvas.drawRect(rect, paintStroke)
 
-def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = False, radius = [0.,0.]):
+def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = False, 
+                            radius = [0.,0.], border_dash = []):
 
     """
     Draw a rounded rectangle on canvas.
@@ -107,6 +108,11 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
         and setNodeFillRadialGradient.
         linewidth: float-line width.
         dash: bool-dashline (True) or not (False as default).
+        radius: list-[rx, ry] in percentage. 
+        border_dash: list-border line in dash.[] means solid; 
+        [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+        [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+        drawing a c-point line followed by a d-point gap.
     """
     radius_percentage = radius
     if radius_percentage == [0.,0.]:
@@ -161,15 +167,24 @@ def _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth
         Color =  outline
         )    
     else:
-        paintStroke = skia.Paint(
-        AntiAlias=True,
-        StrokeWidth=linewidth,
-        Style = skia.Paint.kStroke_Style,
-        Color =  outline
-        )    
+        if type(border_dash) == list and border_dash != []:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            PathEffect=skia.DashPathEffect.Make(border_dash, 0.0),
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )
+        else:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )    
     canvas.drawRoundRect(rect, radius_x, radius_y, paintStroke);   
 
-def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = False):
+def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = False, border_dash = []):
 
     """
     Draw an ellipse on canvas.
@@ -187,6 +202,10 @@ def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = 
         and setNodeFillRadialGradient.
         linewidth: float-line width.
         dash: bool-dashline (True) or not (False as default).
+        border_dash: list-border line in dash.[] means solid; 
+        [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+        [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+        drawing a c-point line followed by a d-point gap.
     """
 
     rect = skia.Rect(x, y, x+width, y+height)    
@@ -234,16 +253,25 @@ def _drawEllipse (canvas, x, y, width, height, outline, fill, linewidth, dash = 
         Color = outline
         )  
     else:  
-        paintStroke = skia.Paint(
-        AntiAlias=True,
-        StrokeWidth=linewidth,
-        Style = skia.Paint.kStroke_Style,
-        Color = outline
-        )  
+        if type(border_dash) == list and border_dash != []:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            PathEffect=skia.DashPathEffect.Make(border_dash, 0.0),
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )
+        else:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            Style = skia.Paint.kStroke_Style,
+            Color = outline
+            )  
     canvas.drawOval(rect, paintStroke)
  
     
-def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
+def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False, border_dash = []):
     
     """
     Draw a circle within a certain size of rectangle on canvas.
@@ -261,6 +289,10 @@ def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
         and setNodeFillRadialGradient.
         linewidth: float-line width.
         dash: bool-dashline (True) or not (False as default).
+        border_dash: list-border line in dash.[] means solid; 
+        [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+        [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+        drawing a c-point line followed by a d-point gap.
     """
 
     centerX = x1 + w/2
@@ -310,12 +342,21 @@ def _drawCircle (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
         Color = outline
         ) 
     else:
-        paint = skia.Paint(
-        AntiAlias=True,
-        Style = skia.Paint.kStroke_Style,
-        StrokeWidth=linewidth,
-        Color = outline
-        )   
+        if type(border_dash) == list and border_dash != []:
+            paintStroke = skia.Paint(
+            AntiAlias=True,
+            StrokeWidth=linewidth,
+            PathEffect=skia.DashPathEffect.Make(border_dash, 0.0),
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )
+        else:
+            paint = skia.Paint(
+            AntiAlias=True,
+            Style = skia.Paint.kStroke_Style,
+            StrokeWidth=linewidth,
+            Color = outline
+            )   
     canvas.drawCircle (centerX, centerY, radius, paint)
 
 def _drawDimer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False):
@@ -474,7 +515,8 @@ def _drawTetramer (canvas, x1, y1, w, h, outline, fill, linewidth, dash = False)
     canvas.drawCircle (centerX3, centerY3, radius, paint)
     canvas.drawCircle (centerX4, centerY4, radius, paint)
 
-def _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, dash = False):
+def _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, 
+                    dash = False, border_dash = []):
     
     """
     Draw a polygon.
@@ -493,6 +535,10 @@ def _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, da
         and setNodeFillRadialGradient.
         linewidth: float-line width.
         dash: bool-dashline (True) or not (False as default).
+        border_dash: list-border line in dash.[] means solid; 
+        [a,b] means drawing a a-point line and folloing a b-point gap and etc;
+        [a,b,c,d] means drawing a a-point line and folloing a b-point gap, and then
+        drawing a c-point line followed by a d-point gap.
     """
 
 
@@ -538,12 +584,21 @@ def _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, da
             Color = outline
         ) 
     else:
-        paintStroke = skia.Paint(
+        if type(border_dash) == list and border_dash != []:
+            paintStroke = skia.Paint(
             AntiAlias=True,
-            Style = skia.Paint.kStroke_Style,
             StrokeWidth=linewidth,
-            Color = outline
-        ) 
+            PathEffect=skia.DashPathEffect.Make(border_dash, 0.0),
+            Style = skia.Paint.kStroke_Style,
+            Color =  outline
+            )
+        else:
+            paintStroke = skia.Paint(
+                AntiAlias=True,
+                Style = skia.Paint.kStroke_Style,
+                StrokeWidth=linewidth,
+                Color = outline
+            ) 
     paintFill.setColor (fill)
     path = skia.Path()
     path.moveTo (pts[0][0],pts[0][1])
@@ -602,7 +657,8 @@ def addProgressBar(canvas, position, dimension, fill_percent, process_broder_wid
     _drawRectangle(canvas, x, y, -f_width, -f_height, outline, process_fill, 0)
 
 
-def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_color, comp_border_width):
+def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_color, comp_border_width,
+    comp_shape_type = '', comp_shape_info = []):
     """
     Add a compartment.
 
@@ -618,6 +674,11 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
         comp_fill_color: list-rgba 1*4 matrix-compartment fill color.
 
         comp_border_width: float-compartment border line width.
+
+        comp_shape_type: str-type of the compartment shape: rectangle, ellipse, polygon.
+
+        comp_shape_info: shape_info: list-rectangle: [[rx, ry]], polygon:[[x1,y1],[x2,y2],[x3,y3],etc], ellipse:[[[x1,y1],[r1,r2]]];
+        where x,y,r are floating numbers from 0 to 100.
         
     """   
 
@@ -628,14 +689,18 @@ def addCompartment(canvas, position, dimension, comp_border_color, comp_fill_col
     linewidth = comp_border_width  
     if linewidth == 0 or linewidth < 0:
         outline = fill  
-    # _drawRectangle (canvas, x, y, width, height, 
-    #               outline=outline, fill = fill, linewidth=linewidth)
-    _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth)
+    
+    try:
+        radius = [comp_shape_info[0][0]/100., comp_shape_info[0][0]/100.]
+    except:
+        radius = [0., 0.]
+    _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, radius = radius)
+        
   
     
 def addNode(canvas, floating_boundary_node, alias_node, position, dimension, 
         spec_border_color, spec_fill_color, spec_border_width, 
-        shapeIdx, shape_name, shape_type, shape_info, complex_shape = ''):
+        shapeIdx, shape_name, shape_type, shape_info, spec_dash, complex_shape = ''):
     
     """
     Add a node.
@@ -667,8 +732,8 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
 
         shape_type: str-type of the node shape: rectangle, ellipse, polygon.
 
-        shape_info: list-polygon:[[x1,y1],[x2,y2],[x3,y3],etc], ellipse:[[[x1,y1],[r1,r2]]];
-                    where x,y,r are floating numbers from 0 to 100.
+        shape_info: list-rectangle: [[rx, ry]], polygon:[[x1,y1],[x2,y2],[x3,y3],etc], ellipse:[[[x1,y1],[r1,r2]]];
+        where x,y,r are floating numbers from 0 to 100.
 
         complex_shape: str-''(default), 'monomer', 'dimer', 'trimer', or 'tetramer'.
 
@@ -695,7 +760,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
             if alias_node == 'alias':
                 _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, dash = True, radius=radius)
             else:
-                _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, radius = radius)
+                _drawRoundedRectangle (canvas, x, y, width, height, outline, fill, linewidth, radius = radius, border_dash = spec_dash)
         
         elif shape_type == 'polygon':
             pts = []
@@ -704,7 +769,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
             if alias_node == 'alias':
                 _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, dash=True)
             else:
-                _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth)
+                _drawPolygon (canvas, x, y, width, height, pts, outline, fill, linewidth, border_dash = spec_dash)
 
         elif shape_type == 'ellipse' or shapeIdx == 2:
             #circle
@@ -719,7 +784,7 @@ def addNode(canvas, floating_boundary_node, alias_node, position, dimension,
                             outline, fill, linewidth, dash=True)
             else:
                 _drawEllipse (canvas, x, y, width, height, 
-                            outline, fill, linewidth)
+                            outline, fill, linewidth, border_dash = spec_dash)
 
 
     elif complex_shape == 'monomer':
@@ -926,7 +991,7 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
         """
 
         src = pts[0]; h1 = pts[1]; h2 = pts[2]; dest = pts[3]
-        if len(reaction_dash) != 0:
+        if type(reaction_dash) == list and reaction_dash != []:
             paint = skia.Paint(
             AntiAlias=True,
             PathEffect=skia.DashPathEffect.Make(reaction_dash, 0.0),
@@ -989,8 +1054,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 line_end_pt = _cross_point(rct_handle_position, [c1[0],c1[1]],[s1[0],s1[1]])
                 if reverse and showReversible:
                     line_end_pt = _cross_point(rct_handle_position, 
-                    [c1[0]-reaction_line_width*2,c1[1]-reaction_line_width*2],
-                    [s1[0]+reaction_line_width*4,s1[1]+reaction_line_width*4])
+                    [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
+                    [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
 
             #draw bezier
             try:
@@ -1005,13 +1070,21 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                             pts.append(rct_center_position)
                 else:  
                     line_end_pt = rct_lineend_pos[i]
-                    pts.append(line_end_pt)
+ 
                     # try:
                     #     arrow_end_pt = _cross_point(line_end_pt, 
                     #         [c1[0]-reaction_line_width, c1[1]-reaction_line_width],
                     #         [s1[0]+2.*reaction_line_width, s1[1]+2.*reaction_line_width])
                     # except:
+                    #     arrow_end_pt = line_end_pt
                     arrow_end_pt = line_end_pt
+                    if not showReversible:
+                        try:
+                            line_end_pt = _cross_point(line_end_pt, c1, s1)
+                        except:
+                            pass
+      
+                    pts.append(line_end_pt)
             except:
                 if reverse and line_end_pt != None:
                     pts.append(line_end_pt)
@@ -1233,8 +1306,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 prd_handle_position = center_position
                 arrow_head_pt = _cross_point(prd_handle_position, c2, s2)
                 line_head_pt = _cross_point(prd_handle_position, 
-                [c2[0]-reaction_line_width*2,c2[1]-reaction_line_width*2],
-                [s2[0]+reaction_line_width*4,s2[1]+reaction_line_width*4])
+                [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
+                [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
 
             #draw bezier
             try:
@@ -1247,15 +1320,20 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         else:
                             prd_center_position = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
                             pts.append(prd_center_position)
-                else: 
-                    line_head_pt = prd_lineend_pos[i]     
-                    pts.append(line_head_pt)
+                else:
+                    line_head_pt = prd_lineend_pos[i]                           
+                    pts.append(line_head_pt)           
                     # try:
                     #     arrow_head_pt = _cross_point(line_head_pt, 
                     #     [c2[0]-reaction_line_width, c2[1]-reaction_line_width],
                     #     [s2[0]+2.*reaction_line_width, s2[1]+2.*reaction_line_width])
                     # except:
-                    arrow_head_pt = line_head_pt
+                    #     arrow_head_pt = line_head_pt
+                    # if arrow_head_pt == None:
+                    #     arrow_head_pt = line_head_pt 
+                    arrow_head_pt = line_head_pt     
+        
+                    
             except:
                 if line_head_pt != None:
                     pts.append(line_head_pt)
@@ -1480,8 +1558,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 line_end_pt = _cross_point(arcCenter, [c1[0],c1[1]],[s1[0],s1[1]])
                 if reverse and showReversible:
                     line_end_pt = _cross_point(arcCenter, 
-                    [c1[0]-reaction_line_width*2,c1[1]-reaction_line_width*2],
-                    [s1[0]+reaction_line_width*4,s1[1]+reaction_line_width*4])
+                    [c1[0]-reaction_line_width,c1[1]-reaction_line_width],
+                    [s1[0]+reaction_line_width*2,s1[1]+reaction_line_width*2])
 
             try:
                 if rct_lineend_pos[i][0] < (c1[0] + s1[0]) and rct_lineend_pos[i][0] > c1[0] and rct_lineend_pos[i][1] > c1[1] and rct_lineend_pos[i][1] < (c1[1]+s1[1]):
@@ -1493,14 +1571,20 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                         lineColor, linewidth)
                 else:
                     line_end_pt = rct_lineend_pos[i]
-                    _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
-                        lineColor, linewidth)
                     # try:
                     #     arrow_end_pt = _cross_point(line_end_pt, 
                     #     [c1[0]-reaction_line_width, c1[1]-reaction_line_width],
                     #     [s1[0]+2.*reaction_line_width, s1[1]+2.*reaction_line_width])
                     # except:
+                    #     arrow_end_pt = line_end_pt
                     arrow_end_pt = line_end_pt
+                    if not showReversible:
+                        try:
+                            line_end_pt = _cross_point(line_end_pt, c1, s1) 
+                        except:
+                            pass        
+                    _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
+                        lineColor, linewidth)
             except:
                 if reverse and line_end_pt != None:
                     _drawLine(canvas, arcCenter[0], arcCenter[1], line_end_pt[0], line_end_pt[1], 
@@ -1726,8 +1810,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                 #arcCenter is inside the node
                 arrow_head_pt = [c2[0]+.5*s2[0], c2[1]+.5*s2[1]]
                 line_head_pt = _cross_point(arcCenter, 
-                [c2[0]-reaction_line_width*2,c2[1]-reaction_line_width*2],
-                [s2[0]+reaction_line_width*4,s2[1]+reaction_line_width*4])
+                [c2[0]-reaction_line_width,c2[1]-reaction_line_width],
+                [s2[0]+reaction_line_width*2,s2[1]+reaction_line_width*2])
 
             try:
                 if prd_lineend_pos[i][0] < (c2[0] + s2[0]) and prd_lineend_pos[i][0] > c2[0]  and prd_lineend_pos[i][1] > c2[1] and prd_lineend_pos[i][1] < (c2[1]+s2[1]):
@@ -1746,6 +1830,9 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     #         [c2[0]-reaction_line_width, c2[1]-reaction_line_width],
                     #         [s2[0]+2.*reaction_line_width, s2[1]+2.*reaction_line_width])
                     # except:
+                    #     arrow_head_pt = line_head_pt
+                    # if arrow_head_pt == None:
+                    #     arrow_head_pt = line_head_pt  
                     arrow_head_pt = line_head_pt
             except:
                 if line_head_pt != None:
@@ -2171,7 +2258,8 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
 
 def addText(canvas, txt_str, position, dimension, 
     text_line_color = [0, 0, 0, 255], text_line_width = 1., fontSize = 12., 
-    textAnchor = ['middle', 'middle'], longText='auto-font'):
+    textAnchor = ['middle', 'middle'], text_font_family = "",
+    longText='auto-font'):
 
     """
     Add the text.
@@ -2190,11 +2278,17 @@ def addText(canvas, txt_str, position, dimension,
         text_line_width: float-text line width.
 
     """ 
+    if text_font_family != "":
+        text_family = text_font_family
+    else:
+        text_family = "Arial"
     #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
     fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
-    paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
-    font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
-
+    paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)
+    try:    
+        font = skia.Font(skia.Typeface(text_family, skia.FontStyle.Bold()), fontSize)
+    except:
+        font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
     text = skia.TextBlob.MakeFromString(txt_str, font)
     twidth = font.measureText(txt_str)
     #fontSize = font.getSize() 
@@ -2207,9 +2301,11 @@ def addText(canvas, txt_str, position, dimension,
         while stop_flag_1 == False and stop_flag_2 == False:
             #default fontSize is 12 in the function font = skia.Font(skia.Typeface())
             fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
-            paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
-            font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
-
+            paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width) 
+            try:   
+                font = skia.Font(skia.Typeface(text_family, skia.FontStyle.Bold()), fontSize)
+            except:
+                font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
             text = skia.TextBlob.MakeFromString(txt_str, font)
             twidth = font.measureText(txt_str)
             #fontSize = font.getSize() 
@@ -2235,7 +2331,7 @@ def addText(canvas, txt_str, position, dimension,
                 # Decrease the size of the text (fontsize) to accomodate the text boundingbox/node bounding box
                 fontSize = fontSize - 1.
             count_while += 1
-            if count_while > 20:
+            if count_while > 50:
                 stop_flag_1 = True
                 position = [position[0], position[1] + theight] #adjust of the text position
                 [position_x,position_y] = position
@@ -2259,9 +2355,11 @@ def addText(canvas, txt_str, position, dimension,
         count_while = 0
         while stop_flag_1 == False and stop_flag_2 == False:
             fontColor = skia.Color(text_line_color[0], text_line_color[1], text_line_color[2], text_line_color[3])    
-            paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)    
-            font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
-
+            paintText = skia.Paint(Color = fontColor, StrokeWidth=text_line_width)  
+            try:  
+                font = skia.Font(skia.Typeface(text_family, skia.FontStyle.Bold()), fontSize)
+            except:    
+                font = skia.Font(skia.Typeface('Arial', skia.FontStyle.Bold()), fontSize)
             text = skia.TextBlob.MakeFromString(txt_str, font)
             twidth = font.measureText(txt_str)
             #fontSize = font.getSize() 
@@ -2290,7 +2388,7 @@ def addText(canvas, txt_str, position, dimension,
                 txt_str = txt_str[:txt_str_len] + '....'
 
             count_while += 1
-            if count_while > 20:
+            if count_while > 50:
                 stop_flag_1 = True
                 position = [position[0], position[1] + theight] #adjust of the text position
                 [position_x,position_y] = position
