@@ -1215,8 +1215,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         vol= model.getCompartmentVolume(i)
                         dimension = imageSize
                         position = [0.,0.]
-                        comp_fill_color = [255, 255, 255, 255]
-                        comp_border_color = [255, 255, 255, 255]
+                        comp_fill_color = [255, 255, 255, 0]
+                        comp_border_color = [255, 255, 255, 0]
                         comp_border_width = 2.0
                         text_content = ''
                         text_position = [0.,0.]
@@ -1277,8 +1277,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             comp_shape_type = ''
                             comp_shape_info = []
                             #allows users to set the color of the "_compartment_default" as the canvas
-                            #color_style.setCompBorderColor((255, 255, 255, 255))
-                            #color_style.setCompFillColor((255, 255, 255, 255)
+                            #color_style.setCompBorderColor((255, 255, 255, 0))
+                            #color_style.setCompFillColor((255, 255, 255, 0)
                         drawNetwork.addCompartment(canvas, position, dimension,
                         color_style.getCompBorderColor(), color_style.getCompFillColor(),color_style.getCompBorderWidth()*scale, 
                         comp_shape_type=comp_shape_type, comp_shape_info=comp_shape_info)
@@ -2140,8 +2140,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
         if Comps_ids[i] != "_compartment_default_":
             comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
             comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
-            if comp_temp_fill_color[0] != [255,255,255,255] or \
-                comp_temp_border_color[0] != [255,255,255,255]:
+            if comp_temp_fill_color[0] != [255,255,255,0] or \
+                comp_temp_border_color[0] != [255,255,255,0]:
                 comp_temp_position = _getCompartmentPosition(_df, Comps_ids[i])[0]
                 if comp_temp_position[0] < position[0]:
                     position[0] = comp_temp_position[0]
@@ -2152,8 +2152,8 @@ def _getNetworkTopLeftCorner(sbmlStr):
     #     if Comps_ids[i] != "_compartment_default_":
     #         comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
     #         comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
-    #         if comp_temp_fill_color[0] != [255,255,255,255] or \
-    #             comp_temp_border_color[0] != [255,255,255,255]:
+    #         if comp_temp_fill_color[0] != [255,255,255,0] or \
+    #             comp_temp_border_color[0] != [255,255,255,0]:
     #             comp_temp_position = _getCompartmentPosition(_df, Comps_ids[i])[0]
     #             if comp_temp_position[0] < position[0]:
     #                 position[0] = comp_temp_position[0]
@@ -2310,8 +2310,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
         if Comps_ids[i] != "_compartment_default_":
             comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
             comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
-            if comp_temp_fill_color[0] != [255,255,255,255] or \
-            comp_temp_border_color[0] != [255,255,255,255]:
+            if comp_temp_fill_color[0] != [255,255,255,0] or \
+            comp_temp_border_color[0] != [255,255,255,0]:
                 comp_temp_size = _getCompartmentSize(_df, Comps_ids[i])[0]
                 comp_temp_position_list = _getCompartmentPosition(_df, Comps_ids[i])
                 comp_temp_position = [comp_temp_position_list[0][0]+comp_temp_size[0],
@@ -2324,8 +2324,8 @@ def _getNetworkBottomRightCorner(sbmlStr):
     #     if Comps_ids[i] != "_compartment_default_":
     #         comp_temp_fill_color = df.getCompartmentFillColor(Comps_ids[i])
     #         comp_temp_border_color = df.getCompartmentBorderColor(Comps_ids[i])
-    #         if comp_temp_fill_color[0] != [255,255,255,255] or \
-    #         comp_temp_border_color[0] != [255,255,255,255]:
+    #         if comp_temp_fill_color[0] != [255,255,255,0] or \
+    #         comp_temp_border_color[0] != [255,255,255,0]:
     #             comp_temp_size = _getCompartmentSize(_df, Comps_ids[i])[0]
     #             comp_temp_position_list = _getCompartmentPosition(_df, Comps_ids[i])
     #             comp_temp_position = [comp_temp_position_list[0][0]+comp_temp_size[0],

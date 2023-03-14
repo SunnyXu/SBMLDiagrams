@@ -409,7 +409,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         #
         layout = mplugin.createLayout()
         layout.setId("SBMLDiagrams_layout")
-        layout.setDimensions(libsbml.Dimensions(layoutns, 800.0, 800.0))
+        layout.setDimensions(libsbml.Dimensions(layoutns, 1000.0, 1000.0))
+        # compartmentDefaultSize = [1000, 1000]
         # random network (40+800x, 40+800y)
 
         #create the CompartmentGlyph and SpeciesGlyphs
