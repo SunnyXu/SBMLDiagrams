@@ -198,11 +198,13 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 comp_id="_compartment_default_"
                 compartment.setId(comp_id)
                 compartment.setConstant(True)
+                compartment.setVolume(1.)
             for i in range(numCompartments):   
                 compartment = model.createCompartment()
                 comp_id=df_CompartmentData.iloc[i]['id']
                 compartment.setId(comp_id)
                 compartment.setConstant(True)
+                compartment.setVolume(1.)
             spec_id_list = []
             for i in range(numNodes):
                 original_index = df_NodeData.iloc[i]['original_idx']
@@ -230,6 +232,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             comp_id="_compartment_default_"
             compartment.setId(comp_id)
             compartment.setConstant(True)
+            compartment.setVolume(1.)
             spec_id_list = []
             for i in range(numNodes):
                 original_index = df_NodeData.iloc[i]['original_idx']
@@ -1013,6 +1016,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         #lineEnding
         for i in range(numlineEndings):
             lineEnding_id = df_LineEndingData.iloc[i]['id']
+            #print(lineEnding_id)
             try:
                 position = list(df_LineEndingData.iloc[i]['position'][1:-1].split(","))
                 size = list(df_LineEndingData.iloc[i]['size'][1:-1].split(","))
@@ -1030,68 +1034,67 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
             lineEnding = rInfo.createLineEnding()
             lineEnding.setId(lineEnding_id)
-            if lineEnding_id != '_line_ending_default_NONE_':
-                bb_id = "bb_" + lineEnding_id
-                [pos_x, pos_y] = position
-                [width, height] = size
-                if size != [0.,0.]:
-                    lineEnding.setEnableRotationalMapping(True)
-                    lineEnding.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
+            #if lineEnding_id != '_line_ending_default_NONE_':
+            if len(fill_color) == 4:
+                fill_color_str    = '#%02x%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]),int(fill_color[3]))
+                color = rInfo.createColorDefinition()
+                color.setId("lineEnding_fill_color" + "_" + lineEnding_id)
+                color.setColorValue(fill_color_str)
+                lineEnding.getGroup().setFill('lineEnding_fill_color' + '_' + lineEnding_id)
 
-                    if len(fill_color) == 4:
-                        fill_color_str    = '#%02x%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]),int(fill_color[3]))
-                        color = rInfo.createColorDefinition()
-                        color.setId("lineEnding_fill_color" + "_" + lineEnding_id)
-                        color.setColorValue(fill_color_str)
-                        lineEnding.getGroup().setFill('lineEnding_fill_color' + '_' + lineEnding_id)
+            elif len(fill_color) == 3:
+                fill_color_str    = '#%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]))     
+                color = rInfo.createColorDefinition()
+                color.setId("lineEnding_fill_color" + "_" + lineEnding_id)
+                color.setColorValue(fill_color_str)
+                lineEnding.getGroup().setFill('lineEnding_fill_color' + '_' + lineEnding_id)
 
-                    elif len(fill_color) == 3:
-                        fill_color_str    = '#%02x%02x%02x' % (int(fill_color[0]),int(fill_color[1]),int(fill_color[2]))     
-                        color = rInfo.createColorDefinition()
-                        color.setId("lineEnding_fill_color" + "_" + lineEnding_id)
-                        color.setColorValue(fill_color_str)
-                        lineEnding.getGroup().setFill('lineEnding_fill_color' + '_' + lineEnding_id)
+            if len(border_color) == 4:
+                border_color_str    = '#%02x%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]),int(border_color[3]))
+                color = rInfo.createColorDefinition()
+                color.setId("lineEnding_border_color" + "_" + lineEnding_id)
+                color.setColorValue(border_color_str)
+                lineEnding.getGroup().setStroke('lineEnding_border_color' + '_' + lineEnding_id)
 
-                    if len(border_color) == 4:
-                        border_color_str    = '#%02x%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]),int(border_color[3]))
-                        color = rInfo.createColorDefinition()
-                        color.setId("lineEnding_border_color" + "_" + lineEnding_id)
-                        color.setColorValue(border_color_str)
-                        lineEnding.getGroup().setStroke('lineEnding_border_color' + '_' + lineEnding_id)
+            elif len(border_color) == 3:
+                border_color_str    = '#%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]))     
+                color = rInfo.createColorDefinition()
+                color.setId("lineEnding_border_color" + "_" + lineEnding_id)
+                color.setColorValue(border_color_str)
+                lineEnding.getGroup().setStroke('lineEnding_border_color' + '_' + lineEnding_id)
 
-                    elif len(border_color) == 3:
-                        border_color_str    = '#%02x%02x%02x' % (int(border_color[0]),int(border_color[1]),int(border_color[2]))     
-                        color = rInfo.createColorDefinition()
-                        color.setId("lineEnding_border_color" + "_" + lineEnding_id)
-                        color.setColorValue(border_color_str)
-                        lineEnding.getGroup().setStroke('lineEnding_border_color' + '_' + lineEnding_id)
+            bb_id = "bb_" + lineEnding_id
+            [pos_x, pos_y] = position
+            [width, height] = size
+            if size != [0.,0.]:
+                lineEnding.setEnableRotationalMapping(True)
+                lineEnding.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
 
+                for j in range(len(shape_type_list)):
+                    if shape_type_list[j] == 'polygon':
+                        polygon = lineEnding.getGroup().createPolygon()
+                        for k in range(len(shape_info_list[j])):
+                            x = shape_info_list[j][k][0]
+                            y = shape_info_list[j][k][1]                           
+                            renderPoint = polygon.createPoint()
+                            renderPoint.setCoordinates(libsbml.RelAbsVector(0,x), libsbml.RelAbsVector(0,y))
 
-                    for j in range(len(shape_type_list)):
-                        if shape_type_list[j] == 'polygon':
-                            polygon = lineEnding.getGroup().createPolygon()
-                            for k in range(len(shape_info_list[j])):
-                                x = shape_info_list[j][k][0]
-                                y = shape_info_list[j][k][1]                           
-                                renderPoint = polygon.createPoint()
-                                renderPoint.setCoordinates(libsbml.RelAbsVector(0,x), libsbml.RelAbsVector(0,y))
-
-                        elif shape_type_list[j] == 'ellipse':
-                            ellipse = lineEnding.getGroup().createEllipse()
-                            cx = shape_info_list[j][0][0]
-                            cy = shape_info_list[j][0][1]
-                            rx = shape_info_list[j][1][0]
-                            ry = shape_info_list[j][1][1] 
-                            ellipse.setCenter2D(libsbml.RelAbsVector(0, cx), libsbml.RelAbsVector(0, cy))
-                            ellipse.setRadii(libsbml.RelAbsVector(0, rx),libsbml.RelAbsVector(0, ry))
-                
-                        elif shape_type_list[j] == 'rectangle':
-                            rectangle = lineEnding.getGroup().createRectangle()
-                            w = shape_info_list[j][0]
-                            h = shape_info_list[j][1]  
-                            rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),
-                            libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
-                            libsbml.RelAbsVector(0,w),libsbml.RelAbsVector(0,h))
+                    elif shape_type_list[j] == 'ellipse':
+                        ellipse = lineEnding.getGroup().createEllipse()
+                        cx = shape_info_list[j][0][0]
+                        cy = shape_info_list[j][0][1]
+                        rx = shape_info_list[j][1][0]
+                        ry = shape_info_list[j][1][1] 
+                        ellipse.setCenter2D(libsbml.RelAbsVector(0, cx), libsbml.RelAbsVector(0, cy))
+                        ellipse.setRadii(libsbml.RelAbsVector(0, rx),libsbml.RelAbsVector(0, ry))
+            
+                    elif shape_type_list[j] == 'rectangle':
+                        rectangle = lineEnding.getGroup().createRectangle()
+                        w = shape_info_list[j][0]
+                        h = shape_info_list[j][1]  
+                        rectangle.setCoordinatesAndSize(libsbml.RelAbsVector(0,0),
+                        libsbml.RelAbsVector(0,0),libsbml.RelAbsVector(0,0),
+                        libsbml.RelAbsVector(0,w),libsbml.RelAbsVector(0,h))
 
         if numCompartments != 0:  
             for i in range(numCompartments):
@@ -1575,6 +1578,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     style.getGroup().setEndHead(src_lineending[j])
                     style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                     style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
+                    # lineEnding_id = src_lineending[j]
+                    # style.getGroup().setEndHead(lineEnding_id)
+                    # style.getGroup().setStroke("lineEnding_border_color" + "_" + lineEnding_id)
+                    # style.getGroup().setFill("lineEnding_fill_color" + "_" + lineEnding_id)
                     style.getGroup().setStrokeWidth(reaction_line_thickness)
                     if len(src_dash) != 0:
                         for pt in range(len(src_dash)):
@@ -1597,6 +1604,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     style.getGroup().setEndHead(dst_lineending[j])
                     style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                     style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
+                    # lineEnding_id = dst_lineending[j]
+                    # style.getGroup().setEndHead(lineEnding_id)
+                    # style.getGroup().setStroke("lineEnding_border_color" + "_" + lineEnding_id)
+                    # style.getGroup().setFill("lineEnding_fill_color" + "_" + lineEnding_id)
                     style.getGroup().setStrokeWidth(reaction_line_thickness)
                     if len(dst_dash) != 0:
                         for pt in range(len(dst_dash)):
@@ -1619,6 +1630,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     style.getGroup().setEndHead(mod_lineending[j])
                     style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                     style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
+                    # lineEnding_id = mod_lineending[j]
+                    # style.getGroup().setEndHead(lineEnding_id)
+                    # style.getGroup().setStroke("lineEnding_border_color" + "_" + lineEnding_id)
+                    # style.getGroup().setFill("lineEnding_fill_color" + "_" + lineEnding_id)
                     style.getGroup().setStrokeWidth(reaction_line_thickness)
                     style.addType('SPECIESREFERENCEGLYPH')
                     style.addId(specsRefG_id)
