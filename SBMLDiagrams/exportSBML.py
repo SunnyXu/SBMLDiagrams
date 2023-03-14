@@ -1461,6 +1461,19 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 rxn_id = df_ReactionData.iloc[i]['id']
                 reactionG_id = "ReactionG_" + rxn_id
                 try:
+                    rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
+                    prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
+                    mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
+                except:
+                    rct_list = df_ReactionData.iloc[i]['sources']
+                    prd_list = df_ReactionData.iloc[i]['targets']
+                    mod_list = df_ReactionData.iloc[i]['modifiers']
+               
+                rct_num = len(rct_list)
+                prd_num = len(prd_list)
+                mod_num = len(mod_list)
+
+                try:
                     reaction_fill_color = list(df_ReactionData.iloc[i]['fill_color'][1:-1].split(","))
                 except:
                     reaction_fill_color = df_ReactionData.iloc[i]['fill_color']
@@ -1573,10 +1586,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                     src_dash = list(df_ReactionData.iloc[i]['src_dash'])
                     dst_dash = list(df_ReactionData.iloc[i]['tgt_dash'])
 
-                for j in range(len(src_lineending)):
+                for j in range(rct_num):
                     specsRefG_id = "SpecRefG_" + rxn_id + "_rct" + str(j)
                     style = rInfo.createStyle("specRefGlyphStyle" + rxn_id + "_rct" + str(j))
-                    style.getGroup().setEndHead(src_lineending[j])
+                    style.getGroup().setEndHead(src_lineending[0])
                     style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                     style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
                     # lineEnding_id = src_lineending[j]
@@ -1599,10 +1612,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                                     pass
                     style.addType('SPECIESREFERENCEGLYPH')
                     style.addId(specsRefG_id)
-                for j in range(len(dst_lineending)):
+                for j in range(prd_num):
                     specsRefG_id = "SpecRefG_" + rxn_id + "_prd" + str(j)
                     style = rInfo.createStyle("specRefGlyphStyle" + rxn_id + "_prd" + str(j))
-                    style.getGroup().setEndHead(dst_lineending[j])
+                    style.getGroup().setEndHead(dst_lineending[0])
                     style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                     style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
                     # lineEnding_id = dst_lineending[j]
@@ -1625,10 +1638,10 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                                     pass
                     style.addType('SPECIESREFERENCEGLYPH')
                     style.addId(specsRefG_id)
-                for j in range(len(mod_lineending)):
+                for j in range(mod_num):
                     specsRefG_id = "SpecRefG_" + rxn_id + "_mod" + str(j)
                     style = rInfo.createStyle("specRefGlyphStyle" + rxn_id + "_mod" + str(j))
-                    style.getGroup().setEndHead(mod_lineending[j])
+                    style.getGroup().setEndHead(mod_lineending[0])
                     style.getGroup().setStroke("reaction_stroke_color" + "_" + rxn_id)
                     style.getGroup().setFill("reaction_fill_color" + "_" + rxn_id)
                     # lineEnding_id = mod_lineending[j]
