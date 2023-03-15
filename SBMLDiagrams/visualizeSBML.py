@@ -1215,8 +1215,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                         vol= model.getCompartmentVolume(i)
                         dimension = imageSize
                         position = [0.,0.]
-                        comp_fill_color = [255, 255, 255, 0]
-                        comp_border_color = [255, 255, 255, 0]
+                        comp_fill_color = [255, 255, 255, 255]
+                        comp_border_color = [255, 255, 255, 255]
                         comp_border_width = 2.0
                         text_content = ''
                         text_position = [0.,0.]
@@ -1277,8 +1277,8 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                             comp_shape_type = ''
                             comp_shape_info = []
                             #allows users to set the color of the "_compartment_default" as the canvas
-                            #color_style.setCompBorderColor((255, 255, 255, 0))
-                            #color_style.setCompFillColor((255, 255, 255, 0)
+                            #color_style.setCompBorderColor((255, 255, 255, 255))
+                            #color_style.setCompFillColor((255, 255, 255, 255)
                         drawNetwork.addCompartment(canvas, position, dimension,
                         color_style.getCompBorderColor(), color_style.getCompFillColor(),color_style.getCompBorderWidth()*scale, 
                         comp_shape_type=comp_shape_type, comp_shape_info=comp_shape_info)

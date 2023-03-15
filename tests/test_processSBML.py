@@ -963,9 +963,9 @@ class TestImportSBML(unittest.TestCase):
     self.assertTrue(self.df.getCompartmentPosition("_compartment_default_").x == [0, 0][0])
     self.assertTrue(self.df.getCompartmentSize("_compartment_default_").x == [1000, 1000][0])
     self.assertTrue(self.df.getCompartmentFillColor("_compartment_default_") == \
-     [[255, 255, 255, 0], 'white', '#FFFFFF00'])
+     [[255, 255, 255, 255], 'white', '#FFFFFFFF'])
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_") == \
-     [[255, 255, 255, 0], 'white', '#FFFFFF00'])
+     [[255, 255, 255, 255], 'white', '#FFFFFFFF'])
     self.assertTrue(self.df.getCompartmentBorderWidth("_compartment_default_") == 2.)
     self.assertTrue(self.df.getCompartmentTextPosition("_compartment_default_").x == 0.)
     self.assertTrue(self.df.getCompartmentTextSize("_compartment_default_").x == 0.)

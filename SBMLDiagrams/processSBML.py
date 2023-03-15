@@ -231,8 +231,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     #set the default values without render info:
     #comp_fill_color = [158, 169, 255, 200]
     #comp_border_color = [0, 29, 255, 255]
-    comp_fill_color = [255, 255, 255, 0]
-    comp_border_color = [255, 255, 255, 0]
+    comp_fill_color = [255, 255, 255, 255]
+    comp_border_color = [255, 255, 255, 255]
     comp_border_width = 2.0
     comp_shape_name = ''
     comp_shape_type = ''
@@ -1739,8 +1739,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     vol = 1.
                 position = [0.,0.]
                 dimension = compartmentDefaultSize
-                comp_fill_color = [255, 255, 255, 0]
-                comp_border_color = [255, 255, 255, 0]
+                comp_fill_color = [255, 255, 255, 255]
+                comp_border_color = [255, 255, 255, 255]
                 comp_border_width = 2.0
                 text_content = ''
                 text_position = [0.,0.]
@@ -1750,8 +1750,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     if temp_id == "_compartment_default_":
                         position = [0, 0]
                         dimension = compartmentDefaultSize
-                        #comp_border_color = [255, 255, 255, 0]
-                        #comp_fill_color = [255, 255, 255, 0]
+                        #comp_border_color = [255, 255, 255, 255]
+                        #comp_fill_color = [255, 255, 255, 255]
 
                     for j in range(len(comp_id_list)):
                         if comp_id_list[j] == temp_id:
@@ -1814,8 +1814,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         comp_shape_info = []
                         #If there is no render info about the compartments given from sbml,
                         #they will be set as white. 
-                        #comp_fill_color = [255, 255, 255, 0]
-                        #comp_border_color = [255, 255, 255, 0]
+                        #comp_fill_color = [255, 255, 255, 255]
+                        #comp_border_color = [255, 255, 255, 255]
                 
 
                 CompartmentData_row_dct = {k:[] for k in COLUMN_NAME_df_CompartmentData}
@@ -2794,8 +2794,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     vol = 1.
                 dimension = compartmentDefaultSize
                 position = [0.,0.]
-                comp_border_color = [255, 255, 255, 0]
-                comp_fill_color = [255, 255, 255, 0]
+                comp_border_color = [255, 255, 255, 255]
+                comp_fill_color = [255, 255, 255, 255]
                 text_content = ''
                 text_position = [0.,0.]
                 text_dimension = [0.,0.]
@@ -6897,7 +6897,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -6956,7 +6956,7 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/cycle1-straight.xml"
     #filename = "Sauro-Coyote/cycle1-straight2.xml"
     #filename = "Sauro-Coyote/test.xml"
-    #filename = "Sauro-Coyote/m2.xml"
+    filename = "Sauro-Coyote/m2.xml"
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
