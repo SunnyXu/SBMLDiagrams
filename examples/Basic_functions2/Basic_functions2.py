@@ -54,3 +54,7 @@ for s in sp:
     createCircleNode(la, s)
 
 la.draw(output_fileName = 'output.png')
+# sbmlStr_layout_render = la.export()
+# f = open("output.xml", "w")
+# f.write(sbmlStr_layout_render)
+# f.close()

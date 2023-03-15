@@ -585,7 +585,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             spec_concentration_list.append(concentration)
 
                         if center_handle == []:
-                                center_handle.append(center_handle_candidate)
+                            center_handle.append(center_handle_candidate)
 
                         # #some "role" assigned wrongly
                         # for k in range(len(spec_specGlyph_id_list)):
@@ -1735,6 +1735,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 temp_id = Comps_ids[i]
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
+                if math.isnan(vol):
+                    vol = 1.
                 position = [0.,0.]
                 dimension = compartmentDefaultSize
                 comp_fill_color = [255, 255, 255, 255]
@@ -2407,16 +2409,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         reaction_shape_name = rxn_render[j][6]
                         reaction_shape_type = rxn_render[j][7]
                         reaction_shape_info = rxn_render[j][8]
-                    if len(rxn_render) == 1:
-                        if rxn_render[0][0] == '':#global render
-                            reaction_line_color = rxn_render[0][1]
-                            reaction_line_width = rxn_render[0][2]
-                            reaction_arrow_head_size = rxn_render[0][3]
-                            reaction_dash = rxn_render[0][4]
-                            reaction_line_fill = rxn_render[0][5]
-                            reaction_shape_name = rxn_render[j][6]
-                            reaction_shape_type = rxn_render[j][7]
-                            reaction_shape_info = rxn_render[j][8]
+                if len(rxn_render) == 1:
+                    if rxn_render[0][0] == '':#global render
+                        reaction_line_color = rxn_render[0][1]
+                        reaction_line_width = rxn_render[0][2]
+                        reaction_arrow_head_size = rxn_render[0][3]
+                        reaction_dash = rxn_render[0][4]
+                        reaction_line_fill = rxn_render[0][5]
+                        reaction_shape_name = rxn_render[j][6]
+                        reaction_shape_type = rxn_render[j][7]
+                        reaction_shape_info = rxn_render[j][8]
+            
                 # try:
                 #     if reaction_dash == [] and src_dash != []:
                 #         reaction_dash = src_dash
@@ -2498,17 +2501,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[RXNREV].append(rxn_rev)
                     ReactionData_row_dct[FILLCOLOR].append(reaction_line_fill)
                     if src_endhead == []:
-                        src_endhead = ["_line_ending_default_NONE_"]
+                        src_endhead = ["_line_ending_default_NONE_" + temp_id]
                         #default src endhead 
-                        if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values:        
+                        if ('_line_ending_default_NONE_' + temp_id) not in df_LineEndingData[ID].values:        
                             LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                            LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
+                            LineEndingData_row_dct[ID].append('_line_ending_default_NONE_' + temp_id)
                             LineEndingData_row_dct[POSITION].append([0.,0.])
                             LineEndingData_row_dct[SIZE].append([0.,0.])
-                            LineEndingData_row_dct[FILLCOLOR].append([])
+                            LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
                             LineEndingData_row_dct[SHAPETYPE].append([])
                             LineEndingData_row_dct[SHAPEINFO].append([])
-                            LineEndingData_row_dct[BORDERCOLOR].append([])
+                            LineEndingData_row_dct[BORDERCOLOR].append(reaction_line_color)
                             if len(df_LineEndingData) == 0:
                                 df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
                             else:
@@ -2626,17 +2629,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                     ReactionData_row_dct[RXNREV].append(rxn_rev)
                     ReactionData_row_dct[FILLCOLOR].append(reaction_line_fill)
                     if src_endhead == []:
-                        src_endhead = ["_line_ending_default_NONE_"]
+                        src_endhead = ["_line_ending_default_NONE_" + temp_id]
                         #default src endhead 
-                        if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values:        
+                        if ('_line_ending_default_NONE_' + temp_id) not in df_LineEndingData[ID].values:        
                             LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                            LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
+                            LineEndingData_row_dct[ID].append('_line_ending_default_NONE_' + temp_id)
                             LineEndingData_row_dct[POSITION].append([0.,0.])
                             LineEndingData_row_dct[SIZE].append([0.,0.])
-                            LineEndingData_row_dct[FILLCOLOR].append([])
+                            LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
                             LineEndingData_row_dct[SHAPETYPE].append([])
                             LineEndingData_row_dct[SHAPEINFO].append([])
-                            LineEndingData_row_dct[BORDERCOLOR].append([])
+                            LineEndingData_row_dct[BORDERCOLOR].append(reaction_line_color)
                             if len(df_LineEndingData) == 0:
                                 df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
                             else:
@@ -2787,6 +2790,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 temp_id = Comps_ids[i]
                 comp_idx_id_list.append([i,temp_id])
                 vol= model.getCompartmentVolume(i)
+                if math.isnan(vol):
+                    vol = 1.
                 dimension = compartmentDefaultSize
                 position = [0.,0.]
                 comp_border_color = [255, 255, 255, 255]
@@ -3070,17 +3075,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 ReactionData_row_dct[RXNREV].append(rxn_rev)
                 ReactionData_row_dct[FILLCOLOR].append(reaction_line_fill)
                 if src_endhead == []:
-                    src_endhead = ["_line_ending_default_NONE_"]
+                    src_endhead = ["_line_ending_default_NONE_" + temp_id]
                     #default src endhead 
-                    if '_line_ending_default_NONE_' not in df_LineEndingData[ID].values:        
+                    if ('_line_ending_default_NONE_' + temp_id) not in df_LineEndingData[ID].values:        
                         LineEndingData_row_dct = {k:[] for k in COLUMN_NAME_df_LineEndingData}
-                        LineEndingData_row_dct[ID].append('_line_ending_default_NONE_')
+                        LineEndingData_row_dct[ID].append('_line_ending_default_NONE_' + temp_id)
                         LineEndingData_row_dct[POSITION].append([0.,0.])
                         LineEndingData_row_dct[SIZE].append([0.,0.])
-                        LineEndingData_row_dct[FILLCOLOR].append([])
+                        LineEndingData_row_dct[FILLCOLOR].append(reaction_line_color)
                         LineEndingData_row_dct[SHAPETYPE].append([])
                         LineEndingData_row_dct[SHAPEINFO].append([])
-                        LineEndingData_row_dct[BORDERCOLOR].append([])
+                        LineEndingData_row_dct[BORDERCOLOR].append(reaction_line_color)
                         if len(df_LineEndingData) == 0:
                             df_LineEndingData = pd.DataFrame(LineEndingData_row_dct)
                         else:
@@ -6951,8 +6956,9 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/cycle1-straight.xml"
     #filename = "Sauro-Coyote/cycle1-straight2.xml"
     #filename = "Sauro-Coyote/test.xml"
+    filename = "Sauro-Coyote/m2.xml"
 
-    filename = "Adel/1.xml"
+    #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
     #filename = "Adel/3.xml"
 
@@ -7211,10 +7217,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    sbmlStr_layout_render = df.export()
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
