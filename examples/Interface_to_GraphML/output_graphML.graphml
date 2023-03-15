@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <graph edgedefault="directed">
+    <node id="x_0" />
+    <node id="x_1" />
+    <node id="x_5" />
+    <node id="x_6" />
+    <node id="x_7" />
+    <node id="x_2" />
+    <node id="x_3" />
+    <node id="x_4" />
+    <node id="x_8" />
+    <node id="x_9" />
+    <node id="x_10" />
+    <node id="x_11" />
+    <node id="reaction_0" />
+    <node id="reaction_1" />
+    <node id="reaction_2" />
+    <node id="reaction_3" />
+    <edge source="x_0" target="reaction_0" />
+    <edge source="x_5" target="reaction_1" />
+    <edge source="x_6" target="reaction_1" />
+    <edge source="x_2" target="reaction_2" />
+    <edge source="x_8" target="reaction_3" />
+    <edge source="x_9" target="reaction_3" />
+    <edge source="reaction_0" target="x_1" />
+    <edge source="reaction_1" target="x_7" />
+    <edge source="reaction_2" target="x_3" />
+    <edge source="reaction_2" target="x_4" />
+    <edge source="reaction_3" target="x_10" />
+    <edge source="reaction_3" target="x_11" />
+  </graph>
+</graphml>
