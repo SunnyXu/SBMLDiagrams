@@ -157,7 +157,7 @@ def _rgb_to_color(rgb):
     return color
 
 
-def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [1000, 1000]): 
+def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10000-20, 6200-20]): 
     """
     Save the information of an SBML file to a set of dataframe.
 
@@ -1737,7 +1737,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 vol= model.getCompartmentVolume(i)
                 if math.isnan(vol):
                     vol = 1.
-                position = [0.,0.]
+                position = [10.,10.]
                 dimension = compartmentDefaultSize
                 comp_fill_color = [255, 255, 255, 255]
                 comp_border_color = [255, 255, 255, 255]
@@ -1748,7 +1748,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 if len(comp_id_list) != 0:
                 #if mplugin is not None:
                     if temp_id == "_compartment_default_":
-                        position = [0, 0]
+                        position = [10., 10.]
                         dimension = compartmentDefaultSize
                         #comp_border_color = [255, 255, 255, 255]
                         #comp_fill_color = [255, 255, 255, 255]
@@ -1804,7 +1804,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         # dimension = [800,800]
                         # position = [40,40]
                         # the whole size of the compartment: 4000*2500
-                        position = [0.,0.]
+                        position = [10.,10.]
                         dimension = compartmentDefaultSize
                         text_content = ''
                         text_position = [0., 0.]
@@ -2793,7 +2793,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 if math.isnan(vol):
                     vol = 1.
                 dimension = compartmentDefaultSize
-                position = [0.,0.]
+                position = [10.,10.]
                 comp_border_color = [255, 255, 255, 255]
                 comp_fill_color = [255, 255, 255, 255]
                 text_content = ''
@@ -7217,10 +7217,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    # sbmlStr_layout_render = df.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    sbmlStr_layout_render = df.export()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
