@@ -6419,7 +6419,7 @@ class load:
 
     def export(self):
         """
-        Generates an SBML string for the current model.
+        This method returns the current model as an SBML string.
 
         Returns:
             SBMLStr_layout_render: str-the string of the output sbml file. 
@@ -6956,7 +6956,9 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/cycle1-straight.xml"
     #filename = "Sauro-Coyote/cycle1-straight2.xml"
     #filename = "Sauro-Coyote/test.xml"
-    filename = "Sauro-Coyote/m2.xml"
+    #filename = "Sauro-Coyote/m2.xml"
+    #filename = "Sauro-Coyote/small.xml"
+    #filename = "Sauro-Coyote/ecoli.xml"
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
