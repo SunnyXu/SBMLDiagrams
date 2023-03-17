@@ -6662,7 +6662,7 @@ class load:
                             handles_update[idx2] = handle2_update
                             self.setReactionBezierHandles(id, handles_update)
                 
-    def draw(self, setImageSize = '', scale = 1., output_fileName = '', 
+    def draw(self, setImageSize = [], scale = 1., output_fileName = '', 
         reactionLineType = 'bezier', showBezierHandles = False, 
         showReactionIds = False, showReversible = False, longText = 'auto-font'):
 
@@ -6670,13 +6670,14 @@ class load:
         Draw to a PNG/JPG/PDF file.
 
         Args: 
-            setImageSize: list-containing two elements indicating the size of the image (if bitmap) [width, height].
+            setImageSize: list-[] (default: default output size), or set by the users with a list
+            containing two elements indicating the size of the image [width, height].
 
             scale: float-determines the figure output size = scale * default output size.
             Increasing the scale will make the resolution higher.
 
             output_fileName: str-filename: '' (default: will not save the file), 
-            or eg 'fileName.png'. Allowable extensions include '.png', '.jpg', or 'pdf'.
+            or eg 'fileName.png'. Allowable extensions include '.png', '.jpg', or '.pdf'.
 
             reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
             If there is no layout information from the SBML file, all reaction lines will look like
@@ -6689,8 +6690,21 @@ class load:
             showReversible: bool-show whether the reaction is reversible (True) or not (False as default).
 
             longText: str-'auto-font'(default) will automatically decrease the font size to fit the 
-            current dimensions of the node; 'ellipsis' will show '....' if the text is too long to fit the node.
-        
+            current dimensions of the node; or 'ellipsis' will show '....' if the text is too long to fit the node.
+
+        Examples: 
+            sd.draw()
+
+            sd.draw(output_fileName = 'output.pdf')
+
+            sd.draw(setImageSize = [1000, 1000], output_fileName = 'output.png')
+
+            sd.draw(scale = 2., output_fileName = 'output.jpg')
+
+            sd.draw(output_fileName = 'output.png', reactionLineType = 'straight', longText = 'ellipsis')
+
+            sd.draw(output_fileName = 'output.png', reactionLineType = 'bezier', showBezierHandles = True, showReactionIds = True, showReversible = True)
+
         """
 
         sbmlStr = self.export()
@@ -6918,7 +6932,7 @@ if __name__ == '__main__':
     #filename = "test_suite/test_gradientRadial/test_gradientRadial.xml"
 
     #long text and alias nodes
-    #filename = "test_suite/Jana_WolfGlycolysis/Jana_WolfGlycolysis.xml"
+    filename = "test_suite/Jana_WolfGlycolysis/Jana_WolfGlycolysis.xml"
 
     #sbml with errors
     #filename = "test_suite/sbml_error/testbigmodel.xml"
@@ -7219,10 +7233,10 @@ if __name__ == '__main__':
 
     #print(df.hasLayout())
 
-    sbmlStr_layout_render = df.export()
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
     
     # with open('output.xml', 'w') as f:
     #   f.write(sbmlStr_layout_render)   
@@ -7256,6 +7270,9 @@ if __name__ == '__main__':
 
     #df.draw(output_fileName = 'output.png', longText = 'ellipsis')
     df.draw(output_fileName = 'output.png')
+    # df.draw(setImageSize = [1000, 1000], scale = 1., output_fileName = 'output.png', 
+    #     reactionLineType = 'bezier', showBezierHandles = False, 
+    #    showReactionIds = False, showReversible = False, longText = 'auto-font')
 
     #df.exportGraphML()
 

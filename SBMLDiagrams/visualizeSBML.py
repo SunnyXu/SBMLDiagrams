@@ -250,7 +250,7 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
 
     Video(outputName + ".mp4")
 
-def _draw(sbmlStr, setImageSize = '', scale = 1.,\
+def _draw(sbmlStr, setImageSize = [], scale = 1.,\
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, showReversible = False, longText = 'auto-font',\
     newStyle = styleSBML.Style(), drawArrow = True, showImage = True, save = True): 
@@ -306,7 +306,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
 
     topLeftCorner = [topLeftCorner[0]-10, topLeftCorner[1]-10]
 
-    if setImageSize == '':
+    if setImageSize == []:
         imageSize = [(networkSize[0]*scale+20*scale), (networkSize[1]*scale+20*scale)]
     else:
         imageSize = setImageSize
