@@ -587,6 +587,44 @@ def _draw(sbmlStr, setImageSize = [], scale = 1.,\
                             modifier_lineend_pos = []
                             spec_lineend_pos = []
 
+                            # try:
+                            #     dist_start_center = math.sqrt((line_start_pt[0]-center_pt[0])*(line_start_pt[0]-center_pt[0])+(line_start_pt[1]-center_pt[1])*(line_start_pt[1]-center_pt[1]))
+                            #     dist_end_center = math.sqrt((line_end_pt[0]-center_pt[0])*(line_end_pt[0]-center_pt[0])+(line_end_pt[1]-center_pt[1])*(line_end_pt[1]-center_pt[1]))
+                            #     #if math.sqrt(line_start_pt, center_pt) <= math.dist(line_end_pt, center_pt):
+                            #     if dist_start_center <= dist_end_center:
+                            #         #line starts from center
+                            #         spec_lineend_pos = line_end_pt
+                            #         modifier_lineend_pos = line_start_pt
+                            #         try: #bezier 
+                            #             center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
+                            #                         segment.getBasePoint1().getYOffset()]                                
+                            #             spec_handle = [segment.getBasePoint2().getXOffset(),
+                            #                     segment.getBasePoint2().getYOffset()]
+                            #         except: #straight
+                            #             # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                            #             # .5*(center_pt[1]+line_end_pt[1])]
+                            #             center_handle_candidate = center_pt
+                            #             spec_handle = center_pt
+                            #     else:
+                            #         #line starts from species
+                            #         spec_lineend_pos = line_start_pt
+                            #         modifier_lineend_pos = line_end_pt
+                            #         try: #bezier
+                            #             spec_handle = [segment.getBasePoint1().getXOffset(), 
+                            #                         segment.getBasePoint1().getYOffset()]                                
+                            #             center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                            #                     segment.getBasePoint2().getYOffset()]
+                            #         except: #straight
+                            #             # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                            #             # .5*(center_pt[1]+line_start_pt[1])]
+                            #             # center_handle_candidate = center_pt
+                            #             center_handle_candidate = center_pt
+                            #             spec_handle = center_pt
+                            # except:
+                            #     center_handle_candidate = []
+                            #     spec_handle = []
+                            
+                            
                             try:
                                 dist_start_center = math.sqrt((line_start_pt[0]-center_pt[0])*(line_start_pt[0]-center_pt[0])+(line_start_pt[1]-center_pt[1])*(line_start_pt[1]-center_pt[1]))
                                 dist_end_center = math.sqrt((line_end_pt[0]-center_pt[0])*(line_end_pt[0]-center_pt[0])+(line_end_pt[1]-center_pt[1])*(line_end_pt[1]-center_pt[1]))
@@ -595,14 +633,22 @@ def _draw(sbmlStr, setImageSize = [], scale = 1.,\
                                     #line starts from center
                                     spec_lineend_pos = line_end_pt
                                     modifier_lineend_pos = line_start_pt
-                                    try: #bezier 
-                                        center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
-                                                    segment.getBasePoint1().getYOffset()]                                
-                                        spec_handle = [segment.getBasePoint2().getXOffset(),
-                                                segment.getBasePoint2().getYOffset()]
+                                    try: #bezier
+                                        if num_curve == 1:
+                                            center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
+                                                            segment.getBasePoint1().getYOffset()]                                
+                                            spec_handle = [segment.getBasePoint2().getXOffset(),
+                                                        segment.getBasePoint2().getYOffset()]
+                                        else:        
+                                            for segment in curve.getListOfCurveSegments():
+                                                if segment.getTypeCode() == 102: 
+                                                    #102 CubicBezier #107LineSegment
+                                                    center_handle_candidate = center_pt                              
+                                                    spec_handle = [segment.getBasePoint2().getXOffset(),
+                                                            segment.getBasePoint2().getYOffset()]
                                     except: #straight
-                                        # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
-                                        # .5*(center_pt[1]+line_end_pt[1])]
+                                        #spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                        #.5*(center_pt[1]+line_end_pt[1])]
                                         center_handle_candidate = center_pt
                                         spec_handle = center_pt
                                 else:
@@ -610,20 +656,28 @@ def _draw(sbmlStr, setImageSize = [], scale = 1.,\
                                     spec_lineend_pos = line_start_pt
                                     modifier_lineend_pos = line_end_pt
                                     try: #bezier
-                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
-                                                    segment.getBasePoint1().getYOffset()]                                
-                                        center_handle_candidate = [segment.getBasePoint2().getXOffset(),
-                                                segment.getBasePoint2().getYOffset()]
+                                        if num_curve == 1:
+                                            spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                                segment.getBasePoint1().getYOffset()]                                
+                                            center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                                                            segment.getBasePoint2().getYOffset()]
+                                        else:
+                                            for segment in curve.getListOfCurveSegments():
+                                                if segment.getTypeCode() == 102: 
+                                                    #102 CubicBezier #107LineSegment
+                                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                                segment.getBasePoint1().getYOffset()]                                
+                                                    center_handle_candidate = center_pt
                                     except: #straight
                                         # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
                                         # .5*(center_pt[1]+line_start_pt[1])]
                                         # center_handle_candidate = center_pt
                                         center_handle_candidate = center_pt
                                         spec_handle = center_pt
+
                             except:
                                 center_handle_candidate = []
                                 spec_handle = []
-                            #print("visualize:", spec_handle)
 
                             role = specRefGlyph.getRoleString()
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
