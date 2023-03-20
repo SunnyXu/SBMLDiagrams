@@ -491,14 +491,22 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 #line starts from center
                                 spec_lineend_pos = line_end_pt
                                 modifier_lineend_pos = line_start_pt
-                                try: #bezier 
-                                    center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
-                                                segment.getBasePoint1().getYOffset()]                                
-                                    spec_handle = [segment.getBasePoint2().getXOffset(),
-                                            segment.getBasePoint2().getYOffset()]
+                                try: #bezier
+                                    if num_curve == 1:
+                                        center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
+                                                        segment.getBasePoint1().getYOffset()]                                
+                                        spec_handle = [segment.getBasePoint2().getXOffset(),
+                                                    segment.getBasePoint2().getYOffset()]
+                                    else:        
+                                        for segment in curve.getListOfCurveSegments():
+                                            if segment.getTypeCode() == 102: 
+                                                #102 CubicBezier #107LineSegment
+                                                center_handle_candidate = center_pt                              
+                                                spec_handle = [segment.getBasePoint2().getXOffset(),
+                                                        segment.getBasePoint2().getYOffset()]
                                 except: #straight
-                                    # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
-                                    # .5*(center_pt[1]+line_end_pt[1])]
+                                    #spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                    #.5*(center_pt[1]+line_end_pt[1])]
                                     center_handle_candidate = center_pt
                                     spec_handle = center_pt
                             else:
@@ -506,10 +514,18 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 spec_lineend_pos = line_start_pt
                                 modifier_lineend_pos = line_end_pt
                                 try: #bezier
-                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
-                                                segment.getBasePoint1().getYOffset()]                                
-                                    center_handle_candidate = [segment.getBasePoint2().getXOffset(),
-                                            segment.getBasePoint2().getYOffset()]
+                                    if num_curve == 1:
+                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                            segment.getBasePoint1().getYOffset()]                                
+                                        center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                                                        segment.getBasePoint2().getYOffset()]
+                                    else:
+                                        for segment in curve.getListOfCurveSegments():
+                                            if segment.getTypeCode() == 102: 
+                                                #102 CubicBezier #107LineSegment
+                                                spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                            segment.getBasePoint1().getYOffset()]                                
+                                                center_handle_candidate = center_pt
                                 except: #straight
                                     # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
                                     # .5*(center_pt[1]+line_start_pt[1])]
@@ -520,8 +536,6 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         except:
                             center_handle_candidate = []
                             spec_handle = []
-
-                        #print("process:", spec_handle)
 
                         role = specRefGlyph.getRoleString()
                         specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -6932,7 +6946,7 @@ if __name__ == '__main__':
     #filename = "test_suite/test_gradientRadial/test_gradientRadial.xml"
 
     #long text and alias nodes
-    filename = "test_suite/Jana_WolfGlycolysis/Jana_WolfGlycolysis.xml"
+    #filename = "test_suite/Jana_WolfGlycolysis/Jana_WolfGlycolysis.xml"
 
     #sbml with errors
     #filename = "test_suite/sbml_error/testbigmodel.xml"
@@ -6971,7 +6985,7 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/cycle1-straight2.xml"
     #filename = "Sauro-Coyote/test.xml"
     #filename = "Sauro-Coyote/m2.xml"
-    #filename = "Sauro-Coyote/small.xml"
+    filename = "Sauro-Coyote/small.xml"
     #filename = "Sauro-Coyote/ecoli.xml"
 
     #filename = "Adel/1.xml"
