@@ -615,15 +615,14 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         #         if spec_specGlyph_id_list[k][0] in temp_mod_list:
                         #             role = "modifier"
 
-                        if role == "substrate": #it is a rct
+                        if role == "substrate" or role == "sidesubstrate": #it is a rct
                             #rct_specGlyph_temp_list.append(specGlyph_id)
-                            rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])   
-                        elif role == "product": #it is a prd
+                            rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
+                        elif role == "product" or role == "sideproduct": #it is a prd
                             #prd_specGlyph_temp_list.append(specGlyph_id)
                             prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
                         elif role == "modifier" or role == 'activator': #it is a modifier
                             mod_specGlyph_temp_list.append([specGlyph_id,specRefGlyph_id,modifier_lineend_pos])
-                        
                     #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                     #prd_specGlyph_list.append(prd_specGlyph_temp_list)
                     
@@ -6985,8 +6984,8 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/cycle1-straight2.xml"
     #filename = "Sauro-Coyote/test.xml"
     #filename = "Sauro-Coyote/m2.xml"
-    filename = "Sauro-Coyote/small.xml"
-    #filename = "Sauro-Coyote/ecoli.xml"
+    #filename = "Sauro-Coyote/small.xml"
+    filename = "Sauro-Coyote/ecoli.xml"
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
@@ -7282,7 +7281,7 @@ if __name__ == '__main__':
     # f.write(sbmlStr_layout_render)
     # f.close()
 
-    #df.draw(output_fileName = 'output.png', longText = 'ellipsis')
+    # df.draw(output_fileName = 'output.png', longText = 'ellipsis')
     df.draw(output_fileName = 'output.png')
     # df.draw(setImageSize = [1000, 1000], scale = 1., output_fileName = 'output.png', 
     #     reactionLineType = 'bezier', showBezierHandles = False, 
