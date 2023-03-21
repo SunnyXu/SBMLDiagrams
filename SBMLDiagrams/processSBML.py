@@ -497,7 +497,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                                         segment.getBasePoint1().getYOffset()]                                
                                         spec_handle = [segment.getBasePoint2().getXOffset(),
                                                     segment.getBasePoint2().getYOffset()]
-                                    else:        
+                                    else:  
+                                        center_handle_candidate = []      
                                         for segment in curve.getListOfCurveSegments():
                                             if segment.getTypeCode() == 102: 
                                                 #102 CubicBezier #107LineSegment
@@ -505,10 +506,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                                 spec_handle = [segment.getBasePoint2().getXOffset(),
                                                         segment.getBasePoint2().getYOffset()]
                                 except: #straight
-                                    #spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
-                                    #.5*(center_pt[1]+line_end_pt[1])]
+                                    spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                    .5*(center_pt[1]+line_end_pt[1])]
                                     center_handle_candidate = center_pt
-                                    spec_handle = center_pt
+                                    #spec_handle = center_pt
                             else:
                                 #line starts from species
                                 spec_lineend_pos = line_start_pt
@@ -520,6 +521,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                         center_handle_candidate = [segment.getBasePoint2().getXOffset(),
                                                         segment.getBasePoint2().getYOffset()]
                                     else:
+                                        center_handle_candidate = [] 
                                         for segment in curve.getListOfCurveSegments():
                                             if segment.getTypeCode() == 102: 
                                                 #102 CubicBezier #107LineSegment
@@ -527,11 +529,10 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                                             segment.getBasePoint1().getYOffset()]                                
                                                 center_handle_candidate = center_pt
                                 except: #straight
-                                    # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
-                                    # .5*(center_pt[1]+line_start_pt[1])]
-                                    # center_handle_candidate = center_pt
+                                    spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                    .5*(center_pt[1]+line_start_pt[1])]
                                     center_handle_candidate = center_pt
-                                    spec_handle = center_pt
+                                    #spec_handle = center_pt
 
                         except:
                             center_handle_candidate = []
@@ -6985,11 +6986,11 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/test.xml"
     #filename = "Sauro-Coyote/m2.xml"
     #filename = "Sauro-Coyote/small.xml"
-    filename = "Sauro-Coyote/ecoli.xml"
+    #filename = "Sauro-Coyote/ecoli.xml"
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
-    #filename = "Adel/3.xml"
+    filename = "Adel/3.xml"
 
     #filename = "MK/sbmld10_2.sbml"
 
