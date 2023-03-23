@@ -491,13 +491,20 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 #line starts from center
                                 spec_lineend_pos = line_end_pt
                                 modifier_lineend_pos = line_start_pt
-                                try: #bezier
-                                    if num_curve == 1:
+                                
+                                if num_curve == 1:
+                                    try: #bezier
                                         center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
                                                         segment.getBasePoint1().getYOffset()]                                
                                         spec_handle = [segment.getBasePoint2().getXOffset(),
-                                                    segment.getBasePoint2().getYOffset()]
-                                    else:  
+                                                    segment.getBasePoint2().getYOffset()] 
+                                    except: #straight
+                                        spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                        .5*(center_pt[1]+line_end_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        #spec_handle = center_pt         
+                                else:  
+                                    try: #bezier
                                         center_handle_candidate = []      
                                         for segment in curve.getListOfCurveSegments():
                                             if segment.getTypeCode() == 102: 
@@ -505,22 +512,34 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                                 center_handle_candidate = center_pt                              
                                                 spec_handle = [segment.getBasePoint2().getXOffset(),
                                                         segment.getBasePoint2().getYOffset()]
-                                except: #straight
-                                    spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
-                                    .5*(center_pt[1]+line_end_pt[1])]
-                                    center_handle_candidate = center_pt
-                                    #spec_handle = center_pt
+                                            else:
+                                                spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                                .5*(center_pt[1]+line_start_pt[1])]
+                                                center_handle_candidate = center_pt
+                                                #spec_handle = center_pt
+                                    except: #straight
+                                        spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                        .5*(center_pt[1]+line_end_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        #spec_handle = center_pt 
                             else:
                                 #line starts from species
                                 spec_lineend_pos = line_start_pt
                                 modifier_lineend_pos = line_end_pt
-                                try: #bezier
-                                    if num_curve == 1:
+                                
+                                if num_curve == 1:
+                                    try: #bezier
                                         spec_handle = [segment.getBasePoint1().getXOffset(), 
                                                             segment.getBasePoint1().getYOffset()]                                
                                         center_handle_candidate = [segment.getBasePoint2().getXOffset(),
                                                         segment.getBasePoint2().getYOffset()]
-                                    else:
+                                    except: #straight
+                                        spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                        .5*(center_pt[1]+line_start_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        #spec_handle = center_pt
+                                else:
+                                    try: #bezier
                                         center_handle_candidate = [] 
                                         for segment in curve.getListOfCurveSegments():
                                             if segment.getTypeCode() == 102: 
@@ -528,11 +547,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                                 spec_handle = [segment.getBasePoint1().getXOffset(), 
                                                             segment.getBasePoint1().getYOffset()]                                
                                                 center_handle_candidate = center_pt
-                                except: #straight
-                                    spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
-                                    .5*(center_pt[1]+line_start_pt[1])]
-                                    center_handle_candidate = center_pt
-                                    #spec_handle = center_pt
+                                            else:
+                                                spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                                .5*(center_pt[1]+line_start_pt[1])]
+                                                center_handle_candidate = center_pt
+                                                #spec_handle = center_pt
+                                    except: #straight
+                                        spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                        .5*(center_pt[1]+line_start_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        #spec_handle = center_pt
 
                         except:
                             center_handle_candidate = []
@@ -6990,7 +7014,7 @@ if __name__ == '__main__':
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
-    filename = "Adel/3.xml"
+    #filename = "Adel/3.xml"
 
     #filename = "MK/sbmld10_2.sbml"
 
