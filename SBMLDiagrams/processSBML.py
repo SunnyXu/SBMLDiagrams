@@ -505,13 +505,18 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                         #spec_handle = center_pt         
                                 else:  
                                     try: #bezier
-                                        center_handle_candidate = []      
+                                        center_handle_candidate = []  
+                                        flag_bezier = 0  
                                         for segment in curve.getListOfCurveSegments():
-                                            if segment.getTypeCode() == 102: 
+                                            if segment.getTypeCode() == 102:
+                                                flag_bezier = 1
+                                        for segment in curve.getListOfCurveSegments():
+                                            if flag_bezier == 1: 
                                                 #102 CubicBezier #107LineSegment
-                                                center_handle_candidate = center_pt                              
-                                                spec_handle = [segment.getBasePoint2().getXOffset(),
-                                                        segment.getBasePoint2().getYOffset()]
+                                                if segment.getTypeCode() == 102:
+                                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                                segment.getBasePoint1().getYOffset()]                                
+                                                    center_handle_candidate = center_pt
                                             else:
                                                 spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
                                                 .5*(center_pt[1]+line_start_pt[1])]
@@ -541,12 +546,17 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 else:
                                     try: #bezier
                                         center_handle_candidate = [] 
+                                        flag_bezier = 0  
                                         for segment in curve.getListOfCurveSegments():
-                                            if segment.getTypeCode() == 102: 
+                                            if segment.getTypeCode() == 102:
+                                                flag_bezier = 1
+                                        for segment in curve.getListOfCurveSegments():
+                                            if flag_bezier == 1: 
                                                 #102 CubicBezier #107LineSegment
-                                                spec_handle = [segment.getBasePoint1().getXOffset(), 
-                                                            segment.getBasePoint1().getYOffset()]                                
-                                                center_handle_candidate = center_pt
+                                                if segment.getTypeCode() == 102:
+                                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                                segment.getBasePoint1().getYOffset()]                                
+                                                    center_handle_candidate = center_pt
                                             else:
                                                 spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
                                                 .5*(center_pt[1]+line_start_pt[1])]
@@ -7010,7 +7020,7 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/test.xml"
     #filename = "Sauro-Coyote/m2.xml"
     #filename = "Sauro-Coyote/small.xml"
-    #filename = "Sauro-Coyote/ecoli.xml"
+    filename = "Sauro-Coyote/ecoli.xml"
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
