@@ -157,7 +157,7 @@ def _rgb_to_color(rgb):
     return color
 
 
-def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [1000, 1000]): 
+def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10000-20, 6200-20]): 
     """
     Save the information of an SBML file to a set of dataframe.
 
@@ -491,37 +491,86 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                                 #line starts from center
                                 spec_lineend_pos = line_end_pt
                                 modifier_lineend_pos = line_start_pt
-                                try: #bezier 
-                                    center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
-                                                segment.getBasePoint1().getYOffset()]                                
-                                    spec_handle = [segment.getBasePoint2().getXOffset(),
-                                            segment.getBasePoint2().getYOffset()]
-                                except: #straight
-                                    # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
-                                    # .5*(center_pt[1]+line_end_pt[1])]
-                                    center_handle_candidate = center_pt
-                                    spec_handle = center_pt
+                                
+                                if num_curve == 1:
+                                    try: #bezier
+                                        center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
+                                                        segment.getBasePoint1().getYOffset()]                                
+                                        spec_handle = [segment.getBasePoint2().getXOffset(),
+                                                    segment.getBasePoint2().getYOffset()] 
+                                    except: #straight
+                                        spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                        .5*(center_pt[1]+line_end_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        #spec_handle = center_pt         
+                                else:  
+                                    try: #bezier
+                                        center_handle_candidate = []  
+                                        flag_bezier = 0  
+                                        for segment in curve.getListOfCurveSegments():
+                                            if segment.getTypeCode() == 102:
+                                                flag_bezier = 1
+                                        for segment in curve.getListOfCurveSegments():
+                                            if flag_bezier == 1: 
+                                                #102 CubicBezier #107LineSegment
+                                                if segment.getTypeCode() == 102:
+                                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                                segment.getBasePoint1().getYOffset()]                                
+                                                    center_handle_candidate = center_pt
+                                            else:
+                                                spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                                .5*(center_pt[1]+line_start_pt[1])]
+                                                center_handle_candidate = center_pt
+                                                #spec_handle = center_pt
+                                    except: #straight
+                                        spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                        .5*(center_pt[1]+line_end_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        #spec_handle = center_pt 
                             else:
                                 #line starts from species
                                 spec_lineend_pos = line_start_pt
                                 modifier_lineend_pos = line_end_pt
-                                try: #bezier
-                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
-                                                segment.getBasePoint1().getYOffset()]                                
-                                    center_handle_candidate = [segment.getBasePoint2().getXOffset(),
-                                            segment.getBasePoint2().getYOffset()]
-                                except: #straight
-                                    # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
-                                    # .5*(center_pt[1]+line_start_pt[1])]
-                                    # center_handle_candidate = center_pt
-                                    center_handle_candidate = center_pt
-                                    spec_handle = center_pt
+                                
+                                if num_curve == 1:
+                                    try: #bezier
+                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                            segment.getBasePoint1().getYOffset()]                                
+                                        center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                                                        segment.getBasePoint2().getYOffset()]
+                                    except: #straight
+                                        spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                        .5*(center_pt[1]+line_start_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        #spec_handle = center_pt
+                                else:
+                                    try: #bezier
+                                        center_handle_candidate = [] 
+                                        flag_bezier = 0  
+                                        for segment in curve.getListOfCurveSegments():
+                                            if segment.getTypeCode() == 102:
+                                                flag_bezier = 1
+                                        for segment in curve.getListOfCurveSegments():
+                                            if flag_bezier == 1: 
+                                                #102 CubicBezier #107LineSegment
+                                                if segment.getTypeCode() == 102:
+                                                    spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                                segment.getBasePoint1().getYOffset()]                                
+                                                    center_handle_candidate = center_pt
+                                            else:
+                                                spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                                .5*(center_pt[1]+line_start_pt[1])]
+                                                center_handle_candidate = center_pt
+                                                #spec_handle = center_pt
+                                    except: #straight
+                                        spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                        .5*(center_pt[1]+line_start_pt[1])]
+                                        center_handle_candidate = center_pt
+                                        #spec_handle = center_pt
 
                         except:
                             center_handle_candidate = []
                             spec_handle = []
-
-                        #print("process:", spec_handle)
 
                         role = specRefGlyph.getRoleString()
                         specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -601,15 +650,14 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         #         if spec_specGlyph_id_list[k][0] in temp_mod_list:
                         #             role = "modifier"
 
-                        if role == "substrate": #it is a rct
+                        if role == "substrate" or role == "sidesubstrate": #it is a rct
                             #rct_specGlyph_temp_list.append(specGlyph_id)
-                            rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])   
-                        elif role == "product": #it is a prd
+                            rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
+                        elif role == "product" or role == "sideproduct": #it is a prd
                             #prd_specGlyph_temp_list.append(specGlyph_id)
                             prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
                         elif role == "modifier" or role == 'activator': #it is a modifier
                             mod_specGlyph_temp_list.append([specGlyph_id,specRefGlyph_id,modifier_lineend_pos])
-                        
                     #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                     #prd_specGlyph_list.append(prd_specGlyph_temp_list)
                     
@@ -1737,7 +1785,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 vol= model.getCompartmentVolume(i)
                 if math.isnan(vol):
                     vol = 1.
-                position = [0.,0.]
+                position = [10.,10.]
                 dimension = compartmentDefaultSize
                 comp_fill_color = [255, 255, 255, 255]
                 comp_border_color = [255, 255, 255, 255]
@@ -1748,7 +1796,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 if len(comp_id_list) != 0:
                 #if mplugin is not None:
                     if temp_id == "_compartment_default_":
-                        position = [0, 0]
+                        position = [10., 10.]
                         dimension = compartmentDefaultSize
                         #comp_border_color = [255, 255, 255, 255]
                         #comp_fill_color = [255, 255, 255, 255]
@@ -1804,7 +1852,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         # dimension = [800,800]
                         # position = [40,40]
                         # the whole size of the compartment: 4000*2500
-                        position = [0.,0.]
+                        position = [10.,10.]
                         dimension = compartmentDefaultSize
                         text_content = ''
                         text_position = [0., 0.]
@@ -2793,7 +2841,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                 if math.isnan(vol):
                     vol = 1.
                 dimension = compartmentDefaultSize
-                position = [0.,0.]
+                position = [10.,10.]
                 comp_border_color = [255, 255, 255, 255]
                 comp_fill_color = [255, 255, 255, 255]
                 text_content = ''
@@ -6419,7 +6467,7 @@ class load:
 
     def export(self):
         """
-        Generates an SBML string for the current model.
+        This method returns the current model as an SBML string.
 
         Returns:
             SBMLStr_layout_render: str-the string of the output sbml file. 
@@ -6590,79 +6638,79 @@ class load:
                 handles_list.append(handles_list_pre)
                 line_width_list.append(self.getReactionLineThickness(id))
             
-            #overlap of centroids from different reactions
-            overlap_center_idx_list = []
-            for i in range(len(center_list)):
-                for j in [x for x in range(len(center_list)) if x != i]:
-                    if [(center_list[i][0]-center_list[j][0])**2+(center_list[i][1]-center_list[j][1])**2]<=2*line_width_list[i]**2:
-                        if [i,j] not in overlap_center_idx_list and [j,i] not in overlap_center_idx_list:
-                            overlap_center_idx_list.append([i,j])
+            # #overlap of centroids from different reactions
+            # overlap_center_idx_list = []
+            # for i in range(len(center_list)):
+            #     for j in [x for x in range(len(center_list)) if x != i]:
+            #         if [(center_list[i][0]-center_list[j][0])**2+(center_list[i][1]-center_list[j][1])**2]<=2*line_width_list[i]**2:
+            #             if [i,j] not in overlap_center_idx_list and [j,i] not in overlap_center_idx_list:
+            #                 overlap_center_idx_list.append([i,j])
             
-            for i in range(len(overlap_center_idx_list)):
-                idx = overlap_center_idx_list[i][0]
-                idx2 = overlap_center_idx_list[i][1]
-                id = reaction_ids[idx]
-                id2 = reaction_ids[idx2]
-                center_position = center_list[idx]
-                center_position2 = center_list[idx2]
-                handle_rct1 = handles_list[idx][1]
-                handle_rct1_2 = handles_list[idx2][1]
-                handles = handles_list[idx]
-                handles2 = handles_list[idx2]
-                line_width = line_width_list[idx]
-                radius = math.dist(center_position, handle_rct1)
-                if radius != 0:
-                    theta = line_width/radius
-                    x = center_position[0] + theta*center_position[1]
-                    y = center_position[1] - theta*center_position[0]
-                    center_position_update = [x, y]
-                    handles_update = [center_position_update] + handles[1:]
-                    self.setReactionCenterPosition(id, center_position_update)
-                    self.setReactionBezierHandles(id, handles_update)
-                    radius2 = math.dist(center_position2, handle_rct1_2)
-                    if radius2 !=0 :
-                        theta2 = line_width/radius2
-                        x2 = center_position2[0] - theta2*center_position2[1]
-                        y2 = center_position2[1] + theta2*center_position2[0]
-                        center_position_2_update = [x2, y2]
-                        handles_update2 = [center_position_2_update] + handles2[1:]
-                        self.setReactionCenterPosition(id2, center_position_2_update)
-                        self.setReactionBezierHandles(id2, handles_update2)
-            #overlap of handles from one reaction
-            for k in range(len(handles_list)):
-                overlap_handles_idx_list = []
-                for i in range(len(handles_list[k])):
-                    for j in [x for x in range(len(handles_list[k])) if x != i]:
-                        if [(handles_list[k][i][0]-handles_list[k][j][0])**2+(handles_list[k][i][1]-handles_list[k][j][1])**2]<=2*line_width_list[k]**2:
-                            if [i,j] not in overlap_handles_idx_list and [j,i] not in overlap_handles_idx_list:
-                                overlap_handles_idx_list.append([i,j])
-                for i in range(len(overlap_handles_idx_list)):
-                    idx = overlap_handles_idx_list[i][0]
-                    idx2 = overlap_handles_idx_list[i][1]
-                    center_position = center_list[k]
-                    handle = handles_list[k][idx]
-                    handle2 = handles_list[k][idx2]
-                    id = reaction_ids[k]
-                    line_width = line_width_list[k]
-                    #print(center_position, handle, handle2, id, line_width)
-                    radius = math.dist(center_position, handle)
-                    if radius != 0:
-                        theta = line_width/radius
-                        x = handle[0] + theta*handle[1]
-                        y = handle[1] - theta*handle[0]
-                        handle_update = [x, y]
-                        radius2 = math.dist(center_position, handle2)   
-                        if radius2 != 0:
-                            theta2 = line_width/radius
-                            x2 = handle2[0] - theta2*handle2[1]
-                            y2 = handle2[1] + theta2*handle2[0]
-                            handle2_update = [x2, y2]
-                            handles_update = handles_list[k]
-                            handles_update[idx] = handle_update
-                            handles_update[idx2] = handle2_update
-                            self.setReactionBezierHandles(id, handles_update)
+            # for i in range(len(overlap_center_idx_list)):
+            #     idx = overlap_center_idx_list[i][0]
+            #     idx2 = overlap_center_idx_list[i][1]
+            #     id = reaction_ids[idx]
+            #     id2 = reaction_ids[idx2]
+            #     center_position = center_list[idx]
+            #     center_position2 = center_list[idx2]
+            #     handle_rct1 = handles_list[idx][1]
+            #     handle_rct1_2 = handles_list[idx2][1]
+            #     handles = handles_list[idx]
+            #     handles2 = handles_list[idx2]
+            #     line_width = line_width_list[idx]
+            #     radius = math.dist(center_position, handle_rct1)
+            #     if radius != 0:
+            #         theta = line_width/radius
+            #         x = center_position[0] + theta*center_position[1]
+            #         y = center_position[1] - theta*center_position[0]
+            #         center_position_update = [x, y]
+            #         handles_update = [center_position_update] + handles[1:]
+            #         self.setReactionCenterPosition(id, center_position_update)
+            #         self.setReactionBezierHandles(id, handles_update)
+            #         radius2 = math.dist(center_position2, handle_rct1_2)
+            #         if radius2 !=0 :
+            #             theta2 = line_width/radius2
+            #             x2 = center_position2[0] - theta2*center_position2[1]
+            #             y2 = center_position2[1] + theta2*center_position2[0]
+            #             center_position_2_update = [x2, y2]
+            #             handles_update2 = [center_position_2_update] + handles2[1:]
+            #             self.setReactionCenterPosition(id2, center_position_2_update)
+            #             self.setReactionBezierHandles(id2, handles_update2)
+            # #overlap of handles from one reaction
+            # for k in range(len(handles_list)):
+            #     overlap_handles_idx_list = []
+            #     for i in range(len(handles_list[k])):
+            #         for j in [x for x in range(len(handles_list[k])) if x != i]:
+            #             if [(handles_list[k][i][0]-handles_list[k][j][0])**2+(handles_list[k][i][1]-handles_list[k][j][1])**2]<=2*line_width_list[k]**2:
+            #                 if [i,j] not in overlap_handles_idx_list and [j,i] not in overlap_handles_idx_list:
+            #                     overlap_handles_idx_list.append([i,j])
+            #     for i in range(len(overlap_handles_idx_list)):
+            #         idx = overlap_handles_idx_list[i][0]
+            #         idx2 = overlap_handles_idx_list[i][1]
+            #         center_position = center_list[k]
+            #         handle = handles_list[k][idx]
+            #         handle2 = handles_list[k][idx2]
+            #         id = reaction_ids[k]
+            #         line_width = line_width_list[k]
+            #         #print(center_position, handle, handle2, id, line_width)
+            #         radius = math.dist(center_position, handle)
+            #         if radius != 0:
+            #             theta = line_width/radius
+            #             x = handle[0] + theta*handle[1]
+            #             y = handle[1] - theta*handle[0]
+            #             handle_update = [x, y]
+            #             radius2 = math.dist(center_position, handle2)   
+            #             if radius2 != 0:
+            #                 theta2 = line_width/radius
+            #                 x2 = handle2[0] - theta2*handle2[1]
+            #                 y2 = handle2[1] + theta2*handle2[0]
+            #                 handle2_update = [x2, y2]
+            #                 handles_update = handles_list[k]
+            #                 handles_update[idx] = handle_update
+            #                 handles_update[idx2] = handle2_update
+            #                 self.setReactionBezierHandles(id, handles_update)
                 
-    def draw(self, setImageSize = '', scale = 1., output_fileName = '', 
+    def draw(self, setImageSize = [], scale = 1., output_fileName = '', 
         reactionLineType = 'bezier', showBezierHandles = False, 
         showReactionIds = False, showReversible = False, longText = 'auto-font'):
 
@@ -6670,13 +6718,14 @@ class load:
         Draw to a PNG/JPG/PDF file.
 
         Args: 
-            setImageSize: list-containing two elements indicating the size of the image (if bitmap) [width, height].
+            setImageSize: list-[] (default: default output size), or set by the users with a list
+            containing two elements indicating the size of the image [width, height].
 
             scale: float-determines the figure output size = scale * default output size.
             Increasing the scale will make the resolution higher.
 
             output_fileName: str-filename: '' (default: will not save the file), 
-            or eg 'fileName.png'. Allowable extensions include '.png', '.jpg', or 'pdf'.
+            or eg 'fileName.png'. Allowable extensions include '.png', '.jpg', or '.pdf'.
 
             reactionLineType: str-type of the reaction line: 'straight' or 'bezier' (default).
             If there is no layout information from the SBML file, all reaction lines will look like
@@ -6689,8 +6738,21 @@ class load:
             showReversible: bool-show whether the reaction is reversible (True) or not (False as default).
 
             longText: str-'auto-font'(default) will automatically decrease the font size to fit the 
-            current dimensions of the node; 'ellipsis' will show '....' if the text is too long to fit the node.
-        
+            current dimensions of the node; or 'ellipsis' will show '....' if the text is too long to fit the node.
+
+        Examples: 
+            sd.draw()
+
+            sd.draw(output_fileName = 'output.pdf')
+
+            sd.draw(setImageSize = [1000, 1000], output_fileName = 'output.png')
+
+            sd.draw(scale = 2., output_fileName = 'output.jpg')
+
+            sd.draw(output_fileName = 'output.png', reactionLineType = 'straight', longText = 'ellipsis')
+
+            sd.draw(output_fileName = 'output.png', reactionLineType = 'bezier', showBezierHandles = True, showReactionIds = True, showReversible = True)
+
         """
 
         sbmlStr = self.export()
@@ -6956,7 +7018,9 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/cycle1-straight.xml"
     #filename = "Sauro-Coyote/cycle1-straight2.xml"
     #filename = "Sauro-Coyote/test.xml"
-    filename = "Sauro-Coyote/m2.xml"
+    #filename = "Sauro-Coyote/m2.xml"
+    #filename = "Sauro-Coyote/small.xml"
+    filename = "Sauro-Coyote/ecoli.xml"
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
@@ -7252,8 +7316,11 @@ if __name__ == '__main__':
     # f.write(sbmlStr_layout_render)
     # f.close()
 
-    #df.draw(output_fileName = 'output.png', longText = 'ellipsis')
+    # df.draw(output_fileName = 'output.png', longText = 'ellipsis')
     df.draw(output_fileName = 'output.png')
+    # df.draw(setImageSize = [1000, 1000], scale = 1., output_fileName = 'output.png', 
+    #     reactionLineType = 'bezier', showBezierHandles = False, 
+    #    showReactionIds = False, showReversible = False, longText = 'auto-font')
 
     #df.exportGraphML()
 

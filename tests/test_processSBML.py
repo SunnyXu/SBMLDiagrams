@@ -960,8 +960,8 @@ class TestImportSBML(unittest.TestCase):
     # Test all the get functions about compartment
     if IGNORE_TEST:
       return  
-    self.assertTrue(self.df.getCompartmentPosition("_compartment_default_").x == [0, 0][0])
-    self.assertTrue(self.df.getCompartmentSize("_compartment_default_").x == [1000, 1000][0])
+    self.assertTrue(self.df.getCompartmentPosition("_compartment_default_").x == [10, 10][0])
+    self.assertTrue(self.df.getCompartmentSize("_compartment_default_").x == [10000-20, 6200-20][0])
     self.assertTrue(self.df.getCompartmentFillColor("_compartment_default_") == \
      [[255, 255, 255, 255], 'white', '#FFFFFFFF'])
     self.assertTrue(self.df.getCompartmentBorderColor("_compartment_default_") == \

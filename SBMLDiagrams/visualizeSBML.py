@@ -250,7 +250,7 @@ def animate(start, end, points , r, thick_changing_rate, sbmlStr = None, frame_p
 
     Video(outputName + ".mp4")
 
-def _draw(sbmlStr, setImageSize = '', scale = 1.,\
+def _draw(sbmlStr, setImageSize = [], scale = 1.,\
     output_fileName = '', complexShape = '', reactionLineType = 'bezier', \
     showBezierHandles = False, showReactionIds = False, showReversible = False, longText = 'auto-font',\
     newStyle = styleSBML.Style(), drawArrow = True, showImage = True, save = True): 
@@ -306,7 +306,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
 
     topLeftCorner = [topLeftCorner[0]-10, topLeftCorner[1]-10]
 
-    if setImageSize == '':
+    if setImageSize == []:
         imageSize = [(networkSize[0]*scale+20*scale), (networkSize[1]*scale+20*scale)]
     else:
         imageSize = setImageSize
@@ -586,7 +586,7 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
 
                             modifier_lineend_pos = []
                             spec_lineend_pos = []
-
+                            
                             try:
                                 dist_start_center = math.sqrt((line_start_pt[0]-center_pt[0])*(line_start_pt[0]-center_pt[0])+(line_start_pt[1]-center_pt[1])*(line_start_pt[1]-center_pt[1]))
                                 dist_end_center = math.sqrt((line_end_pt[0]-center_pt[0])*(line_end_pt[0]-center_pt[0])+(line_end_pt[1]-center_pt[1])*(line_end_pt[1]-center_pt[1]))
@@ -595,35 +595,86 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                     #line starts from center
                                     spec_lineend_pos = line_end_pt
                                     modifier_lineend_pos = line_start_pt
-                                    try: #bezier 
-                                        center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
-                                                    segment.getBasePoint1().getYOffset()]                                
-                                        spec_handle = [segment.getBasePoint2().getXOffset(),
-                                                segment.getBasePoint2().getYOffset()]
-                                    except: #straight
-                                        # spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
-                                        # .5*(center_pt[1]+line_end_pt[1])]
-                                        center_handle_candidate = center_pt
-                                        spec_handle = center_pt
+                                    
+                                    if num_curve == 1:
+                                        try: #bezier
+                                            center_handle_candidate = [segment.getBasePoint1().getXOffset(), 
+                                                            segment.getBasePoint1().getYOffset()]                                
+                                            spec_handle = [segment.getBasePoint2().getXOffset(),
+                                                        segment.getBasePoint2().getYOffset()] 
+                                        except: #straight
+                                            spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                            .5*(center_pt[1]+line_end_pt[1])]
+                                            center_handle_candidate = center_pt
+                                            #spec_handle = center_pt         
+                                    else:  
+                                        try: #bezier
+                                            center_handle_candidate = []    
+                                            flag_bezier = 0  
+                                            for segment in curve.getListOfCurveSegments():
+                                                if segment.getTypeCode() == 102:
+                                                    flag_bezier = 1
+                                            for segment in curve.getListOfCurveSegments():
+                                                if flag_bezier == 1:  
+                                                    #102 CubicBezier #107LineSegment
+                                                    if segment.getTypeCode() == 102:
+                                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                                    segment.getBasePoint1().getYOffset()]                                
+                                                        center_handle_candidate = center_pt
+                                                else:
+                                                    spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                                    .5*(center_pt[1]+line_start_pt[1])]
+                                                    center_handle_candidate = center_pt
+                                                    #spec_handle = center_pt
+                                        except: #straight
+                                            spec_handle = [.5*(center_pt[0]+line_end_pt[0]),
+                                            .5*(center_pt[1]+line_end_pt[1])]
+                                            center_handle_candidate = center_pt
+                                            #spec_handle = center_pt 
                                 else:
                                     #line starts from species
                                     spec_lineend_pos = line_start_pt
                                     modifier_lineend_pos = line_end_pt
-                                    try: #bezier
-                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
-                                                    segment.getBasePoint1().getYOffset()]                                
-                                        center_handle_candidate = [segment.getBasePoint2().getXOffset(),
-                                                segment.getBasePoint2().getYOffset()]
-                                    except: #straight
-                                        # spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
-                                        # .5*(center_pt[1]+line_start_pt[1])]
-                                        # center_handle_candidate = center_pt
-                                        center_handle_candidate = center_pt
-                                        spec_handle = center_pt
+                                    
+                                    if num_curve == 1:
+                                        try: #bezier
+                                            spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                                segment.getBasePoint1().getYOffset()]                                
+                                            center_handle_candidate = [segment.getBasePoint2().getXOffset(),
+                                                            segment.getBasePoint2().getYOffset()]
+                                        except: #straight
+                                            spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                            .5*(center_pt[1]+line_start_pt[1])]
+                                            center_handle_candidate = center_pt
+                                            #spec_handle = center_pt
+                                    else:
+                                        try: #bezier
+                                            center_handle_candidate = [] 
+                                            flag_bezier = 0  
+                                            for segment in curve.getListOfCurveSegments():
+                                                if segment.getTypeCode() == 102:
+                                                    flag_bezier = 1
+                                            for segment in curve.getListOfCurveSegments():
+                                                if flag_bezier == 1: 
+                                                    #102 CubicBezier #107LineSegment
+                                                    if segment.getTypeCode() == 102:
+                                                        spec_handle = [segment.getBasePoint1().getXOffset(), 
+                                                                    segment.getBasePoint1().getYOffset()]                                
+                                                        center_handle_candidate = center_pt
+                                                else:
+                                                    spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                                    .5*(center_pt[1]+line_start_pt[1])]
+                                                    center_handle_candidate = center_pt
+                                                    #spec_handle = center_pt
+                                        except: #straight
+                                            spec_handle = [.5*(center_pt[0]+line_start_pt[0]),
+                                            .5*(center_pt[1]+line_start_pt[1])]
+                                            center_handle_candidate = center_pt
+                                            #spec_handle = center_pt
+
                             except:
                                 center_handle_candidate = []
                                 spec_handle = []
-                            #print("visualize:", spec_handle)
 
                             role = specRefGlyph.getRoleString()
                             specGlyph_id = specRefGlyph.getSpeciesGlyphId()
@@ -683,16 +734,16 @@ def _draw(sbmlStr, setImageSize = '', scale = 1.,\
                                 spec_text_position_list.append([text_pos_x, text_pos_y])
                                 spec_text_dimension_list.append([text_dim_w, text_dim_h])
 
-                            if role == "substrate": #it is a rct
+                            if role == "substrate" or role == "sidesubstrate": #it is a rct
                                 #rct_specGlyph_temp_list.append(specGlyph_id)
                                 rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
                                 if center_handle == []:
                                     center_handle.append(center_handle_candidate)
-                            elif role == "product": #it is a prd
+                            elif role == "product" or role == "sideproduct": #it is a prd
                                 #prd_specGlyph_temp_list.append(specGlyph_id)
                                 prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
                             elif role == "modifier" or role == 'activator': #it is a modifier
-                                mod_specGlyph_temp_list.append([specGlyph_id, specRefGlyph_id,modifier_lineend_pos])
+                                mod_specGlyph_temp_list.append([specGlyph_id,specRefGlyph_id,modifier_lineend_pos])
                             
                             
                         #rct_specGlyph_list.append(rct_specGlyph_temp_list)

@@ -17,7 +17,7 @@ import math
 import sys
 from SBMLDiagrams import processSBML
 
-def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
+def _DFToSBML(df, compartmentDefaultSize = [10000-20,6200-20]):
 
     """
     Write the information of a set of dataframe to an SBML string. 
@@ -409,8 +409,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
         #
         layout = mplugin.createLayout()
         layout.setId("SBMLDiagrams_layout")
-        layout.setDimensions(libsbml.Dimensions(layoutns, 1000.0, 1000.0))
-        # compartmentDefaultSize = [1000, 1000]
+        layout.setDimensions(libsbml.Dimensions(layoutns, 10000-20, 6200-20))
+        # compartmentDefaultSize = [10000-20, 6200-20]
         # random network (40+800x, 40+800y)
 
         #create the CompartmentGlyph and SpeciesGlyphs
@@ -504,6 +504,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
+                if content == "TCA Cycle":
+                    print(textG_id)
                 textGlyph.setId(textG_id)
                 textGlyph.setText(content) # this will merge "setOriginOfTextId"
                 bb_id  = "bb_spec_text_" + spec_id + '_idx_' + str(spec_index)
@@ -527,8 +529,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
             compartmentGlyph.setId(compG_id)
             compartmentGlyph.setCompartmentId(comp_id)
             bb_id  = "bb_" + comp_id
-            pos_x  = 0
-            pos_y  = 0
+            pos_x  = 10.
+            pos_y  = 10.
             width  = compartmentDefaultSize[0]
             height = compartmentDefaultSize[1]
             compartmentGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
@@ -583,6 +585,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
 
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
+                if content == "TCA Cycle":
+                    print(textG_id)
                 textGlyph.setId(textG_id)
                 textGlyph.setText(content) # this will merge "setOriginOfTextId
                 try:
@@ -934,7 +938,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000,1000]):
                 size_list = df_TextData.iloc[i]['txt_size'] 
 
             textGlyph = layout.createTextGlyph()
-            textG_id = "TextG_" + txt_content + '_idx_' + str(i)
+            if ' ' in txt_content:
+                txt_content_adapt = txt_content.replace(' ', '_')
+            else:
+                txt_content_adapt = txt_content
+            textG_id = "TextG_" + txt_content_adapt + '_idx_' + str(i)
             textGlyph.setId(textG_id)
             textGlyph.setText(txt_content)
             bb_id  = "bb_text_" + txt_content + '_idx_' + str(i)
