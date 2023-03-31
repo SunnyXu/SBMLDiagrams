@@ -157,7 +157,8 @@ def _rgb_to_color(rgb):
     return color
 
 
-def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10000-20, 6200-20]): 
+#def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10000-20, 6200-20]):
+def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [1000-20, 1000-20]):
     """
     Save the information of an SBML file to a set of dataframe.
 
@@ -6959,7 +6960,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -7020,7 +7021,7 @@ if __name__ == '__main__':
     #filename = "Sauro-Coyote/test.xml"
     #filename = "Sauro-Coyote/m2.xml"
     #filename = "Sauro-Coyote/small.xml"
-    filename = "Sauro-Coyote/ecoli.xml"
+    #filename = "Sauro-Coyote/ecoli.xml"
 
     #filename = "Adel/1.xml"
     #filename = "Adel/2.xml"
@@ -7311,10 +7312,10 @@ if __name__ == '__main__':
     # df.autolayout()
     # df.draw(output_fileName = 'output.png')
 
-    # sbmlStr_layout_render = df.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    sbmlStr_layout_render = df.export()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
     # df.draw(output_fileName = 'output.png', longText = 'ellipsis')
     df.draw(output_fileName = 'output.png')
@@ -7323,4 +7324,20 @@ if __name__ == '__main__':
     #    showReactionIds = False, showReversible = False, longText = 'auto-font')
 
     #df.exportGraphML()
+
+    #s4 -> does not work
+    # import tellurium as te
+
+    # r = te.loada ('''
+    #   $Xo -> S1; k1*Xo
+    #    S1 -> S2; k1*S1
+    #    S2 -> S3; k1*S2
+    #    S3 -> S4; k1*S3
+    #    S4 ->;    k1*S4
+    #    Xo = 5
+    #    k1 = 0.4''')
+    # sb = load(r.getSBML())
+    # #sb.autolayout()
+    # sb.draw(output_fileName = 'output.png')
+
 
