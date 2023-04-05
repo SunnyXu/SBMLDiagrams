@@ -19,7 +19,6 @@ from SBMLDiagrams import editSBML
 from SBMLDiagrams import visualizeSBML
 from SBMLDiagrams import styleSBML
 from SBMLDiagrams import point
-import simplesbml
 import networkx as nx
 from collections import defaultdict
 import json
