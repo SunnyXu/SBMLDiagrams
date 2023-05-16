@@ -407,6 +407,26 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                         if center_pt == []:
                             if pos_x == 0 and pos_y == 0 and width == 0 and height == 0: #LinearChain.xml
                                 center_pt = []
+                                #if the boundingbox can not give the info for the center point,
+                                #look for the common point of the start and end points
+                                start_end_pt = []
+                                for j in range(numSpecRefGlyphs):     
+                                    specRefGlyph = reactionGlyph.getSpeciesReferenceGlyph(j)   
+                                    curve = specRefGlyph.getCurve()                                  
+                                    for segment in curve.getListOfCurveSegments():
+                                        line_start_x = segment.getStart().getXOffset()
+                                        line_start_y = segment.getStart().getYOffset()
+                                        line_end_x = segment.getEnd().getXOffset()
+                                        line_end_y = segment.getEnd().getYOffset()
+                                        line_start_pt =  [line_start_x, line_start_y]
+                                        line_end_pt = [line_end_x, line_end_y]
+                                        if line_start_pt in start_end_pt:
+                                            center_pt = line_start_pt
+                                        if line_end_pt in start_end_pt:
+                                            center_pt = line_end_pt
+                                        else:
+                                            start_end_pt.append(line_start_pt)
+                                            start_end_pt.append(line_end_pt)
                             else:
                                 center_pt = [pos_x+.5*width, pos_y+.5*height]
                         center_sz = [width, height]
@@ -633,8 +653,8 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
                             spec_text_dimension_list.append([text_dim_w, text_dim_h])
                             spec_concentration_list.append(concentration)
 
-                        if center_handle == []:
-                            center_handle.append(center_handle_candidate)
+                        # if center_handle == []:
+                        #     center_handle.append(center_handle_candidate)
 
                         # #some "role" assigned wrongly
                         # for k in range(len(spec_specGlyph_id_list)):
@@ -652,11 +672,14 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
 
                         if role == "substrate" or role == "sidesubstrate": #it is a rct
                             #rct_specGlyph_temp_list.append(specGlyph_id)
+                            #the center handle is supposed to be from the reactant
+                            if center_handle == []:
+                                center_handle.append(center_handle_candidate)
                             rct_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
                         elif role == "product" or role == "sideproduct": #it is a prd
                             #prd_specGlyph_temp_list.append(specGlyph_id)
                             prd_specGlyph_handles_temp_list.append([specGlyph_id,spec_handle,specRefGlyph_id,spec_lineend_pos])
-                        elif role == "modifier" or role == 'activator': #it is a modifier
+                        elif role == "modifier" or role == 'activator' or role == "inhibitor": #it is a modifier
                             mod_specGlyph_temp_list.append([specGlyph_id,specRefGlyph_id,modifier_lineend_pos])
                     #rct_specGlyph_list.append(rct_specGlyph_temp_list)
                     #prd_specGlyph_list.append(prd_specGlyph_temp_list)
@@ -3242,7 +3265,6 @@ class load:
         try:
           if not self.sbmlstr.startswith('<?xml'):
               raise Exception (sbmlstr + ' is not a valid sbml model')
-                      
           self.df = _SBMLToDF(self.sbmlstr)
           self.color_style = styleSBML.Style()    
           #self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
@@ -6998,7 +7020,7 @@ if __name__ == '__main__':
 
 ##############################
     #filename = 'output.xml'
-
+    #filename = "save.xml"
     #filename = "Bart/bart_arccenter.xml"
     #filename = "Bart/bart_spRefBezier.xml"
     #filename = "Bart/bart2.xml"
@@ -7031,6 +7053,16 @@ if __name__ == '__main__':
 
     #filename = "MK/sbmld10_2.sbml"
 
+    # filename = "additional/BrusselatorWithOutJD.xml"
+    # filename = "additional/BorisEJB_layoutrender.xml"
+    # filename = "additiona/m2.xml"
+    # filename = "additional/small.xml"
+    # filename = "additional/ecoli.xml"
+    # filename = "additional/straight_line.xml"
+    # filename = "E_coli_Millard2016.xml"
+
+    
+
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
     f.close()
@@ -7055,6 +7087,7 @@ if __name__ == '__main__':
     #df = load(os.path.join(TEST_FOLDER, filename))
     #df = load("dfgdg")
     #la = load(sbmlStr)
+    #df = load("XXXX.xml")
 
     # print(df.getCompartmentPosition("_compartment_default_"))
     # print(df.getCompartmentSize("_compartment_default_"))
@@ -7314,13 +7347,13 @@ if __name__ == '__main__':
     # df.autolayout()
     # df.draw(output_fileName = 'output.png')
 
-    sbmlStr_layout_render = df.export()
-    f = open("output.xml", "w")
-    f.write(sbmlStr_layout_render)
-    f.close()
+    # sbmlStr_layout_render = df.export()
+    # f = open("output.xml", "w")
+    # f.write(sbmlStr_layout_render)
+    # f.close()
 
     # df.draw(output_fileName = 'output.png', longText = 'ellipsis')
-    df.draw(output_fileName = 'output.png')
+    # df.draw(output_fileName = 'output.png')
     # df.draw(setImageSize = [1000, 1000], scale = 1., output_fileName = 'output.png', 
     #     reactionLineType = 'bezier', showBezierHandles = False, 
     #    showReactionIds = False, showReversible = False, longText = 'auto-font')
@@ -7328,18 +7361,18 @@ if __name__ == '__main__':
     #df.exportGraphML()
 
     #s4 -> does not work
-    # import tellurium as te
+    import tellurium as te
 
-    # r = te.loada ('''
-    #   $Xo -> S1; k1*Xo
-    #    S1 -> S2; k1*S1
-    #    S2 -> S3; k1*S2
-    #    S3 -> S4; k1*S3
-    #    S4 ->;    k1*S4
-    #    Xo = 5
-    #    k1 = 0.4''')
-    # sb = load(r.getSBML())
-    # #sb.autolayout()
-    # sb.draw(output_fileName = 'output.png')
+    r = te.loada ('''
+      $Xo -> S1; k1*Xo
+       S1 -> S2; k1*S1
+       S2 -> S3; k1*S2
+       S3 -> S4; k1*S3
+       S4 ->;    k1*S3
+       Xo = 5
+       k1 = 0.4''')
+    sb = load(r.getSBML())
+    #sb.autolayout()
+    sb.draw(output_fileName = 'output.png')
 
 

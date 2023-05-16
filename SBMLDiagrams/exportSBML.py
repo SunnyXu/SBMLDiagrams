@@ -751,7 +751,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
             ls.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
             ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
 
-            if center_size != [0.,0.]:
+            if center_size != [0.,0.] and center_size != []:
                 bb_id  = "bb_" + reaction_id
                 width  = float(center_size[0])
                 height = float(center_size[1])
