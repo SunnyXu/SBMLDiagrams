@@ -271,7 +271,16 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     text_render = []
     specRefGlyph_render = []
     gen_render = []
-    lineEnding_render = []          
+    lineEnding_render = []  
+
+    # def_comp_width = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)[0] + 100.
+    # def_comp_height = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)[1] + 100.
+    # if visualizeSBML._getNetworkTopLeftCorner(sbmlStr)[0] < 0:
+    #     def_comp_width -= visualizeSBML._getNetworkTopLeftCorner()[0]
+    # if visualizeSBML._getNetworkTopLeftCorner()[1] < 0:
+    #     def_comp_height -= visualizeSBML._getNetworkTopLeftCorner()[1]
+
+    # compartmentDefaultSize = [def_comp_width, def_comp_height]      
 
     mplugin = None
     try: #invalid sbml
@@ -7347,13 +7356,13 @@ if __name__ == '__main__':
     # df.autolayout()
     # df.draw(output_fileName = 'output.png')
 
-    # sbmlStr_layout_render = df.export()
-    # f = open("output.xml", "w")
-    # f.write(sbmlStr_layout_render)
-    # f.close()
+    sbmlStr_layout_render = df.export()
+    f = open("output.xml", "w")
+    f.write(sbmlStr_layout_render)
+    f.close()
 
     # df.draw(output_fileName = 'output.png', longText = 'ellipsis')
-    # df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png')
     # df.draw(setImageSize = [1000, 1000], scale = 1., output_fileName = 'output.png', 
     #     reactionLineType = 'bezier', showBezierHandles = False, 
     #    showReactionIds = False, showReversible = False, longText = 'auto-font')
@@ -7361,18 +7370,18 @@ if __name__ == '__main__':
     #df.exportGraphML()
 
     #s4 -> does not work
-    import tellurium as te
+    # import tellurium as te
 
-    r = te.loada ('''
-      $Xo -> S1; k1*Xo
-       S1 -> S2; k1*S1
-       S2 -> S3; k1*S2
-       S3 -> S4; k1*S3
-       S4 ->;    k1*S3
-       Xo = 5
-       k1 = 0.4''')
-    sb = load(r.getSBML())
-    #sb.autolayout()
-    sb.draw(output_fileName = 'output.png')
+    # r = te.loada ('''
+    #   $Xo -> S1; k1*Xo
+    #    S1 -> S2; k1*S1
+    #    S2 -> S3; k1*S2
+    #    S3 -> S4; k1*S3
+    #    S4 ->;    k1*S3
+    #    Xo = 5
+    #    k1 = 0.4''')
+    # sb = load(r.getSBML())
+    # #sb.autolayout()
+    # sb.draw(output_fileName = 'output.png')
 
 

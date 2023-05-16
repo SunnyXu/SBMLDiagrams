@@ -165,7 +165,16 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
     numReactionTexts = len(df_ReactionTextData)
 
     if numNodes != 0 or numArbitraryTexts != 0 or numArbitraryShapes != 0:
-        numCompartments = len(df_CompartmentData)      
+        numCompartments = len(df_CompartmentData)   
+        # sbmlStr = df.export() 
+        # layout_width = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)[0] + 100.
+        # layout_height = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)[1] + 100.
+        # if visualizeSBML._getNetworkTopLeftCorner(sbmlStr)[0] < 0:
+        #     layout_width -= visualizeSBML._getNetworkTopLeftCorner()[0]
+        # if visualizeSBML._getNetworkTopLeftCorner()[1] < 0:
+        #     layout_height -= visualizeSBML._getNetworkTopLeftCorner()[1] 
+        layout_width = 1000 - 20 
+        layout_height = 1000 - 20
     # #######################################
 
         # Creates an SBMLNamespaces object with the given SBML level, version
@@ -410,9 +419,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
         #
         layout = mplugin.createLayout()
         layout.setId("SBMLDiagrams_layout")
+        layout.setDimensions(libsbml.Dimensions(layoutns, layout_width, layout_height))
         #layout.setDimensions(libsbml.Dimensions(layoutns, 10000-20, 6200-20))
-        layout.setDimensions(libsbml.Dimensions(layoutns, 1000-20, 1000-20))
+        #layout.setDimensions(libsbml.Dimensions(layoutns, 1000-20, 1000-20))
+        compartmentDefaultSize = [layout_width, layout_height]
         # compartmentDefaultSize = [10000-20, 6200-20]
+        # compartmentDefaultSize = [1000-20,1000-20]
         # random network (40+800x, 40+800y)
 
         #create the CompartmentGlyph and SpeciesGlyphs
