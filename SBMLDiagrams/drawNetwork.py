@@ -2119,9 +2119,10 @@ def addReaction(canvas, rxn_id, rct_position, prd_position, mod_position, center
                     fill = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                 else:
                     fill = lineColor  
-                if prd_endhead_render[0][5] != []: #there is stroke info 
-                    cl = prd_endhead_render[0][5]
-                    outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
+                if prd_endhead_render != []:
+                    if prd_endhead_render[0][5] != []: #there is stroke info 
+                        cl = prd_endhead_render[0][5]
+                        outline = skia.Color(cl[0], cl[1], cl[2], cl[3])   
                 else:
                     outline = lineColor             
                 _drawEllipse (canvas, x-rx, y-ry, 2*rx, 2*ry, 
