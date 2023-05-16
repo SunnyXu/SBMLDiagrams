@@ -19,7 +19,6 @@ from SBMLDiagrams import editSBML
 from SBMLDiagrams import visualizeSBML
 from SBMLDiagrams import styleSBML
 from SBMLDiagrams import point
-import simplesbml
 import networkx as nx
 from collections import defaultdict
 import json
@@ -3241,6 +3240,9 @@ class load:
             self.sbmlstr = sbmlstr
 
         try:
+          if not self.sbmlstr.startswith('<?xml'):
+              raise Exception (sbmlstr + ' is not a valid sbml model')
+                      
           self.df = _SBMLToDF(self.sbmlstr)
           self.color_style = styleSBML.Style()    
           #self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
