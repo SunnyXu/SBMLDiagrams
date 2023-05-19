@@ -271,7 +271,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     text_render = []
     specRefGlyph_render = []
     gen_render = []
-    lineEnding_render = []  
+    lineEnding_render = []   
 
     # def_comp_width = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)[0] + 100.
     # def_comp_height = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)[1] + 100.
@@ -279,8 +279,7 @@ def _SBMLToDF(sbmlStr, reactionLineType = 'bezier', compartmentDefaultSize = [10
     #     def_comp_width -= visualizeSBML._getNetworkTopLeftCorner()[0]
     # if visualizeSBML._getNetworkTopLeftCorner()[1] < 0:
     #     def_comp_height -= visualizeSBML._getNetworkTopLeftCorner()[1]
-
-    # compartmentDefaultSize = [def_comp_width, def_comp_height]      
+    # compartmentDefaultSize = [def_comp_width, def_comp_height]
 
     mplugin = None
     try: #invalid sbml
@@ -3274,6 +3273,7 @@ class load:
         try:
           if not self.sbmlstr.startswith('<?xml'):
               raise Exception (sbmlstr + ' is not a valid sbml model')
+
           self.df = _SBMLToDF(self.sbmlstr)
           self.color_style = styleSBML.Style()    
           #self.df_text = pd.DataFrame(columns = COLUMN_NAME_df_text)
@@ -6507,7 +6507,7 @@ class load:
             SBMLStr_layout_render: str-the string of the output sbml file. 
         
         """
-        sbml = exportSBML._DFToSBML(self.df)
+        sbml = exportSBML._DFToSBML(self.df, self.sbmlstr)
         return sbml
 
     def setColorStyle(self, style):
@@ -6993,7 +6993,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    filename = "test.xml" 
+    #filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -7020,7 +7020,7 @@ if __name__ == '__main__':
     #filename = "test_suite/sbml_error/testbigmodel.xml"
 
     #global render
-    #filename = "test_suite/global_render/global_render.xml"
+    filename = "test_suite/global_render/global_render.xml"
 
     #complex
     #filename = "test_suite/Carcione2020/Carcione2020.xml"
@@ -7062,13 +7062,13 @@ if __name__ == '__main__':
 
     #filename = "MK/sbmld10_2.sbml"
 
-    # filename = "additional/BrusselatorWithOutJD.xml"
-    # filename = "additional/BorisEJB_layoutrender.xml"
-    # filename = "additiona/m2.xml"
-    # filename = "additional/small.xml"
-    # filename = "additional/ecoli.xml"
-    # filename = "additional/straight_line.xml"
-    # filename = "E_coli_Millard2016.xml"
+    #filename = "additional/BrusselatorWithOutJD.xml"
+    #filename = "additional/BorisEJB_layoutrender.xml"
+    #filename = "additional/m2.xml"
+    #filename = "additional/small.xml"
+    #filename = "additional/ecoli.xml"
+    #filename = "additional/straight_line.xml"
+    #filename = "additional/E_coli_Millard2016.xml"
 
     
 
