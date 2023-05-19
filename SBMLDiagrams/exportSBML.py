@@ -18,12 +18,14 @@ import sys
 from SBMLDiagrams import processSBML
 
 #def _DFToSBML(df, compartmentDefaultSize = [10000-20,6200-20]):
-def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
+def _DFToSBML(df, sbmlStr, compartmentDefaultSize = [1000-20,1000-20]):
 
     """
     Write the information of a set of dataframe to an SBML string. 
 
     Args:  
+        sbmlStr: str-the string of the input sbml file.
+
         (df_CompartmentData, df_NodeData, df_ReactionData, df_ArbitraryTextData, df_ArbitraryShapeData): tuple.
 
         df_CompartmentData: DataFrame-Compartment information.
@@ -165,7 +167,16 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
     numReactionTexts = len(df_ReactionTextData)
 
     if numNodes != 0 or numArbitraryTexts != 0 or numArbitraryShapes != 0:
-        numCompartments = len(df_CompartmentData)      
+        numCompartments = len(df_CompartmentData)   
+        # sbmlStr = df.export() 
+        # layout_width = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)[0] + 100.
+        # layout_height = visualizeSBML._getNetworkBottomRightCorner(sbmlStr)[1] + 100.
+        # if visualizeSBML._getNetworkTopLeftCorner(sbmlStr)[0] < 0:
+        #     layout_width -= visualizeSBML._getNetworkTopLeftCorner()[0]
+        # if visualizeSBML._getNetworkTopLeftCorner()[1] < 0:
+        #     layout_height -= visualizeSBML._getNetworkTopLeftCorner()[1] 
+        layout_width = 1000 - 20 
+        layout_height = 1000 - 20
     # #######################################
 
         # Creates an SBMLNamespaces object with the given SBML level, version
@@ -177,201 +188,304 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
         # 
         #    SBMLNamespaces sbmlns(3,1,"layout",1,"LAYOUT")
         # 
-        sbmlns = libsbml.SBMLNamespaces(3, 1, "layout", 1)
-        # create the document
-        document = libsbml.SBMLDocument(sbmlns)
-        # set the "required" attribute of layout package  to "true"
-        document.setPkgRequired("layout", False)  
 
-        # create the Model
-        model = document.createModel()
-        model.setId("SBMLDiagrams_model")
-        document.setModel(model)
+        
+        if sbmlStr != "": 
+            document = libsbml.readSBMLFromString(sbmlStr)    
+            document.enablePackage(libsbml.LayoutExtension_getXmlnsL3V1V1(), "layout", True)
+            
+            # set the "required" attribute of layout package  to "true"
+            document.setPkgRequired("layout", False)  
+            
+            model = document.getModel()
+            rxn_specRef_id = []
+            
+            # to avoid conflicts of species reference ids
+            for i in range(numReactions):
+                reaction = model.getReaction(i)
+                reaction_id = reaction.getId()
+                try: #from excel sheet
+                    rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
+                    prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
+                    mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
+                except: #from dataFrame
+                    rct_list = df_ReactionData.iloc[i]['sources']
+                    prd_list = df_ReactionData.iloc[i]['targets']
+                    mod_list = df_ReactionData.iloc[i]['modifiers']
 
-        # create the Compartment and species
-        comp_id_list = []
-        for i in range(numCompartments):
-            comp_id_list.append(df_CompartmentData.iloc[i]['id']) 
+                rct_num = len(rct_list)
+                prd_num = len(prd_list)
+                mod_num = len(mod_list)
+                rct = []
+                prd = []
+                mod = []
+                for j in range(rct_num):
+                    try:
+                        rct.append(df_NodeData.iloc[int(rct_list[j])]['id'])
+                    except:
+                        rct_num = 0
+                for j in range(prd_num):
+                    try:
+                        prd.append(df_NodeData.iloc[int(prd_list[j])]['id'])
+                    except:
+                        prd_num = 0
+                
+                for j in range(mod_num):
+                    try:
+                        mod.append(df_NodeData.iloc[int(mod_list[j])]['id'])
+                    except:
+                        mod_num = 0
 
-        if numCompartments != 0:
-            if "_compartment_default_" not in comp_id_list:
+                rct_specRef_id = []
+                prd_specRef_id = []
+                mod_specRef_id = []
+                
+                for j in range(rct_num):
+                    reference = reaction.getReactant(j)
+                    if reference != None:
+                        ref_id = reference.getId()
+                        if ref_id == "":
+                            ref_id = "SpecRef_" + reaction_id + "_rct" + str(j)
+                            reference.setId(ref_id)
+                    else:
+                        reference = reaction.createReactant()
+                        reference.setSpecies(rct[j])
+                        ref_id = "SpecRef_" + reaction_id + "_rct" + str(j)
+                        reference.setId(ref_id)
+                        reference.setStoichiometry(1.)
+                        reference.setConstant(False)
+                    rct_specRef_id.append(ref_id)
+
+                for j in range(prd_num):
+                    reference = reaction.getProduct(j)
+                    if reference != None:
+                        ref_id = reference.getId()
+                        if ref_id == "":
+                            ref_id = "SpecRef_" + reaction_id + "_prd" + str(j)
+                            reference.setId(ref_id)
+                    else:
+                        reference = reaction.createProduct()
+                        reference.setSpecies(prd[j])
+                        ref_id = "SpecRef_" + reaction_id + "_prd" + str(j)
+                        reference.setId(ref_id)
+                        reference.setStoichiometry(1.)
+                        reference.setConstant(False)
+                    prd_specRef_id.append(ref_id)
+
+                for j in range(mod_num):
+                    reference = reaction.getModifier(j)
+                    if reference != None:
+                        ref_id = reference.getId()
+                        if ref_id == "":
+                            ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
+                            reference.setId(ref_id)
+                    else:
+                        reference = reaction.createModifier()
+                        reference.setSpecies(mod[j])
+                        ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
+                        reference.setId(ref_id)
+                    mod_specRef_id.append(ref_id)
+
+                temp_rxn_specRef_id = [reaction_id, rct_specRef_id, prd_specRef_id, mod_specRef_id]
+                rxn_specRef_id.append(temp_rxn_specRef_id)
+
+        else: #for test_exportSBML.py
+            sbmlns = libsbml.SBMLNamespaces(3, 1, "layout", 1)
+            # create the document
+            document = libsbml.SBMLDocument(sbmlns)
+
+            # set the "required" attribute of layout package  to "true"
+            document.setPkgRequired("layout", False)  
+
+            # create the Model
+            model = document.createModel()
+            model.setId("SBMLDiagrams_model")
+            document.setModel(model)
+
+            # create the Compartment and species
+            comp_id_list = []
+            for i in range(numCompartments):
+                comp_id_list.append(df_CompartmentData.iloc[i]['id']) 
+
+            if numCompartments != 0:
+                if "_compartment_default_" not in comp_id_list:
+                    compartment = model.createCompartment()
+                    comp_id="_compartment_default_"
+                    compartment.setId(comp_id)
+                    compartment.setConstant(True)
+                    compartment.setVolume(1.)
+                for i in range(numCompartments):   
+                    compartment = model.createCompartment()
+                    comp_id=df_CompartmentData.iloc[i]['id']
+                    compartment.setId(comp_id)
+                    compartment.setConstant(True)
+                    compartment.setVolume(1.)
+                spec_id_list = []
+                for i in range(numNodes):
+                    original_index = df_NodeData.iloc[i]['original_idx']
+                    if original_index == -1:
+                        spec_id = df_NodeData.iloc[i]['id']
+                        if spec_id not in spec_id_list:
+                            spec_id_list.append(spec_id)
+                        species = model.createSpecies()
+                        species.setId(spec_id)
+                        comp_idx = df_NodeData.iloc[i]['comp_idx']
+                        if comp_idx != -1:
+                            comp_id = df_CompartmentData.iloc[comp_idx]['id'] 
+                            species.setCompartment(comp_id)  
+                        else:
+                            species.setCompartment("_compartment_default_") 
+                        species.setInitialConcentration(float(df_NodeData.iloc[i]['concentration']))	
+                        species.setHasOnlySubstanceUnits(False)
+                        species.setBoundaryCondition(False)
+                        species.setConstant(False)            
+                        if df_NodeData.iloc[i]['floating_node'] == 'FALSE':
+                            species.setBoundaryCondition(True)
+                            species.setConstant(True)   
+            else: #set default compartment
                 compartment = model.createCompartment()
                 comp_id="_compartment_default_"
                 compartment.setId(comp_id)
                 compartment.setConstant(True)
                 compartment.setVolume(1.)
-            for i in range(numCompartments):   
-                compartment = model.createCompartment()
-                comp_id=df_CompartmentData.iloc[i]['id']
-                compartment.setId(comp_id)
-                compartment.setConstant(True)
-                compartment.setVolume(1.)
-            spec_id_list = []
-            for i in range(numNodes):
-                original_index = df_NodeData.iloc[i]['original_idx']
-                if original_index == -1:
-                    spec_id = df_NodeData.iloc[i]['id']
-                    if spec_id not in spec_id_list:
-                        spec_id_list.append(spec_id)
-                    species = model.createSpecies()
-                    species.setId(spec_id)
-                    comp_idx = df_NodeData.iloc[i]['comp_idx']
-                    if comp_idx != -1:
-                        comp_id = df_CompartmentData.iloc[comp_idx]['id'] 
-                        species.setCompartment(comp_id)  
-                    else:
-                        species.setCompartment("_compartment_default_") 
-                    species.setInitialConcentration(float(df_NodeData.iloc[i]['concentration']))	
-                    species.setHasOnlySubstanceUnits(False)
-                    species.setBoundaryCondition(False)
-                    species.setConstant(False)            
-                    if df_NodeData.iloc[i]['floating_node'] == 'FALSE':
-                        species.setBoundaryCondition(True)
-                        species.setConstant(True)   
-        else: #set default compartment
-            compartment = model.createCompartment()
-            comp_id="_compartment_default_"
-            compartment.setId(comp_id)
-            compartment.setConstant(True)
-            compartment.setVolume(1.)
-            spec_id_list = []
-            for i in range(numNodes):
-                original_index = df_NodeData.iloc[i]['original_idx']
-                if original_index == -1:
-                    spec_id = df_NodeData.iloc[i]['id']
-                    if spec_id not in spec_id_list:
-                        spec_id_list.append(spec_id)
-                    species = model.createSpecies()
-                    species.setId(spec_id)
-                    species.setCompartment(comp_id)
-                    species.setInitialConcentration(float(df_NodeData.iloc[i]['concentration']))	
-                    species.setHasOnlySubstanceUnits(False)
-                    species.setBoundaryCondition(False)
-                    species.setConstant(False)             
-                    if df_NodeData.iloc[i]['floating_node'] == 'FALSE':
-                        species.setBoundaryCondition(True)
-                        species.setConstant(True)
-        # create reactions:
-        parameters_create = []
-        for i in range(numReactions):
-            reaction_id = df_ReactionData.iloc[i]['id']
-            rxn_rev = bool(df_ReactionData.iloc[i]['rxn_reversible'])
-            isReversible = rxn_rev
-            rct = [] # id list of the rcts
-            prd = []
-            mod = []
-            try: #from excel sheet
-                rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
-                prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
-                mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
-            except: #from dataFrame
-                rct_list = df_ReactionData.iloc[i]['sources']
-                prd_list = df_ReactionData.iloc[i]['targets']
-                mod_list = df_ReactionData.iloc[i]['modifiers']
+                spec_id_list = []
+                for i in range(numNodes):
+                    original_index = df_NodeData.iloc[i]['original_idx']
+                    if original_index == -1:
+                        spec_id = df_NodeData.iloc[i]['id']
+                        if spec_id not in spec_id_list:
+                            spec_id_list.append(spec_id)
+                        species = model.createSpecies()
+                        species.setId(spec_id)
+                        species.setCompartment(comp_id)
+                        species.setInitialConcentration(float(df_NodeData.iloc[i]['concentration']))	
+                        species.setHasOnlySubstanceUnits(False)
+                        species.setBoundaryCondition(False)
+                        species.setConstant(False)             
+                        if df_NodeData.iloc[i]['floating_node'] == 'FALSE':
+                            species.setBoundaryCondition(True)
+                            species.setConstant(True)
+            # create reactions:
+            parameters_create = []
+            for i in range(numReactions):
+                reaction_id = df_ReactionData.iloc[i]['id']
+                rxn_rev = bool(df_ReactionData.iloc[i]['rxn_reversible'])
+                isReversible = rxn_rev
+                rct = [] # id list of the rcts
+                prd = []
+                mod = []
+                try: #from excel sheet
+                    rct_list = list(df_ReactionData.iloc[i]['sources'][1:-1].split(","))
+                    prd_list = list(df_ReactionData.iloc[i]['targets'][1:-1].split(","))
+                    mod_list = list(df_ReactionData.iloc[i]['modifiers'][1:-1].split(","))
+                except: #from dataFrame
+                    rct_list = df_ReactionData.iloc[i]['sources']
+                    prd_list = df_ReactionData.iloc[i]['targets']
+                    mod_list = df_ReactionData.iloc[i]['modifiers']
 
-            rct_num = len(rct_list)
-            prd_num = len(prd_list)
-            mod_num = len(mod_list)
-            for j in range(rct_num):
-                try:
-                    rct.append(df_NodeData.iloc[int(rct_list[j])]['id'])
-                except:
-                    rct_num = 0
-            for j in range(prd_num):
-                try:
-                    prd.append(df_NodeData.iloc[int(prd_list[j])]['id'])
-                except:
-                    prd_num = 0
-            
-            for j in range(mod_num):
-                try:
-                    mod.append(df_NodeData.iloc[int(mod_list[j])]['id'])
-                except:
-                    mod_num = 0
-
-            kinetic_law_from_user = df_ReactionData.iloc[i]['rate_law']
-            flag_nan = 0
-            try:
-                math.isnan(kinetic_law_from_user)
-                flag_nan = 1
-            except:
-                pass
-
-            #if str(kinetic_law_from_user) == '' or flag_nan == 1:
-            kinetic_law = ''
-            parameter_list = []
-            kinetic_law = kinetic_law + 'E' + str (i) + '*(k' + str (i) 
-            parameter_list.append('E' + str (i))
-            parameter_list.append('k' + str (i))
-            for j in range(rct_num):
-                kinetic_law = kinetic_law + '*' + rct[j]
-                
-            if isReversible:
-                kinetic_law = kinetic_law + ' - k' + str (i) + 'r'
-                parameter_list.append('k' + str (i) + 'r')
+                rct_num = len(rct_list)
+                prd_num = len(prd_list)
+                mod_num = len(mod_list)
+                for j in range(rct_num):
+                    try:
+                        rct.append(df_NodeData.iloc[int(rct_list[j])]['id'])
+                    except:
+                        rct_num = 0
                 for j in range(prd_num):
-                    kinetic_law = kinetic_law + '*' + prd[j]
-            kinetic_law = kinetic_law + ')'
-            # else:
-            #     kinetic_law = kinetic_law_from_user
-            #     parameter_spec_list = getSymbols(kinetic_law_from_user) 
-            #     parameter_list = []
-            #     for j in range(len(parameter_spec_list)):
-            #         if parameter_spec_list[j] not in spec_id_list and parameter_spec_list[j] not in comp_id_list and parameter_spec_list[j] not in parameters_create:
-            #             parameter_list.append(parameter_spec_list[j])
-            #     if len(parameter_list) == 0: #If the input kinetic law is invalid
-            #         kinetic_law = ''
-            #         parameter_list = []
-            #         kinetic_law = kinetic_law + 'E' + str (i) + '*(k' + str (i) 
-            #         parameter_list.append('E' + str (i))
-            #         parameter_list.append('k' + str (i))
-            #         for j in range(rct_num):
-            #             kinetic_law = kinetic_law + '*' + rct[j]
-                        
-            #         if isReversible:
-            #             kinetic_law = kinetic_law + ' - k' + str (i) + 'r'
-            #             parameter_list.append('k' + str (i) + 'r')
-            #             for j in range(prd_num):
-            #                 kinetic_law = kinetic_law + '*' + prd[j]
-            #         kinetic_law = kinetic_law + ')'
-        
-            reaction = model.createReaction()
-            reaction.setId(df_ReactionData.iloc[i]['id'])
-            reaction.setReversible(False)
-            reaction.setFast(False)
-            if isReversible:
-                reaction.setReversible(True)
-            
-            for j in range(len(parameter_list)):
-                parameters_create.append(parameter_list[j])
-                parameters = model.createParameter()
-                parameters.setId(parameter_list[j])
-                parameters.setValue(0.1) # needs to set as the true parameter value.
-                parameters.setConstant(True)
-            kinetics = reaction.createKineticLaw()
-            kinetics.setFormula(kinetic_law)
-            
-            for j in range(rct_num):
-                reference = reaction.createReactant()
-                reference.setSpecies(rct[j])
-                ref_id = "SpecRef_" + reaction_id + "_rct" + str(j)
-                reference.setId(ref_id)
-                reference.setStoichiometry(1.)
-                reference.setConstant(False)
+                    try:
+                        prd.append(df_NodeData.iloc[int(prd_list[j])]['id'])
+                    except:
+                        prd_num = 0
+                
+                for j in range(mod_num):
+                    try:
+                        mod.append(df_NodeData.iloc[int(mod_list[j])]['id'])
+                    except:
+                        mod_num = 0
 
-            for j in range(prd_num):
-                reference = reaction.createProduct()
-                reference.setSpecies(prd[j])
-                ref_id = "SpecRef_" + reaction_id + "_prd" + str(j)
-                reference.setId(ref_id)
-                reference.setStoichiometry(1.)
-                reference.setConstant(False)
+                kinetic_law_from_user = df_ReactionData.iloc[i]['rate_law']
+                flag_nan = 0
+                try:
+                    math.isnan(kinetic_law_from_user)
+                    flag_nan = 1
+                except:
+                    pass
 
-            for j in range(mod_num):
-                reference = reaction.createModifier()
-                reference.setSpecies(mod[j])
-                ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
-                reference.setId(ref_id)
+                #if str(kinetic_law_from_user) == '' or flag_nan == 1:
+                kinetic_law = ''
+                parameter_list = []
+                kinetic_law = kinetic_law + 'E' + str (i) + '*(k' + str (i) 
+                parameter_list.append('E' + str (i))
+                parameter_list.append('k' + str (i))
+                for j in range(rct_num):
+                    kinetic_law = kinetic_law + '*' + rct[j]
+                    
+                if isReversible:
+                    kinetic_law = kinetic_law + ' - k' + str (i) + 'r'
+                    parameter_list.append('k' + str (i) + 'r')
+                    for j in range(prd_num):
+                        kinetic_law = kinetic_law + '*' + prd[j]
+                kinetic_law = kinetic_law + ')'
+                # else:
+                #     kinetic_law = kinetic_law_from_user
+                #     parameter_spec_list = getSymbols(kinetic_law_from_user) 
+                #     parameter_list = []
+                #     for j in range(len(parameter_spec_list)):
+                #         if parameter_spec_list[j] not in spec_id_list and parameter_spec_list[j] not in comp_id_list and parameter_spec_list[j] not in parameters_create:
+                #             parameter_list.append(parameter_spec_list[j])
+                #     if len(parameter_list) == 0: #If the input kinetic law is invalid
+                #         kinetic_law = ''
+                #         parameter_list = []
+                #         kinetic_law = kinetic_law + 'E' + str (i) + '*(k' + str (i) 
+                #         parameter_list.append('E' + str (i))
+                #         parameter_list.append('k' + str (i))
+                #         for j in range(rct_num):
+                #             kinetic_law = kinetic_law + '*' + rct[j]
+                            
+                #         if isReversible:
+                #             kinetic_law = kinetic_law + ' - k' + str (i) + 'r'
+                #             parameter_list.append('k' + str (i) + 'r')
+                #             for j in range(prd_num):
+                #                 kinetic_law = kinetic_law + '*' + prd[j]
+                #         kinetic_law = kinetic_law + ')'
+            
+                reaction = model.createReaction()
+                reaction.setId(df_ReactionData.iloc[i]['id'])
+                reaction.setReversible(False)
+                reaction.setFast(False)
+                if isReversible:
+                    reaction.setReversible(True)
+                
+                for j in range(len(parameter_list)):
+                    parameters_create.append(parameter_list[j])
+                    parameters = model.createParameter()
+                    parameters.setId(parameter_list[j])
+                    parameters.setValue(0.1) # needs to set as the true parameter value.
+                    parameters.setConstant(True)
+                kinetics = reaction.createKineticLaw()
+                kinetics.setFormula(kinetic_law)
+                
+                for j in range(rct_num):
+                    reference = reaction.createReactant()
+                    reference.setSpecies(rct[j])
+                    ref_id = "SpecRef_" + reaction_id + "_rct" + str(j)
+                    reference.setId(ref_id)
+                    reference.setStoichiometry(1.)
+                    reference.setConstant(False)
+
+                for j in range(prd_num):
+                    reference = reaction.createProduct()
+                    reference.setSpecies(prd[j])
+                    ref_id = "SpecRef_" + reaction_id + "_prd" + str(j)
+                    reference.setId(ref_id)
+                    reference.setStoichiometry(1.)
+                    reference.setConstant(False)
+
+                for j in range(mod_num):
+                    reference = reaction.createModifier()
+                    reference.setSpecies(mod[j])
+                    ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
+                    reference.setId(ref_id)
 
         sbmlStr = libsbml.writeSBMLToString(document) #sbmlStr is w/o layout or render info
 
@@ -391,6 +505,8 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
         # thus the value needs to be casted for the corresponding derived class.
         #
 
+        model_layout = document.getModel()
+
         mplugin = model.getPlugin("layout")
 
         # rPlugin = model.getPlugin("render")
@@ -408,11 +524,28 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
         #
         # Creates a Layout object via LayoutModelPlugin object.
         #
+        if mplugin != None: #remove existed layout with local render
+            numPlugins = mplugin.getNumLayouts()
+            for i in range(numPlugins):
+                mplugin.removeLayout(i)
+        try: 
+            grPlugin = mplugin.getListOfLayouts().getPlugin("render")
+        except:
+            pass
+
+        if grPlugin != None: #remove existed global render
+            numgrPlugin = grPlugin.getNumGlobalRenderInformationObjects()
+            for i in range(numgrPlugin):
+                grPlugin.removeGlobalRenderInformation(i)
+
         layout = mplugin.createLayout()
         layout.setId("SBMLDiagrams_layout")
+        layout.setDimensions(libsbml.Dimensions(layoutns, layout_width, layout_height))
         #layout.setDimensions(libsbml.Dimensions(layoutns, 10000-20, 6200-20))
-        layout.setDimensions(libsbml.Dimensions(layoutns, 1000-20, 1000-20))
+        #layout.setDimensions(libsbml.Dimensions(layoutns, 1000-20, 1000-20))
+        compartmentDefaultSize = [layout_width, layout_height]
         # compartmentDefaultSize = [10000-20, 6200-20]
+        # compartmentDefaultSize = [1000-20,1000-20]
         # random network (40+800x, 40+800y)
 
         #create the CompartmentGlyph and SpeciesGlyphs
@@ -506,8 +639,6 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
 
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
-                if content == "TCA Cycle":
-                    print(textG_id)
                 textGlyph.setId(textG_id)
                 textGlyph.setText(content) # this will merge "setOriginOfTextId"
                 bb_id  = "bb_spec_text_" + spec_id + '_idx_' + str(spec_index)
@@ -587,8 +718,6 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
 
                 textGlyph = layout.createTextGlyph()
                 textG_id = "TextG_" + spec_id + '_idx_' + str(spec_index)
-                if content == "TCA Cycle":
-                    print(textG_id)
                 textGlyph.setId(textG_id)
                 textGlyph.setText(content) # this will merge "setOriginOfTextId
                 try:
@@ -609,6 +738,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
         # create the ReactionGlyphs and SpeciesReferenceGlyphs
         for i in range(numReactions):
             reaction_id = df_ReactionData.iloc[i]['id']
+            try: #for test_exportSBML.py
+                for xx in range(len(rxn_specRef_id)):
+                    if rxn_specRef_id[xx][0] == reaction_id:
+                        temp_rxn_specRef_id = rxn_specRef_id[xx]
+            except:
+                pass
 
             center_size = [0.,0.]
             try:
@@ -751,7 +886,7 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
             ls.setStart(libsbml.Point(layoutns, center_value[0], center_value[1]))
             ls.setEnd(libsbml.Point(layoutns, center_value[0], center_value[1]))
 
-            if center_size != [0.,0.]:
+            if center_size != [0.,0.] and center_size != []:
                 bb_id  = "bb_" + reaction_id
                 width  = float(center_size[0])
                 height = float(center_size[1])
@@ -760,8 +895,12 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
                 reactionGlyph.setBoundingBox(libsbml.BoundingBox(layoutns, bb_id, pos_x, pos_y, width, height))
                       
             for j in range(rct_num):
-                ref_id = "SpecRef_" + reaction_id + "_rct" + str(j)
-
+                #to make the species reference consistent
+                try: #for test_exportSBML.py if there is no temp_rxn_specRef_id
+                    if temp_rxn_specRef_id[1] != []: #check rct_num error
+                        ref_id = temp_rxn_specRef_id[1][j]
+                except:
+                    ref_id = "SpecRef_" + reaction_id + "_rct" + str(j)
                 speciesReferenceGlyph = reactionGlyph.createSpeciesReferenceGlyph()
                 specsRefG_id = "SpecRefG_" + reaction_id + "_rct" + str(j)
                 specG_id = "SpecG_" + rct[j] + '_idx_' + str(rct_index[j])
@@ -821,7 +960,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
 
 
             for j in range(prd_num):
-                ref_id = "SpecRef_" + reaction_id + "_prd" + str(j)
+                try:
+                    if temp_rxn_specRef_id[2] != []:
+                        ref_id = temp_rxn_specRef_id[2][j]
+                except:
+                    ref_id = "SpecRef_" + reaction_id + "_prd" + str(j)
                 speciesReferenceGlyph = reactionGlyph.createSpeciesReferenceGlyph()
                 specsRefG_id = "SpecRefG_" + reaction_id + "_prd" + str(j)
                 specG_id = "SpecG_" + prd[j]  + '_idx_' + str(prd_index[j])
@@ -882,7 +1025,11 @@ def _DFToSBML(df, compartmentDefaultSize = [1000-20,1000-20]):
                     cb.setEnd(libsbml.Point(layoutns, pos_x + 0.5*width, pos_y + 0.5*height))
 
             for j in range(mod_num):
-                ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
+                try:
+                    if temp_rxn_specRef_id[3] != []:
+                        ref_id = temp_rxn_specRef_id[3][j]
+                except:
+                    ref_id = "SpecRef_" + reaction_id + "_mod" + str(j)
                 speciesReferenceGlyph = reactionGlyph.createSpeciesReferenceGlyph()
                 specsRefG_id = "SpecRefG_" + reaction_id + "_mod" + str(j)
                 specG_id = "SpecG_" + mod[j]  + '_idx_' + str(mod_index[j])
