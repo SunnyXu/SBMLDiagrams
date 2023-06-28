@@ -6550,7 +6550,55 @@ class load:
         return json.dumps(self.color_style.__dict__)
 
 
-    def autolayout(self, layout="spring", scale=200., k=1., iterations=100, graphvizProgram = "dot"):
+    # def autolayout(self, layout="spring", scale=200., k=1., iterations=100, graphvizProgram = "dot"):
+
+    #     """
+    #     Autolayout the node positions using networkX library.
+
+    #     layout: str-the layout name from networkX, which can be one of the following:
+
+    #         spring (default): positioning nodes using Fruchterman-Reingold force-directed algorithm;
+        
+    #         spectral: positioning the nodes using the eigenvectors of the graph Laplacian;
+
+    #         random: positioning nodes randomly;
+        
+    #         circular: positioning nodes on a circle;
+
+    #         graphviz: positioning the nodes using Graphiz.
+
+    #     scale (applies to "spring", "spectral", "circular"): float-Scale factor for positions. 
+    #     The nodes are positioned in a box of size scale in each dim centered at center.
+        
+    #     k (applies to "spring"): float-Optimal distance between nodes. 
+    #     Increase this value to move nodes farther apart.
+
+    #     iterations (applies to "spring"): int-maximum number of iterations to use during the calculation.             
+        
+    #     graphvizProgram (applies to "graphviz"): str-name of Graphviz layout program.
+            
+    #         dot (default): "hierarchical" or layered drawings of directed graphs. This is the default tool 
+    #         to use if edges have directionality.
+            
+    #         neato: "spring model'' layouts. This is the default tool to use if the graph is not 
+    #         too large (about 100 nodes) and you don't know anything else about it. Neato attempts 
+    #         to minimize a global energy function, which is equivalent to statistical 
+    #         multi-dimensional scaling.
+            
+    #         fdp: "spring model'' layouts similar to those of neato, but does this by reducing 
+    #         forces rather than working with energy.
+            
+    #         sfdp: multiscale version of fdp for the layout of large graphs.
+            
+    #         twopi: radial layouts, after Graham Wills 97. Nodes are placed on concentric circles 
+    #         depending their distance from a given root node.
+            
+    #         circo: circular layout, after Six and Tollis 99, Kauffman and Wiese 02. This is 
+    #         suitable for certain diagrams of multiple cyclic structures, such as certain 
+    #         telecommunications networks.
+
+    #     """
+    def autolayout(self, layout="spring", scale=200., k=1., iterations=100):
 
         """
         Autolayout the node positions using networkX library.
@@ -6565,8 +6613,6 @@ class load:
         
             circular: positioning nodes on a circle;
 
-            graphviz: positioning the nodes using Graphiz.
-
         scale (applies to "spring", "spectral", "circular"): float-Scale factor for positions. 
         The nodes are positioned in a box of size scale in each dim centered at center.
         
@@ -6575,29 +6621,8 @@ class load:
 
         iterations (applies to "spring"): int-maximum number of iterations to use during the calculation.             
         
-        graphvizProgram (applies to "graphviz"): str-name of Graphviz layout program.
-            
-            dot (default): "hierarchical" or layered drawings of directed graphs. This is the default tool 
-            to use if edges have directionality.
-            
-            neato: "spring model'' layouts. This is the default tool to use if the graph is not 
-            too large (about 100 nodes) and you don't know anything else about it. Neato attempts 
-            to minimize a global energy function, which is equivalent to statistical 
-            multi-dimensional scaling.
-            
-            fdp: "spring model'' layouts similar to those of neato, but does this by reducing 
-            forces rather than working with energy.
-            
-            sfdp: multiscale version of fdp for the layout of large graphs.
-            
-            twopi: radial layouts, after Graham Wills 97. Nodes are placed on concentric circles 
-            depending their distance from a given root node.
-            
-            circo: circular layout, after Six and Tollis 99, Kauffman and Wiese 02. This is 
-            suitable for certain diagrams of multiple cyclic structures, such as certain 
-            telecommunications networks.
-
         """
+
         #warnings:
         if type(float(scale)) is not float or scale <= 0:
             raise Exception("Not valid scale")
@@ -6644,8 +6669,8 @@ class load:
             elif layout == "circular":
                 pos = nx.circular_layout(graph, scale=scale, center=center)
                  
-            elif layout == "graphviz":
-                pos = nx.nx_agraph.graphviz_layout(graph, prog=graphvizProgram)
+            # elif layout == "graphviz":
+            #     pos = nx.nx_agraph.graphviz_layout(graph, prog=graphvizProgram)
             else:
                 raise Exception("no such layout")
 
@@ -6993,7 +7018,7 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
@@ -7020,7 +7045,7 @@ if __name__ == '__main__':
     #filename = "test_suite/sbml_error/testbigmodel.xml"
 
     #global render
-    filename = "test_suite/global_render/global_render.xml"
+    #filename = "test_suite/global_render/global_render.xml"
 
     #complex
     #filename = "test_suite/Carcione2020/Carcione2020.xml"

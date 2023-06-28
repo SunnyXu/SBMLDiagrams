@@ -192,7 +192,7 @@ def _DFToSBML(df, sbmlStr, compartmentDefaultSize = [1000-20,1000-20]):
         
         if sbmlStr != "": 
             document = libsbml.readSBMLFromString(sbmlStr)    
-            document.enablePackage(libsbml.LayoutExtension_getXmlnsL3V1V1(), "layout", True)
+            document.enablePackage(libsbml.LayoutExtension.getXmlnsL3V1V1(), "layout", True)
             
             # set the "required" attribute of layout package  to "true"
             document.setPkgRequired("layout", False)  
