@@ -20,6 +20,7 @@ from SBMLDiagrams import visualizeSBML
 from SBMLDiagrams import styleSBML
 from SBMLDiagrams import point
 import networkx as nx
+from networkx.drawing.nx_agraph import graphviz_layout
 from collections import defaultdict
 import json
 import numpy as np
@@ -6575,6 +6576,7 @@ class load:
             json.dump(self.color_style.__dict__, out_file, indent=6)
         return json.dumps(self.color_style.__dict__)
 
+    #def autolayout(self, layout="spring", scale=200., k=1., iterations=100, graphvizProgram = "dot"):
     def autolayout(self, layout="spring", scale=200., k=1., iterations=100):
 
         """
@@ -6626,14 +6628,30 @@ class load:
                 scale = max(width, height) // 2
             center = [width // 2, height // 2]
 
+            # # Jessie:
+            # for node in nodes:
+            #     graph.add_node(node)
+            # for edge in edges:
+            #     src = edge[0]
+            #     dests = edge[1:]
+            #     for dest in dests:
+            #         graph.add_edge(src, dest)
+            #         g[src].append(dest)
+
             for node in nodes:
                 graph.add_node(node)
-            for edge in edges:
-                src = edge[0]
-                dests = edge[1:]
-                for dest in dests:
-                    graph.add_edge(src, dest)
-                    g[src].append(dest)
+
+            for rxn in reaction_ids:
+                graph.add_node(rxn) #represent the reaction centroid as a node
+                num_rct = model.getNumReactants(rxn)
+                num_prd = model.getNumProducts(rxn)
+                for i in range(num_rct):
+                    rct = model.getReactant(rxn, i)
+                    graph.add_edge(rct, rxn)
+                for i in range(num_prd):
+                    prd = model.getProduct(rxn, i)
+                    graph.add_edge(rxn, prd)
+
 
             pos = defaultdict(list)
 
@@ -6644,10 +6662,10 @@ class load:
             elif layout == "random":
                 pos = nx.random_layout(graph, center=center)
             elif layout == "circular":
-                pos = nx.circular_layout(graph, scale=scale, center=center)
-                 
+                pos = nx.circular_layout(graph, scale=scale, center=center)              
             # elif layout == "graphviz":
-            #     pos = nx.nx_agraph.graphviz_layout(graph, prog=graphvizProgram)
+            #     pos = graphviz_layout(graph, prog = graphvizProgram)
+
             else:
                 raise Exception("no such layout")
 
@@ -6658,7 +6676,10 @@ class load:
                     p = list(p)
                 else:
                     p = p.tolist()
-                self.setNodeAndTextPosition(n, p)
+                try:#node position
+                    self.setNodeAndTextPosition(n, p)
+                except:#reaction centroid position
+                    self.setReactionCenterPosition(n, p)
 
             center_list = []
             handles_list = []
@@ -6712,7 +6733,7 @@ class load:
             #             handles_update2 = [center_position_2_update] + handles2[1:]
             #             self.setReactionCenterPosition(id2, center_position_2_update)
             #             self.setReactionBezierHandles(id2, handles_update2)
-            # #overlap of handles from one reaction
+            #overlap of handles from one reaction
             # for k in range(len(handles_list)):
             #     overlap_handles_idx_list = []
             #     for i in range(len(handles_list[k])):
@@ -7017,6 +7038,8 @@ if __name__ == '__main__':
 
     #long text and alias nodes
     #filename = "test_suite/Jana_WolfGlycolysis/Jana_WolfGlycolysis.xml"
+    #filename = "test_suite/Jana_WolfGlycolysis/Jana_WolfGlycolysis-original.xml"
+    filename = "test_suite/Jana_WolfGlycolysis/Jana_WolfGlycolysis-modified.xml"
 
     #sbml with errors
     #filename = "test_suite/sbml_error/testbigmodel.xml"
@@ -7355,7 +7378,7 @@ if __name__ == '__main__':
     # ''')
 
     # df = load(r.getSBML())
-    # df.autolayout()
+    #df.autolayout(layout = "spring", scale = 500, k = 2)
     # df.draw(output_fileName = 'output.png')
 
     sbmlStr_layout_render = df.export()
