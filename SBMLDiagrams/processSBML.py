@@ -5843,7 +5843,8 @@ class load:
             c represent the center of the ellipse, and r represents its radii.
             
             if rectangle:
-            []
+            [w, h], where each number is a floating number from 0 to 100. w represents the
+            width of the rectangle, and h represents the height of the rectangle.
             
         """
         self.df = editSBML._setReactionArrowHeadShape(self.df, id, shape_type_list, shape_info_list)
@@ -7140,7 +7141,7 @@ if __name__ == '__main__':
     #bioinformatics
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005_layout_render.xml"
-    #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
+    filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
     
     #gradient: 
     #filename = "test_suite/test_gradientLinear/test_gradientLinear.xml"
@@ -7203,7 +7204,7 @@ if __name__ == '__main__':
     #filename = "additional/small.xml"
     #filename = "additional/ecoli.xml"
     #filename = "additional/straight_line.xml"
-    filename = "additional/E_coli_Millard2016.xml"
+    #filename = "additional/E_coli_Millard2016.xml"
 
     
 
@@ -7396,6 +7397,7 @@ if __name__ == '__main__':
     # shape_info_list=[[[0.0, 0.0], [100.0, 60.0], [0.0, 100.0], [0.0, 0.0]]])
     # df.setReactionArrowHeadShape('path_0_re6338', shape_type_list=['ellipse'],
     # shape_info_list=[[[0.0, 0.0], [100.0, 100.0]]])
+    # df.setReactionArrowHeadShape('path_0_re6338', shape_type_list=['rectangle'], shape_info_list = [[100., 100.]])
     # df.setReactionArrowHeadShape('path_0_re6338', shape_type_list=['polygon', 'polygon'],
     # shape_info_list=[[[33.0, 0.0], [100.0, 50.0], [33.0, 100.0], [33.0, 0.0]], [[0.0, 0.0], [0.0, 100.0]]])
     # print(df.getReactionArrowHeadShape('path_0_re6338'))
@@ -7497,7 +7499,7 @@ if __name__ == '__main__':
     f.close()
 
     # df.draw(output_fileName = 'output.png', longText = 'ellipsis')
-    df.draw(output_fileName = 'output.png')
+    df.draw(output_fileName = 'output.png', showReactionIds = False)
     # df.draw(setImageSize = [1000, 1000], scale = 1., output_fileName = 'output.png', 
     #     reactionLineType = 'bezier', showBezierHandles = False, 
     #    showReactionIds = False, showReversible = False, longText = 'auto-font')

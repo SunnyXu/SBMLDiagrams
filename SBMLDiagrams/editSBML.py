@@ -2219,7 +2219,8 @@ def _setReactionArrowHeadShape(df, id, shape_type_list, shape_info_list):
         [[cx, cy], [rx, ry]], where each number is a floating number from 0 to 100.
         c represent the center of the ellipse, and r represents its radii.
         if rectangle:
-        [] 
+        [w, h], where each number is a floating number from 0 to 100. w represents the
+        width of the rectangle, and h represents the height of the rectangle.
 
     Returns:
         df_temp: DataFrame-information after updates. 
@@ -2243,8 +2244,15 @@ def _setReactionArrowHeadShape(df, id, shape_type_list, shape_info_list):
                 else:
                     raise Exception("This is not a valid polygon shape info.")
             elif shape_type == 'rectangle':
-                if shape_info != []:
+                if isinstance(shape_info, list) and len(shape_info) == 2:
+                    if all((float(item) >= 0. and float(item) <= 100.) for item in shape_info):
+                        pass
+                    else:
+                        raise Exception("This is not a valid rectangle shape info.")
+                else:
                     raise Exception("This is not a valid rectangle shape info.")
+                # if shape_info != []:
+                #     raise Exception("This is not a valid rectangle shape info.")
             elif shape_type == 'ellipse':
                 # [[0.0, 0.0], [100.0, 100.0]]
                 if isinstance(shape_info, list) and len(shape_info) == 2:
