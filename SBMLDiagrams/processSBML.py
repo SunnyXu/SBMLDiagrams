@@ -4464,13 +4464,49 @@ class load:
                 if len(arrow_head_fill_pre) == 1:
                     fill_color = _rgb_to_color(arrow_head_fill_pre[0])
                 else:
-                    raise Exception("There is no arrow head size information.")
+                    raise Exception("There is no arrow head fill color information.")
             else:
                 raise Exception("There is no arrow head information.")
         else:
             raise Exception("This is not a valid id.")
 
         return fill_color
+
+    def getReactionArrowHeadBorderColor(self, id):
+        """
+
+        Get the border color of the reaction arrow head with a given reaction id.
+
+        Args: 
+            id: str-the id of the reaction.
+
+        Returns:
+            border_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)]
+
+        """
+        line_ending_id = []
+        arrow_head_border_pre = []
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        for i in range(len(idx_list)):
+            line_ending_id.append(self.df[2].iloc[idx_list[i]]["targets_lineending"][0]) 
+        if len(line_ending_id) == 1:
+            idx_lineending = self.df[5].index[self.df[5]["id"] == line_ending_id[0]].tolist()
+            if len(idx_lineending) == 1:
+                arrow_head_border_pre.append(self.df[5].iloc[idx_lineending[0]]["border_color"])
+                if len(arrow_head_border_pre) == 1:
+                    border_color = _rgb_to_color(arrow_head_border_pre[0])
+                else:
+                    raise Exception("There is no arrow head border color information.")
+            else:
+                raise Exception("There is no arrow head information.")
+        else:
+            raise Exception("This is not a valid id.")
+
+        if border_color[0] == []:
+            border_color = self.getReactionFillColor(id)
+
+        return border_color
 
     def getReactionArrowHeadShape(self, id):
         """
@@ -4647,7 +4683,7 @@ class load:
                     if len(head_fill_pre) == 1:
                         fill_color = _rgb_to_color(head_fill_pre[0])
                     else:
-                        raise Exception("There is no modifier head size information.")
+                        raise Exception("There is no modifier head fill color information.")
                 else:
                     raise Exception("There is no modifier head information.")
             else:
@@ -4656,6 +4692,48 @@ class load:
             raise Exception("This is not a valid modifier index.")
 
         return fill_color
+    
+    def getReactionModifierHeadBorderColor(self, id, mod_idx = 0):
+        """
+
+        Get the border color of the reaction modifier head with a given reaction id.
+
+        Args: 
+            id: str-the id of the reaction.
+
+            mod_idx: int-index of the modifier: 0 to number of modifiers -1.
+
+        Returns:
+            fill_color: list-[rgba 1*4 matrix, html_name str (if any, otherwise ''), 
+            hex str (8 digits)]
+
+        """
+        line_ending_id = []
+        head_border_pre = []
+        idx_list = self.df[2].index[self.df[2]["id"] == id].tolist()
+        mod_num = self.getReactionModifierNum(id)
+        if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+            for i in range(len(idx_list)):
+                line_ending_id.append(self.df[2].iloc[idx_list[i]]["modifiers_lineending"][mod_idx]) 
+            if len(line_ending_id) == 1:
+                idx_lineending = self.df[5].index[self.df[5]["id"] == line_ending_id[0]].tolist()
+                if len(idx_lineending) == 1:
+                    head_border_pre.append(self.df[5].iloc[idx_lineending[0]]["border_color"])
+                    if len(head_border_pre) == 1:
+                        border_color = _rgb_to_color(head_border_pre[0])
+                    else:
+                        raise Exception("There is no modifier head border color information.")
+                else:
+                    raise Exception("There is no modifier head information.")
+            else:
+                raise Exception("This is not a valid id.")
+        else:
+            raise Exception("This is not a valid modifier index.")
+
+        if border_color[0] == []:
+            border_color = self.getReactionFillColor(id)
+
+        return border_color
 
     def getReactionModifierHeadShape(self, id, mod_idx = 0):
         """
@@ -5818,6 +5896,25 @@ class load:
         """
         self.df = editSBML._setReactionArrowHeadFillColor(self.df, id, fill_color, opacity)
         #return self.df
+
+    # def setReactionArrowHeadBorderColor(self, id, border_color, opacity = 1.):
+
+    #     """
+    #     Set the reaction arrow head border color with a certain reaction id.
+
+    #     Args: 
+    #         id: str-reaction id. 
+
+    #         border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+    #         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+
+    #     Examples:
+    #         setReactionArrowHeadBorderColor ('J1', "BurlyWood")
+        
+    #     """
+    #     self.df = editSBML._setReactionArrowHeadBorderColor(self.df, id, border_color, opacity)
+    #     #return self.df
         
     def setReactionArrowHeadShape(self, id, shape_type_list, shape_info_list):
         """
@@ -5976,6 +6073,33 @@ class load:
         self.df = editSBML._setReactionModifierHeadFillColor(self.df, id, fill_color, 
         opacity, mod_idx = mod_idx)
         #return self.df
+
+    # def setReactionModifierHeadBorderColor(self, id, border_color, opacity = 1., mod_idx = 0):
+
+    #     """
+    #     Set the reaction modifier head border color with a certain reaction id.
+
+    #     Args: 
+    #         id: str-reaction id. 
+
+    #         border_color: list-decimal_rgb 1*3 matrix/str-html_name/str-hex_string (6-digit).
+
+    #         opacity: float-value is between [0,1], default is fully opaque (opacity = 1.).
+            
+    #         mod_idx: int-the index of the modifier: 0 to number of modifiers -1.
+
+    #     Examples:
+    #         setReactionModifierHeadBorderColor ('J1', "BurlyWood")
+        
+    #     """
+    #     mod_num = self.getReactionModifierNum(id)
+    #     if type(mod_idx) == int and mod_idx >= 0 and mod_idx < mod_num:
+    #         pass
+    #     else:
+    #         raise Exception("This is not a valid modifier index.")
+    #     self.df = editSBML._setReactionModifierHeadBorderColor(self.df, id, border_color, 
+    #     opacity, mod_idx = mod_idx)
+    #     #return self.df
 
     def setReactionModifierHeadShape(self, id, shape_type_list, shape_info_list, mod_idx = 0):
         """
@@ -7132,7 +7256,7 @@ if __name__ == '__main__':
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
-    #filename = "test_modifier.xml"
+    filename = "test_modifier.xml"
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_textGlyph.xml"
@@ -7141,7 +7265,7 @@ if __name__ == '__main__':
     #bioinformatics
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005.xml"
     #filename = "test_suite/BIOMD0000000005/BIOMD0000000005_layout_render.xml"
-    filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
+    #filename = "test_suite/pdmap-nulceoid/pdmap-nucleoid.xml"
     
     #gradient: 
     #filename = "test_suite/test_gradientLinear/test_gradientLinear.xml"
@@ -7277,18 +7401,21 @@ if __name__ == '__main__':
     # print(df._getReactionArrowHeadPosition('path_0_re6338'))
     # print(df.getReactionArrowHeadSize('path_0_re6338'))
     # print(df.getReactionArrowHeadFillColor('path_0_re6338'))
+    # print(df.getReactionArrowHeadBorderColor('path_0_re6338'))
     # print(df.getReactionArrowHeadShape('path_0_re6338'))
     # print(df.getReactionArrowHeadShape('path_0_re6337'))
 
     # print(df._getReactionArrowHeadPosition('r_0'))
     # print(df.getReactionArrowHeadSize('r_0'))
     # print(df.getReactionArrowHeadFillColor('r_0'))
+    # print(df.getReactionArrowHeadBorderColor('r_0'))
     # print(df.getReactionArrowHeadShape('r_0'))
 
     # print(df.getReactionModifierNum('path_0_re6338'))
     # print(df._getReactionModifierHeadPosition('path_0_re6338', 2))
     # print(df.getReactionModifierHeadSize('path_0_re6338', 2))
     # print(df.getReactionModifierHeadFillColor('path_0_re6338'))
+    # print(df.getReactionModifierHeadBorderColor('path_0_re6338'))
     # print(df.getReactionModifierHeadShape('path_0_re6338', 2))
 
     # df.setCompartmentPosition('_compartment_default_', [0,0])
@@ -7389,8 +7516,20 @@ if __name__ == '__main__':
     # print(df.getReactionArrowHeadSize('path_0_re6338'))
     # print(df._getReactionArrowHeadPosition('path_0_re6338'))
     # print(df.getReactionArrowHeadFillColor('path_0_re6338'))
-    # df.setReactionArrowHeadFillColor('path_0_re6338', "BurlyWood", opacity = 0.5)
+    # df.setReactionArrowHeadFillColor('path_0_re6338', "red", opacity = 0.5)
     # print(df.getReactionArrowHeadFillColor('path_0_re6338'))
+    # print(df.getReactionArrowHeadBorderColor('path_0_re6338'))
+    # df.setReactionArrowHeadBorderColor('path_0_re6338', "red", opacity = 0.5)
+    # print(df.getReactionArrowHeadBorderColor('path_0_re6338'))
+    #print(df._getReactionArrowHeadPosition('r_0'))
+
+    # print(df.getReactionArrowHeadFillColor('r_0'))
+    # df.setReactionArrowHeadFillColor('r_0', "red", opacity = 0.5)
+    # print(df.getReactionArrowHeadFillColor('r_0'))
+    # print(df.getReactionArrowHeadBorderColor('r_0'))
+    # df.setReactionArrowHeadBorderColor('r_0', "red", opacity = 0.5)
+    # print(df.getReactionArrowHeadBorderColor('r_0'))
+
     # print(df._getReactionArrowHeadPosition('path_0_re6338'))
     # print(df.getReactionArrowHeadShape('path_0_re6338'))
     # df.setReactionArrowHeadShape('path_0_re6338', shape_type_list=['polygon'],
@@ -7415,8 +7554,19 @@ if __name__ == '__main__':
     # print("position_after:", df._getReactionModifierHeadPosition('path_0_re6338'))
     # print(df._getReactionModifierHeadPosition('path_0_re6338'))
     # print(df.getReactionModifierHeadFillColor('path_0_re6338', 2))
-    # df.setReactionModifierHeadFillColor('path_0_re6338', "BurlyWood", opacity = 0.5, mod_idx = 2)
+    # df.setReactionModifierHeadFillColor('path_0_re6338', "red", opacity = 0.5, mod_idx = 2)
     # print(df.getReactionModifierHeadFillColor('path_0_re6338', 2))
+    # print(df.getReactionModifierHeadBorderColor('path_0_re6338', 2))
+    # df.setReactionModifierHeadBorderColor('path_0_re6338', "red", opacity = 0.5, mod_idx = 2)
+    # print(df.getReactionModifierHeadBorderColor('path_0_re6338', 2))
+
+    # print(df.getReactionModifierHeadFillColor('r_0'))
+    # df.setReactionModifierHeadFillColor('r_0', "red", opacity = 0.5)
+    # print(df.getReactionModifierHeadFillColor('r_0'))
+    # print(df.getReactionModifierHeadBorderColor('r_0'))
+    # df.setReactionModifierHeadBorderColor('r_0', "red", opacity = 0.5)
+    # print(df.getReactionModifierHeadBorderColor('r_0'))
+
     # print(df._getReactionModifierHeadPosition('path_0_re6338'))
     # print(df._getReactionModifierHeadPosition('path_0_re6338'))
     # print(df.getReactionModifierHeadShape('path_0_re6338'))
@@ -7499,7 +7649,7 @@ if __name__ == '__main__':
     f.close()
 
     # df.draw(output_fileName = 'output.png', longText = 'ellipsis')
-    df.draw(output_fileName = 'output.png', showReactionIds = False)
+    df.draw(output_fileName = 'output.png', showReactionIds = True)
     # df.draw(setImageSize = [1000, 1000], scale = 1., output_fileName = 'output.png', 
     #     reactionLineType = 'bezier', showBezierHandles = False, 
     #    showReactionIds = False, showReversible = False, longText = 'auto-font')
