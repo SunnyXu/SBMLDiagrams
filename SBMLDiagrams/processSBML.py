@@ -7251,12 +7251,12 @@ if __name__ == '__main__':
     DIR = os.path.dirname(os.path.abspath(__file__))
     TEST_FOLDER = os.path.join(DIR, "test_sbml_files")
     
-    #filename = "test.xml" 
+    filename = "test.xml" 
     #filename = "feedback.xml"
     #filename = "LinearChain.xml"
     #filename = "test_comp.xml"
     #filename = "test_no_comp.xml"
-    filename = "test_modifier.xml"
+    #filename = "test_modifier.xml"
     #filename = "node_grid.xml"
     #filename = "mass_action_rxn.xml"
     #filename = "test_textGlyph.xml"
@@ -7482,7 +7482,9 @@ if __name__ == '__main__':
     # df.setNodeBorderWidth("x_0", 0.)
     # print(df.getNodeBorderWidth("x_1"))
     # df.setNodeTextFontColor("x_1", [0, 0, 0])
-    # df.setNodeTextLineWidth("x_1", 1.)
+    # print(df.getNodeTextLineWidth("x_1"))
+    # df.setNodeTextLineWidth("x_1", 2.5)
+    # print(df.getNodeTextLineWidth("x_1"))
     # print(df.getNodeTextFontSize("x_5"))
     # df.setNodeTextFontSize("x_5", 10)
     #print(df.getNodeTextAnchor("x_1"))
@@ -7649,7 +7651,7 @@ if __name__ == '__main__':
     f.close()
 
     # df.draw(output_fileName = 'output.png', longText = 'ellipsis')
-    df.draw(output_fileName = 'output.png', showReactionIds = True)
+    df.draw(output_fileName = 'output.png')
     # df.draw(setImageSize = [1000, 1000], scale = 1., output_fileName = 'output.png', 
     #     reactionLineType = 'bezier', showBezierHandles = False, 
     #    showReactionIds = False, showReversible = False, longText = 'auto-font')
