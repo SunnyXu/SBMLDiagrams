@@ -3552,7 +3552,7 @@ class load:
 
     def getCompartmentTextLineWidth(self, id):
         """
-        Get the text line width of a compartment with a given compartment id.
+        Get the text line width (the stroke width value of the TEXTGLYPH) of a compartment with a given compartment id.
 
         Args: 
             id: int-the id of the compartment.
@@ -4067,7 +4067,7 @@ class load:
 
     def getNodeTextLineWidth(self, id, alias = 0):
         """
-        Get the text line width of a node with a given node id.
+        Get the text line width (the stroke width value of the TEXTGLYPH) of a node with a given node id.
 
         Args: 
             id: int-the id of the node.
@@ -4943,7 +4943,7 @@ class load:
 
     def setCompartmentTextLineWidth(self, id, txt_line_width):
         """
-        Set the compartment text line width for a compartment of given id.
+        Set the compartment text line width (the stroke width value of the TEXTGLYPH) for a compartment of given id.
 
         Args:  
             id: str-compartment id.
@@ -5494,7 +5494,7 @@ class load:
 
     def setNodeTextLineWidth(self, id, txt_line_width, alias = 0):
         """
-        Set the node text line width for a node of given id.
+        Set the node text line width (the stroke width value of the TEXTGLYPH) for a node of given id.
 
         Args:  
             id: str-node id.
@@ -6249,7 +6249,7 @@ class load:
 
     def getTextLineWidth(self, txt_id):
         """
-        Get the arbitrary text line width with the text id.
+        Get the arbitrary text line width (the stroke width value of the TEXTGLYPH) with the text id.
 
         Args: 
             txt_id: str-the text id.
@@ -6363,7 +6363,7 @@ class load:
 
     def setTextLineWidth(self, txt_id, txt_line_width):
         """
-        Set the arbitrary text line width.
+        Set the arbitrary text line width (the stroke width value of the TEXTGLYPH).
 
         Args:  
             txt_id: str-the text id.
@@ -7330,7 +7330,9 @@ if __name__ == '__main__':
     #filename = "additional/straight_line.xml"
     #filename = "additional/E_coli_Millard2016.xml"
 
-    
+    #filename = "Ethan/test2.xml"
+    #filename = "Ethan/new_copasi_color.xml"
+    #filename = "Ethan/test2-level3.xml"
 
     f = open(os.path.join(TEST_FOLDER, filename), 'r')
     sbmlStr = f.read()
