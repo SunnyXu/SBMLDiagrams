@@ -20,7 +20,7 @@ If you are using any of the code, please cite the article (https://doi.org/10.10
 
 ## A Figure Example
 
-Here is a figure example visualized by SBMLDiagrams below. Users could use another GUI tool SBcoyote together with SBMLDiagrams to adjust positions, i.e., bezier curves of reactions.
+Here is a figure example visualized by SBMLDiagrams below. Users could use another GUI tool SBcoyote (https://github.com/sys-bio/SBcoyote; https://doi.org/10.1016/j.biosystems.2023.105001) together with SBMLDiagrams to adjust positions, i.e., bezier curves of reactions.
 
 <img src="https://raw.githubusercontent.com/SunnyXu/SBMLDiagrams/main/docs/Figures/Introduction/Jana_WolfGlycolysis-corrected.png" width="350" height="500">
 
