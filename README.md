@@ -9,7 +9,7 @@ SBMLDiagrams is a Python package to visualize networks embedded in SBML Level 3 
 
 We also have an interface of SBMLDiagrams to NetworkX to exploit the variety of layout algorithms. 
 
-***Note that please make sure to save a copy of your SBML file before importing into SBcoyote.***
+***Note that please make sure to save a copy of your SBML file before importing into SBMLDiagrams.***
 
 ## Citing
 If you are using any of the code, please cite the article (https://doi.org/10.1093/bioinformatics/btac730) and the PYPI web page (https://pypi.org/project/SBMLDiagrams/). 
